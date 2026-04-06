@@ -1,4 +1,4 @@
-import type { CtaLink, SectionId } from "@/types/site";
+﻿import type { CtaLink } from "@/types/site";
 
 export const siteMeta = {
   name: "UBT",
@@ -11,7 +11,7 @@ export const siteMeta = {
     "I help teams build confidence in complex software through test strategy, automation, release discipline, and hands-on delivery support."
 };
 
-export const navigationItems: Array<{ id: SectionId; label: string }> = [
+export const navigationItems = [
   { id: "tools-developed-by-ubt", label: "Tools Developed by UBT (me)" },
   { id: "my-cv", label: "My CV" },
   { id: "about-me", label: "About me" },
@@ -24,18 +24,10 @@ export const navigationItems: Array<{ id: SectionId; label: string }> = [
   { id: "my-bookmarks", label: "My Bookmarks" },
   { id: "useful-apps", label: "Useful Apps" },
   { id: "contact", label: "Contact" }
-];
+] as const;
 
 export const heroActions: CtaLink[] = [
   { label: "View My CV", href: "#my-cv", variant: "primary" },
   { label: "Explore Tools", href: "#tools-developed-by-ubt", variant: "secondary" },
   { label: "Contact Me", href: "#contact", variant: "ghost" }
-];
-
-export const heroQuickLinks: Array<{ id: SectionId; label: string }> = [
-  { id: "about-me", label: "About" },
-  { id: "experience", label: "Experience" },
-  { id: "articles", label: "Articles" },
-  { id: "my-bookmarks", label: "Bookmarks" },
-  { id: "useful-apps", label: "Useful Apps" }
 ];
