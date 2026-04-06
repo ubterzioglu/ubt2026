@@ -5,17 +5,16 @@ import { useState } from "react";
 import { navigationItems, siteMeta } from "@/content/site";
 
 const desktopLabelMap: Record<(typeof navigationItems)[number]["id"], string> = {
-  "tools-developed-by-ubt": "Tools",
-  "my-cv": "CV",
-  "about-me": "About",
-  "key-achievements": "Wins",
-  "tech-stack": "Stack",
+  "my-cv": "My CV",
+  "about-me": "About me",
+  "key-achievements": "Key Achievements",
+  "tech-stack": "Tech Stack",
   experience: "Experience",
-  "corporate-projects": "Corporate",
-  "private-projects": "Projects",
+  "corporate-projects": "Corporate Projects",
+  "private-projects": "Private Projects",
   articles: "Articles",
-  "my-bookmarks": "Bookmarks",
-  "useful-apps": "Apps",
+  "my-bookmarks": "My Bookmarks",
+  "useful-apps": "Useful Apps",
   contact: "Contact"
 };
 
@@ -26,21 +25,12 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-line/70 bg-paper/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <nav className="hidden min-w-0 flex-1 md:block">
-          <ul className="flex items-center whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.2em] text-ink/70 lg:text-xs">
-            <li className="min-w-0">
-              <a
-                href="#top"
-                className="inline-flex items-center rounded-full px-1 py-1 text-accent transition hover:text-ink"
-                aria-label={`${siteMeta.name} home`}
-              >
-                {siteMeta.name}
-              </a>
-            </li>
-            {navigationItems.map((item) => (
+          <ul className="flex items-center whitespace-nowrap text-[10px] font-semibold tracking-[0.12em] text-ink/70 lg:text-[11px]">
+            {navigationItems.map((item, index) => (
               <li key={item.id} className="flex min-w-0 items-center">
-                <span aria-hidden="true" className="mx-2 text-line lg:mx-3">
-                  /
-                </span>
+                {index > 0 && (
+                  <span aria-hidden="true" className="mx-1.5 text-line lg:mx-2">|</span>
+                )}
                 <a
                   href={`#${item.id}`}
                   className="inline-flex items-center rounded-full px-1 py-1 transition hover:text-ink"

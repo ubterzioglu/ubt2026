@@ -37,7 +37,7 @@ export function FeaturedGrid({ items, sourceLabel, emptyMessage }: FeaturedGridP
                         {item.badge}
                       </span>
                     ) : null}
-                    <h3 className="font-display text-2xl font-semibold leading-tight text-ink">{item.title}</h3>
+                    <h3 className="font-body text-2xl font-semibold leading-tight text-ink">{item.title}</h3>
                   </div>
                   <span className="text-xl text-ink/35">↗</span>
                 </div>

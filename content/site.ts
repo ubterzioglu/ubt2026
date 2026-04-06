@@ -2,7 +2,7 @@
 
 export const siteMeta = {
   name: "UBT",
-  fullName: "Umut Baris Terzioglu",
+  fullName: "Umut Barış Terzioğlu",
   role: "Senior Software QA & Test Automation Engineer",
   location: "Dortmund, Germany",
   headline:
@@ -12,7 +12,6 @@ export const siteMeta = {
 };
 
 export const navigationItems = [
-  { id: "tools-developed-by-ubt", label: "Tools Developed by UBT (me)" },
   { id: "my-cv", label: "My CV" },
   { id: "about-me", label: "About me" },
   { id: "key-achievements", label: "Key Achievements" },

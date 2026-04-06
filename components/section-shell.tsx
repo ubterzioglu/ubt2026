@@ -16,7 +16,7 @@ export function SectionShell({ id, eyebrow, title, description, children }: Sect
           <div className="grid gap-8 lg:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">{eyebrow}</p>
-              <h2 className="mt-4 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
+              <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
                 {title}
               </h2>
               <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">{description}</p>
