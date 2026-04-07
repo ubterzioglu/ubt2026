@@ -1,4 +1,5 @@
 ﻿import type { ReactNode } from "react";
+import Image from "next/image";
 
 import { FeaturedGrid } from "@/components/featured-grid";
 import { HeroSection } from "@/components/hero-section";
@@ -9,8 +10,7 @@ import { TechStack } from "@/components/tech-stack";
 import { fallbackApps, fallbackArticles, fallbackBookmarks, fallbackTools } from "@/content/featured";
 import {
   aboutParagraphs,
-  achievementBullets,
-  achievementHighlights,
+  keyAchievements,
   contactItems,
   corporateProjects,
   cvLinks,
@@ -114,11 +114,14 @@ export default async function HomePage() {
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">About me</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 space-y-4">
-              {aboutParagraphs.map((paragraph) => (
-                <p key={paragraph} className="text-base leading-8 text-ink/74">
-                  {paragraph}
-                </p>
+            <div className="mt-8 space-y-8">
+              {aboutParagraphs.map((section) => (
+                <div key={section.title}>
+                  <h3 className="font-body text-xl font-semibold text-ink mb-3">{section.title}</h3>
+                  <p className="text-base leading-8 text-ink/74">
+                    {section.content}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -153,14 +156,15 @@ export default async function HomePage() {
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Key Achievements</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              {[...achievementHighlights, ...achievementBullets].map((item) => (
-                <article key={item.label} className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5">
-                  <p className="font-body text-4xl font-semibold text-ink">{item.value}</p>
-                  <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-accent">{item.label}</p>
-                  <p className="mt-3 text-sm leading-6 text-ink/66">{item.detail}</p>
-                </article>
-              ))}
+            <div className="mt-8">
+              <ul className="space-y-4">
+                {keyAchievements.map((achievement, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="mr-3 mt-2.5 flex h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent"></span>
+                    <span className="text-base leading-8 text-ink/74">{achievement}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -184,7 +188,9 @@ export default async function HomePage() {
 
       <section id="tech-stack" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <TechStack stackGroups={stackGroups} />
+          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+            <TechStack stackGroups={stackGroups} />
+          </div>
         </div>
       </section>
 
@@ -195,12 +201,25 @@ export default async function HomePage() {
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Corporate Projects</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-8 flex flex-col gap-4">
               {corporateProjects.map((project) => (
-                <article key={project.title} className="rounded-[1.55rem] border border-line/80 bg-white/82 p-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
-                  <h3 className="mt-3 font-body text-2xl font-semibold text-ink">{project.title}</h3>
-                  <p className="mt-4 text-sm leading-6 text-ink/68">{project.summary}</p>
+                <article key={project.title} className="flex items-center justify-between rounded-[1.55rem] border border-line/80 bg-white/82 p-5 sm:p-6">
+                  <div className="flex-1 pr-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
+                    <h3 className="mt-2 font-body text-2xl font-semibold text-ink">{project.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-ink/68">{project.summary}</p>
+                  </div>
+                  {project.image && (
+                    <div className="flex-shrink-0">
+                      <Image 
+                        src={`/corporate/${project.image}`} 
+                        alt={project.title} 
+                        width={80}
+                        height={80}
+                        className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border border-line/50 shadow-sm"
+                      />
+                    </div>
+                  )}
                 </article>
               ))}
             </div>

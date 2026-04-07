@@ -20,60 +20,34 @@ export const cvLinks = [
 ] as const;
 
 export const aboutParagraphs = [
-  "Professional Summary\nSenior Software Quality Assurance Engineer with 15+ years of experience in test management, automation, and process optimization in enterprise environments.\nLed global testing initiatives and built scalable automation frameworks across complex systems.\nStrong expertise in Agile/SCRUM, CI/CD pipelines, and modern QA practices focused on efficiency and reliability.\nExtensive experience in coordinating FAT and SAT activities and aligning testing processes with business goals.\nProven ability to mentor teams, improve test strategies, and deliver high-quality, stable software solutions.",
-  "Professional Strengths & Mindset\nExperienced in international and multicultural environments, with strong cross-functional communication skills.\nActive contributor to professional communities, promoting collaboration and knowledge sharing.\nContinuous learner, closely following new technologies, tools, and industry trends.\nStrong focus on building practical, user-oriented digital products and platforms.\nPragmatic, solution-oriented mindset with emphasis on long-term impact and sustainability.\nFounder and builder of community-driven initiatives connecting professionals across Germany and Turkey.\nHands-on approach to creating and scaling side projects into usable, real-world solutions.\nStrong understanding of the German job market and professional ecosystem.\nPassionate about simplifying complex topics and making knowledge accessible.\nCombines analytical thinking with creativity, bridging technology, community, and content.",
-  "Personal Profile\nI am Umut Barış Terzioğlu — \"Barış\" in Turkey, \"Umut\" in Germany. Born in 1985.\nOriginally trained as a Mechanical Engineer, currently working in software and quality assurance.\nLiving in Dortmund since 2021 with my wife and our two cats.\nEnjoy learning, building, and creating value for others.\nPrefer practical, clear, and actionable knowledge in both professional and daily life.\nInterested in technology, but grounded in real-life usefulness and simplicity.\nIn my free time: computer games, movies/series, music, and traveling.\nAppreciate balance — sometimes best achieved through a \"quiet chaos\" at home with two cats."
-];
-
-export const achievementHighlights: AchievementItem[] = [
   {
-    value: "5,000+",
-    label: "test cases created",
-    detail: "Built and maintained enterprise-scale test assets across HP ALM, Jira, and Polarion."
+    title: "Professional Summary",
+    content: "Senior Software Quality Assurance Engineer with 15+ years of experience in test management, automation, and process optimization in enterprise environments. Led global testing initiatives and built scalable automation frameworks across complex systems. Strong expertise in Agile/SCRUM, CI/CD pipelines, and modern QA practices focused on efficiency and reliability. Extensive experience in coordinating FAT and SAT activities and aligning testing processes with business goals. Proven ability to mentor teams, improve test strategies, and deliver high-quality, stable software solutions."
   },
   {
-    value: "90%",
-    label: "coverage reached",
-    detail: "Raised Daimler coverage from 50% to 90% through systematic test design."
+    title: "Professional Strengths & Mindset",
+    content: "Experienced in international and multicultural environments, with strong cross-functional communication skills. Active contributor to professional communities, promoting collaboration and knowledge sharing. Continuous learner, closely following new technologies, tools, and industry trends. Strong focus on building practical, user-oriented digital products and platforms. Pragmatic, solution-oriented mindset with emphasis on long-term impact and sustainability. Founder and builder of community-driven initiatives connecting professionals across Germany and Turkey. Hands-on approach to creating and scaling side projects into usable, real-world solutions. Strong understanding of the German job market and professional ecosystem. Passionate about simplifying complex topics and making knowledge accessible. Combines analytical thinking with creativity, bridging technology, community, and content."
   },
   {
-    value: "1,000+",
-    label: "automated checks",
-    detail: "Automated and optimized large suites with Ranorex, C#, Selenium, and CI pipelines."
-  },
-  {
-    value: "50+",
-    label: "customer sessions",
-    detail: "Ran FAT, SAT, UAT, release, and support sessions in complex enterprise contexts."
+    title: "Personal Profile",
+    content: "I am Umut Barış Terzioğlu — \"Baris\" in Turkey, \"Umut\" in Germany. Born in 1985. Originally trained as a Mechanical Engineer, currently working in software and quality assurance. Living in Dortmund since 2021 with my wife and our two cats. Enjoy learning, building, and creating value for others. Prefer practical, clear, and actionable knowledge in both professional and daily life. Interested in technology, but grounded in real-life usefulness and simplicity. In my free time: computer games, movies/series, music, and traveling. Appreciate balance — sometimes best achieved through a \"quiet chaos\" at home with two cats."
   }
 ];
 
-export const achievementBullets: AchievementItem[] = [
-  {
-    value: "3",
-    label: "major systems automated",
-    detail: "Implemented Ranorex automation for three major Daimler systems with Jenkins-based CI/CD support."
-  },
-  {
-    value: "40%",
-    label: "execution time reduced",
-    detail: "Optimized 1,000+ automated checks for faster feedback loops."
-  },
-  {
-    value: "2",
-    label: "tool migrations led",
-    detail: "HP ALM to Jira / Xray migration initiatives that lowered manual effort and operational cost."
-  },
-  {
-    value: "30+",
-    label: "QA colleagues mentored",
-    detail: "Across Daimler and Swisslog engagements with hands-on guidance and knowledge transfer."
-  },
-  {
-    value: "100s",
-    label: "hours saved monthly",
-    detail: "KPI-based reporting that improved visibility and saved hundreds of hours monthly."
-  }
+export const keyAchievements: string[] = [
+  "Led global testing initiatives and built scalable automation frameworks across complex enterprise systems.",
+  "Global test responsibility for Daimler's PDM system Smaragd, serving 30,000+ users.",
+  "Test Lead for large-scale warehouse automation and robotics integration projects at Swisslog.",
+  "Built and maintained enterprise-scale test assets (5,000+ test cases) across HP ALM, Jira, and Polarion.",
+  "Raised Daimler test coverage from 50% to 90% through systematic test design and execution.",
+  "Automated and optimized 1,000+ checks using Ranorex, C#, Selenium, and CI/CD pipelines.",
+  "Coordinated and presented 50+ FAT, SAT, UAT, and release sessions in factory and site environments.",
+  "Implemented Ranorex GUI test automation for three major Daimler systems with Jenkins integration.",
+  "Led CRM system migration and built new test architecture for Daimler's DARRS remote support system.",
+  "Successfully led tool migration initiatives from HP ALM to Jira/Xray, lowering manual effort and operational costs.",
+  "Global owner of Daimler's Part Management System SRM infrastructure, designing process and test automation.",
+  "Mentored 30+ QA colleagues across Daimler and Swisslog, providing hands-on guidance and knowledge transfer.",
+  "Optimized test execution time by 40% and saved hundreds of hours monthly through KPI-based reporting."
 ];
 
 export const stackGroups: StackGroup[] = [
@@ -169,49 +143,49 @@ export const corporateProjects: ProjectItem[] = [
     title: "Smaragd",
     label: "Daimler / Mercedes-Benz",
     summary:
-      "Global Product Data Management system for thousands of engineers, where I supported strategy, quality processes, and release management.",
+      "A global Product Data Management system used by thousands of engineers across Mercedes-Benz. Test strategy, quality processes, and release management were established and executed throughout the project lifecycle. The system supported highly complex engineering workflows and integrations.",
     image: "logosmaragd.png"
   },
   {
     title: "SRM",
     label: "Daimler / Mercedes-Benz",
     summary:
-      "Supply and parts management platform serving tens of thousands of internal users, covering E2E testing, automation, and rollout support.",
+      "A critical Supply & Parts Management platform serving tens of thousands of internal users. End-to-end testing, test automation processes, and global rollout support were delivered. The project played a key role in ensuring stability across global supply chain operations.",
     image: "logosrm.png"
   },
   {
     title: "DARRS",
     label: "Daimler / Mercedes-Benz",
     summary:
-      "Internal communication and reporting system that required functional, integration, and user acceptance testing.",
+      "An internal communication and reporting system used for operational and management-level decision processes. Functional, integration, and user acceptance testing activities were carried out. The system directly supported data-driven corporate operations.",
     image: "logodarrs.png"
   },
   {
     title: "TKL",
     label: "Swisslog",
     summary:
-      "Warehouse automation and robotics integration project demanding high reliability in real-time logistics operations.",
+      "A warehouse automation and robotics integration project for logistics operations. Software and hardware synchronization tests were executed across robotic and conveyor systems. The project required high reliability under real-time operational conditions.",
     image: "logotkl.png"
   },
   {
     title: "Kruitbosch",
     label: "Swisslog",
     summary:
-      "Warehouse management system initiative focused on automated retail distribution workflows.",
+      "A warehouse management system supporting retail distribution operations. Order picking, stock management, and shipment processes were tested across automated workflows. Close interaction between physical automation and software systems was a key success factor.",
     image: "logokruitbosch.png"
   },
   {
     title: "Albert Heijn",
     label: "Swisslog",
     summary:
-      "High-volume automation project with system validation, go-live support, and data integrity checks under heavy load.",
+      "A high-volume warehouse automation project for one of Europe's largest retail chains. System validation, go-live support, and data integrity testing were delivered under heavy operational load. The project operated in a high-availability production environment.",
     image: "logoalbert.png"
   },
   {
     title: "EDEKA",
     label: "Swisslog",
     summary:
-      "Large-scale grocery automation program covering pre-go-live validation and operational stability checks.",
+      "A large-scale automation project for Germany's leading supermarket group. Pre-go-live validation, integration testing, and operational stability checks were conducted. The system ensured uninterrupted warehouse operations during transition phases.",
     image: "logoedeka.png"
   }
 ];
