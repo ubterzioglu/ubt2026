@@ -1,0 +1,4 @@
+- [x] `private` ve `corporate` klasörlerini oluştur
+- [x] `ubterzioglude/img` altındaki gerekli görselleri hedef klasörlere kopyala
+- [x] `content/profile.ts` içinde private project kartlarına image alanlarını ekle
+- [x] Değişiklikleri hızlıca doğrula

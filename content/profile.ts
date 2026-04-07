@@ -101,58 +101,69 @@ export const stackGroups: StackGroup[] = [
 
 export const experienceItems: ExperienceItem[] = [
   {
-    company: "Swisslog",
-    role: "Test Lead",
+    company: "Swisslog GmbH",
+    role: "Senior QA Engineer / Test Lead",
     period: "2021 - 2025",
-    location: "Dortmund",
+    location: "Dortmund, Germany",
     summary:
-      "Led test planning and execution for high-complexity warehouse automation projects spanning WMS, WES, SynQ, and customer go-live activities.",
+      "Test Lead for large-scale automation projects in the intralogistics domain, coordinating FAT & SAT phases and leading on-site customer support.",
     highlights: [
-      "Designed and executed 1,000+ test cases with Polarion, Selenium, and Java.",
-      "Acted as test lead on one of Swisslog's largest projects with 500 users and 10 modules.",
-      "Delivered 20+ FAT and SAT sessions plus on-site rollout support.",
-      "Mentored 15+ colleagues and reviewed large automation suites."
+      "Led test planning and execution for high-complexity warehouse automation projects (WMS, WES, SynQ).",
+      "Created and reviewed test cases based on specs using Polarion and Git repository tools.",
+      "Coordinated and presented FAT & SAT test phases in factory and site environments.",
+      "On-site Test Lead assigning team roles in critical test areas by expertise.",
+      "Supported customers on-site and resolved issues during system integration.",
+      "Prioritized defects and improved product quality through root cause analysis.",
+      "Created manuals, guides, and customer training materials for software and processes.",
+      "Mentored new team members and supported onboarding processes effectively."
     ]
   },
   {
     company: "Daimler / Mercedes-Benz",
-    role: "Senior Process Manager",
+    role: "Senior Process Manager & Test Manager",
     period: "2020 - 2021",
-    location: "Istanbul",
+    location: "Istanbul, Turkey",
     summary:
-      "Owned test structure, support, release coordination, and tool evaluation for critical internal engineering systems.",
+      "Global owner of Daimler's Part Management System SRM infrastructure, responsible for test architecture, tool selection, and CRM system migration.",
     highlights: [
-      "Built the complete test structure for the SRM platform.",
-      "Designed test structure for DARRS and evaluated Jira, Xray, Ranorex, and HP ALM.",
-      "Handled 1st and 2nd level support with 1,000+ resolved tickets.",
-      "Coordinated enterprise releases and prepared stakeholder reporting."
+      "Selected test automation tools by scoring against system requirements.",
+      "Global owner of Daimler's Part Management System SRM infrastructure.",
+      "Designed process and test automation for SRM infrastructure.",
+      "Built new test architecture for Daimler's DARRS remote support system.",
+      "Led CRM system migration for the Part Management System SRM.",
+      "Delivered global support for SRM platform across all regions."
     ]
   },
   {
     company: "Daimler / Mercedes-Benz",
     role: "Senior Test Manager",
-    period: "2017 - 2020",
-    location: "Istanbul",
+    period: "2016 - 2020",
+    location: "Istanbul, Turkey",
     summary:
-      "Defined software test strategy for PDM systems and combined release management, automation, and process transformation.",
+      "Global test responsibility for Daimler's PDM system Smaragd serving 30K+ users, leading agile test management with SCRUM methodology.",
     highlights: [
-      "Created the software test strategy for Daimler PDM systems.",
-      "Managed HP ALM to Xray migration for Smaragd.",
-      "Built Jira projects from scratch for test activities.",
-      "Automated 1,000+ test cases and mentored 20+ colleagues."
+      "Global test responsibility for PDM system Smaragd with 30,000+ users.",
+      "Led global agile test management strategy with SCRUM for PDM system.",
+      "Led test case migration from HP ALM to JIRA for improved test management.",
+      "Created and maintained test cases using Jira and Xray tools.",
+      "Executed both manual and automated tests with comprehensive test planning.",
+      "GUI test automation scripting in C# with Ranorex framework.",
+      "Assessed software maturity and aligned with requirement management.",
+      "Tracked open defects and verified resolved issues through retesting."
     ]
   },
   {
     company: "Daimler / Mercedes-Benz",
-    role: "Development Engineer",
-    period: "2007 - 2017",
+    role: "R&D Engineer",
+    period: "2007 - 2016",
     location: "Germany & Turkey",
     summary:
-      "Started in vehicle development and integration, building a strong systems mindset before moving deeper into quality leadership.",
+      "Vehicle development and integration engineer focusing on bus interior systems, supporting NCI Euro6 assembly and cross-border coordination.",
     highlights: [
-      "Worked on interior design and vehicle component development.",
-      "Supported next-generation Conecto and Setra integration projects.",
-      "Delivered factory and prototype support for special-order and NCI E6 vehicles."
+      "Built interiors, flaps, floor frames & luggage areas for several bus models.",
+      "Supported NCI Euro6 assembly & custom requests on-site in Germany (Ulm & Mannheim).",
+      "Joined DE-TR NCR & Conecto projects, focusing on integration and coordination.",
+      "Delivered factory and prototype support for special-order vehicles."
     ]
   }
 ];
@@ -214,37 +225,43 @@ export const privateProjects: ProjectItem[] = [
     title: "UBT Testing",
     label: "Personal brand",
     summary:
-      "A personal QA platform for sharing practical testing experience, tools, and quality thinking."
+      "A personal QA platform for sharing practical testing experience, tools, and quality thinking.",
+    image: "logoubtest.png"
   },
   {
     title: "All in 2 Minutes",
     label: "Short-form content",
     summary:
-      "A format for explaining complex topics quickly with clarity, speed, and entertainment value."
+      "A format for explaining complex topics quickly with clarity, speed, and entertainment value.",
+    image: "logoallin2min.png"
   },
   {
     title: "Press Enter to Code",
     label: "Tech content channel",
     summary:
-      "A personal coding and productivity channel focused on development, testing, and learning."
+      "A personal coding and productivity channel focused on development, testing, and learning.",
+    image: "logopressenter.png"
   },
   {
     title: "Software Tester Network",
     label: "Community initiative",
     summary:
-      "A QA community concept built around knowledge sharing, discussion, and career support."
+      "A QA community concept built around knowledge sharing, discussion, and career support.",
+    image: "logostn.png"
   },
   {
     title: "CAL Community",
     label: "Digital community",
     summary:
-      "A social and alumni-style platform focused on sustained connection, engagement, and collective interaction."
+      "A social and alumni-style platform focused on sustained connection, engagement, and collective interaction.",
+    image: "logocalcom.png"
   },
   {
     title: "Picked Scenes",
     label: "Editorial project",
     summary:
-      "Curated storytelling moments from films and series, presented as short-form editorial content."
+      "Curated storytelling moments from films and series, presented as short-form editorial content.",
+    image: "logopicked.png"
   }
 ];
 
