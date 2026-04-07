@@ -151,16 +151,14 @@ export default async function HomePage() {
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Key Achievements</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 space-y-6">
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                {achievementHighlights.map((item) => (
-                  <article key={item.label} className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5">
-                    <p className="font-body text-4xl font-semibold text-ink">{item.value}</p>
-                    <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-accent">{item.label}</p>
-                    <p className="mt-3 text-sm leading-6 text-ink/66">{item.detail}</p>
-                  </article>
-                ))}
-              </div>
+            <div className="mt-8 grid gap-4 md:grid-cols-2">
+              {achievementHighlights.map((item) => (
+                <article key={item.label} className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5">
+                  <p className="font-body text-4xl font-semibold text-ink">{item.value}</p>
+                  <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-accent">{item.label}</p>
+                  <p className="mt-3 text-sm leading-6 text-ink/66">{item.detail}</p>
+                </article>
+              ))}
               <div className="grid gap-3 md:grid-cols-2">
                 {achievementBullets.map((bullet) => (
                   <div
@@ -180,13 +178,19 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Tools Developed by UBT (me)</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
-              <FeaturedGrid
-                items={tools}
-                sourceLabel={fallbackSource}
-                emptyMessage="No tools are available yet."
-              />
+              {tools.map((item) => {
+                const cardContent = (
+                  <div key={item.id} className="group rounded-[1.6rem] border border-line/80 bg-white/78 p-5 shadow-sm transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow"
+                >
+                  {item.badge ? (
+                    <span className="inline-flex rounded-full bg-accentSoft px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                    {item.badge}
+                  </span>
+                  <h3 className="font-body text-2xl font-semibold leading-tight text-ink">{item.title}</h3>
+                  <p className="mt-5 text-sm leading-6 text-ink/70">{item.summary}</p>
+                </article>
+              ))}
             </div>
           </div>
         </div>
@@ -196,8 +200,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Tech Stack</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 grid gap-4 lg:grid-cols-2">
+            <div className="mt-8 space-y-6">
               {stackGroups.map((group) => (
                 <article key={group.title} className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5">
                   <h3 className="font-body text-2xl font-semibold text-ink">{group.title}</h3>
@@ -206,11 +209,9 @@ export default async function HomePage() {
                       <span
                         key={item}
                         className="rounded-full border border-line/70 bg-paper/75 px-3 py-2 text-sm text-ink/74"
-                      >
-                        {item}
-                      </span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </article>
               ))}
             </div>
@@ -222,49 +223,42 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Experience</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 space-y-4">
-              {experienceItems.map((item) => (
+            <div className="mt-8 space-y-6">
+              {experienceItems.map((item) => {
                 <article key={`${item.company}-${item.role}`} className="rounded-[1.7rem] border border-line/80 bg-white/82 p-6">
                   <div className="flex flex-col gap-3 border-b border-line/70 pb-5 md:flex-row md:items-end md:justify-between">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">{item.company}</p>
-                      <h3 className="mt-2 font-body text-3xl font-semibold text-ink">{item.role}</h3>
-                    </div>
-                    <div className="text-sm leading-6 text-ink/62">
+                      <h3 className="font-body text-3xl font-semibold text-ink">{item.role}</h3>
+                  <div className="text-sm leading-6 text-ink/62 md:flex-row md:items-end md:justify-between">
                       <p>{item.period}</p>
-                      <p>{item.location}</p>
+                      <p className="text-sm text-ink/62">{item.location}</p>
                     </div>
-                  </div>
-                  <p className="mt-5 text-sm leading-7 text-ink/70">{item.summary}</p>
-                  <ul className="mt-5 grid gap-3 md:grid-cols-2">
-                    {item.highlights.map((highlight) => (
-                      <li
-                        key={highlight}
-                        className="rounded-[1.2rem] border border-line/70 bg-mist/55 px-4 py-3 text-sm leading-6 text-ink/74"
-                      >
-                        {highlight}
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
+                    <p className="mt-5 text-sm leading-7 text-ink/70">{item.summary}</p>
+                    <ul className="mt-5 grid gap-3 md:grid-cols-2">
+                      {item.highlights.map((highlight) => (
+                        <li key={highlight} className="rounded-[1.2rem] border border-line/70 bg-mist/55 px-4 py-3 text-sm leading-6 text-ink/74"
+                          </li>
+                        ))}
+                      </ul>
+                    </article>
+                  ))}
+                </div>
+              </div>
           </div>
         </div>
       </section>
 
-      <section id="corporate-projects" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="private-projects" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Corporate Projects</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Private Projects</h2>
             <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {corporateProjects.map((project) => (
+              {privateProjects.map((project) => {
                 <article key={project.title} className="rounded-[1.55rem] border border-line/80 bg-white/82 p-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
-                  <h3 className="mt-3 font-body text-2xl font-semibold text-ink">{project.title}</h3>
-                  <p className="mt-4 text-sm leading-6 text-ink/68">{project.summary}</p>
+                  <h3 className="font-body text-2xl font-semibold text-ink">{project.title}</h3>
+                  <p className="mt-4 text-sm leading-6 text-ink/66">{project.summary}</p>
                 </article>
               ))}
             </div>

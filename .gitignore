@@ -13,3 +13,4 @@ dist
 *.tsbuildinfo
 firmascope/
 ubterzioglude/
+.blackboxcli/

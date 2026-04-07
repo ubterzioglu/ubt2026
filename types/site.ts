@@ -65,6 +65,17 @@ export interface ProjectItem {
   title: string;
   label: string;
   summary: string;
+  image?: string;
+}
+
+ export interface ExperienceItem {
+  company: string;
+  role: string;
+  period: string;
+  location: string;
+  summary: string;
+  highlights: string[];
+    logo?: string;
 }
 
 export interface ArticleItem {

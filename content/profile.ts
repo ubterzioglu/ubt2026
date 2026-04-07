@@ -48,12 +48,32 @@ export const achievementHighlights: AchievementItem[] = [
   }
 ];
 
-export const achievementBullets = [
-  "Implemented Ranorex automation for three major Daimler systems with Jenkins-based CI/CD support.",
-  "Reduced execution time by 40% by optimizing 1,000+ automated checks.",
-  "Led HP ALM to Jira / Xray migration initiatives that lowered manual effort and operational cost.",
-  "Onboarded, mentored, and led 30+ QA colleagues across Daimler and Swisslog engagements.",
-  "Created KPI-based reporting that improved visibility and saved hundreds of hours monthly."
+export const achievementBullets: AchievementItem[] = [
+  {
+    value: "3",
+    label: "major systems automated",
+    detail: "Implemented Ranorex automation for three major Daimler systems with Jenkins-based CI/CD support."
+  },
+  {
+    value: "40%",
+    label: "execution time reduced",
+    detail: "Optimized 1,000+ automated checks for faster feedback loops."
+  },
+  {
+    value: "2",
+    label: "tool migrations led",
+    detail: "HP ALM to Jira / Xray migration initiatives that lowered manual effort and operational cost."
+  },
+  {
+    value: "30+",
+    label: "QA colleagues mentored",
+    detail: "Across Daimler and Swisslog engagements with hands-on guidance and knowledge transfer."
+  },
+  {
+    value: "100s",
+    label: "hours saved monthly",
+    detail: "KPI-based reporting that improved visibility and saved hundreds of hours monthly."
+  }
 ];
 
 export const stackGroups: StackGroup[] = [
@@ -142,43 +162,50 @@ export const corporateProjects: ProjectItem[] = [
     title: "Smaragd",
     label: "Daimler / Mercedes-Benz",
     summary:
-      "Global Product Data Management system for thousands of engineers, where I supported strategy, quality processes, and release management."
+      "Global Product Data Management system for thousands of engineers, where I supported strategy, quality processes, and release management.",
+    image: "logosmaragd.png"
   },
   {
     title: "SRM",
     label: "Daimler / Mercedes-Benz",
     summary:
-      "Supply and parts management platform serving tens of thousands of internal users, covering E2E testing, automation, and rollout support."
+      "Supply and parts management platform serving tens of thousands of internal users, covering E2E testing, automation, and rollout support.",
+    image: "logosrm.png"
   },
   {
     title: "DARRS",
     label: "Daimler / Mercedes-Benz",
     summary:
-      "Internal communication and reporting system that required functional, integration, and user acceptance testing."
+      "Internal communication and reporting system that required functional, integration, and user acceptance testing.",
+    image: "logodarrs.png"
   },
   {
     title: "TKL",
     label: "Swisslog",
     summary:
-      "Warehouse automation and robotics integration project demanding high reliability in real-time logistics operations."
+      "Warehouse automation and robotics integration project demanding high reliability in real-time logistics operations.",
+    image: "logotkl.png"
   },
   {
     title: "Kruitbosch",
     label: "Swisslog",
     summary:
-      "Warehouse management system initiative focused on automated retail distribution workflows."
+      "Warehouse management system initiative focused on automated retail distribution workflows.",
+    image: "logokruitbosch.png"
   },
   {
     title: "Albert Heijn",
     label: "Swisslog",
     summary:
-      "High-volume automation project with system validation, go-live support, and data integrity checks under heavy load."
+      "High-volume automation project with system validation, go-live support, and data integrity checks under heavy load.",
+    image: "logoalbert.png"
   },
   {
     title: "EDEKA",
     label: "Swisslog",
     summary:
-      "Large-scale grocery automation program covering pre-go-live validation and operational stability checks."
+      "Large-scale grocery automation program covering pre-go-live validation and operational stability checks.",
+    image: "logoedeka.png"
   }
 ];
 
