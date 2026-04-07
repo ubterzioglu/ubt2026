@@ -25,7 +25,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-line/70 bg-paper/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <nav className="hidden min-w-0 flex-1 md:block">
-          <ul className="flex items-center whitespace-nowrap text-[10px] font-semibold tracking-[0.12em] text-ink/70 lg:text-[11px]">
+          <ul className="flex items-center whitespace-nowrap text-[10px] font-semibold tracking-[0.12em] text-ink lg:text-[11px]">
             {navigationItems.map((item, index) => (
               <li key={item.id} className="flex min-w-0 items-center">
                 {index > 0 && (
@@ -44,12 +44,12 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="inline-flex items-center rounded-full border border-line/80 bg-white/70 px-4 py-2 text-sm font-semibold text-ink md:hidden"
+          className="ml-auto inline-flex items-center rounded-full border border-line/80 bg-white/70 px-4 py-2 text-sm font-semibold text-ink md:hidden"
           onClick={() => setIsOpen((open) => !open)}
           aria-expanded={isOpen}
           aria-controls="site-navigation"
         >
-          {siteMeta.name} / Menu
+          UBT
         </button>
       </div>
 

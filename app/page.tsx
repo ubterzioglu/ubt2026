@@ -107,18 +107,17 @@ export default async function HomePage() {
       <HeroSection />
       <ScrollToTop />
 
-      <section id="tools-developed-by-ubt" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="about-me" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Built by me</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Tools Developed by UBT (me)</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">Small, opinionated tools designed to solve practical decisions, career questions, and everyday moments with a bit of personality.</p>
-            <div className="mt-8">
-              <FeaturedGrid
-                items={tools}
-                sourceLabel={fallbackSource}
-                emptyMessage="No tools are available yet."
-              />
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">About me</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <div className="mt-8 space-y-4">
+              {aboutParagraphs.map((paragraph) => (
+                <p key={paragraph} className="text-base leading-8 text-ink/74">
+                  {paragraph}
+                </p>
+              ))}
             </div>
           </div>
         </div>
@@ -127,9 +126,8 @@ export default async function HomePage() {
       <section id="my-cv" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Recruiter-ready</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">My CV</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">This section keeps the CV in-page while the actual view and download actions stay external.</p>
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">My CV</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8 grid gap-4 md:grid-cols-2">
               {cvLinks.map((link) => (
                 <a
@@ -141,38 +139,8 @@ export default async function HomePage() {
                 >
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">PDF</p>
                   <h3 className="mt-3 font-body text-3xl font-semibold text-ink">{link.label}</h3>
-                  <p className="mt-4 text-sm leading-6 text-ink/68">{link.note}</p>
-                  <span className="mt-6 inline-flex rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white">
-                    View or download
-                  </span>
                 </a>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="about-me" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Positioning</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">About me</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">The core positioning and tone are distilled from the original profile pages and rewritten into a structured, modern summary.</p>
-            <div className="mt-8 grid gap-6 lg:grid-cols-[180px_minmax(0,1fr)]">
-              <div className="flex aspect-square items-center justify-center rounded-[2rem] border border-line/80 bg-ink text-center text-white shadow-glow">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.32em] text-white/60">UBT</p>
-                  <p className="mt-3 font-body text-4xl font-semibold">15+</p>
-                  <p className="mt-1 text-sm text-white/72">years of quality work</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                {aboutParagraphs.map((paragraph) => (
-                  <p key={paragraph} className="text-base leading-8 text-ink/74">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
             </div>
           </div>
         </div>
@@ -181,9 +149,8 @@ export default async function HomePage() {
       <section id="key-achievements" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Highlights</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Key Achievements</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">A condensed view of measurable impact pulled from the recruiter-oriented material.</p>
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Key Achievements</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8 space-y-6">
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 {achievementHighlights.map((item) => (
@@ -209,12 +176,27 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <section id="tools-developed-by-ubt" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Tools Developed by UBT (me)</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <div className="mt-8">
+              <FeaturedGrid
+                items={tools}
+                sourceLabel={fallbackSource}
+                emptyMessage="No tools are available yet."
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="tech-stack" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Toolkit</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Tech Stack</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">Grouped into capability areas instead of a flat checklist so the page reads like a portfolio, not a keyword dump.</p>
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Tech Stack</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8 grid gap-4 lg:grid-cols-2">
               {stackGroups.map((group) => (
                 <article key={group.title} className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5">
@@ -239,9 +221,8 @@ export default async function HomePage() {
       <section id="experience" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Career path</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Experience</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">A timeline-driven reading of the roles that shaped the current QA, automation, and delivery perspective.</p>
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Experience</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8 space-y-4">
               {experienceItems.map((item) => (
                 <article key={`${item.company}-${item.role}`} className="rounded-[1.7rem] border border-line/80 bg-white/82 p-6">
@@ -276,9 +257,8 @@ export default async function HomePage() {
       <section id="corporate-projects" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Enterprise work</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Corporate Projects</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">Representative programs that show scale, operational complexity, and domain depth.</p>
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Corporate Projects</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {corporateProjects.map((project) => (
                 <article key={project.title} className="rounded-[1.55rem] border border-line/80 bg-white/82 p-5">
@@ -313,9 +293,8 @@ export default async function HomePage() {
       <section id="articles" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Published thinking</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Articles</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">Writing around software testing, technology, AI, and the broader human side of work.</p>
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Articles</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <FeaturedGrid
                 items={articles}
@@ -330,9 +309,8 @@ export default async function HomePage() {
       <section id="my-bookmarks" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Curated references</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">My Bookmarks</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">A smaller, cleaner slice of the original bookmark universe, focused on links worth returning to.</p>
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">My Bookmarks</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <FeaturedGrid
                 items={bookmarks}
@@ -347,9 +325,8 @@ export default async function HomePage() {
       <section id="useful-apps" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">Utilities</p>
-            <h2 className="mt-4 font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Useful Apps</h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-ink/68 sm:text-base">Lightweight helpers and utilities that improve workflow, output, or day-to-day convenience.</p>
+            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Useful Apps</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <FeaturedGrid
                 items={apps}
