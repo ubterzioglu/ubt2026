@@ -29,7 +29,7 @@ export function HeroSection() {
             <p className="mt-3 max-w-3xl animate-reveal text-base font-semibold text-ink/76 sm:text-lg lg:text-[1.1rem] text-center">
               {siteMeta.role}
             </p>
-            <p className="mt-4 max-w-3xl animate-reveal text-sm leading-6 text-ink/68 sm:text-base text-center">
+            <p className="mt-4 max-w-3xl animate-reveal text-sm leading-6 text-ink/68 sm:text-base text-center whitespace-pre-wrap">
               {siteMeta.intro}
             </p>
 

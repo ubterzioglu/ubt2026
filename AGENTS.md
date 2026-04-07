@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Personal portfolio site for UBT (Umut Barış Terzioğlu), built with **Next.js 15** (App Router), **React 19**, **TypeScript**, **Tailwind CSS 3**, and **Supabase** as the data backend. Deployed via Docker (standalone output).
+Personal portfolio site for UBT (Umut Barış Terzioglu), built with **Next.js 15** (App Router), **React 19**, **TypeScript**, **Tailwind CSS 3**, and **Supabase** as the data backend. Deployed via Docker (standalone output).
 
 ## Build / Lint / Typecheck Commands
 

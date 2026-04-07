@@ -1,4 +1,10 @@
-- [x] `private` ve `corporate` klasörlerini oluştur
-- [x] `ubterzioglude/img` altındaki gerekli görselleri hedef klasörlere kopyala
-- [x] `content/profile.ts` içinde private project kartlarına image alanlarını ekle
-- [x] Değişiklikleri hızlıca doğrula
+- [x] Update corporate project summaries in `content/profile.ts` for:
+  - Smaragd
+  - SRM
+  - DARRS
+  - TKL
+  - Kruitbosch
+  - Albert Heijn
+  - EDEKA
+- [x] Verify only `corporateProjects` summaries changed
+- [x] Mark tasks complete and provide summary

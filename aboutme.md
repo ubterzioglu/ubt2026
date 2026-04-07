@@ -16,7 +16,7 @@ Strong understanding of the German job market and professional ecosystem.
 Passionate about simplifying complex topics and making knowledge accessible.
 Combines analytical thinking with creativity, bridging technology, community, and content.
 Personal Profile
-I am Umut Barış Terzioğlu — “Barış” in Turkey, “Umut” in Germany. Born in 1985.
+I am Umut Barış Terzioglu — “Barış” in Turkey, “Umut” in Germany. Born in 1985.
 Originally trained as a Mechanical Engineer, currently working in software and quality assurance.
 Living in Dortmund since 2021 with my wife and our two cats.
 Enjoy learning, building, and creating value for others.
