@@ -3,7 +3,7 @@
 export const siteMeta = {
   name: "UBT",
   fullName: "Umut Barış Terzioğlu",
-  role: "Senior Software QA & Test Automation Engineer",
+  role: "Senior Software Quality Assurance Engineer",
   location: "Dortmund, Germany",
   headline:
     "Editorial one-page portfolio for quality leadership, automation strategy, enterprise delivery, and practical engineering thinking.",
