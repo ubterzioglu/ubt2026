@@ -92,10 +92,6 @@ export const stackGroups: StackGroup[] = [
   {
     title: "CI/CD & Tooling",
     items: ["Jenkins", "Docker", "Git", "GitHub", "Jira", "Xray", "HP ALM", "Polarion"]
-  },
-  {
-    title: "Methods",
-    items: ["Agile", "SCRUM", "Risk-based testing", "Release coordination", "UAT", "FAT", "SAT"]
   }
 ];
 

@@ -4,7 +4,8 @@ import { FeaturedGrid } from "@/components/featured-grid";
 import { HeroSection } from "@/components/hero-section";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { SiteHeader } from "@/components/site-header";
-import { ExperienceTimeline } from "@/components/experience-timeline";
+import { ExperienceSection } from "@/components/experience-section";
+import { TechStack } from "@/components/tech-stack";
 import { fallbackApps, fallbackArticles, fallbackBookmarks, fallbackTools } from "@/content/featured";
 import {
   aboutParagraphs,
@@ -183,39 +184,11 @@ export default async function HomePage() {
 
       <section id="tech-stack" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Tech Stack</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 space-y-6">
-              {stackGroups.map((group) => (
-                <article key={group.title} className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5">
-                  <h3 className="font-body text-2xl font-semibold text-ink">{group.title}</h3>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {group.items.map((item) => (
-                      <span
-                        key={item}
-                        className="rounded-full border border-line/70 bg-paper/75 px-3 py-2 text-sm text-ink/74"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
+          <TechStack stackGroups={stackGroups} />
         </div>
       </section>
 
-      <section id="experience" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Experience</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <ExperienceTimeline items={experienceItems} />
-          </div>
-        </div>
-      </section>
+      <ExperienceSection items={experienceItems} />
 
       <section id="corporate-projects" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
