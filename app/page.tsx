@@ -299,7 +299,7 @@ export default async function HomePage() {
 
       <footer className="px-4 pt-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl border-t border-line/70 py-8 text-center text-sm text-ink/55">
-          UBT 2026
+          | ©2026 | UBT | All rights reserved. | Without a test you cannot be the best! |
         </div>
       </footer>
     </main>
