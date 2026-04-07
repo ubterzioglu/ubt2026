@@ -5,37 +5,30 @@ interface TechStackProps {
 }
 
 export function TechStack({ stackGroups }: TechStackProps) {
-  const colors = [
-    "bg-blue-100 text-blue-800", // Automation & Frameworks
-    "bg-red-100 text-red-800",   // Programming Languages  
-    "bg-yellow-100 text-yellow-800", // API & Integration Testing
-    "bg-green-100 text-green-800",  // CI/CD & Tooling
-  ];
-
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-display font-bold text-ink mb-2">Tech Stack</h2>
-        <p className="text-lg text-ink/70">Tools and technologies I work with daily</p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stackGroups.map((group, index) => (
-          <div key={group.title} className="bg-white rounded-2xl p-6 shadow-sm border border-line/20">
-            <div className={`rounded-lg p-3 mb-4 ${colors[index]}`}>
-              <h3 className="font-semibold text-lg">{group.title}</h3>
-            </div>
-            <div className="space-y-2">
-              {group.items.map((item, itemIndex) => (
-                <div
-                  key={itemIndex}
-                  className="inline-block px-3 py-1 bg-mist rounded-lg text-sm text-ink/80"
+    <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+      <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Tech Stack</h2>
+      <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+      <p className="mt-4 text-base text-ink/70">Tools and technologies I work with daily</p>
+
+      <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {stackGroups.map((group) => (
+          <article
+            key={group.title}
+            className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5 transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow"
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{group.title}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {group.items.map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full border border-line/70 bg-mist/60 px-3 py-1.5 text-sm text-ink/74"
                 >
                   {item}
-                </div>
+                </span>
               ))}
             </div>
-          </div>
+          </article>
         ))}
       </div>
     </div>
