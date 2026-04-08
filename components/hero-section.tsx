@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 
 import { heroActions, siteMeta } from "@/content/site";
 
@@ -12,12 +12,12 @@ export function HeroSection() {
       <div className="accent-dot right-[-5.5rem] top-14 h-40 w-40 animate-float bg-sunrise/16 sm:h-48 sm:w-48 lg:right-[-6rem] lg:top-16 lg:h-52 lg:w-52" />
 
       <div className="mx-auto max-w-7xl">
-          <div className="section-panel relative overflow-hidden px-5 py-12 sm:px-8 sm:py-10 lg:min-h-[22rem] lg:px-12 lg:py-8">
+        <div className="section-panel relative overflow-hidden px-5 py-12 sm:px-8 sm:py-10 lg:min-h-[22rem] lg:px-12 lg:py-8">
           <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent sm:inset-x-8" />
           <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-accentSoft/45 via-transparent to-transparent sm:w-36 lg:w-56" />
 
-          <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-            <div className="order-2 flex flex-col items-center text-center lg:order-1 lg:flex-1 lg:items-start lg:text-left">
+          <div className="relative z-10 flex flex-col items-center gap-8 lg:flex-row lg:gap-12">
+            <div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
               <h1 className="max-w-4xl animate-reveal font-body text-[clamp(1.75rem,7vw,3.2rem)] font-semibold leading-[0.96] tracking-[-0.03em] text-ink">
                 {siteMeta.fullName}
               </h1>
@@ -28,30 +28,29 @@ export function HeroSection() {
                 {siteMeta.intro}
               </p>
 
+              <div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start">
+                {heroActions
+                  .filter((action) => action.variant === "primary" || action.label === "Contact Me")
+                  .map((action) => {
+                    const className =
+                      action.variant === "primary"
+                        ? "bg-accent text-white"
+                        : "bg-white text-ink";
+
+                    return (
+                      <a
+                        key={action.label}
+                        href={action.href}
+                        className={`inline-flex min-h-[44px] items-center rounded-full border border-line/70 px-4 py-2.5 text-sm font-semibold shadow-sm transition hover:-translate-y-0.5 active:scale-95 ${className}`}
+                      >
+                        {action.label}
+                      </a>
+                    );
+                  })}
+              </div>
             </div>
 
-            <div className="order-3 flex flex-wrap justify-center gap-3 px-4 mb-8 lg:order-none lg:justify-start lg:px-0 lg:mt-6 lg:mb-0">
-              {heroActions
-                .filter((action) => action.variant === "primary" || action.label === "Contact Me")
-                .map((action) => {
-                  const className =
-                    action.variant === "primary"
-                      ? "bg-accent text-white"
-                      : "bg-white text-ink";
-
-                  return (
-                    <a
-                      key={action.label}
-                      href={action.href}
-                      className={`inline-flex min-h-[44px] items-center rounded-full border border-line/70 px-4 py-2.5 text-sm font-semibold shadow-sm transition hover:-translate-y-0.5 active:scale-95 ${className}`}
-                    >
-                      {action.label}
-                    </a>
-                  );
-                })}
-            </div>
-
-            <div className="order-4 mt-auto mx-auto w-full max-w-[16rem] sm:max-w-[18rem] md:max-w-[20rem] lg:order-2 lg:mx-0 lg:mt-0 lg:w-80 lg:max-w-none xl:w-96">
+            <div className="order-first mx-auto w-full max-w-[16rem] sm:max-w-[18rem] md:max-w-[20rem] lg:order-last lg:mx-0 lg:w-80 lg:max-w-none xl:w-96">
               <Image
                 src="/yeni.png"
                 alt=""

@@ -21,7 +21,7 @@ export const navigationItems = [
   { id: "private-projects", label: "Private Projects" },
   { id: "articles", label: "Articles" },
   { id: "my-bookmarks", label: "My Bookmarks" },
-  { id: "useful-apps", label: "Useful Apps" },
+  { id: "book-appointment", label: "Book Appointment" },
   { id: "contact", label: "Contact" }
 ] as const;
 

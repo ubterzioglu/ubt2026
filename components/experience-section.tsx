@@ -1,7 +1,7 @@
 "use client";
 
 import type { ExperienceItem } from "@/types/site";
-import { Briefcase, MapPin, CalendarDays, ChevronRight, Star, Sparkles } from "lucide-react";
+import { MapPin, CalendarDays, Star, Sparkles } from "lucide-react";
 
 interface ExperienceSectionProps {
   items: ExperienceItem[];
@@ -10,16 +10,15 @@ interface ExperienceSectionProps {
 export function ExperienceSection({ items }: ExperienceSectionProps) {
   const stats = [
     { value: "18+", label: "Years of Experience" },
-    { value: "30K+", label: "Users in Global Systems" },
-    { value: "4", label: "Major Career Chapters" },
-    { value: "DE + TR", label: "International Delivery" },
+    { value: "8", label: "Big Projects" },
+    { value: "3", label: "Languages (DE+EN+TR)" },
   ];
 
   const impactLabels = [
-    ["Large-scale automation", "Cross-functional coordination", "On-site execution"],
-    ["Global ownership", "Architecture design", "Process optimization"],
-    ["30K+ users", "Agile transformation", "Automation coverage"],
-    ["Engineering foundation", "Cross-country collaboration", "Product integration"],
+    ["Large-scale automation", "Cross-functional coordination", "On-site execution", "Test leadership", "Customer support"],
+    ["Global ownership", "Architecture design", "Process optimization", "Tool selection", "CRM migration"],
+    ["30K+ users", "Agile transformation", "Automation coverage", "SCRUM methodology", "GUI automation"],
+    ["Engineering foundation", "Cross-country collaboration", "Product integration", "Factory support", "Prototype development"],
   ];
 
   return (
@@ -40,11 +39,11 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
             enterprise and intralogistics environments.
           </p>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {stats.map((item) => (
               <div
                 key={item.label}
-                className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5 transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow"
+                className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5 text-center transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow"
               >
                 <div className="font-body text-3xl font-semibold text-ink">{item.value}</div>
                 <div className="mt-2 text-sm text-ink/60">{item.label}</div>
@@ -60,11 +59,6 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
               >
                 <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
                   <div>
-                    <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accentSoft px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-                      <Briefcase className="h-3.5 w-3.5" />
-                      Chapter {index + 1}
-                    </div>
-
                     <h3 className="font-body text-2xl font-semibold leading-tight text-ink sm:text-3xl">
                       {item.role}
                     </h3>
@@ -88,20 +82,18 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
 
                 <div className="mb-6 rounded-2xl border border-line/70 bg-mist/55 p-4">
                   <div className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-ink/50">
-                    Key Focus
+                    KEY WORDS
                   </div>
-                  <p className="text-base leading-7 text-ink/75">{item.summary}</p>
-                </div>
-
-                <div className="mb-6 flex flex-wrap gap-2">
-                  {impactLabels[index]?.map((impact) => (
-                    <span
-                      key={impact}
-                      className="rounded-full border border-accent/30 bg-accentSoft px-3 py-1 text-xs font-medium text-accent"
-                    >
-                      {impact}
-                    </span>
-                  ))}
+                  <div className="flex flex-wrap gap-2">
+                    {impactLabels[index]?.map((impact) => (
+                      <span
+                        key={impact}
+                        className="rounded-full border border-accent/30 bg-accentSoft px-3 py-1 text-xs font-medium text-accent"
+                      >
+                        {impact}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="mb-6">
@@ -110,24 +102,16 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
                     Responsibilities & Achievements
                   </div>
 
-                  <div className="grid gap-3 md:grid-cols-2">
+                  <ul className="space-y-3">
                     {item.highlights.map((highlight) => (
-                      <div
-                        key={highlight}
-                        className="flex items-start gap-3 rounded-2xl border border-line/70 bg-mist/55 p-4 transition hover:border-line hover:bg-mist/70"
-                      >
-                        <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                      <li key={highlight} className="flex items-start gap-3">
+                        <span className="mt-2 h-2 w-2 rounded-full bg-accent flex-shrink-0" />
                         <p className="text-sm leading-6 text-ink/75">{highlight}</p>
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
 
-                {index === 0 && (
-                  <div className="absolute -right-2 -top-2 rounded-full bg-accent px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
-                    Current
-                  </div>
-                )}
               </article>
             ))}
           </div>

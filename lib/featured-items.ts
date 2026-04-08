@@ -10,6 +10,7 @@ interface SupabaseFeaturedRow {
   category: FeaturedCategory;
   title: string;
   summary: string;
+  image_url: string | null;
   href: string | null;
   badge: string | null;
   sort_order: number;
@@ -37,6 +38,7 @@ const toFeaturedItem = (row: SupabaseFeaturedRow): FeaturedItem => ({
   category: row.category,
   title: row.title,
   summary: row.summary,
+  imageUrl: row.image_url?.trim() || null,
   href: row.href,
   badge: row.badge,
   sortOrder: row.sort_order,
@@ -70,7 +72,7 @@ export async function getFeaturedCollections(
     const { data, error } = await supabase
       .from("featured_items")
       .select(
-        "id, slug, category, title, summary, href, badge, sort_order, is_published, created_at"
+        "id, slug, category, title, summary, image_url, href, badge, sort_order, is_published, created_at"
       )
       .in("category", categories)
       .eq("is_published", true)
@@ -100,4 +102,3 @@ export async function getFeaturedCollections(
     };
   }
 }
-

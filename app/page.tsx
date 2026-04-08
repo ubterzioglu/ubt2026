@@ -1,13 +1,14 @@
-﻿import type { ReactNode } from "react";
+import type { ReactNode } from "react";
 import Image from "next/image";
 
+import { AchievementCard } from "@/components/achievement-card";
 import { FeaturedGrid } from "@/components/featured-grid";
 import { HeroSection } from "@/components/hero-section";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { SiteHeader } from "@/components/site-header";
 import { ExperienceSection } from "@/components/experience-section";
 import { TechStack } from "@/components/tech-stack";
-import { fallbackApps, fallbackArticles, fallbackBookmarks, fallbackTools } from "@/content/featured";
+import { fallbackArticles, fallbackBookmarks, fallbackTools } from "@/content/featured";
 import {
   aboutParagraphs,
   keyAchievements,
@@ -60,6 +61,7 @@ function mapFallbackItems(items: Array<{
   category: FeaturedItem["category"];
   title: string;
   summary: string;
+  imageUrl?: string | null;
   href: string | null;
   badge?: string;
 }>): FeaturedItem[] {
@@ -69,6 +71,7 @@ function mapFallbackItems(items: Array<{
     category: item.category,
     title: item.title,
     summary: item.summary,
+    imageUrl: item.imageUrl ?? null,
     href: item.href,
     badge: item.badge ?? null,
     sortOrder: index,
@@ -82,7 +85,6 @@ export default async function HomePage() {
     "tools",
     "articles",
     "bookmarks",
-    "apps",
     "private-projects"
   ]);
 
@@ -95,9 +97,6 @@ export default async function HomePage() {
   const bookmarks = featuredCollections.itemsByCategory.bookmarks.length
     ? featuredCollections.itemsByCategory.bookmarks
     : mapFallbackItems(fallbackBookmarks);
-  const apps = featuredCollections.itemsByCategory.apps.length
-    ? featuredCollections.itemsByCategory.apps
-    : mapFallbackItems(fallbackApps);
 
   const fallbackSource =
     featuredCollections.source === "remote" ? undefined : featuredCollections.source;
@@ -156,15 +155,10 @@ export default async function HomePage() {
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Key Achievements</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8">
-              <ul className="space-y-4">
-                {keyAchievements.map((achievement, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="mr-3 mt-2.5 flex h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent"></span>
-                    <span className="text-sm leading-7 text-ink/74 sm:text-base sm:leading-8">{achievement}</span>
-                  </li>
-                ))}
-              </ul>
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {keyAchievements.map((achievement) => (
+                <AchievementCard key={achievement.text} achievement={achievement} />
+              ))}
             </div>
           </div>
         </div>
@@ -232,12 +226,25 @@ export default async function HomePage() {
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Private Projects</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-8 flex flex-col gap-4">
               {privateProjects.map((project) => (
-                <article key={project.title} className="rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:rounded-[1.55rem]">
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
-                  <h3 className="mt-3 font-body text-[clamp(1.35rem,4.8vw,1.5rem)] font-semibold text-ink">{project.title}</h3>
-                  <p className="mt-4 text-sm leading-6 text-ink/68">{project.summary}</p>
+                <article key={project.title} className="flex flex-col gap-4 rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:flex-row sm:items-center sm:justify-between sm:rounded-[1.55rem] sm:p-6">
+                  <div className="flex-1 sm:pr-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
+                    <h3 className="mt-2 font-body text-[clamp(1.35rem,4.8vw,1.5rem)] font-semibold text-ink">{project.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-ink/68">{project.summary}</p>
+                  </div>
+                  {project.image && (
+                    <div className="flex-shrink-0">
+                      <Image
+                        src={`/private/${project.image}`}
+                        alt={project.title}
+                        width={80}
+                        height={80}
+                        className="h-16 w-16 rounded-full border border-line/50 object-cover shadow-sm sm:h-20 sm:w-20"
+                      />
+                    </div>
+                  )}
                 </article>
               ))}
             </div>
@@ -277,17 +284,27 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="useful-apps" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
+      <section id="book-appointment" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Useful Apps</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8">
-              <FeaturedGrid
-                items={apps}
-                sourceLabel={fallbackSource}
-                emptyMessage="No useful apps are available yet."
-              />
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(280px,0.9fr)] lg:items-center">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent">Book Appointment</p>
+                <h2 className="mt-4 font-body text-[clamp(1.75rem,6vw,2.4rem)] font-semibold tracking-[-0.02em] text-ink">
+                  Reserve time for a focused conversation.
+                </h2>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/72 sm:text-base sm:leading-8">
+                  If you want to discuss QA leadership, test strategy, automation, or a project idea,
+                  you can now request one of the published appointment slots directly from the site.
+                </p>
+              </div>
+              <div className="rounded-[1.7rem] border border-line/80 bg-gradient-to-br from-white via-paper to-mist/80 p-5 shadow-sm sm:p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sunrise">Now live</p>
+                <p className="mt-3 text-sm leading-7 text-ink/72">
+                  Review available slots, send your request, and I will confirm it from the admin panel.
+                </p>
+                <a href="/book-appointment" className="mt-5 inline-flex min-h-[46px] items-center justify-center rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition hover:-translate-y-0.5 hover:bg-accent/95">Open booking page</a>
+              </div>
             </div>
           </div>
         </div>
@@ -324,4 +341,7 @@ export default async function HomePage() {
     </main>
   );
 }
+
+
+
 

@@ -28,6 +28,7 @@ export interface FeaturedItem {
   category: FeaturedCategory;
   title: string;
   summary: string;
+  imageUrl?: string | null;
   href: string | null;
   badge: string | null;
   sortOrder: number;
@@ -42,14 +43,18 @@ export interface CtaLink {
 }
 
 export interface AchievementItem {
-  value: string;
-  label: string;
-  detail: string;
+  text: string;
+  image?: string;
+}
+
+export interface StackItem {
+  name: string;
+  logo?: string;
 }
 
 export interface StackGroup {
   title: string;
-  items: string[];
+  items: StackItem[];
 }
 
 export interface ExperienceItem {
@@ -82,6 +87,7 @@ export interface ArticleItem {
   category: "articles";
   title: string;
   summary: string;
+  imageUrl?: string | null;
   href: string | null;
   badge?: string;
 }
@@ -90,6 +96,7 @@ export interface BookmarkItem {
   category: "bookmarks";
   title: string;
   summary: string;
+  imageUrl?: string | null;
   href: string | null;
   badge?: string;
 }
@@ -98,6 +105,7 @@ export interface AppToolItem {
   category: "apps" | "tools";
   title: string;
   summary: string;
+  imageUrl?: string | null;
   href: string | null;
   badge?: string;
 }
@@ -107,3 +115,5 @@ export interface ContactItem {
   value: string;
   href: string;
 }
+
+

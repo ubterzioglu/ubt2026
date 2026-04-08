@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import type { StackGroup } from "@/types/site";
 
 interface TechStackProps {
@@ -23,10 +25,20 @@ export function TechStack({ stackGroups }: TechStackProps) {
             <div className="mt-3 flex flex-wrap gap-2">
               {group.items.map((item) => (
                 <span
-                  key={item}
-                  className="rounded-full bg-accentSoft px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-accent"
+                  key={`${group.title}-${item.name}`}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-accentSoft px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-accent"
                 >
-                  {item}
+                  {item.logo ? (
+                    <Image
+                      src={`/tech-logos/${item.logo}`}
+                      alt=""
+                      aria-hidden="true"
+                      width={16}
+                      height={16}
+                      className="h-4 w-4 shrink-0"
+                    />
+                  ) : null}
+                  <span>{item.name}</span>
                 </span>
               ))}
             </div>

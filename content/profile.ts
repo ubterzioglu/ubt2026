@@ -34,38 +34,92 @@ export const aboutParagraphs = [
   }
 ];
 
-export const keyAchievements: string[] = [
-  "Led global testing initiatives and built scalable automation frameworks across complex enterprise systems.",
-  "Global test responsibility for Daimler's PDM system Smaragd, serving 30,000+ users.",
-  "Test Lead for large-scale warehouse automation and robotics integration projects at Swisslog.",
-  "Built and maintained enterprise-scale test assets (5,000+ test cases) across HP ALM, Jira, and Polarion.",
-  "Raised Daimler test coverage from 50% to 90% through systematic test design and execution.",
-  "Automated and optimized 1,000+ checks using Ranorex, C#, Selenium, and CI/CD pipelines.",
-  "Coordinated and presented 50+ FAT, SAT, UAT, and release sessions in factory and site environments.",
-  "Implemented Ranorex GUI test automation for three major Daimler systems with Jenkins integration.",
-  "Led CRM system migration and built new test architecture for Daimler's DARRS remote support system.",
-  "Successfully led tool migration initiatives from HP ALM to Jira/Xray, lowering manual effort and operational costs.",
-  "Global owner of Daimler's Part Management System SRM infrastructure, designing process and test automation.",
-  "Mentored 30+ QA colleagues across Daimler and Swisslog, providing hands-on guidance and knowledge transfer.",
-  "Optimized test execution time by 40% and saved hundreds of hours monthly through KPI-based reporting."
+export const keyAchievements: AchievementItem[] = [
+  {
+    text: "Led global testing initiatives and built scalable automation frameworks across complex enterprise systems."
+  },
+  {
+    text: "Global test responsibility for Daimler's PDM system Smaragd, serving 30,000+ users."
+  },
+  {
+    text: "Test Lead for large-scale warehouse automation and robotics integration projects at Swisslog."
+  },
+  {
+    text: "Built and maintained enterprise-scale test assets (5,000+ test cases) across HP ALM, Jira, and Polarion."
+  },
+  {
+    text: "Raised Daimler test coverage from 50% to 90% through systematic test design and execution."
+  },
+  {
+    text: "Automated and optimized 1,000+ checks using Ranorex, C#, Selenium, and CI/CD pipelines."
+  },
+  {
+    text: "Coordinated and presented 50+ FAT, SAT, UAT, and release sessions in factory and site environments."
+  },
+  {
+    text: "Implemented Ranorex GUI test automation for three major Daimler systems with Jenkins integration."
+  },
+  {
+    text: "Led CRM system migration and built new test architecture for Daimler's DARRS remote support system."
+  },
+  {
+    text: "Successfully led tool migration initiatives from HP ALM to Jira/Xray, lowering manual effort and operational costs."
+  },
+  {
+    text: "Global owner of Daimler's Part Management System SRM infrastructure, designing process and test automation."
+  },
+  {
+    text: "Mentored 30+ QA colleagues across Daimler and Swisslog, providing hands-on guidance and knowledge transfer."
+  },
+  {
+    text: "Optimized test execution time by 40% and saved hundreds of hours monthly through KPI-based reporting."
+  }
 ];
 
 export const stackGroups: StackGroup[] = [
   {
     title: "Automation & Frameworks",
-    items: ["Selenium", "Ranorex", "Maven", "TestNG", "JUnit", "Cucumber", "Gherkin"]
+    items: [
+      { name: "Selenium", logo: "selenium.svg" },
+      { name: "Ranorex" },
+      { name: "Maven", logo: "maven.svg" },
+      { name: "TestNG" },
+      { name: "JUnit", logo: "junit.svg" },
+      { name: "Cucumber", logo: "cucumber.svg" },
+      { name: "Gherkin", logo: "cucumber.svg" }
+    ]
   },
   {
     title: "Programming Languages",
-    items: ["Java", "C#", "Python", "TypeScript"]
+    items: [
+      { name: "Java", logo: "java.svg" },
+      { name: "C#", logo: "csharp.svg" },
+      { name: "Python", logo: "python.svg" },
+      { name: "TypeScript", logo: "typescript.svg" }
+    ]
   },
   {
     title: "API & Integration Testing",
-    items: ["REST", "SOAP", "Postman", "SoapUI", "API mocking"]
+    items: [
+      { name: "REST", logo: "rest.svg" },
+      { name: "SOAP" },
+      { name: "Postman", logo: "postman.svg" },
+      { name: "SoapUI", logo: "soapui.svg" },
+      { name: "API mocking" }
+    ]
   },
   {
     title: "CI/CD & Tooling",
-    items: ["Jenkins", "Docker", "Git", "GitHub", "Jira", "Xray", "HP ALM", "Polarion"]
+    items: [
+      { name: "Jenkins", logo: "jenkins.svg" },
+      { name: "Docker", logo: "docker.svg" },
+      { name: "Git", logo: "git.svg" },
+      { name: "GitHub", logo: "github.svg" },
+      { name: "Jira", logo: "jira.svg" },
+      { name: "Xray", logo: "xray.svg" },
+      { name: "HP ALM", logo: "hpalm.svg" },
+      { name: "Polarion", logo: "polarion.svg" }
+    ]
   }
 ];
 
@@ -255,3 +309,5 @@ export const contactItems: ContactItem[] = [
     href: "https://maps.google.com/?q=Dortmund,Germany"
   }
 ];
+
+
