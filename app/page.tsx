@@ -109,16 +109,16 @@ export default async function HomePage() {
       <HeroSection />
       <ScrollToTop />
 
-      <section id="about-me" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="about-me" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">About me</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">About me</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8 space-y-8">
               {aboutParagraphs.map((section) => (
                 <div key={section.title}>
-                  <h3 className="font-body text-xl font-semibold text-ink mb-3">{section.title}</h3>
-                  <p className="text-base leading-8 text-ink/74">
+                  <h3 className="mb-3 font-body text-xl font-semibold text-ink">{section.title}</h3>
+                  <p className="text-sm leading-7 text-ink/74 sm:text-base sm:leading-8">
                     {section.content}
                   </p>
                 </div>
@@ -128,22 +128,22 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="my-cv" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="my-cv" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">My CV</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">My CV</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {cvLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-[1.6rem] border border-line/80 bg-gradient-to-br from-white to-mist/80 p-6 shadow-sm transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow"
+                  className="rounded-[1.35rem] border border-line/80 bg-gradient-to-br from-white to-mist/80 p-5 shadow-sm transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow sm:rounded-[1.6rem] sm:p-6"
                 >
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">PDF</p>
-                  <h3 className="mt-3 font-body text-3xl font-semibold text-ink">{link.label}</h3>
+                  <h3 className="mt-3 font-body text-[clamp(1.4rem,5vw,1.875rem)] font-semibold text-ink">{link.label}</h3>
                 </a>
               ))}
             </div>
@@ -151,17 +151,17 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="key-achievements" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="key-achievements" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Key Achievements</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Key Achievements</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <ul className="space-y-4">
                 {keyAchievements.map((achievement, index) => (
                   <li key={index} className="flex items-start">
                     <span className="mr-3 mt-2.5 flex h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent"></span>
-                    <span className="text-base leading-8 text-ink/74">{achievement}</span>
+                    <span className="text-sm leading-7 text-ink/74 sm:text-base sm:leading-8">{achievement}</span>
                   </li>
                 ))}
               </ul>
@@ -170,10 +170,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="tools-developed-by-ubt" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="tools-developed-by-ubt" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Tools Developed by UBT (me)</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Tools Developed by UBT (me)</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <FeaturedGrid
@@ -186,7 +186,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="tech-stack" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="tech-stack" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <TechStack stackGroups={stackGroups} />
@@ -196,17 +196,17 @@ export default async function HomePage() {
 
       <ExperienceSection items={experienceItems} />
 
-      <section id="corporate-projects" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="corporate-projects" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Corporate Projects</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Corporate Projects</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8 flex flex-col gap-4">
               {corporateProjects.map((project) => (
-                <article key={project.title} className="flex items-center justify-between rounded-[1.55rem] border border-line/80 bg-white/82 p-5 sm:p-6">
-                  <div className="flex-1 pr-4">
+                <article key={project.title} className="flex flex-col gap-4 rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:flex-row sm:items-center sm:justify-between sm:rounded-[1.55rem] sm:p-6">
+                  <div className="flex-1 sm:pr-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
-                    <h3 className="mt-2 font-body text-2xl font-semibold text-ink">{project.title}</h3>
+                    <h3 className="mt-2 font-body text-[clamp(1.35rem,4.8vw,1.5rem)] font-semibold text-ink">{project.title}</h3>
                     <p className="mt-3 text-sm leading-6 text-ink/68">{project.summary}</p>
                   </div>
                   {project.image && (
@@ -227,16 +227,16 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="private-projects" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="private-projects" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Private Projects</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Private Projects</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {privateProjects.map((project) => (
-                <article key={project.title} className="rounded-[1.55rem] border border-line/80 bg-white/82 p-5">
+                <article key={project.title} className="rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:rounded-[1.55rem]">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
-                  <h3 className="mt-3 font-body text-2xl font-semibold text-ink">{project.title}</h3>
+                  <h3 className="mt-3 font-body text-[clamp(1.35rem,4.8vw,1.5rem)] font-semibold text-ink">{project.title}</h3>
                   <p className="mt-4 text-sm leading-6 text-ink/68">{project.summary}</p>
                 </article>
               ))}
@@ -245,10 +245,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="articles" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="articles" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Articles</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Articles</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <FeaturedGrid
@@ -261,10 +261,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="my-bookmarks" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="my-bookmarks" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">My Bookmarks</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">My Bookmarks</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <FeaturedGrid
@@ -277,10 +277,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="useful-apps" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="useful-apps" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Useful Apps</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Useful Apps</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <FeaturedGrid
@@ -293,7 +293,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="contact" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+      <section id="contact" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel flex min-h-[6rem] items-center justify-center overflow-hidden px-6 py-6 sm:px-8">
             <div className="flex flex-wrap items-center justify-center gap-5">

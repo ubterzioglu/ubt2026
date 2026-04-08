@@ -33,18 +33,22 @@ export function SiteHeader() {
   }, [isOpen]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/70 bg-paper/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <nav className="hidden min-w-0 flex-1 md:block">
-          <ul className="flex items-center whitespace-nowrap text-[10px] font-semibold tracking-[0.12em] text-ink lg:text-[11px]">
-            {navigationItems.map((item, index) => (
-              <li key={item.id} className="flex min-w-0 items-center">
-                {index > 0 && (
-                  <span aria-hidden="true" className="mx-1.5 text-line lg:mx-2">|</span>
-                )}
+    <header className="sticky top-0 z-50 border-b border-line/70 bg-paper/85 supports-[backdrop-filter]:bg-paper/75 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+        <a
+          href="#top"
+          className="inline-flex min-h-[44px] items-center rounded-full border border-line/70 bg-white/70 px-3 text-sm font-semibold text-ink transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35 md:hidden"
+        >
+          {siteMeta.name}
+        </a>
+
+        <nav className="hidden min-w-0 flex-1 md:block" aria-label="Primary">
+          <ul className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold tracking-[0.08em] text-ink lg:text-sm">
+            {navigationItems.map((item) => (
+              <li key={item.id} className="min-w-0">
                 <a
                   href={`#${item.id}`}
-                  className="inline-flex items-center rounded-full px-1 py-1 transition hover:text-ink"
+                  className="inline-flex min-h-[40px] items-center rounded-full px-2.5 py-1.5 transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35"
                 >
                   {desktopLabelMap[item.id]}
                 </a>
@@ -55,22 +59,31 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="ml-auto inline-flex items-center min-h-[44px] rounded-full border border-line/80 bg-white/70 px-4 py-2 text-sm font-semibold text-ink md:hidden active:scale-95 transition-transform"
+          className={`ml-auto inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-semibold transition-transform active:scale-95 md:hidden ${
+            isOpen
+              ? "border-red-400 bg-red-500 text-white hover:bg-red-600"
+              : "border-green-400 bg-green-500 text-white hover:bg-green-600"
+          }`}
           onClick={() => setIsOpen((open) => !open)}
           aria-expanded={isOpen}
           aria-controls="site-navigation"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
         >
-          UBT
+          {isOpen ? "Close" : "Menu"}
         </button>
       </div>
 
       {isOpen ? (
-        <nav id="site-navigation" className="border-t border-line/70 bg-white/85 max-h-[calc(100vh-4rem)] overflow-y-auto px-4 py-3 md:hidden">
-          <ul className="grid gap-2">
+        <nav
+          id="site-navigation"
+          className="border-t border-line/70 bg-white/90 px-4 py-3 md:hidden"
+          aria-label="Mobile"
+        >
+          <ul className="grid max-h-[calc(100dvh-4rem)] gap-2 overflow-y-auto pb-2">
             <li>
               <a
                 href="#top"
-                className="block rounded-2xl border border-line/70 bg-paper/70 px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-accent"
+                className="block min-h-[44px] rounded-2xl border border-line/70 bg-paper/70 px-4 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-accent"
                 onClick={() => setIsOpen(false)}
               >
                 {siteMeta.name}
@@ -80,7 +93,7 @@ export function SiteHeader() {
               <li key={item.id}>
                 <a
                   href={`#${item.id}`}
-                  className="block rounded-2xl border border-line/70 bg-paper/70 px-4 py-3 text-sm font-medium text-ink/80"
+                  className="block min-h-[44px] rounded-2xl border border-line/70 bg-paper/70 px-4 py-3 text-sm font-medium text-ink/85"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.label}

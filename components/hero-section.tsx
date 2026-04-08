@@ -4,39 +4,33 @@ import { heroActions, siteMeta } from "@/content/site";
 
 export function HeroSection() {
   return (
-    <section id="top" className="relative overflow-hidden px-4 pb-20 pt-8 sm:px-6 sm:pb-24 lg:px-8 lg:pb-8 lg:pt-10">
-      <div className="accent-dot left-[-8rem] top-10 h-56 w-56 animate-drift bg-accent/16" />
-      <div className="accent-dot right-[-6rem] top-16 h-52 w-52 animate-float bg-sunrise/16" />
+    <section
+      id="top"
+      className="relative overflow-hidden px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-8 lg:px-8 lg:pb-8 lg:pt-10"
+    >
+      <div className="accent-dot left-[-7rem] top-8 h-44 w-44 animate-drift bg-accent/16 sm:h-52 sm:w-52 lg:left-[-8rem] lg:top-10 lg:h-56 lg:w-56" />
+      <div className="accent-dot right-[-5.5rem] top-14 h-40 w-40 animate-float bg-sunrise/16 sm:h-48 sm:w-48 lg:right-[-6rem] lg:top-16 lg:h-52 lg:w-52" />
 
-<div className="mx-auto max-w-7xl">
-        <div className="section-panel relative overflow-hidden px-6 py-6 sm:px-8 lg:min-h-[22rem] lg:px-12 lg:py-8">
-          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
-          <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-accentSoft/55 via-transparent to-transparent sm:w-48 lg:w-56" />
-            <div className="lg:order-1 lg:w-80 xl:w-96">
-              <Image
-                src="/yeni.png"
-                alt=""
-                aria-hidden="true"
-                width={607}
-                height={745}
-                className="pointer-events-none absolute bottom-0 left-2 z-0 h-auto w-32 select-none drop-shadow-2xl sm:left-4 sm:w-40 md:w-48 lg:left-6 lg:w-88 xl:w-96 lg:static lg:h-auto lg:w-full"
-                priority
-              />
-            </div>
+      <div className="mx-auto max-w-7xl">
+          <div className="section-panel relative overflow-hidden px-5 py-12 sm:px-8 sm:py-10 lg:min-h-[22rem] lg:px-12 lg:py-8">
+          <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent sm:inset-x-8" />
+          <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-accentSoft/45 via-transparent to-transparent sm:w-36 lg:w-56" />
 
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-            <div className="flex flex-col items-center lg:order-2 lg:flex-1 lg:items-start lg:text-left">
-              <h1 className="mt-4 max-w-4xl animate-reveal font-body text-[clamp(2rem,5vw,4rem)] font-semibold leading-[0.96] tracking-[-0.03em] text-ink sm:text-[clamp(2.5rem,6vw,4.5rem)] lg:text-6xl text-center lg:text-left">
+          <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+            <div className="order-2 flex flex-col items-center text-center lg:order-1 lg:flex-1 lg:items-start lg:text-left">
+              <h1 className="max-w-4xl animate-reveal font-body text-[clamp(1.75rem,7vw,3.2rem)] font-semibold leading-[0.96] tracking-[-0.03em] text-ink">
                 {siteMeta.fullName}
               </h1>
-            <p className="mt-3 max-w-3xl animate-reveal text-base font-semibold text-ink/76 sm:text-lg lg:text-[1.1rem] text-center lg:text-left">
-              {siteMeta.role}
-            </p>
-            <p className="mt-4 max-w-3xl animate-reveal text-sm leading-6 text-ink/68 sm:text-base text-center lg:text-left whitespace-pre-wrap">
-              {siteMeta.intro}
-            </p>
+              <p className="mt-3 max-w-3xl animate-reveal text-[clamp(0.875rem,2.8vw,1rem)] font-semibold text-ink/76">
+                {siteMeta.role}
+              </p>
+              <p className="mt-4 max-w-3xl animate-reveal whitespace-pre-wrap text-sm leading-6 text-ink/68 sm:text-base">
+                {siteMeta.intro}
+              </p>
 
-            <div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start">
+            </div>
+
+            <div className="order-3 flex flex-wrap justify-center gap-3 px-4 mb-8 lg:order-none lg:justify-start lg:px-0 lg:mt-6 lg:mb-0">
               {heroActions
                 .filter((action) => action.variant === "primary" || action.label === "Contact Me")
                 .map((action) => {
@@ -56,7 +50,19 @@ export function HeroSection() {
                   );
                 })}
             </div>
+
+            <div className="order-4 mt-auto mx-auto w-full max-w-[16rem] sm:max-w-[18rem] md:max-w-[20rem] lg:order-2 lg:mx-0 lg:mt-0 lg:w-80 lg:max-w-none xl:w-96">
+              <Image
+                src="/yeni.png"
+                alt=""
+                aria-hidden="true"
+                width={607}
+                height={745}
+                className="pointer-events-none relative z-10 h-auto w-full select-none drop-shadow-2xl"
+                priority
+              />
             </div>
+          </div>
         </div>
       </div>
     </section>

@@ -24,11 +24,14 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: clip;
   color: rgb(var(--ink));
   font-family: var(--font-body), "Trebuchet MS", sans-serif;
   background:
@@ -47,7 +50,7 @@ a {
 
 @layer components {
   .page-shell {
-    @apply relative isolate overflow-hidden;
+    @apply relative isolate overflow-x-clip overflow-y-visible;
   }
 
   .page-shell::before {
@@ -67,5 +70,15 @@ a {
 
   .accent-dot {
     @apply absolute rounded-full blur-2xl;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

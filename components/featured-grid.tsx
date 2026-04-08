@@ -26,27 +26,29 @@ export function FeaturedGrid({ items, sourceLabel, emptyMessage }: FeaturedGridP
           {emptyMessage}
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {items.map((item) => {
             const cardContent = (
               <>
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-3">
+                <div className="flex items-start justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 space-y-2.5 sm:space-y-3">
                     {item.badge ? (
-                      <span className="inline-flex rounded-full bg-accentSoft px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                      <span className="inline-flex rounded-full bg-accentSoft px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent sm:text-xs sm:tracking-[0.18em]">
                         {item.badge}
                       </span>
                     ) : null}
-                    <h3 className="font-body text-2xl font-semibold leading-tight text-ink">{item.title}</h3>
+                    <h3 className="font-body text-[clamp(1.25rem,5vw,1.5rem)] font-semibold leading-tight text-ink">
+                      {item.title}
+                    </h3>
                   </div>
-                  <span className="text-xl text-ink/35">↗</span>
+                  <span className="shrink-0 text-lg text-ink/35 sm:text-xl">↗</span>
                 </div>
-                <p className="mt-5 text-sm leading-6 text-ink/70">{item.summary}</p>
+                <p className="mt-4 text-sm leading-6 text-ink/70">{item.summary}</p>
               </>
             );
 
             const classes =
-              "group rounded-[1.6rem] border border-line/80 bg-white/78 p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow";
+              "group rounded-[1.35rem] sm:rounded-[1.6rem] border border-line/80 bg-white/78 p-4 sm:p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow";
 
             return item.href ? (
               <a
@@ -54,7 +56,7 @@ export function FeaturedGrid({ items, sourceLabel, emptyMessage }: FeaturedGridP
                 href={item.href}
                 target="_blank"
                 rel="noreferrer"
-                className={classes}
+                className={`${classes} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35`}
               >
                 {cardContent}
               </a>
