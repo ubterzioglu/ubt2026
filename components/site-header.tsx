@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { navigationItems, siteMeta } from "@/content/site";
 
@@ -20,6 +20,17 @@ const desktopLabelMap: Record<(typeof navigationItems)[number]["id"], string> = 
 
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-paper/80 backdrop-blur-xl">
@@ -44,7 +55,7 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="ml-auto inline-flex items-center rounded-full border border-line/80 bg-white/70 px-4 py-2 text-sm font-semibold text-ink md:hidden"
+          className="ml-auto inline-flex items-center min-h-[44px] rounded-full border border-line/80 bg-white/70 px-4 py-2 text-sm font-semibold text-ink md:hidden active:scale-95 transition-transform"
           onClick={() => setIsOpen((open) => !open)}
           aria-expanded={isOpen}
           aria-controls="site-navigation"
@@ -54,7 +65,7 @@ export function SiteHeader() {
       </div>
 
       {isOpen ? (
-        <nav id="site-navigation" className="border-t border-line/70 bg-white/85 px-4 py-3 md:hidden">
+        <nav id="site-navigation" className="border-t border-line/70 bg-white/85 max-h-[calc(100vh-4rem)] overflow-y-auto px-4 py-3 md:hidden">
           <ul className="grid gap-2">
             <li>
               <a

@@ -6,7 +6,7 @@ interface TechStackProps {
 
 export function TechStack({ stackGroups }: TechStackProps) {
   return (
-    <section id="tech-stack" className="scroll-mt-28 px-4 py-5 sm:px-6 lg:px-8">
+    <>
       <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
         Tech Stack
       </h2>
@@ -15,7 +15,7 @@ export function TechStack({ stackGroups }: TechStackProps) {
         {stackGroups.map((group) => (
           <article
             key={group.title}
-            className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5 transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow"
+            className="rounded-[1.5rem] border border-line/80 bg-white/82 p-5 transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow active:scale-[0.98]"
           >
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               {group.title}
@@ -33,6 +33,6 @@ export function TechStack({ stackGroups }: TechStackProps) {
           </article>
         ))}
       </div>
-    </section>
+    </>
   );
 }

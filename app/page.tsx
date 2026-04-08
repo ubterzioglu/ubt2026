@@ -297,20 +297,20 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl">
           <div className="section-panel flex min-h-[6rem] items-center justify-center overflow-hidden px-6 py-6 sm:px-8">
             <div className="flex flex-wrap items-center justify-center gap-5">
-              {communicationItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  target={item.href.startsWith("mailto:") || item.href.startsWith("tel:") ? undefined : "_blank"}
-                  rel={item.href.startsWith("mailto:") || item.href.startsWith("tel:") ? undefined : "noreferrer"}
-                  aria-label={item.label}
-                  title={item.label}
-                  className="flex h-20 w-20 items-center justify-center rounded-full border border-line/80 bg-gradient-to-br from-white via-paper to-mist/75 text-ink shadow-[0_20px_40px_rgba(20,31,39,0.12)] transition hover:-translate-y-1 hover:border-accent/45 hover:bg-white hover:text-accent hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35"
-                >
-                  <span className="sr-only">{item.label}</span>
-                  {contactIconMap[item.label as CommunicationLabel]}
-                </a>
-              ))}
+                {communicationItems.map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target={item.href.startsWith("mailto:") || item.href.startsWith("tel:") ? undefined : "_blank"}
+                    rel={item.href.startsWith("mailto:") || item.href.startsWith("tel:") ? undefined : "noreferrer"}
+                    aria-label={item.label}
+                    title={item.label}
+                    className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full border border-line/80 bg-gradient-to-br from-white via-paper to-mist/75 text-ink shadow-[0_20px_40px_rgba(20,31,39,0.12)] transition hover:-translate-y-1 hover:border-accent/45 hover:bg-white hover:text-accent hover:shadow-glow active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35"
+                  >
+                    <span className="sr-only">{item.label}</span>
+                    {contactIconMap[item.label as CommunicationLabel]}
+                  </a>
+                ))}
             </div>
           </div>
         </div>

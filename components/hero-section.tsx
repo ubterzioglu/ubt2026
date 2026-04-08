@@ -12,28 +12,31 @@ export function HeroSection() {
         <div className="section-panel relative overflow-hidden px-6 py-6 sm:px-8 lg:min-h-[22rem] lg:px-12 lg:py-8">
           <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
           <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-accentSoft/55 via-transparent to-transparent sm:w-48 lg:w-56" />
-          <Image
-            src="/yeni.png"
-            alt=""
-            aria-hidden="true"
-            width={607}
-            height={745}
-            className="pointer-events-none absolute bottom-0 left-2 z-0 h-auto w-32 select-none drop-shadow-2xl sm:left-4 sm:w-40 md:w-48 lg:left-6 lg:w-88 xl:w-96"
-            priority
-          />
+            <div className="lg:order-1 lg:w-80 xl:w-96">
+              <Image
+                src="/yeni.png"
+                alt=""
+                aria-hidden="true"
+                width={607}
+                height={745}
+                className="pointer-events-none absolute bottom-0 left-2 z-0 h-auto w-32 select-none drop-shadow-2xl sm:left-4 sm:w-40 md:w-48 lg:left-6 lg:w-88 xl:w-96 lg:static lg:h-auto lg:w-full"
+                priority
+              />
+            </div>
 
-          <div className="relative z-10 flex flex-col items-center justify-center lg:pl-40 lg:pb-0 xl:pl-44">
-            <h1 className="mt-4 max-w-4xl animate-reveal font-body text-4xl font-semibold leading-[0.96] tracking-[-0.03em] text-ink sm:text-5xl lg:text-6xl xl:text-[4.5rem] text-center">
-              {siteMeta.fullName}
-            </h1>
-            <p className="mt-3 max-w-3xl animate-reveal text-base font-semibold text-ink/76 sm:text-lg lg:text-[1.1rem] text-center">
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+            <div className="flex flex-col items-center lg:order-2 lg:flex-1 lg:items-start lg:text-left">
+              <h1 className="mt-4 max-w-4xl animate-reveal font-body text-[clamp(2rem,5vw,4rem)] font-semibold leading-[0.96] tracking-[-0.03em] text-ink sm:text-[clamp(2.5rem,6vw,4.5rem)] lg:text-6xl text-center lg:text-left">
+                {siteMeta.fullName}
+              </h1>
+            <p className="mt-3 max-w-3xl animate-reveal text-base font-semibold text-ink/76 sm:text-lg lg:text-[1.1rem] text-center lg:text-left">
               {siteMeta.role}
             </p>
-            <p className="mt-4 max-w-3xl animate-reveal text-sm leading-6 text-ink/68 sm:text-base text-center whitespace-pre-wrap">
+            <p className="mt-4 max-w-3xl animate-reveal text-sm leading-6 text-ink/68 sm:text-base text-center lg:text-left whitespace-pre-wrap">
               {siteMeta.intro}
             </p>
 
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start">
               {heroActions
                 .filter((action) => action.variant === "primary" || action.label === "Contact Me")
                 .map((action) => {
@@ -46,14 +49,14 @@ export function HeroSection() {
                     <a
                       key={action.label}
                       href={action.href}
-                      className={`inline-flex items-center rounded-full border border-line/70 px-4 py-2.5 text-sm font-semibold shadow-sm transition hover:-translate-y-0.5 ${className}`}
+                      className={`inline-flex min-h-[44px] items-center rounded-full border border-line/70 px-4 py-2.5 text-sm font-semibold shadow-sm transition hover:-translate-y-0.5 active:scale-95 ${className}`}
                     >
                       {action.label}
                     </a>
                   );
                 })}
             </div>
-          </div>
+            </div>
         </div>
       </div>
     </section>
