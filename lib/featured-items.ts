@@ -18,19 +18,23 @@ interface SupabaseFeaturedRow {
   created_at: string;
 }
 
-export interface FeaturedCollectionResult {
+export interface FeaturedCollectionResult<TCategory extends FeaturedCategory> {
   source: SourceState;
   errorMessage?: string;
-  itemsByCategory: Record<FeaturedCategory, FeaturedItem[]>;
+  itemsByCategory: Record<TCategory, FeaturedItem[]>;
 }
 
-const defaultCollections = (): Record<FeaturedCategory, FeaturedItem[]> => ({
-  tools: [],
-  articles: [],
-  bookmarks: [],
-  apps: [],
-  "private-projects": []
-});
+const defaultCollections = <TCategory extends FeaturedCategory>(
+  categories: readonly TCategory[]
+): Record<TCategory, FeaturedItem[]> => {
+  const collections = {} as Record<TCategory, FeaturedItem[]>;
+
+  for (const category of categories) {
+    collections[category] = [];
+  }
+
+  return collections;
+};
 
 const toFeaturedItem = (row: SupabaseFeaturedRow): FeaturedItem => ({
   id: row.id,
@@ -46,9 +50,9 @@ const toFeaturedItem = (row: SupabaseFeaturedRow): FeaturedItem => ({
   createdAt: row.created_at
 });
 
-export async function getFeaturedCollections(
-  categories: FeaturedCategory[]
-): Promise<FeaturedCollectionResult> {
+export async function getFeaturedCollections<TCategory extends FeaturedCategory>(
+  categories: readonly TCategory[]
+): Promise<FeaturedCollectionResult<TCategory>> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey =
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
@@ -57,7 +61,7 @@ export async function getFeaturedCollections(
   if (!url || !anonKey) {
     return {
       source: "env-missing",
-      itemsByCategory: defaultCollections()
+      itemsByCategory: defaultCollections(categories)
     };
   }
 
@@ -74,7 +78,7 @@ export async function getFeaturedCollections(
       .select(
         "id, slug, category, title, summary, image_url, href, badge, sort_order, is_published, created_at"
       )
-      .in("category", categories)
+      .in("category", [...categories])
       .eq("is_published", true)
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false });
@@ -83,10 +87,12 @@ export async function getFeaturedCollections(
       throw error;
     }
 
-    const mapped = defaultCollections();
+    const mapped = defaultCollections(categories);
 
     for (const row of (data ?? []) as SupabaseFeaturedRow[]) {
-      mapped[row.category].push(toFeaturedItem(row));
+      if (row.category in mapped) {
+        mapped[row.category as TCategory].push(toFeaturedItem(row));
+      }
     }
 
     return {
@@ -98,7 +104,7 @@ export async function getFeaturedCollections(
     return {
       source: "error",
       errorMessage: message,
-      itemsByCategory: defaultCollections()
+      itemsByCategory: defaultCollections(categories)
     };
   }
 }

@@ -9,7 +9,6 @@ export const SECTION_IDS = [
   "private-projects",
   "articles",
   "my-bookmarks",
-  "useful-apps",
   "contact"
 ] as const;
 
@@ -64,23 +63,7 @@ export interface ExperienceItem {
   location: string;
   summary: string;
   highlights: string[];
-}
-
-export interface ProjectItem {
-  title: string;
-  label: string;
-  summary: string;
-  image?: string;
-}
-
- export interface ExperienceItem {
-  company: string;
-  role: string;
-  period: string;
-  location: string;
-  summary: string;
-  highlights: string[];
-    logo?: string;
+  logo?: string;
 }
 
 export interface ArticleItem {
@@ -110,10 +93,15 @@ export interface AppToolItem {
   badge?: string;
 }
 
+export interface ProjectItem {
+  title: string;
+  label: string;
+  summary: string;
+  image?: string;
+}
+
 export interface ContactItem {
   label: string;
   value: string;
   href: string;
 }
-
-
