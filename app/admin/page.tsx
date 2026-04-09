@@ -159,6 +159,12 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               >
                 Manage news
               </a>
+              <a
+                href={buildAdminUrl("/admin/bookmarks", accessKey)}
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+              >
+                Manage bookmarks
+              </a>
             </div>
           </div>
         </section>

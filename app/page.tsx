@@ -8,6 +8,7 @@ import { AboutAccordion } from "@/components/about-accordion";
 import { BookingForm } from "@/components/appointment/booking-form";
 import { CvReviewForm } from "@/components/cv-review-form";
 import { CvReviewQueueSection } from "@/components/cv-review-queue-section";
+import { BookmarksList } from "@/components/bookmarks-list";
 import { FeaturedGrid } from "@/components/featured-grid";
 import { HeroSection } from "@/components/hero-section";
 import { NewsUpdatesCarousel } from "@/components/news-updates-carousel";
@@ -490,7 +491,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">My Bookmarks</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
-              <FeaturedGrid
+              <BookmarksList
                 items={bookmarks}
                 sourceLabel={fallbackSource}
                 emptyMessage="No bookmarks are available yet."

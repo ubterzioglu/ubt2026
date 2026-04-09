@@ -19,7 +19,7 @@ export function HeroSection() {
           <div className="relative z-10 flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:gap-12 xl:gap-16">
             <div className="order-last mx-auto flex w-full max-w-[16rem] items-end self-end sm:max-w-[18rem] md:max-w-[20rem] lg:order-first lg:mx-0 lg:w-[25rem] lg:max-w-none lg:self-center xl:w-[30rem]">
               <Image
-                src="/yeni.png"
+                src="/1yeni.png"
                 alt=""
                 aria-hidden="true"
                 width={607}
