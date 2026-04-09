@@ -5,6 +5,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { AchievementCard } from "@/components/achievement-card";
+import { AboutAccordion } from "@/components/about-accordion";
 import { BookingForm } from "@/components/appointment/booking-form";
 import { FeaturedGrid } from "@/components/featured-grid";
 import { HeroSection } from "@/components/hero-section";
@@ -193,15 +194,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">About me</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 space-y-8">
-              {aboutParagraphs.map((section) => (
-                <div key={section.title}>
-                  <h3 className="mb-3 font-body text-xl font-semibold text-ink">{section.title}</h3>
-                  <p className="text-sm leading-7 text-ink/74 sm:text-base sm:leading-8">
-                    {section.content}
-                  </p>
-                </div>
-              ))}
+            <div className="mt-8">
+              <AboutAccordion sections={aboutParagraphs} />
             </div>
           </div>
         </div>
@@ -367,7 +361,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </section>
 
       <section id="book-appointment" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
-        <div className="mx-auto max-w-7xl space-y-6">
+        <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent">Book Appointment</p>
@@ -379,14 +373,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 and I will review the request before confirming it by email.
               </p>
             </div>
+            <div className="mt-8">
+              <BookingForm
+                action={submitBookingRequest}
+                slots={slotsResult.slots}
+                selectedSlotId={selectedSlotId}
+                feedbackTone={feedbackTone || fallbackFeedback?.tone}
+                feedbackMessage={feedbackMessage || fallbackFeedback?.message}
+              />
+            </div>
           </div>
-          <BookingForm
-            action={submitBookingRequest}
-            slots={slotsResult.slots}
-            selectedSlotId={selectedSlotId}
-            feedbackTone={feedbackTone || fallbackFeedback?.tone}
-            feedbackMessage={feedbackMessage || fallbackFeedback?.message}
-          />
         </div>
       </section>
 

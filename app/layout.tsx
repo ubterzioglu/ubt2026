@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr">
+    <html lang="en">
       <body className="text-sm leading-6 text-ink/68 sm:text-base">{children}</body>
     </html>
   );

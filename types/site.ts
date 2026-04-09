@@ -105,3 +105,8 @@ export interface ContactItem {
   value: string;
   href: string;
 }
+
+export interface AboutSection {
+  title: string;
+  items: string[];
+}

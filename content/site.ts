@@ -6,10 +6,17 @@ export const siteMeta = {
   role: "Senior Software Quality Assurance Engineer",
   location: "Dortmund, Germany",
   headline:
-    "Editorial one-page portfolio for quality leadership, automation strategy, enterprise delivery, and practical engineering thinking.",
-  intro:
-    "I help teams build confidence in complex software\nthrough test strategy, automation, release discipline,\nand hands-on delivery support."
+    "Editorial one-page portfolio for quality leadership, automation strategy, enterprise delivery, and practical engineering thinking."
 };
+
+export const heroKeywords = [
+  "Quality Leadership",
+  "Test Strategy",
+  "Automation",
+  "Release Discipline",
+  "Risk Management",
+  "Team Mentoring"
+] as const;
 
 export const navigationItems = [
   { id: "my-cv", label: "My CV" },
@@ -27,6 +34,6 @@ export const navigationItems = [
 
 export const heroActions: CtaLink[] = [
   { label: "View My CV", href: "#my-cv", variant: "primary" },
-  { label: "Explore Tools", href: "#tools-developed-by-ubt", variant: "secondary" },
-  { label: "Contact Me", href: "#contact", variant: "ghost" }
+  { label: "Contact", href: "#contact", variant: "secondary" },
+  { label: "Appointment", href: "#book-appointment", variant: "ghost" }
 ];

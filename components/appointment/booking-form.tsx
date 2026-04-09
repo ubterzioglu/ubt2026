@@ -24,7 +24,10 @@ export function BookingForm({
 }: BookingFormProps) {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-      <form action={action} className="section-panel px-6 py-7 sm:px-8 sm:py-8">
+      <form
+        action={action}
+        className="rounded-[1.75rem] border border-line/70 bg-white/72 px-6 py-7 sm:px-8 sm:py-8"
+      >
         <div className="space-y-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
@@ -99,7 +102,7 @@ export function BookingForm({
         </div>
       </form>
 
-      <aside className="section-panel px-6 py-7 sm:px-8 sm:py-8">
+      <aside className="rounded-[1.75rem] border border-line/70 bg-gradient-to-br from-white/78 via-paper/86 to-mist/78 px-6 py-7 sm:px-8 sm:py-8">
         <div className="space-y-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sunrise">
