@@ -11,8 +11,7 @@ const desktopLabelMap: Record<(typeof navigationItems)[number]["id"], string> = 
   "key-achievements": "Key Achievements",
   "tech-stack": "Tech Stack",
   experience: "Experience",
-  "corporate-projects": "Corporate Projects",
-  "private-projects": "Private Projects",
+  "corporate-projects": "Projects",
   articles: "Articles",
   "my-bookmarks": "My Bookmarks",
   "book-appointment": "Book Appointment",
@@ -50,18 +49,23 @@ export function SiteHeader() {
         </a>
 
         <nav className="hidden min-w-0 flex-1 md:block" aria-label="Primary">
-          <ul className="flex flex-nowrap items-center gap-x-0 text-xs font-semibold tracking-[0.08em] text-ink lg:text-sm">
+          <ul className="flex flex-nowrap items-center justify-center text-xs font-semibold tracking-[0.08em] text-ink lg:text-sm">
             {navigationItems.map((item, index) => (
-              <li key={item.id} className="min-w-0 flex items-center">
-                {index > 0 && (
-                  <span className="mx-2 h-3 w-px bg-line/60" aria-hidden="true" />
-                )}
+              <li key={item.id} className="flex items-center">
                 <a
                   href={`#${item.id}`}
-                  className="inline-flex min-h-[40px] items-center rounded-full px-2.5 py-1.5 whitespace-nowrap transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35"
+                  className="inline-flex min-h-[40px] items-center rounded-full px-2 py-1.5 whitespace-nowrap transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35"
                 >
                   {desktopLabelMap[item.id]}
                 </a>
+                {index < navigationItems.length - 1 ? (
+                  <span
+                    className="px-2.5 text-ink/35 lg:px-3"
+                    aria-hidden="true"
+                  >
+                    |
+                  </span>
+                ) : null}
               </li>
             ))}
           </ul>

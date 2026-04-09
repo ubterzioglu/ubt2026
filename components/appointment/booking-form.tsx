@@ -23,112 +23,75 @@ export function BookingForm({
   feedbackMessage
 }: BookingFormProps) {
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-      <form action={action} className="px-1 py-1">
-        <div className="space-y-6">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-              Request a meeting
-            </p>
-            <h2 className="mt-3 font-body text-[clamp(1.9rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-ink">
-              Book an appointment
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-ink/72 sm:text-base">
-              Pick an open slot, add your details, and I will review the request before
-              confirming it by email.
-            </p>
-          </div>
+    <form action={action} className="px-1 py-1">
+      <div className="space-y-6">
+        <div>
+          <p className="max-w-3xl text-sm leading-7 text-ink/72 sm:text-base">
+            Choose a suitable slot and send a short note about your topic.
+          </p>
+          <p className="max-w-3xl text-sm leading-7 text-ink/72 sm:text-base">
+            If the listed times do not work, you can also reach me through the contact section.
+          </p>
+        </div>
 
-          {feedbackMessage ? (
-            <div
-              className={`rounded-[1.35rem] border px-4 py-3 text-sm leading-6 ${
-                toneClasses[feedbackTone ?? "info"]
-              }`}
-            >
-              {feedbackMessage}
-            </div>
-          ) : null}
-
-          <SlotSelector name="slotId" slots={slots} selectedSlotId={selectedSlotId} />
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-ink">Full name</span>
-              <input
-                type="text"
-                name="fullName"
-                required
-                minLength={2}
-                className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-              />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-ink">Email</span>
-              <input
-                type="email"
-                name="email"
-                required
-                className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-              />
-            </label>
-            <label className="block sm:col-span-2">
-              <span className="mb-2 block text-sm font-medium text-ink">Company or context</span>
-              <input
-                type="text"
-                name="company"
-                className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-              />
-            </label>
-            <label className="block sm:col-span-2">
-              <span className="mb-2 block text-sm font-medium text-ink">What would you like to cover?</span>
-              <textarea
-                name="notes"
-                rows={5}
-                className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm leading-6 text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-              />
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            disabled={slots.length === 0}
-            className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition hover:-translate-y-0.5 hover:bg-accent/95 disabled:cursor-not-allowed disabled:bg-line disabled:shadow-none"
+        {feedbackMessage ? (
+          <div
+            className={`rounded-[1.35rem] border px-4 py-3 text-sm leading-6 ${
+              toneClasses[feedbackTone ?? "info"]
+            }`}
           >
-            Send appointment request
-          </button>
-        </div>
-      </form>
+            {feedbackMessage}
+          </div>
+        ) : null}
 
-      <aside className="px-1 py-1">
-        <div className="space-y-6">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sunrise">
-              What happens next
-            </p>
-            <h3 className="mt-3 font-body text-[clamp(1.6rem,4vw,2rem)] font-semibold tracking-[-0.02em] text-ink">
-              Simple review-first workflow
-            </h3>
-          </div>
-          <div className="space-y-4 text-sm leading-7 text-ink/72">
-            {[
-              "You choose a published slot that is still open.",
-              "Your request lands in the admin review panel with your notes.",
-              "I confirm, complete, or cancel the appointment after review."
-            ].map((step, index) => (
-              <div key={step} className="flex items-start gap-3">
-                <span className="mt-1.5 inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-accent/10 text-xs font-semibold text-accent">
-                  {index + 1}
-                </span>
-                <p>{step}</p>
-              </div>
-            ))}
-          </div>
-          <div className="border-t border-line/70 pt-5 text-sm leading-7 text-ink/72">
-            If none of the slots fit, you can still reach out through the contact links on the
-            homepage and we can arrange another time.
-          </div>
+        <SlotSelector name="slotId" slots={slots} selectedSlotId={selectedSlotId} />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-ink">Full name</span>
+            <input
+              type="text"
+              name="fullName"
+              required
+              minLength={2}
+              className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
+            />
+          </label>
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-ink">Email</span>
+            <input
+              type="email"
+              name="email"
+              required
+              className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
+            />
+          </label>
+          <label className="block sm:col-span-2">
+            <span className="mb-2 block text-sm font-medium text-ink">Company or context</span>
+            <input
+              type="text"
+              name="company"
+              className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
+            />
+          </label>
+          <label className="block sm:col-span-2">
+            <span className="mb-2 block text-sm font-medium text-ink">What would you like to cover?</span>
+            <textarea
+              name="notes"
+              rows={5}
+              className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm leading-6 text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
+            />
+          </label>
         </div>
-      </aside>
-    </div>
+
+        <button
+          type="submit"
+          disabled={slots.length === 0}
+          className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition hover:-translate-y-0.5 hover:bg-accent/95 disabled:cursor-not-allowed disabled:bg-line disabled:shadow-none"
+        >
+          Send appointment request
+        </button>
+      </div>
+    </form>
   );
 }

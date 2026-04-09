@@ -23,8 +23,7 @@ export const navigationItems = [
   { id: "key-achievements", label: "Key Achievements" },
   { id: "tech-stack", label: "Tech Stack" },
   { id: "experience", label: "Experience" },
-  { id: "corporate-projects", label: "Corporate Projects" },
-  { id: "private-projects", label: "Private Projects" },
+  { id: "corporate-projects", label: "Project" },
   { id: "articles", label: "Articles" },
   { id: "my-bookmarks", label: "My Bookmarks" },
   { id: "book-appointment", label: "Book Appointment" },
@@ -34,5 +33,6 @@ export const navigationItems = [
 export const heroActions: CtaLink[] = [
   { label: "View My CV", href: "#my-cv", variant: "primary" },
   { label: "Contact", href: "#contact", variant: "secondary" },
-  { label: "Appointment", href: "#book-appointment", variant: "ghost" }
+  { label: "Appointment", href: "#book-appointment", variant: "ghost" },
+  { label: "Key Achievements", href: "#key-achievements", variant: "ghost" }
 ];

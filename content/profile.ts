@@ -329,7 +329,7 @@ export const privateProjects: ProjectItem[] = [
 ];
 
 export const contactItems: ContactItem[] = [
-  { label: "WhatsApp", value: "+49 173 956 9429", href: "https://wa.me/491739569429" },
+  { label: "WhatsApp", value: "+90 530 240 4995", href: "https://wa.me/905302404995" },
   {
     label: "LinkedIn",
     value: "linkedin.com/in/ubterzioglu",

@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 
 import { AboutAccordion } from "@/components/about-accordion";
 import { BookingForm } from "@/components/appointment/booking-form";
+import { CvReviewForm } from "@/components/cv-review-form";
+import { CvReviewQueueSection } from "@/components/cv-review-queue-section";
 import { FeaturedGrid } from "@/components/featured-grid";
 import { HeroSection } from "@/components/hero-section";
 import { NewsUpdatesCarousel } from "@/components/news-updates-carousel";
@@ -33,6 +35,12 @@ import {
   type SearchParamsRecord
 } from "@/lib/appointment-url";
 import { createAppointment, getAvailableAppointmentSlots } from "@/lib/appointments";
+import {
+  buildCvReviewSectionUrl,
+  buildCvReviewWhatsappLink,
+  readCvReviewFeedbackTone
+} from "@/lib/cv-review-url";
+import { createCvReviewRequest, getCvReviewRequestById, getPublicCvReviewQueue } from "@/lib/cv-reviews";
 import { sendNewBookingNotification } from "@/lib/email";
 import { getFeaturedCollections } from "@/lib/featured-items";
 import { getNewsUpdates } from "@/lib/news-updates";
@@ -76,38 +84,38 @@ function hasContactIcon(label: string): label is CommunicationLabel {
 function renderCvFlag(flagCode: CvLink["flagCode"]): ReactNode {
   if (flagCode === "de") {
     return (
-      <svg viewBox="0 0 64 64" aria-hidden="true" className="h-14 w-14">
+      <svg viewBox="0 0 64 48" aria-hidden="true" className="h-12 w-[4.5rem] drop-shadow-[0_10px_18px_rgba(20,31,39,0.18)]">
         <defs>
-          <clipPath id="flag-de-circle">
-            <circle cx="32" cy="32" r="32" />
+          <clipPath id="flag-de-rounded">
+            <rect x="0" y="0" width="64" height="48" rx="10" ry="10" />
           </clipPath>
         </defs>
-        <g clipPath="url(#flag-de-circle)">
-          <rect width="64" height="21.34" y="0" fill="#111827" />
-          <rect width="64" height="21.34" y="21.33" fill="#d62828" />
-          <rect width="64" height="21.34" y="42.66" fill="#f4b400" />
+        <g clipPath="url(#flag-de-rounded)">
+          <rect width="64" height="16" y="0" fill="#111827" />
+          <rect width="64" height="16" y="16" fill="#d62828" />
+          <rect width="64" height="16" y="32" fill="#f4b400" />
         </g>
       </svg>
     );
   }
 
   return (
-    <svg viewBox="0 0 64 64" aria-hidden="true" className="h-14 w-14">
+    <svg viewBox="0 0 64 48" aria-hidden="true" className="h-12 w-[4.5rem] drop-shadow-[0_10px_18px_rgba(20,31,39,0.18)]">
       <defs>
-        <clipPath id="flag-uk-circle">
-          <circle cx="32" cy="32" r="32" />
+        <clipPath id="flag-uk-rounded">
+          <rect x="0" y="0" width="64" height="48" rx="10" ry="10" />
         </clipPath>
       </defs>
-      <g clipPath="url(#flag-uk-circle)">
-        <rect width="64" height="64" fill="#1f4aa8" />
-        <path d="M0 8 8 0l56 56-8 8Z" fill="#fff" />
-        <path d="M56 0 64 8 8 64 0 56Z" fill="#fff" />
-        <path d="M0 13.5 13.5 0l50.5 50.5L50.5 64Z" fill="#cf142b" />
-        <path d="M50.5 0 64 13.5 13.5 64 0 50.5Z" fill="#cf142b" />
-        <rect x="26" width="12" height="64" fill="#fff" />
-        <rect y="26" width="64" height="12" fill="#fff" />
-        <rect x="28.5" width="7" height="64" fill="#cf142b" />
-        <rect y="28.5" width="64" height="7" fill="#cf142b" />
+      <g clipPath="url(#flag-uk-rounded)">
+        <rect width="64" height="48" fill="#1f4aa8" />
+        <path d="M0 6 6 0l58 42-6 6Z" fill="#fff" />
+        <path d="M58 0 64 6 6 48 0 42Z" fill="#fff" />
+        <path d="M0 9.5 9.5 0 64 38.5 54.5 48Z" fill="#cf142b" />
+        <path d="M54.5 0 64 9.5 9.5 48 0 38.5Z" fill="#cf142b" />
+        <rect x="26" width="12" height="48" fill="#fff" />
+        <rect y="18" width="64" height="12" fill="#fff" />
+        <rect x="28.5" width="7" height="48" fill="#cf142b" />
+        <rect y="20.5" width="64" height="7" fill="#cf142b" />
       </g>
     </svg>
   );
@@ -145,7 +153,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const feedbackTone = readAppointmentFeedbackTone(params.status);
   const feedbackMessage = readSearchParam(params.message);
   const selectedSlotId = readSearchParam(params.slot);
-  const [featuredCollections, slotsResult, newsUpdatesResult] = await Promise.all([
+  const cvFeedbackTone = readCvReviewFeedbackTone(params.cv_status);
+  const cvFeedbackMessage = readSearchParam(params.cv_message);
+  const cvRequestId = readSearchParam(params.cv_request);
+  const [featuredCollections, slotsResult, newsUpdatesResult, cvReviewRequestResult, queueResult] =
+    await Promise.all([
     getFeaturedCollections([
       "tools",
       "articles",
@@ -153,7 +165,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       "private-projects"
     ]),
     getAvailableAppointmentSlots(),
-    getNewsUpdates()
+    getNewsUpdates(),
+    cvRequestId ? getCvReviewRequestById(cvRequestId) : Promise.resolve(null),
+    getPublicCvReviewQueue()
   ]);
 
   async function submitBookingRequest(formData: FormData) {
@@ -193,6 +207,37 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     );
   }
 
+  async function submitCvReviewRequest(formData: FormData) {
+    "use server";
+
+    const result = await createCvReviewRequest({
+      fullName: String(formData.get("fullName") ?? ""),
+      whatsappNumber: String(formData.get("whatsappNumber") ?? ""),
+      linkedinUrl: String(formData.get("linkedinUrl") ?? "")
+    });
+
+    if (!result.ok || !result.data) {
+      redirect(
+        buildCvReviewSectionUrl({
+          status: "error",
+          message: result.errorMessage ?? "Unable to submit your CV review request."
+        }) as Route
+      );
+    }
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    revalidatePath("/admin/cv-reviews");
+
+    redirect(
+      buildCvReviewSectionUrl({
+        status: "success",
+        message: "Your CV review request is saved. Use WhatsApp below to send your CV file.",
+        requestId: result.data.id
+      }) as Route
+    );
+  }
+
   const tools = featuredCollections.itemsByCategory.tools.length
     ? featuredCollections.itemsByCategory.tools
     : mapFallbackItems(fallbackTools);
@@ -204,6 +249,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     : mapFallbackItems(fallbackBookmarks);
   const newsUpdates: NewsUpdateItem[] =
     newsUpdatesResult.items.length > 0 ? newsUpdatesResult.items : fallbackNewsUpdates;
+  const submittedCvReview = cvReviewRequestResult?.request ?? null;
+  const cvWhatsappHref =
+    cvFeedbackTone === "success" && submittedCvReview
+      ? buildCvReviewWhatsappLink(submittedCvReview)
+      : undefined;
 
   const fallbackSource =
     featuredCollections.source === "remote" ? undefined : featuredCollections.source;
@@ -238,21 +288,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="news-updates" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-                  News / Updates
-                </p>
-                <h2 className="mt-3 font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
-                  Current notes from the portfolio and ongoing work
-                </h2>
-              </div>
-              {newsUpdatesResult.source !== "remote" ? (
-                <p className="text-sm text-ink/58">
-                  Showing local updates while the database feed is unavailable.
-                </p>
-              ) : null}
-            </div>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
+              News/Updates
+            </h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <NewsUpdatesCarousel items={newsUpdates} />
@@ -291,11 +329,32 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">PDF</p>
                     <h3 className="mt-3 font-body text-[clamp(1.4rem,5vw,1.875rem)] font-semibold text-ink">{link.label}</h3>
                   </div>
-                  <span className="flex h-16 w-16 flex-none items-center justify-center rounded-full border border-line/80 bg-white/92 shadow-[0_14px_30px_rgba(20,31,39,0.14)]">
+                  <span className="flex flex-none items-center justify-center">
                     {renderCvFlag(link.flagCode)}
                   </span>
                 </a>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cv-review" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
+              CV Review
+            </h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <div className="mt-8">
+              <CvReviewForm
+                action={submitCvReviewRequest}
+                feedbackTone={cvFeedbackTone}
+                feedbackMessage={cvFeedbackMessage}
+                whatsappHref={cvWhatsappHref}
+                submittedRequest={submittedCvReview}
+              />
+              <CvReviewQueueSection result={queueResult} />
             </div>
           </div>
         </div>
@@ -465,16 +524,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="book-appointment" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent">Book Appointment</p>
-              <h2 className="mt-4 font-body text-[clamp(1.75rem,6vw,2.4rem)] font-semibold tracking-[-0.02em] text-ink">
-                Request time for QA, test strategy, or a focused project conversation.
-              </h2>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/72 sm:text-base sm:leading-8">
-                Choose one of the published slots below, send the context for our conversation,
-                and I will review the request before confirming it by email.
-              </p>
-            </div>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
+              Book Appointment
+            </h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <BookingForm
                 action={submitBookingRequest}
