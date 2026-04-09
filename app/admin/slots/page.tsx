@@ -130,7 +130,7 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
 
     revalidatePath("/admin");
     revalidatePath("/admin/slots");
-    revalidatePath("/book-appointment");
+    revalidatePath("/");
 
     redirect(
       buildSlotsUrl(
@@ -163,7 +163,7 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
 
     revalidatePath("/admin");
     revalidatePath("/admin/slots");
-    revalidatePath("/book-appointment");
+    revalidatePath("/");
 
     redirect(
       buildSlotsUrl(
@@ -188,7 +188,7 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
 
     revalidatePath("/admin");
     revalidatePath("/admin/slots");
-    revalidatePath("/book-appointment");
+    revalidatePath("/");
 
     redirect(
       buildSlotsUrl(
@@ -304,7 +304,7 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
             </label>
             <label className="flex items-center gap-3 rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm lg:mt-8">
               <input type="checkbox" name="isPublic" defaultChecked className="h-4 w-4" />
-              Publish this slot on the public booking page
+              Publish this slot on the homepage booking section
             </label>
             <label className="block lg:col-span-2">
               <span className="mb-2 block text-sm font-medium text-ink">Description</span>

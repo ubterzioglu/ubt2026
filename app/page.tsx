@@ -1,7 +1,11 @@
 import type { ReactNode } from "react";
+import type { Route } from "next";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 import { AchievementCard } from "@/components/achievement-card";
+import { BookingForm } from "@/components/appointment/booking-form";
 import { FeaturedGrid } from "@/components/featured-grid";
 import { HeroSection } from "@/components/hero-section";
 import { ScrollToTop } from "@/components/scroll-to-top";
@@ -19,6 +23,14 @@ import {
   privateProjects,
   stackGroups
 } from "@/content/profile";
+import {
+  buildAppointmentSectionUrl,
+  readAppointmentFeedbackTone,
+  readSearchParam,
+  type SearchParamsRecord
+} from "@/lib/appointment-url";
+import { createAppointment, getAvailableAppointmentSlots } from "@/lib/appointments";
+import { sendNewBookingNotification } from "@/lib/email";
 import { getFeaturedCollections } from "@/lib/featured-items";
 import type { FeaturedItem } from "@/types/site";
 
@@ -80,13 +92,61 @@ function mapFallbackItems(items: Array<{
   }));
 }
 
-export default async function HomePage() {
-  const featuredCollections = await getFeaturedCollections([
-    "tools",
-    "articles",
-    "bookmarks",
-    "private-projects"
+interface HomePageProps {
+  searchParams?: Promise<SearchParamsRecord>;
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const params = searchParams ? await searchParams : {};
+  const feedbackTone = readAppointmentFeedbackTone(params.status);
+  const feedbackMessage = readSearchParam(params.message);
+  const selectedSlotId = readSearchParam(params.slot);
+  const [featuredCollections, slotsResult] = await Promise.all([
+    getFeaturedCollections([
+      "tools",
+      "articles",
+      "bookmarks",
+      "private-projects"
+    ]),
+    getAvailableAppointmentSlots()
   ]);
+
+  async function submitBookingRequest(formData: FormData) {
+    "use server";
+
+    const slotId = String(formData.get("slotId") ?? "");
+    const result = await createAppointment({
+      slotId,
+      fullName: String(formData.get("fullName") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      company: String(formData.get("company") ?? ""),
+      notes: String(formData.get("notes") ?? "")
+    });
+
+    if (!result.ok || !result.data) {
+      redirect(
+        buildAppointmentSectionUrl({
+          status: "error",
+          message: result.errorMessage ?? "Unable to submit the appointment request.",
+          slotId
+        }) as Route
+      );
+    }
+
+    await sendNewBookingNotification(result.data);
+
+    revalidatePath("/");
+    revalidatePath("/admin");
+    revalidatePath("/admin/slots");
+    revalidatePath("/admin/appointments");
+
+    redirect(
+      buildAppointmentSectionUrl({
+        status: "success",
+        message: "Appointment request received. I will review it and follow up by email."
+      }) as Route
+    );
+  }
 
   const tools = featuredCollections.itemsByCategory.tools.length
     ? featuredCollections.itemsByCategory.tools
@@ -101,6 +161,26 @@ export default async function HomePage() {
   const fallbackSource =
     featuredCollections.source === "remote" ? undefined : featuredCollections.source;
   const communicationItems = contactItems.filter((item) => hasContactIcon(item.label));
+  const fallbackFeedback =
+    slotsResult.source === "env-missing"
+      ? {
+          tone: "error" as const,
+          message:
+            "Booking is temporarily unavailable because the Supabase service role key is not configured on the server."
+        }
+      : slotsResult.source === "error"
+        ? {
+            tone: "error" as const,
+            message:
+              slotsResult.errorMessage ??
+              "Something went wrong while loading appointment slots."
+          }
+        : slotsResult.source === "empty"
+          ? {
+              tone: "info" as const,
+              message: "There are no published appointment slots available right now."
+            }
+          : null;
 
   return (
     <main className="page-shell pb-16">
@@ -174,6 +254,7 @@ export default async function HomePage() {
                 items={tools}
                 sourceLabel={fallbackSource}
                 emptyMessage="No tools are available yet."
+                cardLayout="square"
               />
             </div>
           </div>
@@ -198,7 +279,7 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-col gap-4">
               {corporateProjects.map((project) => (
                 <article key={project.title} className="flex flex-col gap-4 rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:flex-row sm:items-center sm:justify-between sm:rounded-[1.55rem] sm:p-6">
-                  <div className="flex-1 sm:pr-4">
+                  <div className="flex-1 sm:pr-6">
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
                     <h3 className="mt-2 font-body text-[clamp(1.35rem,4.8vw,1.5rem)] font-semibold text-ink">{project.title}</h3>
                     <p className="mt-3 text-sm leading-6 text-ink/68">{project.summary}</p>
@@ -208,9 +289,9 @@ export default async function HomePage() {
                       <Image 
                         src={`/corporate/${project.image}`} 
                         alt={project.title} 
-                        width={80}
-                        height={80}
-                        className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border border-line/50 shadow-sm"
+                        width={120}
+                        height={120}
+                        className="h-24 w-24 rounded-full border border-line/50 object-cover shadow-sm sm:h-28 sm:w-28"
                       />
                     </div>
                   )}
@@ -229,7 +310,7 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-col gap-4">
               {privateProjects.map((project) => (
                 <article key={project.title} className="flex flex-col gap-4 rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:flex-row sm:items-center sm:justify-between sm:rounded-[1.55rem] sm:p-6">
-                  <div className="flex-1 sm:pr-4">
+                  <div className="flex-1 sm:pr-6">
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
                     <h3 className="mt-2 font-body text-[clamp(1.35rem,4.8vw,1.5rem)] font-semibold text-ink">{project.title}</h3>
                     <p className="mt-3 text-sm leading-6 text-ink/68">{project.summary}</p>
@@ -239,9 +320,9 @@ export default async function HomePage() {
                       <Image
                         src={`/private/${project.image}`}
                         alt={project.title}
-                        width={80}
-                        height={80}
-                        className="h-16 w-16 rounded-full border border-line/50 object-cover shadow-sm sm:h-20 sm:w-20"
+                        width={120}
+                        height={120}
+                        className="h-24 w-24 rounded-full border border-line/50 object-cover shadow-sm sm:h-28 sm:w-28"
                       />
                     </div>
                   )}
@@ -262,6 +343,7 @@ export default async function HomePage() {
                 items={articles}
                 sourceLabel={fallbackSource}
                 emptyMessage="No articles are available yet."
+                cardLayout="square"
               />
             </div>
           </div>
@@ -285,28 +367,26 @@ export default async function HomePage() {
       </section>
 
       <section id="book-appointment" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-7xl space-y-6">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(280px,0.9fr)] lg:items-center">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent">Book Appointment</p>
-                <h2 className="mt-4 font-body text-[clamp(1.75rem,6vw,2.4rem)] font-semibold tracking-[-0.02em] text-ink">
-                  Reserve time for a focused conversation.
-                </h2>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/72 sm:text-base sm:leading-8">
-                  If you want to discuss QA leadership, test strategy, automation, or a project idea,
-                  you can now request one of the published appointment slots directly from the site.
-                </p>
-              </div>
-              <div className="rounded-[1.7rem] border border-line/80 bg-gradient-to-br from-white via-paper to-mist/80 p-5 shadow-sm sm:p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sunrise">Now live</p>
-                <p className="mt-3 text-sm leading-7 text-ink/72">
-                  Review available slots, send your request, and I will confirm it from the admin panel.
-                </p>
-                <a href="/book-appointment" className="mt-5 inline-flex min-h-[46px] items-center justify-center rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition hover:-translate-y-0.5 hover:bg-accent/95">Open booking page</a>
-              </div>
+            <div className="max-w-3xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent">Book Appointment</p>
+              <h2 className="mt-4 font-body text-[clamp(1.75rem,6vw,2.4rem)] font-semibold tracking-[-0.02em] text-ink">
+                Request time for QA, test strategy, or a focused project conversation.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/72 sm:text-base sm:leading-8">
+                Choose one of the published slots below, send the context for our conversation,
+                and I will review the request before confirming it by email.
+              </p>
             </div>
           </div>
+          <BookingForm
+            action={submitBookingRequest}
+            slots={slotsResult.slots}
+            selectedSlotId={selectedSlotId}
+            feedbackTone={feedbackTone || fallbackFeedback?.tone}
+            feedbackMessage={feedbackMessage || fallbackFeedback?.message}
+          />
         </div>
       </section>
 

@@ -8,7 +8,7 @@ export const siteMeta = {
   headline:
     "Editorial one-page portfolio for quality leadership, automation strategy, enterprise delivery, and practical engineering thinking.",
   intro:
-    "I help teams build confidence in complex software\nthrough test strategy, automation, release discipline, and hands-on delivery support."
+    "I help teams build confidence in complex software\nthrough test strategy, automation, release discipline,\nand hands-on delivery support."
 };
 
 export const navigationItems = [

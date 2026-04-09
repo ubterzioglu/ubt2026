@@ -132,7 +132,7 @@ export default async function AdminAppointmentsPage({
     revalidatePath("/admin");
     revalidatePath("/admin/appointments");
     revalidatePath("/admin/slots");
-    revalidatePath("/book-appointment");
+    revalidatePath("/");
 
     redirect(
       buildAppointmentsUrl(
