@@ -339,27 +339,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
-      <section id="cv-review" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
-              CV Review
-            </h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8">
-              <CvReviewForm
-                action={submitCvReviewRequest}
-                feedbackTone={cvFeedbackTone}
-                feedbackMessage={cvFeedbackMessage}
-                whatsappHref={cvWhatsappHref}
-                submittedRequest={submittedCvReview}
-              />
-              <CvReviewQueueSection result={queueResult} />
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section id="key-achievements" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
@@ -536,6 +515,27 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 feedbackTone={feedbackTone || fallbackFeedback?.tone}
                 feedbackMessage={feedbackMessage || fallbackFeedback?.message}
               />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cv-review" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
+              CV Review
+            </h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <div className="mt-8">
+              <CvReviewForm
+                action={submitCvReviewRequest}
+                feedbackTone={cvFeedbackTone}
+                feedbackMessage={cvFeedbackMessage}
+                whatsappHref={cvWhatsappHref}
+                submittedRequest={submittedCvReview}
+              />
+              <CvReviewQueueSection result={queueResult} />
             </div>
           </div>
         </div>

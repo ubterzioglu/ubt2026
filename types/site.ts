@@ -8,7 +8,8 @@ export const SECTION_IDS = [
   "corporate-projects",
   "private-projects",
   "articles",
-  "my-bookmarks",
+  "cv-review",
+  "book-appointment",
   "contact"
 ] as const;
 

@@ -13,7 +13,7 @@ const desktopLabelMap: Record<(typeof navigationItems)[number]["id"], string> = 
   experience: "Experience",
   "corporate-projects": "Projects",
   articles: "Articles",
-  "my-bookmarks": "My Bookmarks",
+  "cv-review": "CV Review",
   "book-appointment": "Book Appointment",
   contact: "Contact"
 };

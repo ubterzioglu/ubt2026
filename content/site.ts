@@ -25,7 +25,7 @@ export const navigationItems = [
   { id: "experience", label: "Experience" },
   { id: "corporate-projects", label: "Project" },
   { id: "articles", label: "Articles" },
-  { id: "my-bookmarks", label: "My Bookmarks" },
+  { id: "cv-review", label: "CV Review" },
   { id: "book-appointment", label: "Book Appointment" },
   { id: "contact", label: "Contact" }
 ] as const;
