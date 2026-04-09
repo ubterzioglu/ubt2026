@@ -64,43 +64,56 @@ export const aboutParagraphs: AboutSection[] = [
 
 export const keyAchievements: AchievementItem[] = [
   {
-    text: "Led global testing initiatives and built scalable automation frameworks across complex enterprise systems."
+    text: "Led global testing initiatives and built scalable automation frameworks across complex enterprise systems.",
+    image: "https://unsplash.com/photos/u66Vdx6unNo/download?force=true&w=1200"
   },
   {
-    text: "Global test responsibility for Daimler's PDM system Smaragd, serving 30,000+ users."
+    text: "Global test responsibility for Daimler's PDM system Smaragd, serving 30,000+ users.",
+    image: "https://unsplash.com/photos/IM0s86hJvfc/download?force=true&w=1200"
   },
   {
-    text: "Test Lead for large-scale warehouse automation and robotics integration projects at Swisslog."
+    text: "Test Lead for large-scale warehouse automation and robotics integration projects at Swisslog.",
+    image: "https://unsplash.com/photos/blcn1kWjWqQ/download?force=true&w=1200"
   },
   {
-    text: "Built and maintained enterprise-scale test assets (5,000+ test cases) across HP ALM, Jira, and Polarion."
+    text: "Built and maintained enterprise-scale test assets (5,000+ test cases) across HP ALM, Jira, and Polarion.",
+    image: "https://unsplash.com/photos/Mpu0MnkC4bc/download?force=true&w=1200"
   },
   {
-    text: "Raised Daimler test coverage from 50% to 90% through systematic test design and execution."
+    text: "Raised Daimler test coverage from 50% to 90% through systematic test design and execution.",
+    image: "https://unsplash.com/photos/gU9gg010ebs/download?force=true&w=1200"
   },
   {
-    text: "Automated and optimized 1,000+ checks using Ranorex, C#, Selenium, and CI/CD pipelines."
+    text: "Automated and optimized 1,000+ checks using Ranorex, C#, Selenium, and CI/CD pipelines.",
+    image: "https://unsplash.com/photos/v_q6AiHgvYQ/download?force=true&w=1200"
   },
   {
-    text: "Coordinated and presented 50+ FAT, SAT, UAT, and release sessions in factory and site environments."
+    text: "Coordinated and presented 50+ FAT, SAT, UAT, and release sessions in factory and site environments.",
+    image: "https://unsplash.com/photos/-Ct1GFXY4JU/download?force=true&w=1200"
   },
   {
-    text: "Implemented Ranorex GUI test automation for three major Daimler systems with Jenkins integration."
+    text: "Implemented Ranorex GUI test automation for three major Daimler systems with Jenkins integration.",
+    image: "https://unsplash.com/photos/Mpu0MnkC4bc/download?force=true&w=1200"
   },
   {
-    text: "Led CRM system migration and built new test architecture for Daimler's DARRS remote support system."
+    text: "Led CRM system migration and built new test architecture for Daimler's DARRS remote support system.",
+    image: "https://unsplash.com/photos/TdzAoU1rTDk/download?force=true&w=1200"
   },
   {
-    text: "Successfully led tool migration initiatives from HP ALM to Jira/Xray, lowering manual effort and operational costs."
+    text: "Successfully led tool migration initiatives from HP ALM to Jira/Xray, lowering manual effort and operational costs.",
+    image: "https://unsplash.com/photos/LsqCTxqchxs/download?force=true&w=1200"
   },
   {
-    text: "Global owner of Daimler's Part Management System SRM infrastructure, designing process and test automation."
+    text: "Global owner of Daimler's Part Management System SRM infrastructure, designing process and test automation.",
+    image: "https://unsplash.com/photos/PSksbOVDhWk/download?force=true&w=1200"
   },
   {
-    text: "Mentored 30+ QA colleagues across Daimler and Swisslog, providing hands-on guidance and knowledge transfer."
+    text: "Mentored 30+ QA colleagues across Daimler and Swisslog, providing hands-on guidance and knowledge transfer.",
+    image: "https://unsplash.com/photos/mVeP6_n_3pM/download?force=true&w=1200"
   },
   {
-    text: "Optimized test execution time by 40% and saved hundreds of hours monthly through KPI-based reporting."
+    text: "Optimized test execution time by 40% and saved hundreds of hours monthly through KPI-based reporting.",
+    image: "https://unsplash.com/photos/gU9gg010ebs/download?force=true&w=1200"
   }
 ];
 
