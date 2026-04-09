@@ -37,11 +37,11 @@ export function HeroSection() {
                 {siteMeta.role}
               </p>
               <div className="mt-5 w-full max-w-[37rem]">
-                <div className="flex w-max min-w-full origin-center scale-[0.82] flex-nowrap justify-start gap-1.5 sm:origin-left sm:scale-[0.92] lg:scale-100">
+                <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:justify-start sm:gap-1.5 lg:gap-2">
                   {heroKeywords.map((keyword) => (
                     <span
                       key={keyword}
-                      className="inline-flex shrink-0 items-center rounded-full border border-accent/12 bg-accent/8 px-2.5 py-1 text-[0.68rem] font-medium tracking-[0.01em] text-accent/80"
+                      className="inline-flex items-center justify-center rounded-full border border-accent/12 bg-accent/8 px-2.5 py-1 text-[0.68rem] font-medium tracking-[0.01em] text-accent/80 sm:justify-start"
                     >
                       {keyword}
                     </span>
@@ -49,12 +49,12 @@ export function HeroSection() {
                 </div>
               </div>
 
-              <div className="mt-6 flex w-full flex-nowrap justify-center gap-3 lg:justify-start">
+              <div className="mt-6 flex w-full flex-col justify-center gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
                 {heroActions.map((action) => (
                   <a
                     key={action.label}
                     href={action.href}
-                    className="inline-flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-line/70 bg-white px-3 py-2.5 text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 active:scale-95 sm:flex-none sm:px-4 sm:w-[12.5rem]"
+                    className="inline-flex min-h-[44px] w-full items-center justify-center rounded-full border border-line/70 bg-white px-3 py-2.5 text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 active:scale-95 sm:w-[12.5rem]"
                   >
                     {action.label}
                   </a>

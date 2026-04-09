@@ -35,6 +35,17 @@ export interface FeaturedItem {
   createdAt: string;
 }
 
+export interface NewsUpdateItem {
+  id: string;
+  title: string;
+  summary: string;
+  imageUrl: string | null;
+  detailHref: string | null;
+  sortOrder: number;
+  isPublished: boolean;
+  createdAt: string;
+}
+
 export interface CtaLink {
   label: string;
   href: string;

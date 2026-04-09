@@ -144,8 +144,7 @@ export const stackGroups: StackGroup[] = [
       { name: "REST", logo: "rest.svg" },
       { name: "SOAP" },
       { name: "Postman", logo: "postman.svg" },
-      { name: "SoapUI", logo: "soapui.svg" },
-      { name: "API mocking" }
+      { name: "SoapUI", logo: "soapui.svg" }
     ]
   },
   {

@@ -9,7 +9,7 @@ interface AboutAccordionProps {
 }
 
 export function AboutAccordion({ sections }: AboutAccordionProps) {
-  const [openSection, setOpenSection] = useState<string>(sections[0]?.title ?? "");
+  const [openSection, setOpenSection] = useState<string>("");
 
   return (
     <div className="space-y-4">

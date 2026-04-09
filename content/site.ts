@@ -14,7 +14,6 @@ export const heroKeywords = [
   "Test Strategy",
   "Automation",
   "Release Discipline",
-  "Risk Management",
   "Team Mentoring"
 ] as const;
 

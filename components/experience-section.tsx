@@ -101,14 +101,14 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
                     <div className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-ink/50">
                       KEY WORDS
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="space-y-2.5">
                       {impactLabels[index]?.map((impact) => (
-                        <span
+                        <div
                           key={impact}
-                          className="rounded-full border border-accent/30 bg-accentSoft px-3 py-1 text-xs font-medium text-accent"
+                          className="rounded-[1rem] border border-accent/18 bg-white/72 px-3 py-2 text-sm font-medium leading-6 text-accent"
                         >
                           {impact}
-                        </span>
+                        </div>
                       ))}
                     </div>
                   </aside>

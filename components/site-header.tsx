@@ -38,16 +38,15 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <a
           href="#top"
-          className="inline-flex min-h-[44px] items-center rounded-full border border-line/70 bg-white/70 pl-1.5 pr-3 transition hover:shadow-lg hover:shadow-accent/20 md:hidden"
+          className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line/70 bg-white/80 shadow-[0_16px_30px_rgba(20,31,39,0.16)] transition hover:shadow-lg hover:shadow-accent/20 md:hidden"
         >
           <Image
-            src="/yeni.png"
+            src="/logoubt.png"
             alt={siteMeta.name}
-            width={32}
-            height={32}
-            className="h-8 w-8 rounded-full shadow-sm"
+            width={40}
+            height={40}
+            className="h-10 w-10 rounded-full object-cover shadow-[0_10px_22px_rgba(20,31,39,0.22)]"
           />
-          <span className="ml-2 text-sm font-semibold text-ink">{siteMeta.name}</span>
         </a>
 
         <nav className="hidden min-w-0 flex-1 md:block" aria-label="Primary">
@@ -72,15 +71,15 @@ export function SiteHeader() {
           type="button"
           className={`ml-auto inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-sm font-semibold transition-transform active:scale-95 md:hidden ${
             isOpen
-              ? "border-accent bg-accent text-white shadow-lg shadow-accent/30"
-              : "border-accent/40 bg-accent/90 text-white shadow-md shadow-accent/20 hover:bg-accent"
+              ? "border-rose-600 bg-rose-600 text-white shadow-lg shadow-rose-500/25"
+              : "border-emerald-600 bg-emerald-600 text-white shadow-md shadow-emerald-500/25 hover:bg-emerald-500"
           }`}
           onClick={() => setIsOpen((open) => !open)}
           aria-expanded={isOpen}
           aria-controls="site-navigation"
-          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-label="Toggle menu"
         >
-          {isOpen ? "Close" : "UBT"}
+          UBT
         </button>
       </div>
 

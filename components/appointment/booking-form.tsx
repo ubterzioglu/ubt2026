@@ -24,10 +24,7 @@ export function BookingForm({
 }: BookingFormProps) {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-      <form
-        action={action}
-        className="rounded-[1.75rem] border border-line/70 bg-white/72 px-6 py-7 sm:px-8 sm:py-8"
-      >
+      <form action={action} className="px-1 py-1">
         <div className="space-y-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
@@ -102,7 +99,7 @@ export function BookingForm({
         </div>
       </form>
 
-      <aside className="rounded-[1.75rem] border border-line/70 bg-gradient-to-br from-white/78 via-paper/86 to-mist/78 px-6 py-7 sm:px-8 sm:py-8">
+      <aside className="px-1 py-1">
         <div className="space-y-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sunrise">
@@ -113,17 +110,20 @@ export function BookingForm({
             </h3>
           </div>
           <div className="space-y-4 text-sm leading-7 text-ink/72">
-            <div className="rounded-[1.35rem] border border-line/80 bg-white/80 px-4 py-4">
-              1. You choose a published slot that is still open.
-            </div>
-            <div className="rounded-[1.35rem] border border-line/80 bg-white/80 px-4 py-4">
-              2. Your request lands in the admin review panel with your notes.
-            </div>
-            <div className="rounded-[1.35rem] border border-line/80 bg-white/80 px-4 py-4">
-              3. I confirm, complete, or cancel the appointment after review.
-            </div>
+            {[
+              "You choose a published slot that is still open.",
+              "Your request lands in the admin review panel with your notes.",
+              "I confirm, complete, or cancel the appointment after review."
+            ].map((step, index) => (
+              <div key={step} className="flex items-start gap-3">
+                <span className="mt-1.5 inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-accent/10 text-xs font-semibold text-accent">
+                  {index + 1}
+                </span>
+                <p>{step}</p>
+              </div>
+            ))}
           </div>
-          <div className="rounded-[1.5rem] border border-line/80 bg-gradient-to-br from-paper via-white to-mist/90 px-5 py-5 text-sm leading-7 text-ink/72">
+          <div className="border-t border-line/70 pt-5 text-sm leading-7 text-ink/72">
             If none of the slots fit, you can still reach out through the contact links on the
             homepage and we can arrange another time.
           </div>
