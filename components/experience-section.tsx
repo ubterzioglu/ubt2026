@@ -80,38 +80,39 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
                   </div>
                 </div>
 
-                <div className="mb-6 rounded-2xl border border-line/70 bg-mist/55 p-4">
-                  <div className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-ink/50">
-                    KEY WORDS
+                <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_19rem] xl:items-start">
+                  <div>
+                    <div className="mb-4 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-ink/70">
+                      <Star className="h-4 w-4 text-accent" />
+                      Responsibilities & Achievements
+                    </div>
+
+                    <ul className="space-y-3">
+                      {item.highlights.map((highlight) => (
+                        <li key={highlight} className="flex items-start gap-3">
+                          <span className="mt-2 h-2 w-2 rounded-full bg-accent flex-shrink-0" />
+                          <p className="text-sm leading-6 text-ink/75">{highlight}</p>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {impactLabels[index]?.map((impact) => (
-                      <span
-                        key={impact}
-                        className="rounded-full border border-accent/30 bg-accentSoft px-3 py-1 text-xs font-medium text-accent"
-                      >
-                        {impact}
-                      </span>
-                    ))}
-                  </div>
+
+                  <aside className="rounded-2xl border border-line/70 bg-mist/55 p-4">
+                    <div className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-ink/50">
+                      KEY WORDS
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {impactLabels[index]?.map((impact) => (
+                        <span
+                          key={impact}
+                          className="rounded-full border border-accent/30 bg-accentSoft px-3 py-1 text-xs font-medium text-accent"
+                        >
+                          {impact}
+                        </span>
+                      ))}
+                    </div>
+                  </aside>
                 </div>
-
-                <div className="mb-6">
-                  <div className="mb-4 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-ink/70">
-                    <Star className="h-4 w-4 text-accent" />
-                    Responsibilities & Achievements
-                  </div>
-
-                  <ul className="space-y-3">
-                    {item.highlights.map((highlight) => (
-                      <li key={highlight} className="flex items-start gap-3">
-                        <span className="mt-2 h-2 w-2 rounded-full bg-accent flex-shrink-0" />
-                        <p className="text-sm leading-6 text-ink/75">{highlight}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
               </article>
             ))}
           </div>

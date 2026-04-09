@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
-import { AchievementCard } from "@/components/achievement-card";
 import { AboutAccordion } from "@/components/about-accordion";
 import { BookingForm } from "@/components/appointment/booking-form";
 import { FeaturedGrid } from "@/components/featured-grid";
@@ -15,8 +14,9 @@ import { ExperienceSection } from "@/components/experience-section";
 import { TechStack } from "@/components/tech-stack";
 import { fallbackArticles, fallbackBookmarks, fallbackTools } from "@/content/featured";
 import {
+  achievementBullets,
+  achievementMetrics,
   aboutParagraphs,
-  keyAchievements,
   contactItems,
   corporateProjects,
   cvLinks,
@@ -33,7 +33,7 @@ import {
 import { createAppointment, getAvailableAppointmentSlots } from "@/lib/appointments";
 import { sendNewBookingNotification } from "@/lib/email";
 import { getFeaturedCollections } from "@/lib/featured-items";
-import type { FeaturedItem } from "@/types/site";
+import type { CvLink, FeaturedItem } from "@/types/site";
 
 const contactIconMap = {
   WhatsApp: (
@@ -68,6 +68,46 @@ type CommunicationLabel = keyof typeof contactIconMap;
 
 function hasContactIcon(label: string): label is CommunicationLabel {
   return label in contactIconMap;
+}
+
+function renderCvFlag(flagCode: CvLink["flagCode"]): ReactNode {
+  if (flagCode === "de") {
+    return (
+      <svg viewBox="0 0 64 64" aria-hidden="true" className="h-14 w-14">
+        <defs>
+          <clipPath id="flag-de-circle">
+            <circle cx="32" cy="32" r="32" />
+          </clipPath>
+        </defs>
+        <g clipPath="url(#flag-de-circle)">
+          <rect width="64" height="21.34" y="0" fill="#111827" />
+          <rect width="64" height="21.34" y="21.33" fill="#d62828" />
+          <rect width="64" height="21.34" y="42.66" fill="#f4b400" />
+        </g>
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden="true" className="h-14 w-14">
+      <defs>
+        <clipPath id="flag-uk-circle">
+          <circle cx="32" cy="32" r="32" />
+        </clipPath>
+      </defs>
+      <g clipPath="url(#flag-uk-circle)">
+        <rect width="64" height="64" fill="#1f4aa8" />
+        <path d="M0 8 8 0l56 56-8 8Z" fill="#fff" />
+        <path d="M56 0 64 8 8 64 0 56Z" fill="#fff" />
+        <path d="M0 13.5 13.5 0l50.5 50.5L50.5 64Z" fill="#cf142b" />
+        <path d="M50.5 0 64 13.5 13.5 64 0 50.5Z" fill="#cf142b" />
+        <rect x="26" width="12" height="64" fill="#fff" />
+        <rect y="26" width="64" height="12" fill="#fff" />
+        <rect x="28.5" width="7" height="64" fill="#cf142b" />
+        <rect y="28.5" width="64" height="7" fill="#cf142b" />
+      </g>
+    </svg>
+  );
 }
 
 function mapFallbackItems(items: Array<{
@@ -213,10 +253,15 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-[1.35rem] border border-line/80 bg-gradient-to-br from-white to-mist/80 p-5 shadow-sm transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow sm:rounded-[1.6rem] sm:p-6"
+                  className="flex items-center justify-between gap-4 rounded-[1.35rem] border border-line/80 bg-gradient-to-br from-white to-mist/80 p-5 shadow-sm transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow sm:rounded-[1.6rem] sm:p-6"
                 >
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">PDF</p>
-                  <h3 className="mt-3 font-body text-[clamp(1.4rem,5vw,1.875rem)] font-semibold text-ink">{link.label}</h3>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">PDF</p>
+                    <h3 className="mt-3 font-body text-[clamp(1.4rem,5vw,1.875rem)] font-semibold text-ink">{link.label}</h3>
+                  </div>
+                  <span className="flex h-16 w-16 flex-none items-center justify-center rounded-full border border-line/80 bg-white/92 shadow-[0_14px_30px_rgba(20,31,39,0.14)]">
+                    {renderCvFlag(link.flagCode)}
+                  </span>
                 </a>
               ))}
             </div>
@@ -229,10 +274,35 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Key Achievements</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {keyAchievements.map((achievement) => (
-                <AchievementCard key={achievement.text} achievement={achievement} />
+            <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-5">
+              {achievementMetrics.map((metric) => (
+                <article
+                  key={metric.value}
+                  className="flex aspect-square flex-col justify-center rounded-[1.35rem] border border-line/80 bg-gradient-to-br from-white via-paper to-mist/75 p-4 shadow-sm sm:rounded-[1.6rem] sm:p-5"
+                >
+                  <div>
+                    <p className="font-body text-[clamp(1.8rem,6vw,2.7rem)] font-semibold leading-none tracking-[-0.04em] text-ink">
+                      {metric.value}
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-ink/72">
+                      {metric.label}
+                    </p>
+                  </div>
+                </article>
               ))}
+            </div>
+            <div className="mt-8 rounded-[1.55rem] border border-line/80 bg-white/82 px-5 py-5 sm:px-6 sm:py-6">
+              <ul className="space-y-3 text-sm text-ink/74 sm:text-base">
+                {achievementBullets.map((achievement) => (
+                  <li
+                    key={achievement.text}
+                    className="flex items-start gap-3 leading-7 sm:leading-8"
+                  >
+                    <span className="mt-3 h-1.5 w-1.5 flex-none rounded-full bg-accent/75" />
+                    <span>{achievement.text}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>

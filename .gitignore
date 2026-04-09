@@ -14,3 +14,4 @@ dist
 firmascope/
 ubterzioglude/
 .blackboxcli/
+.secret

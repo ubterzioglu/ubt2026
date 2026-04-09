@@ -41,9 +41,20 @@ export interface CtaLink {
   variant?: "primary" | "secondary" | "ghost";
 }
 
-export interface AchievementItem {
+export interface CvLink {
+  label: string;
+  href: string;
+  note: string;
+  flagCode: "uk" | "de";
+}
+
+export interface AchievementMetric {
+  value: string;
+  label: string;
+}
+
+export interface AchievementBullet {
   text: string;
-  image?: string;
 }
 
 export interface StackItem {
