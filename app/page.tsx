@@ -408,19 +408,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     href="https://docs.google.com/document/d/15HZsBLxiA3hiSBkb-stllK__2PS74el8/export?format=docx"
                     className="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-line/80 bg-white px-4 py-2 text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-accent/40 hover:text-accent"
                   >
-                    <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 3a1 1 0 0 1 .707.293l3 3a1 1 0 0 1-1.414 1.414L11 6.414V12a1 1 0 1 1-2 0V6.414L7.707 7.707A1 1 0 0 1 6.293 6.293l3-3A1 1 0 0 1 10 3Zm-3.707 9.293a1 1 0 0 1 0 1.414l.001.001A1 1 0 0 1 4.88 14H4a2 2 0 0 0-2 2v1a1 1 0 1 1-2 0v-1a4 4 0 0 1 4-4h.879a1 1 0 0 1 .707.293ZM10 3a1 1 0 0 1 .707.293l3 3a1 1 0 0 1-1.414 1.414L11 6.414V12a1 1 0 1 1-2 0V6.414L7.707 7.707A1 1 0 0 1 6.293 6.293l3-3A1 1 0 0 1 10 3Z" clipRule="evenodd" />
-                    </svg>
                     CV Draft (Deutsch) .docx
                   </a>
                   <a
                     href="https://docs.google.com/document/d/1545TJQCrahRcWanWjSKCv63UjxqDcKso/export?format=docx"
                     className="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-line/80 bg-white px-4 py-2 text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-accent/40 hover:text-accent"
                   >
-                    <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 3a1 1 0 0 1 .707.293l3 3a1 1 0 0 1-1.414 1.414L11 6.414V12a1 1 0 1 1-2 0V6.414L7.707 7.707A1 1 0 0 1 6.293 6.293l3-3A1 1 0 0 1 10 3Z" clipRule="evenodd" />
-                      <path d="M3 17a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Z" />
-                    </svg>
                     CV Draft (English) .docx
                   </a>
                 </div>
