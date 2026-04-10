@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <link rel="canonical" href="https://ubterzioglu.de/cv.html" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Özgeçmiş | Umut Barış Terzioğlu</title>
+
+  <link rel="stylesheet" href="ubt-shared.css" />
+
+  <!-- Matrix efekti için canvas -->
+  <canvas id="matrixCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+
+  <!-- Atatürk ve Türk teması için özel CSS -->
+  <style>
+    /* Türk Bayrağı Renkleri */
+    :root {
+      --turk-kirmizi: #E30A17;
+      --turk-koyu-kirmizi: #B30813;
+      --turk-beyaz: #FFFFFF;
+      --turk-ay-yildiz: #FFFFFF;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: #0a0404;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Atatürk silueti arka plan */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(227, 10, 23, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(227, 10, 23, 0.1) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Ay-Yıldız deseni */
+    .turk-pattern {
+      position: fixed;
+      top: 50%;
+      right: -100px;
+      transform: translateY(-50%);
+      width: 400px;
+      height: 400px;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .turk-pattern::before {
+      content: '☾☆';
+      font-size: 300px;
+      color: var(--turk-beyaz);
+      display: block;
+      transform: rotate(-15deg);
+    }
+
+    /* Ana container */
+    .cv-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    /* Neden Buradasın - Accordion Kart */
+    .quick-message-card {
+      background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(227, 10, 23, 0.2) inset;
+      border: 1px solid rgba(227, 10, 23, 0.15);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .quick-message-card:hover {
+      box-shadow: 0 25px 70px rgba(227, 10, 23, 0.15), 0 0 0 1px rgba(227, 10, 23, 0.3) inset;
+      border-color: rgba(227, 10, 23, 0.3);
+    }
+
+    .quick-message-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 24px 28px;
+      transition: background 0.3s ease;
+      gap: 16px;
+    }
+
+    .quick-message-card:hover .quick-message-header {
+      background: rgba(227, 10, 23, 0.05);
+    }
+
+    .quick-message-header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .quick-message-title {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .quick-message-subtitle {
+      color: #aaa;
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .quick-message-subtitle em {
+      color: var(--turk-kirmizi);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .quick-message-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+      padding: 0 28px;
+    }
+
+    .quick-message-card.active .quick-message-content {
+      max-height: 300px;
+      padding: 0 28px 24px 28px;
+    }
+
+    .quick-message-card.active .accordion-arrow {
+      transform: rotate(180deg);
+    }
+
+    .quick-message-body {
+      text-align: center;
+      padding-top: 8px;
+      border-top: 1px solid rgba(227, 10, 23, 0.2);
+    }
+
+    .quick-message-icon-large {
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+
+    .quick-message-body p {
+      color: #ccc;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 8px 0;
+    }
+
+    .quick-message-body strong {
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .quick-message-body em {
+      color: var(--turk-kirmizi);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    /* Hero Kart - Siyah Tema */
+    .main-header {
+      background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-radius: 24px;
+      padding: 35px 30px;
+      text-align: center;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(227, 10, 23, 0.3) inset;
+      border: 1px solid rgba(227, 10, 23, 0.2);
+    }
+
+    .main-domain {
+      color: rgba(227, 10, 23, 0.8);
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 600;
+    }
+
+    .main-header h1 {
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 16px 0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    /* Ay-Yıldız sembolü */
+    .ay-yildiz {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Ben Kimim Linki */
+    .whoami-link {
+      display: inline-block;
+      padding: 10px 24px;
+      background: transparent;
+      color: var(--turk-kirmizi);
+      text-decoration: none;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 2px solid var(--turk-kirmizi);
+    }
+
+    .whoami-link:hover {
+      background: var(--turk-kirmizi);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(227, 10, 23, 0.4);
+    }
+
+    /* Home ikonu - KALDIRILDI */
+
+    /* İndirme Kartı - Siyah Tema */
+    .download-card {
+      background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(227, 10, 23, 0.2) inset;
+      border: 1px solid rgba(227, 10, 23, 0.15);
+    }
+
+    .download-card h3 {
+      color: #ffffff;
+      font-size: 20px;
+      margin: 0 0 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .download-card h3::before {
+      content: '📋';
+      font-size: 24px;
+    }
+
+    /* İndirme butonları */
+    .download-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #252525 0%, #1a1a1a 100%);
+      border: 2px solid rgba(227, 10, 23, 0.3);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .download-btn:hover {
+      border-color: var(--turk-kirmizi);
+      transform: translateX(8px);
+      box-shadow: 0 8px 24px rgba(227, 10, 23, 0.3);
+      background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+    }
+
+    .download-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--turk-kirmizi) 0%, var(--turk-koyu-kirmizi) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .download-info {
+      flex: 1;
+    }
+
+    .download-title {
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .download-desc {
+      color: #999;
+      font-size: 13px;
+    }
+
+    .download-arrow {
+      color: var(--turk-kirmizi);
+      font-size: 24px;
+      font-weight: 300;
+    }
+
+    /* Atatürk Sözü - Siyah Tema */
+    .ataturk-quote {
+      margin-top: 24px;
+      padding: 20px;
+      background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-left: 4px solid var(--turk-kirmizi);
+      border-radius: 12px;
+      font-style: italic;
+      color: #ccc;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(227, 10, 23, 0.15);
+    }
+    
+    .ataturk-quote::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(227, 10, 23, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .ataturk-quote cite {
+      color: var(--turk-kirmizi);
+      font-weight: 600;
+    }
+
+    /* Mesaj Kartı - Siyah Tema */
+    .message-card {
+      background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+      border-radius: 24px;
+      padding: 0;
+      margin-top: 0;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(227, 10, 23, 0.2) inset;
+      overflow: hidden;
+      border: 1px solid rgba(227, 10, 23, 0.15);
+    }
+
+    .message-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 24px 32px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      border-bottom: 2px solid rgba(227, 10, 23, 0.2);
+    }
+
+    .message-header:hover {
+      background: rgba(227, 10, 23, 0.1);
+    }
+
+    .message-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .accordion-arrow {
+      font-size: 14px;
+      color: var(--turk-kirmizi);
+      transition: transform 0.3s ease;
+    }
+
+    .message-card.active .accordion-arrow {
+      transform: rotate(180deg);
+    }
+
+    .message-icon {
+      font-size: 28px;
+    }
+
+    .message-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .message-content {
+      color: #fff;
+      line-height: 1.6;
+      font-size: 12px;
+      padding: 0 32px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+    }
+
+    .message-card.active .message-content {
+      padding: 16px 32px;
+      max-height: 2000px;
+    }
+
+    .message-content strong {
+      color: #fff;
+    }
+
+    .message-content em {
+      color: #fff;
+      font-style: italic;
+    }
+
+    .message-content .highlight {
+      background: linear-gradient(180deg, transparent 60%, rgba(255, 255, 255, 0.2) 60%);
+      padding: 0 2px;
+    }
+
+    .message-closing {
+      text-align: center;
+      color: #fff;
+      font-size: 13px;
+      margin-top: 16px !important;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+    }
+
+    .message-content p {
+      margin: 0 0 16px 0;
+    }
+
+    .message-content em {
+      color: var(--turk-kirmizi);
+      font-style: italic;
+    }
+
+    .message-content strong {
+      color: #1a1a1a;
+    }
+
+    .message-content .highlight {
+      background: linear-gradient(180deg, transparent 60%, rgba(227, 10, 23, 0.2) 60%);
+      padding: 0 4px;
+    }
+
+    .message-separator {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+      margin: 16px 0;
+    }
+
+    .message-closing {
+      text-align: center;
+      color: var(--turk-kirmizi);
+      font-size: 16px;
+      margin-top: 24px !important;
+      padding: 16px;
+      background: rgba(227, 10, 23, 0.05);
+      border-radius: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .message-header {
+        padding: 20px 24px;
+      }
+      
+      .message-content {
+        padding: 0 24px;
+      }
+      
+      .message-card.active .message-content {
+        padding: 12px 24px;
+      }
+      
+      .message-content {
+        font-size: 11px;
+      }
+    }
+
+    .ataturk-quote p {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .ataturk-quote cite {
+      font-size: 12px;
+      color: var(--turk-kirmizi);
+      font-weight: 600;
+      font-style: normal;
+    }
+
+    /* Footer */
+    .turk-footer {
+      text-align: center;
+      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 13px;
+    }
+
+    .turk-footer a {
+      color: rgba(227, 10, 23, 0.8);
+      text-decoration: none;
+    }
+
+    /* Mobil uyum */
+    @media (max-width: 480px) {
+      .cv-container {
+        padding: 20px 16px;
+      }
+
+      .main-header h1 {
+        font-size: 22px;
+      }
+
+      .main-domain {
+        font-size: 10px;
+      }
+
+      .quick-message-header {
+        padding: 20px 24px;
+        gap: 12px;
+      }
+
+      .quick-message-title {
+        font-size: 16px;
+      }
+
+      .quick-message-subtitle {
+        font-size: 13px;
+      }
+
+      .quick-message-card.active .quick-message-content {
+        padding: 0 24px 20px 24px;
+      }
+
+      .quick-message-icon-large {
+        font-size: 32px;
+      }
+
+      .quick-message-body p {
+        font-size: 13px;
+      }
+
+      .download-card {
+        padding: 24px;
+      }
+
+      .download-btn {
+        padding: 16px 20px;
+      }
+
+      .message-header {
+        padding: 20px 24px;
+      }
+      
+      .message-content {
+        padding: 0 24px;
+      }
+      
+      .message-card.active .message-content {
+        padding: 20px 24px;
+      }
+
+      .turk-pattern {
+        width: 200px;
+        height: 200px;
+        right: -50px;
+      }
+
+      .turk-pattern::before {
+        font-size: 150px;
+      }
+    }
+  </style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://ubterzioglu.de/#person",
+  "name": "Umut Barış Terzioğlu",
+  "url": "https://ubterzioglu.de",
+  "image": "https://ubterzioglu.de/img/logoubt.png",
+  "jobTitle": "Kıdemli Yazılım Kalite Güvence Mühendisi",
+  "sameAs": [
+    "https://www.linkedin.com/in/umutbaristerzioglu"
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Umut Barış Terzioğlu",
+  "url": "https://ubterzioglu.de",
+  "description": "Umut Barış Terzioğlu'nun kişisel web sitesi. Özgeçmişe buradan ulaşabilirsiniz."
+}
+</script>
+
+<meta name="description" content="Umut Barış Terzioğlu'nun özgeçmişi. Almanya'da Kıdemli Yazılım QA ve Test Otomasyon Mühendisi." />
+<link rel="icon" type="image/png" href="/img/logoubt.png" />
+
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "v900wrlvts");
+</script>
+</head>
+
+<body>
+  <div class="turk-pattern"></div>
+  
+  <div class="cv-container">
+    
+    <!-- İNDİRME KARTI (ÜSTTE) -->
+    <div class="download-card">
+      <h3>Dokümanları İndir</h3>
+
+      <div class="download-list">
+
+        <div class="download-btn" onclick="window.open('https://drive.google.com/file/d/1CzVipytHne3_JyvSx8GpxHozHCiKc42i/view?usp=drive_link', '_blank')">
+          <div class="download-icon">🇬🇧</div>
+          <div class="download-info">
+            <div class="download-title">İngilizce Özgeçmiş (PDF)</div>
+            <div class="download-desc">Google Drive'da görüntüle</div>
+          </div>
+          <span class="download-arrow">›</span>
+        </div>
+
+        <div class="download-btn" onclick="window.open('https://docs.google.com/document/d/1545TJQCrahRcWanWjSKCv63UjxqDcKso/edit?usp=sharing&ouid=117487114464451671367&rtpof=true&sd=true', '_blank')">
+          <div class="download-icon">🇬🇧</div>
+          <div class="download-info">
+            <div class="download-title">İngilizce Özgeçmiş (DOCX)</div>
+            <div class="download-desc">Google Docs'ta düzenle</div>
+          </div>
+          <span class="download-arrow">›</span>
+        </div>
+
+        <div class="download-btn" onclick="window.open('https://drive.google.com/file/d/16ymUOQHBevOX4J_adnTzyqC2BEEj6Jv4/view?usp=drive_link', '_blank')">
+          <div class="download-icon">🇩🇪</div>
+          <div class="download-info">
+            <div class="download-title">Almanca Lebenslauf (PDF)</div>
+            <div class="download-desc">Google Drive'da görüntüle</div>
+          </div>
+          <span class="download-arrow">›</span>
+        </div>
+
+        <div class="download-btn" onclick="window.open('https://docs.google.com/document/d/15HZsBLxiA3hiSBkb-stllK__2PS74el8/edit?usp=drive_link&ouid=117487114464451671367&rtpof=true&sd=true', '_blank')">
+          <div class="download-icon">🇩🇪</div>
+          <div class="download-info">
+            <div class="download-title">Almanca Lebenslauf (DOCX)</div>
+            <div class="download-desc">Google Docs'ta düzenle</div>
+          </div>
+          <span class="download-arrow">›</span>
+        </div>
+
+      </div>
+
+      <!-- Atatürk Sözü -->
+      <div class="ataturk-quote">
+        <p>"Hayatta en hakiki mürşit ilimdir, fendir. İlim ve fennin dışında mürşit aramak gaflettir, cehalettir, dalalettir."</p>
+        <cite>— Mustafa Kemal Atatürk</cite>
+      </div>
+    </div>
+
+    <!-- ANA BAŞLIK (ALTA) -->
+    <div class="main-header">
+      <span class="main-domain">ubterzioglu.de</span>
+      <h1>Umut Barış Terzioğlu</h1>
+      <a href="/index.html" class="whoami-link">Ben Kimim? →</a>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="turk-footer">
+      © ubterzioglu · 2025 <a href="https://www.spindorai.com" rel="dofollow">Seo Aracı</a> ve Seo Hizmetleri Spindora
+    </div>
+
+  </div>
+
+  <!-- COUNTER GOAT -->
+  <script data-goatcounter="https://ubterzioglude.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+  <!-- Accordion JavaScript -->
+  <script>
+    function toggleAccordion(header) {
+      const card = header.parentElement;
+      card.classList.toggle('active');
+    }
+  </script>
+
+  <!-- Kırmızı-Beyaz Matrix Efekti -->
+  <script>
+    (function() {
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Canvas boyutunu ayarla
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+      
+      // Matrix karakterleri - Türkçe karakterler ve semboller
+      const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン☾☆✦✧★☆ATATÜRK1923TÜRKİYEMUSTAFAKEMAL'; 
+      const charArray = chars.split('');
+      
+      // Sütun ayarları
+      const fontSize = 14;
+      let columns = Math.floor(canvas.width / fontSize);
+      
+      // Her sütunun y pozisyonu
+      const drops = [];
+      for (let i = 0; i < columns; i++) {
+        drops[i] = Math.random() * -100; // Farklı başlangıç yükseklikleri
+      }
+      
+      // Hız kontrolü
+      let frameCount = 0;
+      const speed = 2; // Her 2 frame'de bir güncelle
+      
+      function draw() {
+        frameCount++;
+        
+        // Yarı saydam siyah ile üzerine çiz (uzun kuyruk efekti)
+        ctx.fillStyle = 'rgba(26, 10, 10, 0.08)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        if (frameCount % speed !== 0) {
+          requestAnimationFrame(draw);
+          return;
+        }
+        
+        ctx.font = fontSize + 'px monospace';
+        
+        for (let i = 0; i < drops.length; i++) {
+          // Rastgele karakter seç
+          const char = charArray[Math.floor(Math.random() * charArray.length)];
+          
+          // Renk belirle - kırmızı ve beyaz karışımı
+          const rand = Math.random();
+          let color;
+          let shadowColor;
+          
+          if (rand > 0.85) {
+            // Beyaz (parlak)
+            color = '#FFFFFF';
+            shadowColor = 'rgba(255, 255, 255, 0.8)';
+            ctx.shadowBlur = 8;
+          } else if (rand > 0.6) {
+            // Açık kırmızı
+            color = '#FF6B6B';
+            shadowColor = 'rgba(227, 10, 23, 0.6)';
+            ctx.shadowBlur = 4;
+          } else if (rand > 0.3) {
+            // Ana kırmızı
+            color = '#E30A17';
+            shadowColor = 'rgba(227, 10, 23, 0.5)';
+            ctx.shadowBlur = 3;
+          } else {
+            // Koyu kırmızı
+            color = '#8B0000';
+            shadowColor = 'rgba(139, 0, 0, 0.4)';
+            ctx.shadowBlur = 2;
+          }
+          
+          ctx.fillStyle = color;
+          ctx.shadowColor = shadowColor;
+          
+          // Karakteri çiz
+          ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+          
+          // Reset shadow for next character
+          ctx.shadowBlur = 0;
+          
+          // Y pozisyonunu güncelle
+          drops[i]++;
+          
+          // Ekran dışına çıktıysa veya rastgele reset
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+        }
+        
+        requestAnimationFrame(draw);
+      }
+      
+      // Sütun sayısını güncelle pencere boyutu değişince
+      window.addEventListener('resize', function() {
+        const newColumns = Math.floor(canvas.width / fontSize);
+        if (newColumns > columns) {
+          for (let i = columns; i < newColumns; i++) {
+            drops[i] = Math.random() * -100;
+          }
+        }
+        columns = newColumns;
+      });
+      
+      draw();
+    })();
+  </script>
+
+</body>
+</html>

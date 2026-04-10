@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elif DE-TR Takip Aracı</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="logoubt.png" />
+</head>
+<body>
+  <main class="wrap">
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">Z</div>
+        <div class="brandText">
+          <h1>ZELIFS</h1>
+          <p>Sade, hızlı, net...</p>
+        </div>
+      </div>
+
+      <div class="brandMedia">
+        <img class="brandImg brandLogo" src="logoubt.png" alt="UBT logo" />
+        <img class="brandImg brandProfile" src="elifprofile.png" alt="Elif profile" />
+        <img class="brandImg brandProfile" src="picprofile.png" alt="UBT profile" />
+      </div>
+    </header>
+
+    <!-- BİLGİ (tek kart, aç/kapa) -->
+    <section class="card card-blue accordion is-collapsed" id="accInfo">
+      <div class="accBar">
+        <div class="accBarLeft">
+          <h2 class="accBarTitle">Bilgi</h2>
+          <div class="accBarHint muted small">Tool mesajı + TR tatiller (2026)</div>
+        </div>
+
+        <div class="accBarRight">
+          <span class="pill pill-blue">Bilgi</span>
+          <button class="accToggleBtn" type="button" id="btnInfoToggle" aria-expanded="false">Aç</button>
+        </div>
+      </div>
+
+      <div class="accBody">
+        <!-- Tool mesajı -->
+        <div class="innerCard innerCompact">
+          <div class="innerHead">
+            <h3>Tool mesajı</h3>
+            <span class="pill pill-yellow">Not</span>
+          </div>
+
+          <div class="toolMsg" style="margin-top:0;">
+            <div class="toolMsgText">
+              Umarım işine yarar; istediğin güncellemeleri söyle, yapalım!
+            </div>
+            <div class="miniNote muted small" style="margin-top:6px;">
+              Bu tool Elif için hazırlanmıştır.
+            </div>
+          </div>
+        </div>
+
+        <!-- Tatiller -->
+        <div class="innerCard innerCompact">
+          <div class="innerHead">
+            <h3>Takvim — TR Tatiller (2026)</h3>
+            <div id="holidayCount" class="muted small">—</div>
+          </div>
+
+          <div class="muted small" style="margin-top:-2px;">
+            Not: “Arefe” günleri <b>0.5</b> olarak sayılır.
+          </div>
+
+          <div class="tableWrap" style="margin-top:8px;">
+            <table class="table tableCompact tableTight" aria-label="TR 2026 holidays table">
+              <thead>
+                <tr>
+                  <th class="col-date">Tarih</th>
+                  <th class="col-day">Gün</th>
+                  <th class="col-name">Ad</th>
+                  <th class="col-w">W</th>
+                </tr>
+              </thead>
+              <tbody id="holidaysTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANA KART: SEYAHAT EKLE + TOPLAM -->
+    <section class="card card-orange">
+      <div class="cardHead">
+        <h2>DE dışı gün hesabı</h2>
+        <div id="statusBadge" class="statusBadge status-unknown">Durum: —</div>
+      </div>
+
+      <div class="formGrid">
+        <div class="field">
+          <label for="dateOut">DE ➡️ TR (Çıkış)</label>
+          <input id="dateOut" type="date" />
+          <div id="outPretty" class="hint">Seçim: —</div>
+        </div>
+
+        <div class="field">
+          <label for="dateIn">TR ➡️ DE (Dönüş)</label>
+          <input id="dateIn" type="date" />
+          <div id="inPretty" class="hint">Seçim: —</div>
+        </div>
+      </div>
+
+      <div class="rowBetween">
+        <div class="resultCard">
+          <div class="resultTitle">Toplam DE dışı gün</div>
+          <div id="daysValue" class="resultValue">—</div>
+          <div class="muted small">Toplam = tüm seyahatler için (Dönüş − Çıkış)</div>
+        </div>
+
+        <div class="actions">
+          <button id="btnTodayIn" class="btn btn-green" type="button">Bugün: Dönüş</button>
+          <button id="btnAddTrip" class="btn btn-blue" type="button">Seyahat ekle</button>
+          <button id="btnClearInputs" class="btn btn-ghost" type="button">Girişi temizle</button>
+          <button id="btnClearAll" class="btn btn-ghost" type="button">Hepsini temizle</button>
+        </div>
+      </div>
+
+      <div id="errors" class="errors" aria-live="polite"></div>
+
+      <div class="innerCard">
+        <div class="innerHead">
+          <h3>Seyahatler</h3>
+          <div id="tripCount" class="muted small">0 kayıt</div>
+        </div>
+
+        <div class="tableWrap">
+          <table class="table" aria-label="Seyahatler tablosu">
+            <thead>
+              <tr>
+                <th>Çıkış</th>
+                <th>Dönüş</th>
+                <th>Gün</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tripsTbody"></tbody>
+          </table>
+        </div>
+
+        <div id="emptyTrips" class="muted small" style="display:none; padding-top:8px;">
+          Henüz seyahat yok. Üstten tarih seçip “Seyahat ekle” ile ekleyebilirsin.
+        </div>
+      </div>
+    </section>
+
+    <!-- ARTI / EKSİ (alt alta + aç/kapa) -->
+    <section class="stack">
+      <!-- ARTI -->
+      <article class="card card-blue accordion is-collapsed">
+        <div class="accBar">
+          <div class="accBarLeft">
+            <h2 class="accBarTitle">Artı</h2>
+            <div class="accBarHint muted small">Karar destek</div>
+          </div>
+
+          <div class="accBarRight">
+            <span class="pill pill-blue">+</span>
+            <button class="accToggleBtn" type="button" data-acc-toggle aria-expanded="false">Aç</button>
+          </div>
+        </div>
+
+        <div class="accBody">
+          <div class="noteRow">
+            <input id="plusInput" type="text" autocomplete="off" placeholder="Tek satır artı notu..." />
+            <button id="btnAddPlus" class="btn btn-blue" type="button">Ekle</button>
+          </div>
+
+          <div class="innerCard">
+            <div class="innerHead">
+              <h3>Artılar listesi</h3>
+              <div id="plusCount" class="muted small">0 kayıt</div>
+            </div>
+            <ul id="plusList" class="notesList"></ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- EKSİ -->
+      <article class="card card-purple accordion is-collapsed">
+        <div class="accBar">
+          <div class="accBarLeft">
+            <h2 class="accBarTitle">Eksi</h2>
+            <div class="accBarHint muted small">Karar destek</div>
+          </div>
+
+          <div class="accBarRight">
+            <span class="pill pill-purple">−</span>
+            <button class="accToggleBtn" type="button" data-acc-toggle aria-expanded="false">Aç</button>
+          </div>
+        </div>
+
+        <div class="accBody">
+          <div class="noteRow">
+            <input id="minusInput" type="text" autocomplete="off" placeholder="Tek satır eksi notu..." />
+            <button id="btnAddMinus" class="btn btn-purple" type="button">Ekle</button>
+          </div>
+
+          <div class="innerCard">
+            <div class="innerHead">
+              <h3>Eksiler listesi</h3>
+              <div id="minusCount" class="muted small">0 kayıt</div>
+            </div>
+            <ul id="minusList" class="notesList"></ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- DURUM KARTI (HER ZAMAN GÖRÜNÜR) -->
+    <section class="card card-yellow" id="summaryCard">
+      <div class="cardHead">
+        <h2>Durum Özeti (Screenshot-ready)</h2>
+        <span id="summaryBadge" class="pill pill-yellow">ZELIFS</span>
+      </div>
+
+      <div class="summaryGrid">
+        <div class="metric">
+          <div class="metricLabel">Toplam DE dışı gün</div>
+          <div id="sumTotalDays" class="metricValue">—</div>
+        </div>
+
+        <div class="metric">
+          <div class="metricLabel">180 limiti</div>
+          <div id="sumLimit" class="metricValue">—</div>
+          <div id="sumLimitNote" class="muted small">—</div>
+        </div>
+
+        <div class="metric">
+          <div class="metricLabel">Seyahat sayısı</div>
+          <div id="sumTripCount" class="metricValue">0</div>
+        </div>
+
+        <div class="metric">
+          <div class="metricLabel">Aralık</div>
+          <div id="sumRange" class="metricValue">—</div>
+          <div id="sumRangeNote" class="muted small">—</div>
+        </div>
+      </div>
+
+      <div class="summaryBody">
+        <div class="innerCard">
+          <div class="innerHead">
+            <h3>Seyahat listesi</h3>
+            <div id="sumTripsMeta" class="muted small">—</div>
+          </div>
+
+          <div class="tableWrap">
+            <table class="table tableCompact" aria-label="Özet seyahatler tablosu">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Çıkış</th>
+                  <th>Dönüş</th>
+                  <th>Gün</th>
+                </tr>
+              </thead>
+              <tbody id="sumTripsTbody"></tbody>
+            </table>
+          </div>
+
+          <div id="sumTripsEmpty" class="muted small" style="display:none; padding-top:8px;">
+            Henüz seyahat eklenmedi.
+          </div>
+        </div>
+
+        <div class="gridInner">
+          <div class="innerCard">
+            <div class="innerHead">
+              <h3>Artılar</h3>
+              <div id="sumPlusMeta" class="muted small">0 kayıt</div>
+            </div>
+            <ul id="sumPlusList" class="notesList"></ul>
+          </div>
+
+          <div class="innerCard">
+            <div class="innerHead">
+              <h3>Eksiler</h3>
+              <div id="sumMinusMeta" class="muted small">0 kayıt</div>
+            </div>
+            <ul id="sumMinusList" class="notesList"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span class="muted small">Veriler internete gitmez! Lokal kullanım! Bilgiler tarayıcıda tutulur. Screenshot ile paylaşılabilir.</span>
+      <span class="muted small">©ubterzioglu 2025</span>
+    </footer>
+  </main>
+
+  <!-- Accordion toggle (Bilgi + Artı + Eksi) -->
+  <script>
+    (function () {
+      const infoCard = document.getElementById("accInfo");
+      const infoBtn = document.getElementById("btnInfoToggle");
+
+      function syncBtn(btn, card) {
+        if (!btn || !card) return;
+        const collapsed = card.classList.contains("is-collapsed");
+        btn.textContent = collapsed ? "Aç" : "Kapat";
+        btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      }
+
+      if (infoCard && infoBtn) {
+        infoBtn.addEventListener("click", () => {
+          infoCard.classList.toggle("is-collapsed");
+          syncBtn(infoBtn, infoCard);
+        });
+        syncBtn(infoBtn, infoCard);
+      }
+
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-acc-toggle]");
+        if (!btn) return;
+
+        const card = btn.closest(".accordion");
+        if (!card) return;
+
+        card.classList.toggle("is-collapsed");
+        syncBtn(btn, card);
+      });
+    })();
+  </script>
+
+  <script src="app.js"></script>
+</body>
+</html>
