@@ -9,6 +9,7 @@ import {
   hasAdminAccess,
   updateAppointmentSlot
 } from "@/lib/appointments";
+import { SlotDatePicker } from "@/components/appointment/slot-date-picker";
 
 interface AdminSlotsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -249,10 +250,7 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
               Create a slot
             </p>
             <h2 className="mt-2 font-body text-2xl font-semibold text-ink">Publish new availability</h2>
-            <p className="mt-3 text-sm leading-7 text-ink/72">
-              Use full ISO 8601 timestamps with an offset, for example
-              2026-04-15T14:00:00+02:00.
-            </p>
+
           </div>
           <form action={createSlotAction} className="mt-8 grid gap-4 lg:grid-cols-2">
             <input type="hidden" name="access" value={accessKey} />
@@ -273,36 +271,8 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
                 className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
               />
             </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-ink">Starts at</span>
-              <input
-                type="text"
-                name="startsAt"
-                required
-                placeholder="2026-04-15T14:00:00+02:00"
-                className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-              />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-ink">Ends at</span>
-              <input
-                type="text"
-                name="endsAt"
-                required
-                placeholder="2026-04-15T14:45:00+02:00"
-                className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-              />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-ink">Timezone</span>
-              <input
-                type="text"
-                name="timezone"
-                defaultValue="Europe/Berlin"
-                className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-              />
-            </label>
-            <label className="flex items-center gap-3 rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm lg:mt-8">
+            <SlotDatePicker />
+            <label className="flex items-center gap-3 rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm">
               <input type="checkbox" name="isPublic" defaultChecked className="h-4 w-4" />
               Publish this slot on the homepage booking section
             </label>
@@ -382,35 +352,11 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
                       className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
                     />
                   </label>
-                  <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-ink">Starts at</span>
-                    <input
-                      type="text"
-                      name="startsAt"
-                      required
-                      defaultValue={slot.startsAt}
-                      className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-ink">Ends at</span>
-                    <input
-                      type="text"
-                      name="endsAt"
-                      required
-                      defaultValue={slot.endsAt}
-                      className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-ink">Timezone</span>
-                    <input
-                      type="text"
-                      name="timezone"
-                      defaultValue={slot.timezone}
-                      className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-                    />
-                  </label>
+                  <SlotDatePicker
+                    defaultStartsAt={slot.startsAt}
+                    defaultEndsAt={slot.endsAt}
+                    defaultTimezone={slot.timezone}
+                  />
                   <label className="flex items-center gap-3 rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm lg:mt-8">
                     <input type="checkbox" name="isPublic" defaultChecked={slot.isPublic} className="h-4 w-4" />
                     Publish this slot
