@@ -131,7 +131,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 Request admin
               </p>
               <h1 className="mt-2 font-body text-[clamp(2rem,5vw,2.7rem)] font-semibold tracking-[-0.03em] text-ink">
-                Requests dashboard
+                UBT
               </h1>
             </div>
             <div className="flex flex-wrap gap-3">
