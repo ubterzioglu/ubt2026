@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
+import type { Metadata } from "next";
 import type { Route } from "next";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
+import { JsonLd } from "@/components/json-ld";
 import { AboutAccordion } from "@/components/about-accordion";
 import { BookingForm } from "@/components/appointment/booking-form";
 import { CvReviewForm } from "@/components/cv-review-form";
@@ -13,6 +15,27 @@ import { FeaturedGrid } from "@/components/featured-grid";
 import { HeroSection } from "@/components/hero-section";
 import { NewsUpdatesCarousel } from "@/components/news-updates-carousel";
 import { ScrollToTop } from "@/components/scroll-to-top";
+import { buildMetadata } from "@/lib/seo";
+import { buildBreadcrumbSchema, buildFaqSchema } from "@/lib/structured-data";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Umut Barış Terzioğlu — Senior QA Engineer in Dortmund, Germany",
+  description:
+    "Portfolio of Umut Barış Terzioğlu — Senior Software QA Engineer with 15+ years in test strategy, automation, enterprise delivery, and quality leadership.",
+  keywords: [
+    "QA Engineer Germany",
+    "Senior QA Engineer Dortmund",
+    "Test Automation Expert",
+    "Software Quality Assurance",
+    "Selenium WebDriver",
+    "Ranorex Automation",
+    "CI/CD Testing",
+    "Test Manager Germany",
+    "Agile QA Engineer",
+    "Umut Barış Terzioğlu"
+  ],
+  canonical: "/"
+});
 import { SiteHeader } from "@/components/site-header";
 import { ExperienceSection } from "@/components/experience-section";
 import { TechStack } from "@/components/tech-stack";
@@ -282,6 +305,39 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <main className="page-shell pb-16">
+      <JsonLd
+        id="json-ld-homepage"
+        schema={[
+          buildBreadcrumbSchema([{ name: "Home", href: "/" }]),
+          buildFaqSchema([
+            {
+              question: "What does Umut Barış Terzioğlu do?",
+              answer:
+                "Umut Barış Terzioğlu is a Senior Software Quality Assurance Engineer with 15+ years of experience in test strategy, automation, enterprise delivery, and quality leadership."
+            },
+            {
+              question: "Where is Umut Barış Terzioğlu based?",
+              answer:
+                "He is based in Dortmund, Germany and has been working in the German tech ecosystem since 2021."
+            },
+            {
+              question: "What test automation tools does Umut Barış Terzioğlu use?",
+              answer:
+                "Selenium, Ranorex, TestNG, JUnit, Cucumber, Jenkins, Docker, Java, C#, Postman, and Jira/Xray among others."
+            },
+            {
+              question: "Can I book an appointment with Umut Barış Terzioğlu?",
+              answer:
+                "Yes. You can book a free appointment directly through the booking section on this portfolio page."
+            },
+            {
+              question: "Does Umut Barış Terzioğlu offer CV reviews?",
+              answer:
+                "Yes. He offers free CV reviews for software testers and QA professionals looking to improve their resumes for the German job market."
+            }
+          ])
+        ]}
+      />
       <SiteHeader />
       <HeroSection />
       <ScrollToTop />
