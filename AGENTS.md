@@ -163,7 +163,7 @@ Paths alias: `@/*` maps to project root.
 - Content data (profile info, featured items, navigation) belongs in `content/`, not hardcoded in components.
 - Type definitions shared across files go in `types/`.
 - Data-fetching and external service logic goes in `lib/`.
-- Do not modify files in `firmascope/` or `ubterzioglude/` (excluded from tsconfig).
+- Do not modify files in `firmascope/` (excluded from tsconfig).
 
 ## Environment Variables
 

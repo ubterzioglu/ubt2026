@@ -36,5 +36,5 @@
     "types/**/*.tsx",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "firmascope", "ubterzioglude"]
+  "exclude": ["node_modules", "firmascope"]
 }
