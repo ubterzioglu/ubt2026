@@ -1,5 +1,4 @@
 import type { CvReviewQueueEntry, CvReviewQueueResult } from "@/types/cv-review";
-import { buildPublicCvWhatsappLink } from "@/lib/cv-review-url";
 
 interface CvReviewQueueSectionProps {
   result: CvReviewQueueResult;
@@ -18,32 +17,34 @@ function QueueCard({ entry }: QueueCardProps) {
         <p className="font-body text-xl font-semibold text-ink">{entry.initials}</p>
         <p className="mt-0.5 text-xs text-ink/55">{entry.createdDate}</p>
       </div>
-      <div className="flex flex-col items-end gap-1.5">
+      <div className="flex flex-wrap items-center justify-end gap-1.5">
         <span
-          className={`inline-flex min-w-[60px] items-center justify-center rounded-full px-3 py-1 text-xs font-semibold ${
+          className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-semibold ${
             isApproved
               ? "bg-emerald-100 text-emerald-800"
               : "bg-amber-100 text-amber-800"
           }`}
         >
-          Approval
+          {isApproved ? "Approved" : "Pending"}
         </span>
-        <a
-          href={entry.linkedinUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex min-w-[60px] items-center justify-center rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent transition hover:bg-accent/20"
-        >
-          LinkedIn
-        </a>
-        <a
-          href={buildPublicCvWhatsappLink(entry.id)}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex min-w-[60px] items-center justify-center rounded-full bg-ink/8 px-3 py-1 text-xs font-semibold text-ink transition hover:bg-ink/14"
+        <span
+          className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+            entry.cvReviewed
+              ? "bg-emerald-100 text-emerald-800"
+              : "bg-amber-100 text-amber-800"
+          }`}
         >
           CV
-        </a>
+        </span>
+        <span
+          className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+            entry.linkedinReviewed
+              ? "bg-emerald-100 text-emerald-800"
+              : "bg-amber-100 text-amber-800"
+          }`}
+        >
+          LinkedIn
+        </span>
       </div>
     </article>
   );

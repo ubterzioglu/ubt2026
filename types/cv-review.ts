@@ -10,6 +10,8 @@ export interface CvReviewRequest {
   whatsappNumber: string;
   linkedinUrl: string;
   status: CvReviewStatus;
+  cvReviewed: boolean;
+  linkedinReviewed: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -18,6 +20,12 @@ export interface CvReviewRequestInput {
   fullName: string;
   whatsappNumber: string;
   linkedinUrl: string;
+}
+
+export interface CvReviewUpdateInput {
+  status?: CvReviewStatus;
+  cvReviewed?: boolean;
+  linkedinReviewed?: boolean;
 }
 
 export interface CvReviewRequestsResult {
@@ -43,7 +51,8 @@ export interface CvReviewQueueEntry {
   initials: string;
   createdDate: string;
   status: CvReviewStatus;
-  linkedinUrl: string;
+  cvReviewed: boolean;
+  linkedinReviewed: boolean;
 }
 
 export interface CvReviewQueueResult {

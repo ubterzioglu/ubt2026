@@ -10,7 +10,8 @@ import type {
   CvReviewRequestInput,
   CvReviewRequestResult,
   CvReviewRequestsResult,
-  CvReviewStatus
+  CvReviewStatus,
+  CvReviewUpdateInput
 } from "@/types/cv-review";
 
 interface CvReviewRow {
@@ -19,6 +20,8 @@ interface CvReviewRow {
   whatsapp_number: string;
   linkedin_url: string;
   status: CvReviewStatus;
+  cv_reviewed: boolean;
+  linkedin_reviewed: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -118,6 +121,8 @@ function toCvReviewRequest(row: CvReviewRow): CvReviewRequest {
     whatsappNumber: row.whatsapp_number,
     linkedinUrl: row.linkedin_url,
     status: row.status,
+    cvReviewed: row.cv_reviewed,
+    linkedinReviewed: row.linkedin_reviewed,
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
@@ -223,7 +228,7 @@ export async function getAllCvReviewRequests(): Promise<CvReviewRequestsResult> 
     const { data, error } = await supabase
       .from("cv_review_requests")
       .select(
-        "id, full_name, whatsapp_number, linkedin_url, status, created_at, updated_at"
+        "id, full_name, whatsapp_number, linkedin_url, status, cv_reviewed, linkedin_reviewed, created_at, updated_at"
       )
       .order("created_at", { ascending: false });
 
@@ -260,7 +265,7 @@ export async function getCvReviewRequestById(
     const { data, error } = await supabase
       .from("cv_review_requests")
       .select(
-        "id, full_name, whatsapp_number, linkedin_url, status, created_at, updated_at"
+        "id, full_name, whatsapp_number, linkedin_url, status, cv_reviewed, linkedin_reviewed, created_at, updated_at"
       )
       .eq("id", requestId)
       .single();
@@ -279,6 +284,56 @@ export async function getCvReviewRequestById(
       errorMessage:
         error instanceof Error ? error.message : "Unknown CV review request error",
       request: null
+    };
+  }
+}
+
+export async function updateCvReviewRequest(
+  requestId: string,
+  input: CvReviewUpdateInput
+): Promise<CvReviewMutationResult<CvReviewRequest>> {
+  if (!requestId.trim()) {
+    return { ok: false, errorMessage: "Request ID is required." };
+  }
+
+  const supabase = createServiceSupabaseClient();
+
+  if (!supabase) {
+    return { ok: false, errorMessage: "Supabase service role credentials are missing." };
+  }
+
+  const patch: Record<string, unknown> = {};
+  if (input.status !== undefined) patch.status = input.status;
+  if (input.cvReviewed !== undefined) patch.cv_reviewed = input.cvReviewed;
+  if (input.linkedinReviewed !== undefined) patch.linkedin_reviewed = input.linkedinReviewed;
+
+  if (Object.keys(patch).length === 0) {
+    return { ok: false, errorMessage: "No fields to update." };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("cv_review_requests")
+      .update(patch)
+      .eq("id", requestId)
+      .select(
+        "id, full_name, whatsapp_number, linkedin_url, status, cv_reviewed, linkedin_reviewed, created_at, updated_at"
+      )
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      ok: true,
+      data: toCvReviewRequest(data as CvReviewRow)
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage:
+        error instanceof Error ? error.message : "Unable to update CV review request."
     };
   }
 }
@@ -302,7 +357,8 @@ function formatQueueDate(isoString: string): string {
 interface CvReviewQueueRow {
   id: string;
   full_name: string;
-  linkedin_url: string;
+  cv_reviewed: boolean;
+  linkedin_reviewed: boolean;
   status: CvReviewStatus;
   created_at: string;
 }
@@ -323,7 +379,7 @@ export async function getPublicCvReviewQueue(): Promise<CvReviewQueueResult> {
   try {
     const { data, error } = await supabase
       .from("cv_review_requests")
-      .select("id, full_name, linkedin_url, status, created_at")
+      .select("id, full_name, cv_reviewed, linkedin_reviewed, status, created_at")
       .order("created_at", { ascending: true });
 
     if (error) {
@@ -336,7 +392,8 @@ export async function getPublicCvReviewQueue(): Promise<CvReviewQueueResult> {
       initials: toInitials(row.full_name),
       createdDate: formatQueueDate(row.created_at),
       status: row.status,
-      linkedinUrl: row.linkedin_url
+      cvReviewed: row.cv_reviewed,
+      linkedinReviewed: row.linkedin_reviewed
     }));
 
     const approved = entries.filter((e) => e.status === "approved").length;
