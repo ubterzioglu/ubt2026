@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { JsonLd } from "@/components/json-ld";
@@ -73,9 +74,9 @@ export default async function GeoPage({ params }: Props) {
         <nav aria-label="Breadcrumb" className="mb-8">
           <ol className="flex flex-wrap items-center gap-2 text-sm text-ink/50">
             <li>
-              <a href="/" className="transition hover:text-accent">
+              <Link href="/" className="transition hover:text-accent">
                 Home
-              </a>
+              </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li className="font-semibold text-ink">
@@ -138,18 +139,18 @@ export default async function GeoPage({ params }: Props) {
             {loc.city}. Book a free appointment or send a message.
           </p>
           <div className="flex flex-wrap gap-3">
-            <a
+            <Link
               href="/#book-appointment"
               className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
             >
               Book Appointment
-            </a>
-            <a
+            </Link>
+            <Link
               href="/#contact"
               className="rounded-full border border-line/60 bg-white/80 px-5 py-2.5 text-sm font-semibold text-ink transition hover:-translate-y-0.5"
             >
               Contact
-            </a>
+            </Link>
           </div>
         </section>
       </main>
