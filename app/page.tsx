@@ -580,7 +580,15 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             </h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
-              <details className="group mb-8 rounded-[1.35rem] border border-line/80 bg-paper/70 px-5 py-5">
+              <CvReviewForm
+                action={submitCvReviewRequest}
+                feedbackTone={cvFeedbackTone}
+                feedbackMessage={cvFeedbackMessage}
+                whatsappHref={cvWhatsappHref}
+                submittedRequest={submittedCvReview}
+              />
+              <CvReviewQueueSection result={queueResult} />
+              <details className="group mt-6 rounded-[1.35rem] border border-line/80 bg-paper/70 px-5 py-5">
                 <summary className="flex cursor-pointer list-none select-none items-center justify-between gap-4">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent/80">Drafts for you</p>
@@ -619,14 +627,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   </div>
                 </div>
               </details>
-              <CvReviewForm
-                action={submitCvReviewRequest}
-                feedbackTone={cvFeedbackTone}
-                feedbackMessage={cvFeedbackMessage}
-                whatsappHref={cvWhatsappHref}
-                submittedRequest={submittedCvReview}
-              />
-              <CvReviewQueueSection result={queueResult} />
             </div>
           </div>
         </div>
