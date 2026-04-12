@@ -21,9 +21,9 @@ import { buildMetadata } from "@/lib/seo";
 import { buildBreadcrumbSchema, buildFaqSchema, buildSpeakableSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Umut Barış Terzioğlu — Senior QA Engineer in Dortmund, Germany",
+  title: "Umut Terzioğlu - Senior QA Engineer, Germany",
   description:
-    "Portfolio of Umut Barış Terzioğlu — Senior Software QA Engineer with 15+ years in test strategy, automation, enterprise delivery, and quality leadership.",
+    "Portfolio of Umut Terzioğlu - Senior Software QA Engineer with 15+ years in test strategy, automation, enterprise delivery, and quality leadership.",
   keywords: [
     "QA Engineer Germany",
     "Senior QA Engineer Dortmund",
@@ -34,7 +34,7 @@ export const metadata: Metadata = buildMetadata({
     "CI/CD Testing",
     "Test Manager Germany",
     "Agile QA Engineer",
-    "Umut Barış Terzioğlu"
+    "Umut Terzioğlu"
   ],
   canonical: "/"
 });
