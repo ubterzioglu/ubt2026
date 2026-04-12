@@ -328,6 +328,65 @@ export const privateProjects: ProjectItem[] = [
   }
 ];
 
+export const heroSummary = "As of 2026, Umut Barış Terzioğlu brings over 18 years of professional experience spanning mechanical engineering, enterprise software testing, and quality leadership. Quality assurance engineering is the discipline of ensuring software meets defined quality standards through systematic testing, automation, and process improvement — a practice UBT has applied across 30,000+ users and multiple global platforms.";
+
+export const methodologyText = "UBT's testing methodology combines risk-based testing with shift-left principles, embedding quality validation early in the development lifecycle. By integrating automation into CI/CD pipelines with Jenkins and Docker, every code change is validated against 1,000+ automated checks before reaching production. This approach raised test coverage from 50% to 90% on the Daimler Smaragd platform and optimized test execution time by 40%, saving hundreds of engineering hours monthly.";
+
+export const aboutIntroParagraph = "With a career that began in mechanical engineering and evolved into global quality leadership, UBT combines hands-on engineering discipline with modern test strategy. This unique background means every test plan, automation script, and quality gate is designed with both the product and the user in mind.";
+
+export const achievementsIntroParagraph = "Across enterprise platforms serving tens of thousands of users, these metrics reflect the measurable impact of systematic quality engineering. From raising test coverage by 80% to building automation frameworks that execute over 1,000 checks per cycle, each number represents a concrete improvement in software delivery reliability.";
+
+export const techStackIntroParagraph = "Test automation is the practice of using software tools to execute tests automatically, compare expected versus actual outcomes, and report results without manual intervention. UBT's toolkit spans industry-standard frameworks and languages selected for enterprise reliability and scalability.";
+
+export const corporateProjectsIntroParagraph = "Each project below represents a real enterprise engagement where test strategy, automation, and quality leadership were delivered under production conditions. These are not hypothetical case studies — they are systems actively used by thousands of engineers and operators worldwide.";
+
+export const privateProjectsIntroParagraph = "Beyond enterprise work, UBT builds community platforms, content channels, and practical tools that make quality engineering knowledge accessible to a wider audience.";
+
+export const faqItems = [
+  {
+    question: "What does Umut Barış Terzioğlu do?",
+    answer: "Umut Barış Terzioğlu is a Senior Software Quality Assurance Engineer with 15+ years of experience in test strategy, automation, enterprise delivery, and quality leadership."
+  },
+  {
+    question: "Where is Umut Barış Terzioğlu based?",
+    answer: "He is based in Dortmund, Germany and has been working in the German tech ecosystem since 2021."
+  },
+  {
+    question: "What test automation tools does Umut Barış Terzioğlu use?",
+    answer: "Selenium, Ranorex, TestNG, JUnit, Cucumber, Jenkins, Docker, Java, C#, Postman, and Jira/Xray among others."
+  },
+  {
+    question: "Can I book an appointment with Umut Barış Terzioğlu?",
+    answer: "Yes. You can book a free appointment directly through the booking section on this portfolio page."
+  },
+  {
+    question: "Does Umut Barış Terzioğlu offer CV reviews?",
+    answer: "Yes. He offers free CV reviews for software testers and QA professionals looking to improve their resumes for the German job market."
+  }
+] as const;
+
+export const comparisonTableData = {
+  caption: "Comparison of test automation tools used across UBT's enterprise projects",
+  headers: ["Feature", "Selenium", "Ranorex", "TestNG", "Cucumber"],
+  rows: [
+    ["Type", "Web UI", "Desktop + Web UI", "Unit / Integration", "BDD / Acceptance"],
+    ["Language", "Java, C#, Python, TS", "C#", "Java", "Java, Gherkin"],
+    ["CI/CD Ready", "Yes", "Yes", "Yes", "Yes"],
+    ["Learning Curve", "Moderate", "Low-Moderate", "Low", "Moderate"],
+    ["Best For", "Cross-browser web apps", "Enterprise desktop + web", "Java test orchestration", "Behavior-driven workflows"],
+    ["Used At", "Daimler, Swisslog", "Daimler (Smaragd, SRM, DARRS)", "Daimler, Swisslog", "Daimler"]
+  ]
+};
+
+export const geoLinks = [
+  { label: "Dortmund", href: "/geo/dortmund" },
+  { label: "Frankfurt", href: "/geo/frankfurt" },
+  { label: "Berlin", href: "/geo/berlin" },
+  { label: "Hamburg", href: "/geo/hamburg" },
+  { label: "Germany", href: "/geo/germany" },
+  { label: "Istanbul", href: "/geo/istanbul" }
+] as const;
+
 export const contactItems: ContactItem[] = [
   { label: "WhatsApp", value: "+90 530 240 4995", href: "https://wa.me/905302404995" },
   {

@@ -30,7 +30,7 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
             Career Journey
           </div>
 
-          <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">Experience</h2>
+          <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">What Is UBT&apos;s Professional Experience?</h2>
           <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
 
           <p className="mt-6 max-w-3xl text-base leading-7 text-ink/70">

@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { heroActions, heroKeywords, siteMeta } from "@/content/site";
+import { heroSummary } from "@/content/profile";
 
 export function HeroSection() {
   return (
@@ -20,8 +21,8 @@ export function HeroSection() {
             <div className="order-last mx-auto flex w-full max-w-[16rem] items-end self-end sm:max-w-[18rem] md:max-w-[20rem] lg:order-first lg:mx-0 lg:w-[25rem] lg:max-w-none lg:self-center xl:w-[30rem]">
               <Image
                 src="/1yeni.png"
-                alt=""
-                aria-hidden="true"
+                alt="Umut Barış Terzioğlu — Senior QA Engineer"
+                aria-hidden="false"
                 width={607}
                 height={745}
                 className="pointer-events-none relative z-10 h-auto w-full translate-y-px self-end select-none object-bottom drop-shadow-2xl lg:self-center"
@@ -35,6 +36,9 @@ export function HeroSection() {
               </h1>
               <p className="mt-3 max-w-3xl animate-reveal text-[clamp(0.875rem,2.8vw,1rem)] font-semibold text-ink/76">
                 {siteMeta.role}
+              </p>
+              <p className="mt-4 max-w-3xl animate-reveal text-[clamp(0.8rem,2.2vw,0.92rem)] leading-7 text-ink/64">
+                {heroSummary}
               </p>
               <div className="mt-5 w-full max-w-[37rem]">
                 <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:justify-start sm:gap-1.5 lg:gap-2">

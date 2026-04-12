@@ -15,8 +15,10 @@ import { FeaturedGrid } from "@/components/featured-grid";
 import { HeroSection } from "@/components/hero-section";
 import { NewsUpdatesCarousel } from "@/components/news-updates-carousel";
 import { ScrollToTop } from "@/components/scroll-to-top";
+import Link from "next/link";
+
 import { buildMetadata } from "@/lib/seo";
-import { buildBreadcrumbSchema, buildFaqSchema } from "@/lib/structured-data";
+import { buildBreadcrumbSchema, buildFaqSchema, buildSpeakableSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = buildMetadata({
   title: "Umut Barış Terzioğlu — Senior QA Engineer in Dortmund, Germany",
@@ -45,12 +47,21 @@ import {
   achievementBullets,
   achievementMetrics,
   aboutParagraphs,
+  aboutIntroParagraph,
+  achievementsIntroParagraph,
+  comparisonTableData,
   contactItems,
   corporateProjects,
+  corporateProjectsIntroParagraph,
   cvLinks,
   experienceItems,
+  faqItems,
+  geoLinks,
+  methodologyText,
   privateProjects,
-  stackGroups
+  privateProjectsIntroParagraph,
+  stackGroups,
+  techStackIntroParagraph
 } from "@/content/profile";
 import {
   buildAppointmentSectionUrl,
@@ -304,44 +315,25 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         id="json-ld-homepage"
         schema={[
           buildBreadcrumbSchema([{ name: "Home", href: "/" }]),
-          buildFaqSchema([
-            {
-              question: "What does Umut Barış Terzioğlu do?",
-              answer:
-                "Umut Barış Terzioğlu is a Senior Software Quality Assurance Engineer with 15+ years of experience in test strategy, automation, enterprise delivery, and quality leadership."
-            },
-            {
-              question: "Where is Umut Barış Terzioğlu based?",
-              answer:
-                "He is based in Dortmund, Germany and has been working in the German tech ecosystem since 2021."
-            },
-            {
-              question: "What test automation tools does Umut Barış Terzioğlu use?",
-              answer:
-                "Selenium, Ranorex, TestNG, JUnit, Cucumber, Jenkins, Docker, Java, C#, Postman, and Jira/Xray among others."
-            },
-            {
-              question: "Can I book an appointment with Umut Barış Terzioğlu?",
-              answer:
-                "Yes. You can book a free appointment directly through the booking section on this portfolio page."
-            },
-            {
-              question: "Does Umut Barış Terzioğlu offer CV reviews?",
-              answer:
-                "Yes. He offers free CV reviews for software testers and QA professionals looking to improve their resumes for the German job market."
-            }
-          ])
+          buildFaqSchema(faqItems.map((item) => ({ question: item.question, answer: item.answer }))),
+          buildSpeakableSchema()
         ]}
       />
       <SiteHeader />
       <HeroSection />
       <ScrollToTop />
 
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <p className="text-xs text-ink/40">
+          Published <time dateTime="2026-04-06">April 6, 2026</time> · Last updated <time dateTime="2026-04-12">April 12, 2026</time>
+        </p>
+      </div>
+
       <section id="news-updates" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
-              News/Updates
+              What Is New?
             </h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
@@ -354,8 +346,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="about-me" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">About me</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Who Is Umut Barış Terzioglu?</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <p className="mt-6 max-w-3xl text-sm leading-7 text-ink/68">{aboutIntroParagraph}</p>
             <div className="mt-8">
               <AboutAccordion sections={aboutParagraphs} />
             </div>
@@ -366,7 +359,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="my-cv" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">My CV</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Does UBT&apos;s CV Include?</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {cvLinks.map((link) => (
@@ -426,8 +419,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="key-achievements" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Key Achievements</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Are UBT&apos;s Key Achievements?</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <p className="mt-6 max-w-3xl text-sm leading-7 text-ink/68">{achievementsIntroParagraph}</p>
             <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-5">
               {achievementMetrics.map((metric) => (
                 <article
@@ -465,7 +459,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="tools-developed-by-ubt" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Tools Developed by UBT (me)</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Which Tools Has UBT Developed?</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <FeaturedGrid
@@ -482,7 +476,34 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="tech-stack" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <TechStack stackGroups={stackGroups} />
+            <TechStack stackGroups={stackGroups} introParagraph={techStackIntroParagraph} />
+            <div className="mt-8 overflow-x-auto">
+              <table className="w-full text-sm text-ink/74">
+                <caption className="mb-3 text-left text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                  {comparisonTableData.caption}
+                </caption>
+                <thead>
+                  <tr className="border-b border-line/60">
+                    {comparisonTableData.headers.map((header) => (
+                      <th key={header} scope="col" className="px-3 py-3 text-left font-semibold text-ink">
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparisonTableData.rows.map((row) => (
+                    <tr key={row[0]} className="border-b border-line/30">
+                      {row.map((cell, i) => (
+                        <td key={`${row[0]}-${i}`} className={`px-3 py-2.5 ${i === 0 ? "font-medium text-ink" : ""}`}>
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>
@@ -492,8 +513,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="corporate-projects" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Corporate Projects</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Which Corporate Projects Has UBT Delivered?</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <p className="mt-6 max-w-3xl text-sm leading-7 text-ink/68">{corporateProjectsIntroParagraph}</p>
             <div className="mt-8 flex flex-col gap-4">
               {corporateProjects.map((project) => (
                 <article key={project.title} className="flex flex-col gap-4 rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:flex-row sm:items-center sm:justify-between sm:rounded-[1.55rem] sm:p-6">
@@ -503,15 +525,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     <p className="mt-3 text-sm leading-6 text-ink/68">{project.summary}</p>
                   </div>
                   {project.image && (
-                    <div className="flex-shrink-0">
-                      <Image 
-                        src={`/corporate/${project.image}`} 
-                        alt={project.title} 
+                    <figure className="flex-shrink-0 text-center">
+                      <Image
+                        src={`/corporate/${project.image}`}
+                        alt={`${project.title} — ${project.label} project`}
                         width={120}
                         height={120}
-                        className="h-24 w-24 rounded-full border border-line/50 object-cover shadow-sm sm:h-28 sm:w-28"
+                        className="mx-auto h-24 w-24 rounded-full border border-line/50 object-cover shadow-sm sm:h-28 sm:w-28"
                       />
-                    </div>
+                      <figcaption className="mt-2 text-[0.65rem] leading-4 text-ink/45">{project.title} — {project.label}</figcaption>
+                    </figure>
                   )}
                 </article>
               ))}
@@ -523,8 +546,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="private-projects" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Private Projects</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Side Projects Does UBT Build?</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <p className="mt-6 max-w-3xl text-sm leading-7 text-ink/68">{privateProjectsIntroParagraph}</p>
             <div className="mt-8 flex flex-col gap-4">
               {privateProjects.map((project) => (
                 <article key={project.title} className="flex flex-col gap-4 rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:flex-row sm:items-center sm:justify-between sm:rounded-[1.55rem] sm:p-6">
@@ -534,15 +558,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     <p className="mt-3 text-sm leading-6 text-ink/68">{project.summary}</p>
                   </div>
                   {project.image && (
-                    <div className="flex-shrink-0">
+                    <figure className="flex-shrink-0 text-center">
                       <Image
                         src={`/private/${project.image}`}
-                        alt={project.title}
+                        alt={`${project.title} — ${project.label}`}
                         width={120}
                         height={120}
-                        className="h-24 w-24 rounded-full border border-line/50 object-cover shadow-sm sm:h-28 sm:w-28"
+                        className="mx-auto h-24 w-24 rounded-full border border-line/50 object-cover shadow-sm sm:h-28 sm:w-28"
                       />
-                    </div>
+                      <figcaption className="mt-2 text-[0.65rem] leading-4 text-ink/45">{project.title} — {project.label}</figcaption>
+                    </figure>
                   )}
                 </article>
               ))}
@@ -554,7 +579,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="articles" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Articles</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Articles Has UBT Published?</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <FeaturedGrid
@@ -571,7 +596,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section id="my-bookmarks" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">My Bookmarks</h2>
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Bookmarks Does UBT Recommend?</h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
               <BookmarksList
@@ -588,7 +613,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
-              Book Appointment
+              How Can You Book an Appointment?
             </h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
@@ -608,7 +633,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
             <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
-              CV Review
+              How Does the Free CV Review Work?
             </h2>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
             <div className="mt-8">
@@ -625,10 +650,84 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
+      <section id="qa-approach" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">How Does UBT Approach Quality Assurance?</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <p className="mt-6 max-w-3xl text-sm leading-7 text-ink/68">{methodologyText}</p>
+            <h3 className="mt-8 font-body text-lg font-semibold text-ink">Common QA Challenges and How UBT Solves Them</h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-[1.35rem] border border-line/80 bg-white/82 p-5">
+                <h4 className="text-sm font-semibold text-accent">Low Test Coverage</h4>
+                <p className="mt-2 text-sm leading-6 text-ink/68">Systematic test design and risk-based prioritization raised Daimler Smaragd coverage from 50% to 90%, targeting the most critical paths first.</p>
+              </div>
+              <div className="rounded-[1.35rem] border border-line/80 bg-white/82 p-5">
+                <h4 className="text-sm font-semibold text-accent">Slow Feedback Cycles</h4>
+                <p className="mt-2 text-sm leading-6 text-ink/68">CI/CD pipeline integration with Jenkins and automated regression suites cut test execution time by 40%, delivering results in minutes instead of hours.</p>
+              </div>
+              <div className="rounded-[1.35rem] border border-line/80 bg-white/82 p-5">
+                <h4 className="text-sm font-semibold text-accent">Tool Fragmentation</h4>
+                <p className="mt-2 text-sm leading-6 text-ink/68">Led migration from HP ALM to Jira/Xray, consolidating test management into a single platform and reducing manual effort across teams.</p>
+              </div>
+              <div className="rounded-[1.35rem] border border-line/80 bg-white/82 p-5">
+                <h4 className="text-sm font-semibold text-accent">Knowledge Silos</h4>
+                <p className="mt-2 text-sm leading-6 text-ink/68">Mentored 30+ QA colleagues across Daimler and Swisslog, creating shared documentation, training materials, and onboarding guides.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Frequently Asked Questions</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <dl className="mt-8 space-y-4">
+              {faqItems.map((item, index) => (
+                <details
+                  key={item.question}
+                  open={index === 0}
+                  className="group rounded-[1.35rem] border border-line/80 bg-paper/70"
+                >
+                  <summary className="flex cursor-pointer list-none select-none items-center justify-between gap-4 px-5 py-5">
+                    <dt className="font-body text-[clamp(1rem,3vw,1.2rem)] font-semibold text-ink">
+                      {item.question}
+                    </dt>
+                    <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full border border-line/80 bg-paper text-ink/60 transition group-open:rotate-180">
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden="true">
+                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <dd className="border-t border-line/60 px-5 py-4 text-sm leading-7 text-ink/68">
+                    {item.answer}
+                  </dd>
+                </details>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+
       <section id="contact" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="section-panel flex min-h-[5rem] items-center justify-center overflow-hidden px-4 py-5 sm:min-h-[6rem] sm:px-8 sm:py-6">
-            <div className="flex flex-nowrap items-center justify-center gap-2 sm:gap-5">
+          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">How Can You Reach UBT?</h2>
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <p className="mt-6 max-w-3xl text-sm leading-7 text-ink/68">
+              Available for QA consulting, test strategy reviews, and automation advisory in{" "}
+              {geoLinks.map((loc, i) => (
+                <span key={loc.href}>
+                  <Link href={loc.href} className="font-medium text-accent underline decoration-accent/30 transition hover:decoration-accent">{loc.label}</Link>
+                  {i < geoLinks.length - 2 ? ", " : i === geoLinks.length - 2 ? ", and " : ""}
+                </span>
+              ))}
+              . All appointments and CV reviews are free of charge.
+            </p>
+            <div className="mt-8 flex min-h-[5rem] items-center justify-center px-4 py-5 sm:px-8 sm:py-6">
+              <div className="flex flex-nowrap items-center justify-center gap-2 sm:gap-5">
                 {communicationItems.map((item) => (
                   <a
                     key={item.label}
@@ -643,6 +742,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     {contactIconMap[item.label as CommunicationLabel]}
                   </a>
                 ))}
+              </div>
             </div>
           </div>
         </div>

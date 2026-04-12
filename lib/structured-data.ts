@@ -142,6 +142,22 @@ export function buildFaqSchema(items: FaqEntry[]) {
   };
 }
 
+export function buildSpeakableSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SpeakableSpecification",
+    xpath: [
+      "/html/head/title",
+      "/html/body/main/section[@id='about-me']//p",
+      "/html/body/main/section[@id='key-achievements']//p"
+    ],
+    cssSelector: [
+      "#about-me p",
+      "#key-achievements p"
+    ]
+  };
+}
+
 interface LocalServiceInput {
   city: string;
   region: string;

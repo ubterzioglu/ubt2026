@@ -4,19 +4,23 @@ import type { StackGroup } from "@/types/site";
 
 interface TechStackProps {
   stackGroups: StackGroup[];
+  introParagraph?: string;
 }
 
 function normalizeStackName(name: string) {
   return name.replace(/İ/g, "I");
 }
 
-export function TechStack({ stackGroups }: TechStackProps) {
+export function TechStack({ stackGroups, introParagraph }: TechStackProps) {
   return (
     <>
       <h2 className="font-body text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
-        Tech Stack
+        What Technologies Does UBT Use?
       </h2>
       <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+      {introParagraph && (
+        <p className="mt-4 max-w-3xl text-sm leading-7 text-ink/68">{introParagraph}</p>
+      )}
       <div className="mt-4 space-y-4">
         {stackGroups.map((group) => (
           <article
