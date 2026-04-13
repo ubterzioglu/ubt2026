@@ -65,7 +65,7 @@ export function CvReviewQueueSection({ result }: CvReviewQueueSectionProps) {
           <div>
             <h3 className="font-body text-xl font-semibold text-ink">Queue status</h3>
             <p className="mt-1 text-sm text-ink/55">
-              {result.total} total &middot; {result.pending} pending &middot; {result.approved} approved
+              {result.total} total &middot; {result.pending} pending &middot; {result.approved} approved &middot; {result.cvOptimized} CV optimized &middot; {result.linkedinOptimized} LinkedIn optimized
             </p>
           </div>
           <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full border border-line/80 bg-paper text-ink/60 transition group-open:rotate-180">
@@ -79,7 +79,7 @@ export function CvReviewQueueSection({ result }: CvReviewQueueSectionProps) {
           The overview only shows initials and process statuses. Contact details are kept private.
         </p>
 
-        <div className="mt-6 grid grid-cols-3 gap-3">
+        <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-5">
           <div className="flex flex-col items-center justify-center rounded-[1.35rem] border border-line/80 bg-paper px-4 py-5">
             <span className="font-body text-3xl font-semibold tracking-tight text-ink">
               {result.total}
@@ -102,6 +102,22 @@ export function CvReviewQueueSection({ result }: CvReviewQueueSectionProps) {
             </span>
             <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/50">
               Approved
+            </span>
+          </div>
+          <div className="flex flex-col items-center justify-center rounded-[1.35rem] border border-line/80 bg-paper px-4 py-5">
+            <span className="font-body text-3xl font-semibold tracking-tight text-ink">
+              {result.cvOptimized}
+            </span>
+            <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/50">
+              CV Opt.
+            </span>
+          </div>
+          <div className="flex flex-col items-center justify-center rounded-[1.35rem] border border-line/80 bg-paper px-4 py-5">
+            <span className="font-body text-3xl font-semibold tracking-tight text-ink">
+              {result.linkedinOptimized}
+            </span>
+            <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/50">
+              Li Opt.
             </span>
           </div>
         </div>

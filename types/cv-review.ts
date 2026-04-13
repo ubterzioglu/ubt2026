@@ -62,4 +62,6 @@ export interface CvReviewQueueResult {
   total: number;
   pending: number;
   approved: number;
+  cvOptimized: number;
+  linkedinOptimized: number;
 }

@@ -372,7 +372,9 @@ export async function getPublicCvReviewQueue(): Promise<CvReviewQueueResult> {
       entries: [],
       total: 0,
       pending: 0,
-      approved: 0
+      approved: 0,
+      cvOptimized: 0,
+      linkedinOptimized: 0
     };
   }
 
@@ -398,13 +400,17 @@ export async function getPublicCvReviewQueue(): Promise<CvReviewQueueResult> {
 
     const approved = entries.filter((e) => e.status === "approved").length;
     const pending = entries.filter((e) => e.status === "new").length;
+    const cvOptimized = entries.filter((e) => e.cvReviewed).length;
+    const linkedinOptimized = entries.filter((e) => e.linkedinReviewed).length;
 
     return {
       source: entries.length > 0 ? "remote" : "empty",
       entries,
       total: entries.length,
       pending,
-      approved
+      approved,
+      cvOptimized,
+      linkedinOptimized
     };
   } catch (error) {
     return {
@@ -414,7 +420,9 @@ export async function getPublicCvReviewQueue(): Promise<CvReviewQueueResult> {
       entries: [],
       total: 0,
       pending: 0,
-      approved: 0
+      approved: 0,
+      cvOptimized: 0,
+      linkedinOptimized: 0
     };
   }
 }
