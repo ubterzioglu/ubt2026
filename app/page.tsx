@@ -750,7 +750,30 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       <footer className="px-4 pt-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl border-t border-line/70 py-8 text-center text-sm text-ink/55">
-          | ©2026 | UBT | All rights reserved. | Without a test you cannot be the best! |
+          <div>| ©2026 | UBT | All rights reserved. | Without a test you cannot be the best! |</div>
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <a
+              href="https://www.spindorai.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent/70 hover:text-accent transition-colors"
+            >
+              Seo Aracı
+            </a>
+            <span className="text-ink/30">·</span>
+            <span>Seo Hizmetleri Spindora</span>
+            <span className="text-ink/30">·</span>
+            <a
+              href="https://www.corteqs.net"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent/70 hover:text-accent transition-colors"
+            >
+              Corteqs
+            </a>
+            <span className="text-ink/30">·</span>
+            <span>Diasporayı Birleştiren Platform</span>
+          </div>
         </div>
       </footer>
     </main>
