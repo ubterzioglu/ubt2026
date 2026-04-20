@@ -127,15 +127,15 @@
       }
 
       h1 {
-        max-width: 16ch;
+        max-width: none;
         margin-top: 18px;
-        font-size: clamp(2rem, 5vw, 3.4rem);
+        font-size: clamp(1.8rem, 3.2vw, 3rem);
         line-height: 1.02;
         font-weight: 700;
       }
 
       .hero-copy {
-        max-width: 760px;
+        max-width: 980px;
         margin-top: 28px;
       }
 
@@ -152,12 +152,12 @@
         list-style: none;
         display: grid;
         gap: 12px;
-        max-width: 760px;
+        max-width: 980px;
       }
 
       .hero-points li {
         position: relative;
-        padding: 14px 16px 14px 44px;
+        padding: 16px 18px 16px 48px;
         border: 1px solid var(--line);
         border-radius: 14px;
         background: rgba(255, 255, 255, 0.56);
@@ -168,8 +168,8 @@
       .hero-points li::before {
         content: "";
         position: absolute;
-        left: 16px;
-        top: 19px;
+        left: 18px;
+        top: 21px;
         width: 12px;
         height: 12px;
         border-radius: 999px;
@@ -472,7 +472,7 @@
         }
 
         h1 {
-          max-width: none;
+          font-size: clamp(1.7rem, 7vw, 2.2rem);
         }
 
         .section-intro {
