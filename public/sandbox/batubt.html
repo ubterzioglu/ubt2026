@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Batuhan Toplanti Notlari</title>
+    <style>
+      :root {
+        --bg: #f3efe7;
+        --surface: rgba(255, 252, 246, 0.78);
+        --surface-strong: #fffdf8;
+        --line: rgba(40, 60, 72, 0.12);
+        --line-strong: rgba(40, 60, 72, 0.24);
+        --text: #18232d;
+        --muted: #5f6c73;
+        --teal: #0f766e;
+        --teal-soft: rgba(15, 118, 110, 0.12);
+        --amber: #b86a27;
+        --amber-soft: rgba(184, 106, 39, 0.14);
+        --shadow: 0 28px 80px rgba(24, 35, 45, 0.12);
+        --radius-xl: 26px;
+        --radius-lg: 18px;
+        --radius-sm: 10px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--text);
+        font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(15, 118, 110, 0.18), transparent 30%),
+          radial-gradient(circle at top right, rgba(184, 106, 39, 0.16), transparent 26%),
+          linear-gradient(180deg, #f8f4ee 0%, #f1eee8 50%, #ecefe9 100%);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page {
+        width: min(1180px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 32px 0 48px;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        padding: 28px;
+        background:
+          linear-gradient(135deg, rgba(255, 253, 248, 0.96), rgba(248, 244, 237, 0.88)),
+          var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .hero::before,
+      .hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        pointer-events: none;
+      }
+
+      .hero::before {
+        width: 320px;
+        height: 320px;
+        right: -110px;
+        top: -110px;
+        background: radial-gradient(circle, rgba(15, 118, 110, 0.16), transparent 70%);
+      }
+
+      .hero::after {
+        width: 220px;
+        height: 220px;
+        left: -80px;
+        bottom: -90px;
+        background: radial-gradient(circle, rgba(184, 106, 39, 0.14), transparent 72%);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border: 1px solid rgba(15, 118, 110, 0.18);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.64);
+        color: var(--teal);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--teal), #23a399);
+        box-shadow: 0 0 0 6px rgba(15, 118, 110, 0.08);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        max-width: 12ch;
+        margin-top: 18px;
+        font-size: clamp(2.6rem, 7vw, 5.2rem);
+        line-height: 0.95;
+        font-weight: 700;
+      }
+
+      .hero-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+        gap: 24px;
+        margin-top: 28px;
+      }
+
+      .hero-copy {
+        max-width: 760px;
+      }
+
+      .hero-copy p {
+        margin: 18px 0 0;
+        font-size: 1.02rem;
+        line-height: 1.85;
+        color: var(--muted);
+      }
+
+      .meta-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .meta-card,
+      .panel,
+      .note-card,
+      .todo-card,
+      .step-card {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(10px);
+      }
+
+      .meta-card {
+        padding: 16px 18px;
+      }
+
+      .meta-label {
+        margin: 0;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .meta-value {
+        margin: 10px 0 0;
+        font-size: 1rem;
+        line-height: 1.5;
+        font-weight: 600;
+      }
+
+      .decision-panel {
+        padding: 22px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(246, 249, 248, 0.76));
+      }
+
+      .decision-panel h2 {
+        font-size: 1.5rem;
+        line-height: 1.15;
+      }
+
+      .decision-list {
+        margin: 18px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 12px;
+      }
+
+      .decision-list li {
+        position: relative;
+        padding: 14px 14px 14px 44px;
+        border-radius: 14px;
+        background: rgba(15, 118, 110, 0.06);
+        color: var(--text);
+        line-height: 1.65;
+      }
+
+      .decision-list li::before {
+        content: "";
+        position: absolute;
+        left: 16px;
+        top: 18px;
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--teal), #31b7ac);
+        box-shadow: 0 0 0 6px rgba(15, 118, 110, 0.12);
+      }
+
+      .content-grid {
+        display: grid;
+        gap: 18px;
+        margin-top: 22px;
+      }
+
+      .panel {
+        padding: 24px;
+        box-shadow: 0 18px 44px rgba(24, 35, 45, 0.06);
+      }
+
+      .section-intro {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .section-intro p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .section-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--teal-soft);
+        color: var(--teal);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .notes-grid,
+      .todo-grid,
+      .steps-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .notes-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .note-card,
+      .todo-card,
+      .step-card {
+        padding: 20px;
+        box-shadow: 0 14px 32px rgba(24, 35, 45, 0.05);
+      }
+
+      .note-card h3,
+      .todo-card h3,
+      .step-card h3 {
+        font-size: 1.3rem;
+        line-height: 1.2;
+      }
+
+      .note-card p,
+      .todo-card p,
+      .step-card p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .bullet-list,
+      .step-list {
+        margin: 18px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 12px;
+      }
+
+      .bullet-list li,
+      .step-list li {
+        position: relative;
+        padding-left: 22px;
+        line-height: 1.7;
+        color: var(--text);
+      }
+
+      .bullet-list li::before,
+      .step-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 11px;
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--amber);
+      }
+
+      .todo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .todo-card {
+        background:
+          linear-gradient(180deg, rgba(255, 253, 248, 0.94), rgba(248, 244, 238, 0.8));
+      }
+
+      .todo-card .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: var(--amber-soft);
+        color: var(--amber);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .todo-card .tag::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: currentColor;
+      }
+
+      .step-card {
+        background:
+          linear-gradient(180deg, rgba(245, 251, 250, 0.94), rgba(255, 255, 255, 0.82));
+      }
+
+      .step-list {
+        counter-reset: steps;
+        gap: 16px;
+      }
+
+      .step-list li {
+        min-height: 44px;
+        padding-left: 58px;
+      }
+
+      .step-list li::before {
+        counter-increment: steps;
+        content: counter(steps);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        top: 0;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--teal), #27b2a6);
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border: 1px dashed var(--line-strong);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.58);
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .notes-grid,
+        .todo-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .meta-strip {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .page {
+          width: min(100vw - 20px, 1180px);
+          padding: 14px 0 28px;
+        }
+
+        .hero,
+        .panel,
+        .note-card,
+        .todo-card,
+        .step-card {
+          border-radius: 20px;
+        }
+
+        .hero {
+          padding: 20px;
+        }
+
+        .panel,
+        .note-card,
+        .todo-card,
+        .step-card {
+          padding: 18px;
+        }
+
+        h1 {
+          max-width: none;
+        }
+
+        .section-intro {
+          display: block;
+        }
+
+        .section-chip {
+          margin-top: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="eyebrow">Toplanti Notlari</div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Batuhan ile is gelistirme ve urun yol haritasi</h1>
+            <p>
+              Bu notlar, CV analiziyle baslayan gelir modeli, Anabasis API entegrasyonu,
+              Spindora etrafinda topluluk kurma fikri ve daha buyuk olcekli kuresel platform
+              vizyonu uzerine alinmis yonlendirici kararlarin temizlenmis versiyonudur.
+            </p>
+            <p>
+              Ozet resim su: kucuk, hizli ve maliyet kontrollu baslanacak; dogrulanan her alan
+              5-6 aylik bir test penceresi icinde buyutulecek; teknik ve ticari rol dagilimi ise
+              su anda yeterince netlesmis durumda.
+            </p>
+            <div class="meta-strip">
+              <article class="meta-card">
+                <p class="meta-label">Odak</p>
+                <p class="meta-value">CV analizi, topluluk gelistirme, API entegrasyonu</p>
+              </article>
+              <article class="meta-card">
+                <p class="meta-label">Hedef</p>
+                <p class="meta-value">Hizli test, dusuk maliyet, paylasimli gelir modeli</p>
+              </article>
+              <article class="meta-card">
+                <p class="meta-label">Yol</p>
+                <p class="meta-value">MVP mantigi, net dokumantasyon, asamali buyume</p>
+              </article>
+            </div>
+          </div>
+
+          <aside class="decision-panel panel">
+            <h2>Temel kararlar</h2>
+            <ul class="decision-list">
+              <li>Ilk odak noktasi CV analizi olacak; yeni algoritma yazmak yerine mevcut API gucu kullanilacak.</li>
+              <li>Gelir modeli once kullanici kazanimi, sonra 10-30 TL bandinda ucretlendirme uzerine kurulacak.</li>
+              <li>Spindora ve SEO araclari etrafinda bir topluluk yapisi kurulup gelir paylasimi %50 mantigiyla ilerletilecek.</li>
+              <li>Anabasis entegrasyonu backend tarafini buyutmeden, JSON donen API akisiyla hizli sekilde baglanacak.</li>
+              <li>Daha buyuk kuresel platform fikri masada; 5-6 ay icinde MVP, sonrasinda yatirimci ve ekip yapisi hedefleniyor.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="panel">
+          <div class="section-intro">
+            <div>
+              <h2>Kisa toplanti ozeti</h2>
+              <p>
+                Toplanti boyunca dort ana eksen one cikti: hizli gelir uretebilecek CV analizi,
+                toplulukla buyuyecek Spindora modeli, mevcut API katmanlari uzerinden hafif
+                entegrasyon ve daha sonra buyutulebilecek kuresel platform vizyonu.
+              </p>
+            </div>
+            <span class="section-chip">Executive summary</span>
+          </div>
+          <ul class="bullet-list">
+            <li>CV analizi, dusuk operasyon maliyeti sayesinde test etmeye en uygun ilk urun olarak goruluyor.</li>
+            <li>Ucretsiz kullanim ve dusuk fiyatli paketler ile once talep toplanip sonra ticari model keskinlestirilecek.</li>
+            <li>Teknik tarafta gereksiz komplekslikten kacilacak; mevcut API'ler ve hizli frontend baglantisi esas alinacak.</li>
+            <li>Topluluk, referans kodu ve premium paket mantigi ile Spindora tarafinda tekrar eden gelir yapisi hedefleniyor.</li>
+            <li>Isbirligi modeli teknik destek, pazarlama ve operasyonu ayirarak ilerliyor; rol dagilimi pratik sekilde kurulmus durumda.</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <div class="section-intro">
+            <div>
+              <h2>Konu bazli toplanti notlari</h2>
+              <p>
+                Asagidaki bloklar, kaynak notlari daha rahat okunabilir bir yapiya donusturur.
+                Her bolum aksiyona ve yon duygusuna odaklanir.
+              </p>
+            </div>
+            <span class="section-chip">Madde madde</span>
+          </div>
+
+          <div class="notes-grid">
+            <article class="note-card">
+              <h3>CV analizi platformu</h3>
+              <p>Ilk urun dogrulamasi burada yapilacak; amac hizli sekilde ekstra gelir uretebilen yalniz bir modul cikarmak.</p>
+              <ul class="bullet-list">
+                <li>Baslangicta sadece CV analizi modulune odaklanilacak.</li>
+                <li>100 CV analizinin yaklasik 5 TL maliyete geldigi bilgisi paylasildi.</li>
+                <li>Analiz sonuclari insan odakli yorumlar ve PDF ciktiyla zenginlestirilebilir.</li>
+                <li>Dil destegi mevcut olsa da ilk oncelik Turkce ve Ingilizce olacak.</li>
+                <li>Aylik 2.000-3.000 TL ek gelir hedefi, iki taraf icin de erken asama beklenti olarak kayda gecti.</li>
+              </ul>
+            </article>
+
+            <article class="note-card">
+              <h3>Fiyatlandirma ve buyume mantigi</h3>
+              <p>Ticari model bugunden sertlestirilmiyor; once kullanici cekilecek, sonra fiyat bandi netlestirilecek.</p>
+              <ul class="bullet-list">
+                <li>Ilk asamada ucretsiz ya da sinirli ucretsiz kullanim mantigi uygulanacak.</li>
+                <li>Ucretli analiz hizmeti 10-30 TL bandinda konumlanacak.</li>
+                <li>Batuhan maliyet kontrolu icin ucretsiz analiz haklarini kisitlayabilecek.</li>
+                <li>Token bazli maliyetlerin Turkiye pazarinda zorlayici oldugu not edildi.</li>
+                <li>Proje kucuk baslayip gelir ve kullanim verisine gore buyutulecek.</li>
+              </ul>
+            </article>
+
+            <article class="note-card">
+              <h3>Anabasis API entegrasyonu</h3>
+              <p>Teknik karar net: yeni algoritma ya da buyuk backend isleri yerine disa acilan API akisiyla hizli baglanti kurulacak.</p>
+              <ul class="bullet-list">
+                <li>API'ler JSON donuslu olacak ve arayuzde dogrudan kullanilacak.</li>
+                <li>CV, egitim ve is deneyimi analizi mevcut API sonucuyla yonetilecek.</li>
+                <li>Backend tarafinda yeni alan acmak su an gereksiz goruluyor.</li>
+                <li>API endpointleri hazirlandiginda Umut frontend akisini kuracak.</li>
+                <li>Ilk entegrasyon sonrasi testler yapilip sistem kullanima hazir hale getirilecek.</li>
+              </ul>
+            </article>
+
+            <article class="note-card">
+              <h3>Spindora ve topluluk modeli</h3>
+              <p>Teknik urun kadar onemli ikinci hat, topluluk ve dagitim mekanizmasi. Burada ana motor pazarlama ve referans etkisi.</p>
+              <ul class="bullet-list">
+                <li>CEO ve SEO uzmanlarina odakli bir topluluk kurulmasi planlaniyor.</li>
+                <li>Kullanicilara ucretsiz veya dusuk maliyetli erisim haklari saglanacak.</li>
+                <li>WhatsApp grubu temel iletisim ve destek kanali olarak dusunuluyor.</li>
+                <li>Referans kodu ile gelen odemelerden %50 paylasim modeli hedefleniyor.</li>
+                <li>Premium paket satislarinda otomatik komisyon mantigi kurulacak.</li>
+              </ul>
+            </article>
+
+            <article class="note-card">
+              <h3>Yeni kuresel platform fikri</h3>
+              <p>Bu kisim hemen yarina donuk degil ama stratejik olarak buyuk. Finansal katki ve itibar etkisi birlikte dusunuluyor.</p>
+              <ul class="bullet-list">
+                <li>Dunya genelindeki Turkleri bir araya getirecek bir platform fikri masada.</li>
+                <li>5-6 ay icinde MVP asamasina gecis ve yil basinda lansman dusunuluyor.</li>
+                <li>Is modeli, yatirimci arayisi ve ekip kurulumu simdiden taslak seviyede dusunuluyor.</li>
+                <li>Batuhan projeyi inceleyip mantikli ve karlI bulursa destek vermeye acik.</li>
+                <li>Instagram ve diger sosyal kanallar uzerinden kullanici cekme plani bulunuyor.</li>
+              </ul>
+            </article>
+
+            <article class="note-card">
+              <h3>Isbolumu ve iletisim</h3>
+              <p>Toplanti boyunca teknik ve ticari sorumluluklarin birbiriyle cakismamasi icin net bir dagilim olustu.</p>
+              <ul class="bullet-list">
+                <li>Umut pazarlama, topluluk yonetimi, frontend ve dokumantasyon tarafina yaklasiyor.</li>
+                <li>Batuhan teknik altyapi, entegrasyon ve gerektiginde backend destegi tarafinda duruyor.</li>
+                <li>5-6 aylik bir deneme penceresi sonunda isbirligi yeniden degerlendirilecek.</li>
+                <li>Duzenli toplantilar ve yazismalar ile performans ve strateji gozden gecirilecek.</li>
+                <li>Dokumantasyon, sureci seffaflastiran temel arac olarak konumlandi.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="section-intro">
+            <div>
+              <h2>To do listeleri</h2>
+              <p>
+                Buradaki maddeler, hem acik action item'lari hem de toplantinin mantigindan
+                cikan takip islerini bir araya getirir.
+              </p>
+            </div>
+            <span class="section-chip">Aksiyon odakli</span>
+          </div>
+
+          <div class="todo-grid">
+            <article class="todo-card">
+              <span class="tag">UBT to do</span>
+              <h3 style="margin-top: 16px;">Umut Baris Terzioglu</h3>
+              <ul class="bullet-list">
+                <li>CV analizi icin gerekli Anabasis API duzenlemesini yapacak kisiyle iletisime gecmek ve 1 saatlik kod isini haftaya kapatmak.</li>
+                <li>Frontend tasarimi ile kayit ve giris akisini planlayip Batuhan'a net bir kullanim senaryosu cikarmak.</li>
+                <li>Bu toplanti notlarini ve sonraki proje asamalarini HTML formatinda dokumante edip paylasmak.</li>
+                <li>CV urunu icin ucretsiz kullanim siniri, fiyat bandi ve kullanici edinme kurgusunu taslak hale getirmek.</li>
+                <li>Spindora tarafinda LinkedIn, Instagram ve topluluk buyutme kanal planini netlestirmek.</li>
+                <li>Kuresel Turk platformu dokumantasyonunu tekrar gozden gecirip 1 ay icinde karar toplantisi cagrisi yapmak.</li>
+                <li>Buyume halinde talep edilecek teknik destek, bakim ve operasyon ihtiyacini onceden listelemek.</li>
+              </ul>
+            </article>
+
+            <article class="todo-card">
+              <span class="tag">Batuhan to do</span>
+              <h3 style="margin-top: 16px;">Batuhan Yalcin</h3>
+              <ul class="bullet-list">
+                <li>Anabasis API'lerinde CV parsing ve analiz ozelliklerini hizli entegrasyona uygun hale getirmek.</li>
+                <li>API'den donecek JSON cevap yapisini ve temel kullanim beklentilerini netlestirmek.</li>
+                <li>Spindora gelir paylasimi ve topluluk teklifinin ticari detaylarini Umut ile son haline getirmek.</li>
+                <li>Referans kodu ve premium paket komisyon mantiginin nasil izlenecegine dair cerceve cikarmak.</li>
+                <li>Ucretsiz kullanim siniri ve maliyet kontrolu icin teknik kisitlari onermek.</li>
+                <li>Kuresel platform dokumanini inceleyip teknik katkI ve ticari mantik acisindan geri bildirim vermek.</li>
+                <li>Kullanici artisi halinde teknik destek, altyapi buyutme ve development lead ihtiyaci icin erken kriterler tanimlamak.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="section-intro">
+            <div>
+              <h2>Next steps</h2>
+              <p>
+                Bu bolum su an taslak niteliginde. Istersen sonraki duzenlemede daha teknik,
+                daha ticari ya da daha kisa bir versiyona cekebiliriz.
+              </p>
+            </div>
+            <span class="section-chip">Duzenlenebilir taslak</span>
+          </div>
+
+          <div class="steps-grid">
+            <article class="step-card">
+              <h3>Onumuzdeki mantikli akIs</h3>
+              <ul class="step-list">
+                <li>CV analizi icin gereken minimum API baglantisi tamamlanir ve ilk demo akisi cikarilir.</li>
+                <li>Urunun ilk ekranlari, kayit-giris mantigi ve sonuc sunum bicimi tek bir demo akista birlestirilir.</li>
+                <li>Ucretsiz kullanim siniri ve ilk ucretli paket mantigi belirlenerek kucuk bir test grubu bulunur.</li>
+                <li>Spindora toplulugu icin mesajlasma, davet ve referans mekanizmasi sade bir operasyon akisina donusturulur.</li>
+                <li>2-4 haftalik ilk test doneminden sonra gelir, ilgi ve operasyon maliyeti birlikte degerlendirilir.</li>
+                <li>Eger sinyaller pozitifse hem CV urunu hem topluluk modeli icin ikinci faz iyilestirmeler planlanir.</li>
+              </ul>
+              <div class="footer-note">
+                Not: Buradaki siralama kesin proje takvimi degil; ilk duzenlemede hizli hareket etmek icin olusturulmus pratik bir taslaktir.
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

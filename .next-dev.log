@@ -1,0 +1,11 @@
+
+> ubt2026@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.14
+   - Local:        http://localhost:3000
+   - Network:      http://10.18.0.116:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 32.1s
