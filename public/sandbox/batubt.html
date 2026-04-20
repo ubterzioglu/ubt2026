@@ -127,10 +127,10 @@
       }
 
       h1 {
-        max-width: 12ch;
+        max-width: 16ch;
         margin-top: 18px;
-        font-size: clamp(2.6rem, 7vw, 5.2rem);
-        line-height: 0.95;
+        font-size: clamp(2rem, 5vw, 3.4rem);
+        line-height: 1.02;
         font-weight: 700;
       }
 
@@ -144,6 +144,37 @@
         font-size: 1.02rem;
         line-height: 1.85;
         color: var(--muted);
+      }
+
+      .hero-points {
+        margin: 22px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 12px;
+        max-width: 760px;
+      }
+
+      .hero-points li {
+        position: relative;
+        padding: 14px 16px 14px 44px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.56);
+        color: var(--text);
+        line-height: 1.7;
+      }
+
+      .hero-points li::before {
+        content: "";
+        position: absolute;
+        left: 16px;
+        top: 19px;
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--blue), var(--green));
+        box-shadow: 0 0 0 6px rgba(66, 133, 244, 0.1);
       }
 
       .meta-card,
@@ -460,16 +491,11 @@
         <div class="eyebrow">Toplantı Notları</div>
         <div class="hero-copy">
           <h1>Batuhan ile iş geliştirme ve ürün yol haritası</h1>
-          <p>
-            Bu notlar, CV analiziyle başlayan gelir modeli, Anabasis API entegrasyonu,
-            Spindora etrafında topluluk kurma fikri ve daha büyük ölçekli küresel platform
-            vizyonu üzerine alınmış yönlendirici kararların temizlenmiş versiyonudur.
-          </p>
-          <p>
-            Özet resim şu: küçük, hızlı ve maliyet kontrollü başlanacak; doğrulanan her alan
-            5-6 aylık bir test penceresi içinde büyütülecek; teknik ve ticari rol dağılımı ise
-            şu anda yeterince netleşmiş durumda.
-          </p>
+          <ul class="hero-points">
+            <li>CV analizi, Anabasis API entegrasyonu, Spindora topluluk modeli ve küresel platform vizyonu tek çerçevede ele alındı.</li>
+            <li>Küçük, hızlı ve maliyet kontrollü başlanıp doğrulanan alanların 5-6 aylık pencere içinde büyütülmesi hedefleniyor.</li>
+            <li>Teknik ve ticari rol dağılımı şu aşamada yeterince netleşmiş durumda.</li>
+          </ul>
         </div>
       </section>
 
