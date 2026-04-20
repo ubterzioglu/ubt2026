@@ -9,3 +9,7 @@
 
  ✓ Starting...
  ✓ Ready in 32.1s
+ ○ Compiling /sandbox ...
+ ✓ Compiled /sandbox in 32.6s (651 modules)
+ GET /sandbox 200 in 4921ms
+ GET /sandbox 200 in 107ms
