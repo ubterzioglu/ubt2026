@@ -94,30 +94,6 @@
         background: radial-gradient(circle, rgba(251, 188, 5, 0.14), transparent 72%);
       }
 
-      .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 14px;
-        border: 1px solid rgba(66, 133, 244, 0.22);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.78);
-        color: var(--blue);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .eyebrow::before {
-        content: "";
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: linear-gradient(135deg, var(--blue), var(--green));
-        box-shadow: 0 0 0 6px rgba(66, 133, 244, 0.12);
-      }
-
       h1,
       h2,
       h3 {
@@ -129,7 +105,7 @@
       h1 {
         max-width: none;
         margin-top: 18px;
-        font-size: clamp(1.8rem, 3.2vw, 3rem);
+        font-size: clamp(1.5rem, 2.2vw, 2.35rem);
         line-height: 1.02;
         font-weight: 700;
       }
@@ -282,6 +258,10 @@
       details.step-card {
         padding: 0;
         overflow: hidden;
+      }
+
+      .standalone-card {
+        margin-top: 0;
       }
 
       details > summary {
@@ -472,7 +452,7 @@
         }
 
         h1 {
-          font-size: clamp(1.7rem, 7vw, 2.2rem);
+          font-size: clamp(1.4rem, 6.4vw, 1.9rem);
         }
 
         .section-intro {
@@ -488,7 +468,6 @@
   <body>
     <main class="page">
       <section class="hero">
-        <div class="eyebrow">Toplantı Notları</div>
         <div class="hero-copy">
           <h1>Batuhan ile iş geliştirme ve ürün yol haritası</h1>
           <ul class="hero-points">
@@ -510,7 +489,6 @@
                 entegrasyon ve daha sonra büyütülebilecek küresel platform vizyonu.
               </p>
             </div>
-            <span class="section-chip">Yönetici özeti</span>
           </div>
           <ul class="bullet-list">
             <li>CV analizi, düşük operasyon maliyeti sayesinde test etmeye en uygun ilk ürün olarak görülüyor.</li>
@@ -521,26 +499,24 @@
           </ul>
         </div>
 
-        <div class="panel">
-          <details class="note-card" open>
-            <summary class="accordion-summary">
-              <div class="accordion-summary-text">
-                <h2>Temel kararlar</h2>
-                <p>Toplantının ürün, gelir modeli, entegrasyon ve büyüme yönünü belirleyen ana kararlar.</p>
-              </div>
-              <span class="accordion-icon" aria-hidden="true">⌄</span>
-            </summary>
-            <div class="accordion-body">
-              <ul class="decision-list">
-                <li>İlk odak noktası CV analizi olacak; yeni algoritma yazmak yerine mevcut API gücü kullanılacak.</li>
-                <li>Gelir modeli önce kullanıcı kazanımı, sonra 10-30 TL bandında ücretlendirme üzerine kurulacak.</li>
-                <li>Spindora ve SEO araçları etrafında bir topluluk yapısı kurulup gelir paylaşımı %50 mantığıyla ilerletilecek.</li>
-                <li>Anabasis entegrasyonu backend tarafını büyütmeden, JSON dönen API akışıyla hızlı şekilde bağlanacak.</li>
-                <li>Daha büyük küresel platform fikri masada; 5-6 ay içinde MVP, sonrasında yatırımcı ve ekip yapısı hedefleniyor.</li>
-              </ul>
+        <details class="note-card" open>
+          <summary class="accordion-summary">
+            <div class="accordion-summary-text">
+              <h2>Temel kararlar</h2>
+              <p>Toplantının ürün, gelir modeli, entegrasyon ve büyüme yönünü belirleyen ana kararlar.</p>
             </div>
-          </details>
-        </div>
+            <span class="accordion-icon" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="accordion-body">
+            <ul class="decision-list">
+              <li>İlk odak noktası CV analizi olacak; yeni algoritma yazmak yerine mevcut API gücü kullanılacak.</li>
+              <li>Gelir modeli önce kullanıcı kazanımı, sonra 10-30 TL bandında ücretlendirme üzerine kurulacak.</li>
+              <li>Spindora ve SEO araçları etrafında bir topluluk yapısı kurulup gelir paylaşımı %50 mantığıyla ilerletilecek.</li>
+              <li>Anabasis entegrasyonu backend tarafını büyütmeden, JSON dönen API akışıyla hızlı şekilde bağlanacak.</li>
+              <li>Daha büyük küresel platform fikri masada; 5-6 ay içinde MVP, sonrasında yatırımcı ve ekip yapısı hedefleniyor.</li>
+            </ul>
+          </div>
+        </details>
 
         <div class="panel">
           <div class="section-intro">
@@ -666,90 +642,71 @@
           </div>
         </div>
 
-        <div class="panel">
-          <div class="section-intro">
-            <div>
-              <h2>Yapılacaklar listeleri</h2>
+        <div class="todo-grid">
+          <details class="todo-card" open>
+            <summary class="accordion-summary">
+              <div class="accordion-summary-text">
+                <span class="tag">UBT yapılacaklar</span>
+                <h3 style="margin-top: 16px;">Umut Barış Terzioğlu</h3>
+              </div>
+              <span class="accordion-icon" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="accordion-body">
+              <ul class="bullet-list">
+              <li>CV analizi için gerekli Anabasis API düzenlemesini yapacak kişiyle iletişime geçmek ve 1 saatlik kod işini haftaya kapatmak.</li>
+              <li>Frontend tasarımı ile kayıt ve giriş akışını planlayıp Batuhan'a net bir kullanım senaryosu çıkarmak.</li>
+              <li>Bu toplantı notlarını ve sonraki proje aşamalarını HTML formatında dokümante edip paylaşmak.</li>
+              <li>CV ürünü için ücretsiz kullanım sınırı, fiyat bandı ve kullanıcı edinme kurgusunu taslak hale getirmek.</li>
+              <li>Spindora tarafında LinkedIn, Instagram ve topluluk büyütme kanal planını netleştirmek.</li>
+              <li>Küresel Türk platformu dokümantasyonunu tekrar gözden geçirip 1 ay içinde karar toplantısı çağrısı yapmak.</li>
+              <li>Büyüme halinde talep edilecek teknik destek, bakım ve operasyon ihtiyacını önceden listelemek.</li>
+              </ul>
             </div>
-          </div>
+          </details>
 
-          <div class="todo-grid">
-            <details class="todo-card" open>
-              <summary class="accordion-summary">
-                <div class="accordion-summary-text">
-                  <span class="tag">UBT yapılacaklar</span>
-                  <h3 style="margin-top: 16px;">Umut Barış Terzioğlu</h3>
-                </div>
-                <span class="accordion-icon" aria-hidden="true">⌄</span>
-              </summary>
-              <div class="accordion-body">
-                <ul class="bullet-list">
-                <li>CV analizi için gerekli Anabasis API düzenlemesini yapacak kişiyle iletişime geçmek ve 1 saatlik kod işini haftaya kapatmak.</li>
-                <li>Frontend tasarımı ile kayıt ve giriş akışını planlayıp Batuhan'a net bir kullanım senaryosu çıkarmak.</li>
-                <li>Bu toplantı notlarını ve sonraki proje aşamalarını HTML formatında dokümante edip paylaşmak.</li>
-                <li>CV ürünü için ücretsiz kullanım sınırı, fiyat bandı ve kullanıcı edinme kurgusunu taslak hale getirmek.</li>
-                <li>Spindora tarafında LinkedIn, Instagram ve topluluk büyütme kanal planını netleştirmek.</li>
-                <li>Küresel Türk platformu dokümantasyonunu tekrar gözden geçirip 1 ay içinde karar toplantısı çağrısı yapmak.</li>
-                <li>Büyüme halinde talep edilecek teknik destek, bakım ve operasyon ihtiyacını önceden listelemek.</li>
-                </ul>
+          <details class="todo-card">
+            <summary class="accordion-summary">
+              <div class="accordion-summary-text">
+                <span class="tag">Batuhan yapılacaklar</span>
+                <h3 style="margin-top: 16px;">Batuhan Yalçın</h3>
               </div>
-            </details>
-
-            <details class="todo-card">
-              <summary class="accordion-summary">
-                <div class="accordion-summary-text">
-                  <span class="tag">Batuhan yapılacaklar</span>
-                  <h3 style="margin-top: 16px;">Batuhan Yalçın</h3>
-                </div>
-                <span class="accordion-icon" aria-hidden="true">⌄</span>
-              </summary>
-              <div class="accordion-body">
-                <ul class="bullet-list">
-                <li>Anabasis API'lerinde CV parsing ve analiz özelliklerini hızlı entegrasyona uygun hale getirmek.</li>
-                <li>API'den dönecek JSON cevap yapısını ve temel kullanım beklentilerini netleştirmek.</li>
-                <li>Spindora gelir paylaşımı ve topluluk teklifinin ticari detaylarını Umut ile son haline getirmek.</li>
-                <li>Referans kodu ve premium paket komisyon mantığının nasıl izleneceğine dair çerçeve çıkarmak.</li>
-                <li>Ücretsiz kullanım sınırı ve maliyet kontrolü için teknik kısıtları önermek.</li>
-                <li>Küresel platform dokümanını inceleyip teknik katkı ve ticari mantık açısından geri bildirim vermek.</li>
-                <li>Kullanıcı artışı halinde teknik destek, altyapı büyütme ve development lead ihtiyacı için erken kriterler tanımlamak.</li>
-                </ul>
-              </div>
-            </details>
-          </div>
+              <span class="accordion-icon" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="accordion-body">
+              <ul class="bullet-list">
+              <li>Anabasis API'lerinde CV parsing ve analiz özelliklerini hızlı entegrasyona uygun hale getirmek.</li>
+              <li>API'den dönecek JSON cevap yapısını ve temel kullanım beklentilerini netleştirmek.</li>
+              <li>Spindora gelir paylaşımı ve topluluk teklifinin ticari detaylarını Umut ile son haline getirmek.</li>
+              <li>Referans kodu ve premium paket komisyon mantığının nasıl izleneceğine dair çerçeve çıkarmak.</li>
+              <li>Ücretsiz kullanım sınırı ve maliyet kontrolü için teknik kısıtları önermek.</li>
+              <li>Küresel platform dokümanını inceleyip teknik katkı ve ticari mantık açısından geri bildirim vermek.</li>
+              <li>Kullanıcı artışı halinde teknik destek, altyapı büyütme ve development lead ihtiyacı için erken kriterler tanımlamak.</li>
+              </ul>
+            </div>
+          </details>
         </div>
 
-        <div class="panel">
-          <div class="section-intro">
-            <div>
+        <details class="step-card" open>
+          <summary class="accordion-summary">
+            <div class="accordion-summary-text">
               <h2>Sonraki adımlar</h2>
             </div>
+            <span class="accordion-icon" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="accordion-body">
+            <ul class="step-list">
+            <li>CV analizi için gereken minimum API bağlantısı tamamlanır ve ilk demo akışı çıkarılır.</li>
+            <li>Ürünün ilk ekranları, kayıt-giriş mantığı ve sonuç sunum biçimi tek bir demo akışta birleştirilir.</li>
+            <li>Ücretsiz kullanım sınırı ve ilk ücretli paket mantığı belirlenerek küçük bir test grubu bulunur.</li>
+            <li>Spindora topluluğu için mesajlaşma, davet ve referans mekanizması sade bir operasyon akışına dönüştürülür.</li>
+            <li>2-4 haftalık ilk test döneminden sonra gelir, ilgi ve operasyon maliyeti birlikte değerlendirilir.</li>
+            <li>Eğer sinyaller pozitifse hem CV ürünü hem topluluk modeli için ikinci faz iyileştirmeler planlanır.</li>
+            </ul>
+            <div class="footer-note">
+              Not: Buradaki sıralama kesin proje takvimi değil; ilk düzenlemede hızlı hareket etmek için oluşturulmuş pratik bir taslaktır.
+            </div>
           </div>
-
-          <div class="steps-grid">
-            <details class="step-card" open>
-              <summary class="accordion-summary">
-                <div class="accordion-summary-text">
-                  <h3>Önümüzdeki mantıklı akış</h3>
-                  <p>Bu bölüm sonraki turda kolayca güncellenebilsin diye tek bir açılır blok halinde duruyor.</p>
-                </div>
-                <span class="accordion-icon" aria-hidden="true">⌄</span>
-              </summary>
-              <div class="accordion-body">
-                <ul class="step-list">
-                <li>CV analizi için gereken minimum API bağlantısı tamamlanır ve ilk demo akışı çıkarılır.</li>
-                <li>Ürünün ilk ekranları, kayıt-giriş mantığı ve sonuç sunum biçimi tek bir demo akışta birleştirilir.</li>
-                <li>Ücretsiz kullanım sınırı ve ilk ücretli paket mantığı belirlenerek küçük bir test grubu bulunur.</li>
-                <li>Spindora topluluğu için mesajlaşma, davet ve referans mekanizması sade bir operasyon akışına dönüştürülür.</li>
-                <li>2-4 haftalık ilk test döneminden sonra gelir, ilgi ve operasyon maliyeti birlikte değerlendirilir.</li>
-                <li>Eğer sinyaller pozitifse hem CV ürünü hem topluluk modeli için ikinci faz iyileştirmeler planlanır.</li>
-                </ul>
-                <div class="footer-note">
-                  Not: Buradaki sıralama kesin proje takvimi değil; ilk düzenlemede hızlı hareket etmek için oluşturulmuş pratik bir taslaktır.
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
+        </details>
       </section>
     </main>
   </body>
