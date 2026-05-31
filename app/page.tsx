@@ -774,6 +774,27 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <span className="text-ink/30">·</span>
             <span>Diasporayı Birleştiren Platform</span>
           </div>
+          <div className="mt-4 flex flex-col items-center gap-2 text-xs text-ink/45">
+            <p className="site-footer-credit">
+              <a
+                href="https://www.spindorai.com/seo/seo-calismasi"
+                rel="dofollow"
+                className="site-footer-credit-link text-accent/60 hover:text-accent transition-colors"
+              >
+                SEO Çalışması
+              </a>{" "}
+              Spindora Tarafından Yapılmıştır.
+            </p>
+            <p className="site-footer-credit">
+              <a
+                href="https://aryateknoloji.com"
+                rel="dofollow"
+                className="site-footer-credit-link text-accent/60 hover:text-accent transition-colors"
+              >
+                Arya Teknoloji
+              </a>
+            </p>
+          </div>
         </div>
       </footer>
     </main>
