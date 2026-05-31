@@ -761,39 +761,14 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               Seo Aracı
             </a>
             <span className="text-ink/30">·</span>
-            <span>Seo Hizmetleri Spindora</span>
-            <span className="text-ink/30">·</span>
             <a
-              href="https://www.corteqs.net"
+              href="https://aryateknoloji.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent/70 hover:text-accent transition-colors"
             >
-              Corteqs
+              Arya Teknoloji
             </a>
-            <span className="text-ink/30">·</span>
-            <span>Diasporayı Birleştiren Platform</span>
-          </div>
-          <div className="mt-4 flex flex-col items-center gap-2 text-xs text-ink/45">
-            <p className="site-footer-credit">
-              <a
-                href="https://www.spindorai.com/seo/seo-calismasi"
-                rel="dofollow"
-                className="site-footer-credit-link text-accent/60 hover:text-accent transition-colors"
-              >
-                SEO Çalışması
-              </a>{" "}
-              Spindora Tarafından Yapılmıştır.
-            </p>
-            <p className="site-footer-credit">
-              <a
-                href="https://aryateknoloji.com"
-                rel="dofollow"
-                className="site-footer-credit-link text-accent/60 hover:text-accent transition-colors"
-              >
-                Arya Teknoloji
-              </a>
-            </p>
           </div>
         </div>
       </footer>
