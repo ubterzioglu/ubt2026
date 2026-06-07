@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  typedRoutes: true,
-  output: "standalone"
+  output: "standalone",
+  experimental: {
+    optimizePackageImports: ["lucide-react"]
+  }
 };
 
 export default nextConfig;
