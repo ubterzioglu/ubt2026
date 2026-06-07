@@ -6,19 +6,29 @@ export default function ElifPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    if (sessionStorage.getItem("elif_auth") === "true") {
-      setAuthenticated(true);
-    }
+    fetch("/api/zelifs").then((r) => {
+      if (r.ok) setAuthenticated(true);
+    });
   }, []);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (password === "elif123") {
-      sessionStorage.setItem("elif_auth", "true");
+    setLoading(true);
+
+    const res = await fetch("/api/elif-auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password })
+    });
+
+    setLoading(false);
+
+    if (res.ok) {
       setAuthenticated(true);
       setError(false);
     } else {
@@ -55,6 +65,7 @@ export default function ElifPage() {
             onChange={(e) => { setPassword(e.target.value); setError(false); }}
             placeholder="Şifre"
             autoFocus
+            disabled={loading}
             style={{
               padding: "0.65rem 1rem",
               borderRadius: "0.85rem",
@@ -71,18 +82,19 @@ export default function ElifPage() {
           )}
           <button
             type="submit"
+            disabled={loading}
             style={{
               padding: "0.7rem",
               borderRadius: "0.85rem",
-              background: "#3b5bdb",
+              background: loading ? "#8fa3e8" : "#3b5bdb",
               color: "#fff",
               fontWeight: 700,
               fontSize: "1rem",
               border: "none",
-              cursor: "pointer"
+              cursor: loading ? "default" : "pointer"
             }}
           >
-            Giriş
+            {loading ? "..." : "Giriş"}
           </button>
         </form>
       </div>

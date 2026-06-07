@@ -1,7 +1,5 @@
 /* ZELIFS v1 — multi-trip + always-visible summary + TR 2026 holidays in info card */
 
-const STORAGE_KEY = "zelifs_v1_state";
-
 /* --------- HOLIDAYS (TR 2026) --------- */
 const TR_2026_HOLIDAYS = [
   { date: "2026-01-01", name_tr: "Yılbaşı", weight: 1 },
@@ -46,29 +44,24 @@ const HOLIDAY_SHORT = {
 
 /* --------- ELEMENTS --------- */
 const els = {
-  // inputs
   dateOut: document.getElementById("dateOut"),
   dateIn: document.getElementById("dateIn"),
   outPretty: document.getElementById("outPretty"),
   inPretty: document.getElementById("inPretty"),
 
-  // buttons
   btnTodayIn: document.getElementById("btnTodayIn"),
   btnAddTrip: document.getElementById("btnAddTrip"),
   btnClearInputs: document.getElementById("btnClearInputs"),
   btnClearAll: document.getElementById("btnClearAll"),
 
-  // main calc
   daysValue: document.getElementById("daysValue"),
   statusBadge: document.getElementById("statusBadge"),
   errors: document.getElementById("errors"),
 
-  // trips table
   tripCount: document.getElementById("tripCount"),
   tripsTbody: document.getElementById("tripsTbody"),
   emptyTrips: document.getElementById("emptyTrips"),
 
-  // notes
   plusInput: document.getElementById("plusInput"),
   minusInput: document.getElementById("minusInput"),
   btnAddPlus: document.getElementById("btnAddPlus"),
@@ -78,7 +71,6 @@ const els = {
   plusCount: document.getElementById("plusCount"),
   minusCount: document.getElementById("minusCount"),
 
-  // summary
   summaryBadge: document.getElementById("summaryBadge"),
   sumTotalDays: document.getElementById("sumTotalDays"),
   sumLimit: document.getElementById("sumLimit"),
@@ -94,7 +86,6 @@ const els = {
   sumPlusList: document.getElementById("sumPlusList"),
   sumMinusList: document.getElementById("sumMinusList"),
 
-  // holidays
   holidayCount: document.getElementById("holidayCount"),
   holidaysTbody: document.getElementById("holidaysTbody"),
 };
@@ -102,33 +93,34 @@ const els = {
 const state = {
   inputOut: "",
   inputIn: "",
-  trips: [],   // { id, out, in }
-  plus: [],    // { text, ts }
-  minus: [],   // { text, ts }
+  trips: [],
+  plus: [],
+  minus: [],
 };
+
+/* debounce timer for API saves */
+let _saveTimer = null;
 
 init();
 
 /* ---------------- INIT ---------------- */
 
-function init() {
-  loadState();
+async function init() {
+  await loadState();
 
   els.dateOut.value = state.inputOut || "";
   els.dateIn.value = state.inputIn || "";
 
-  renderHolidays();  // info card
+  renderHolidays();
   wire();
   renderAll();
 
-  // UI: keep buttons readable on narrow screens (labels become shorter)
   setupResponsiveButtons();
   applyResponsiveButtons();
   window.addEventListener("resize", applyResponsiveButtons);
 }
 
 function setupResponsiveButtons() {
-  // Store full labels + define short labels (for narrow widths)
   const mapping = {
     btnTodayIn: "Bugün",
     btnAddTrip: "Ekle",
@@ -243,7 +235,6 @@ function wire() {
     }
   });
 
-  // delete trip (delegation)
   els.tripsTbody.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-del]");
     if (!btn) return;
@@ -335,7 +326,6 @@ function addTripFromInputs() {
 
   state.trips.push({ id: cryptoId(), out, in: inn });
 
-  // clear inputs after add
   state.inputOut = "";
   state.inputIn = "";
   els.dateOut.value = "";
@@ -488,10 +478,8 @@ function renderSummary() {
   const trips = state.trips.slice();
   const total = computeTotalDays(trips);
 
-  // total days
   els.sumTotalDays.textContent = trips.length ? String(total) : "—";
 
-  // limit
   if (!trips.length) {
     els.sumLimit.textContent = "—";
     els.sumLimitNote.textContent = "Henüz seyahat yok.";
@@ -503,21 +491,15 @@ function renderSummary() {
     els.sumLimitNote.textContent = `Aşılan: ${total - 180} gün`;
   }
 
-  // trip count
   els.sumTripCount.textContent = String(trips.length);
 
-  // range
   const range = computeRange(trips);
   els.sumRange.textContent = range.label;
   els.sumRangeNote.textContent = range.note;
 
-  // badge
   els.summaryBadge.textContent = trips.length ? "Güncel" : "Boş";
 
-  // trips table
   renderSummaryTrips(trips);
-
-  // plus/minus in summary
   renderSummaryNotes();
 }
 
@@ -576,7 +558,6 @@ function renderSummaryNoteList(arr, ul, kind) {
     return;
   }
 
-  // newest first for screenshot, max 6
   const max = 6;
   const sorted = arr.slice().sort((a, b) => b.ts - a.ts);
   const slice = sorted.slice(0, max);
@@ -703,31 +684,39 @@ function formatTS(ts) {
   }
 }
 
-/* ---------------- STORAGE ---------------- */
+/* ---------------- API STORAGE ---------------- */
 
-function loadState() {
+async function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const p = JSON.parse(raw);
+    const res = await fetch("/api/zelifs");
+    if (!res.ok) return;
+    const json = await res.json();
+    const p = json.data;
+    if (!p) return;
 
-    state.inputOut = typeof p.inputOut === "string" ? p.inputOut : "";
-    state.inputIn = typeof p.inputIn === "string" ? p.inputIn : "";
-
+    state.inputOut = "";
+    state.inputIn = "";
     state.trips = Array.isArray(p.trips) ? p.trips.filter(isValidTrip) : [];
     state.plus = Array.isArray(p.plus) ? p.plus.filter(isValidNote) : [];
     state.minus = Array.isArray(p.minus) ? p.minus.filter(isValidNote) : [];
   } catch {
-    // ignore
+    /* ignore — network errors should not crash the UI */
   }
 }
 
 function saveState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    // ignore
-  }
+  if (_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(() => {
+    fetch("/api/zelifs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        trips: state.trips,
+        plus: state.plus,
+        minus: state.minus,
+      }),
+    }).catch(() => {});
+  }, 600);
 }
 
 function isValidTrip(t) {
