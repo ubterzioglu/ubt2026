@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"git remote -v && git status && git pull 2>&1 | head -40\",\"description\":\"Show remote, status, and pull latest\"}",
+  "error": "Exit code 128\nfatal: detected dubious ownership in repository at 'C:/temp_private/ubt2026'\n'C:/temp_private/ubt2026/.git' is owned by:\n\t388RBC4/CodexSandboxOffline (S-1-5-21-474817277-3887773849-3733453433-1005)\nbut the current user is:\n\tADESSO/baris-terzioglu (S-1-12-1-981353143-1339062443-413223870-89948378)\nTo add an exception for this directory, call:\n\n\tgit config --global --add safe.directory C:/temp_private/ubt2026",
+  "timestamp": "2026-06-17T20:49:28.129Z",
+  "retry_count": 1
+}

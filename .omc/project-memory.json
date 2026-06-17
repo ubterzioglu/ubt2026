@@ -1,0 +1,290 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1781729316353,
+  "projectRoot": "c:\\temp_private\\ubt2026",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "next",
+        "version": "15.5.14",
+        "category": "fullstack"
+      },
+      {
+        "name": "react",
+        "version": "19.1.0",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.1.0",
+        "category": "frontend"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": null,
+    "lintCommand": "npm run lint",
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "eslint . --max-warnings=0",
+      "typecheck": "tsc --noEmit"
+    }
+  },
+  "conventions": {
+    "namingStyle": "camelCase",
+    "importStyle": "ES modules",
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "app",
+      "components",
+      "lib",
+      "public",
+      "scripts"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "app": {
+      "path": "app",
+      "purpose": "Application code",
+      "fileCount": 6,
+      "lastAccessed": 1781729316266,
+      "keyFiles": [
+        "globals.css",
+        "layout.tsx",
+        "not-found.tsx",
+        "page.tsx",
+        "robots.ts"
+      ]
+    },
+    "components": {
+      "path": "components",
+      "purpose": "UI components",
+      "fileCount": 14,
+      "lastAccessed": 1781729316267,
+      "keyFiles": [
+        "about-accordion.tsx",
+        "bookmarks-list.tsx",
+        "cv-review-form.tsx",
+        "cv-review-queue-section.tsx",
+        "experience-section.tsx"
+      ]
+    },
+    "content": {
+      "path": "content",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1781729316285,
+      "keyFiles": [
+        "featured.ts",
+        "geo.ts",
+        "news-updates.ts",
+        "profile.ts",
+        "site.ts"
+      ]
+    },
+    "experience": {
+      "path": "experience",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1781729316330,
+      "keyFiles": [
+        "adesso.png",
+        "logodaimler.png",
+        "logoswisslog.png"
+      ]
+    },
+    "lib": {
+      "path": "lib",
+      "purpose": "Library code",
+      "fileCount": 10,
+      "lastAccessed": 1781729316330,
+      "keyFiles": [
+        "appointment-url.ts",
+        "appointments.ts",
+        "cv-review-url.ts",
+        "cv-reviews.ts",
+        "email.ts"
+      ]
+    },
+    "plan": {
+      "path": "plan",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1781729316331,
+      "keyFiles": []
+    },
+    "ppimage": {
+      "path": "ppimage",
+      "purpose": null,
+      "fileCount": 6,
+      "lastAccessed": 1781729316332,
+      "keyFiles": [
+        "logoallin2min.png",
+        "logofactovium.png",
+        "logoloved.png",
+        "logopicked.png",
+        "logopressenter.png"
+      ]
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 4,
+      "lastAccessed": 1781729316332,
+      "keyFiles": [
+        "1yeni.png",
+        "logoubt.png",
+        "yeni.png"
+      ]
+    },
+    "scripts": {
+      "path": "scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 2,
+      "lastAccessed": 1781729316333,
+      "keyFiles": [
+        "convert-cvopt-to-reviews.mjs",
+        "migrate-cvopt-participants.mjs"
+      ]
+    },
+    "supabase": {
+      "path": "supabase",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1781729316333,
+      "keyFiles": [
+        "config.toml",
+        "seed.sql"
+      ]
+    },
+    "types": {
+      "path": "types",
+      "purpose": "Type definitions",
+      "fileCount": 3,
+      "lastAccessed": 1781729316333,
+      "keyFiles": [
+        "appointment.ts",
+        "cv-review.ts",
+        "site.ts"
+      ]
+    },
+    "app\\api": {
+      "path": "app\\api",
+      "purpose": "API routes",
+      "fileCount": 0,
+      "lastAccessed": 1781729316333,
+      "keyFiles": []
+    },
+    "supabase\\migrations": {
+      "path": "supabase\\migrations",
+      "purpose": "Database migrations",
+      "fileCount": 11,
+      "lastAccessed": 1781729316337,
+      "keyFiles": [
+        "001_appointment_slots.sql",
+        "002_appointments.sql",
+        "20260406110000_create_featured_items.sql"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "app\\admin\\page.tsx",
+      "accessCount": 12,
+      "lastAccessed": 1781729788923,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin",
+      "accessCount": 5,
+      "lastAccessed": 1781730225119,
+      "type": "directory"
+    },
+    {
+      "path": "app\\admin\\appointments\\page.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1781730205652,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\_actions.ts",
+      "accessCount": 3,
+      "lastAccessed": 1781729804360,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\slots\\page.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1781729877756,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\cv-reviews\\page.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1781729910952,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\news\\page.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1781729952337,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\bookmarks\\page.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1781729991941,
+      "type": "file"
+    },
+    {
+      "path": "lib\\appointments.ts",
+      "accessCount": 2,
+      "lastAccessed": 1781729567379,
+      "type": "directory"
+    },
+    {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 2,
+      "lastAccessed": 1781729803577,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\_components\\admin-gate.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1781729804060,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

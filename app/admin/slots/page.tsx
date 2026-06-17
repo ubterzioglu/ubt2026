@@ -6,9 +6,11 @@ import {
   createAppointmentSlot,
   deleteAppointmentSlot,
   getAllAppointmentSlots,
-  hasAdminAccess,
   updateAppointmentSlot
 } from "@/lib/appointments";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { AdminGate } from "@/app/admin/_components/admin-gate";
+import { adminSignOutAction } from "@/app/admin/_actions";
 import { SlotDatePicker } from "@/components/appointment/slot-date-picker";
 
 interface AdminSlotsPageProps {
@@ -28,15 +30,10 @@ function readParam(value: string | string[] | undefined): string {
 }
 
 function buildSlotsUrl(
-  accessKey: string,
   status?: "success" | "error",
   message?: string
 ): string {
   const params = new URLSearchParams();
-
-  if (accessKey) {
-    params.set("access", accessKey);
-  }
 
   if (status) {
     params.set("status", status);
@@ -72,51 +69,19 @@ function formatSlotTime(startsAt: string, endsAt: string, timezone: string): str
 
 export default async function AdminSlotsPage({ searchParams }: AdminSlotsPageProps) {
   const params = searchParams ? await searchParams : {};
-  const accessKey = readParam(params.access);
-  const hasAccess = hasAdminAccess(accessKey);
+  const hasAccess = await isAdminAuthenticated();
   const status = readParam(params.status) as "success" | "error" | "";
   const message = readParam(params.message);
 
   if (!hasAccess) {
-    return (
-      <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <section className="section-panel px-6 py-8 sm:px-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-              Admin access
-            </p>
-            <h1 className="mt-3 font-body text-[clamp(2rem,5vw,2.6rem)] font-semibold tracking-[-0.03em] text-ink">
-              Enter the appointment admin key
-            </h1>
-            <form action="/admin/slots" className="mt-8 space-y-4">
-              <label className="block">
-                <span className="mb-2 block text-sm font-medium text-ink">Access key</span>
-                <input
-                  type="password"
-                  name="access"
-                  className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-                />
-              </label>
-              <button
-                type="submit"
-                className="inline-flex min-h-[46px] items-center justify-center rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent/95"
-              >
-                Open slot manager
-              </button>
-            </form>
-          </section>
-        </div>
-      </main>
-    );
+    return <AdminGate redirectTo="/admin/slots" submitLabel="Open slot manager" />;
   }
 
   async function createSlotAction(formData: FormData) {
     "use server";
 
-    const access = String(formData.get("access") ?? "");
-
-    if (!hasAdminAccess(access)) {
-      redirect(buildSlotsUrl("", "error", "Access denied.") as Route);
+    if (!(await isAdminAuthenticated())) {
+      redirect("/admin/slots" as Route);
     }
 
     const result = await createAppointmentSlot({
@@ -135,7 +100,6 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
 
     redirect(
       buildSlotsUrl(
-        access,
         result.ok ? "success" : "error",
         result.ok ? "Appointment slot created." : result.errorMessage ?? "Unable to create slot."
       ) as Route
@@ -145,12 +109,11 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
   async function updateSlotAction(formData: FormData) {
     "use server";
 
-    const access = String(formData.get("access") ?? "");
-    const slotId = String(formData.get("slotId") ?? "");
-
-    if (!hasAdminAccess(access)) {
-      redirect(buildSlotsUrl("", "error", "Access denied.") as Route);
+    if (!(await isAdminAuthenticated())) {
+      redirect("/admin/slots" as Route);
     }
+
+    const slotId = String(formData.get("slotId") ?? "");
 
     const result = await updateAppointmentSlot(slotId, {
       title: String(formData.get("title") ?? ""),
@@ -168,7 +131,6 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
 
     redirect(
       buildSlotsUrl(
-        access,
         result.ok ? "success" : "error",
         result.ok ? "Appointment slot updated." : result.errorMessage ?? "Unable to update slot."
       ) as Route
@@ -178,12 +140,11 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
   async function deleteSlotAction(formData: FormData) {
     "use server";
 
-    const access = String(formData.get("access") ?? "");
-    const slotId = String(formData.get("slotId") ?? "");
-
-    if (!hasAdminAccess(access)) {
-      redirect(buildSlotsUrl("", "error", "Access denied.") as Route);
+    if (!(await isAdminAuthenticated())) {
+      redirect("/admin/slots" as Route);
     }
+
+    const slotId = String(formData.get("slotId") ?? "");
 
     const result = await deleteAppointmentSlot(slotId);
 
@@ -193,7 +154,6 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
 
     redirect(
       buildSlotsUrl(
-        access,
         result.ok ? "success" : "error",
         result.ok ? "Appointment slot deleted." : result.errorMessage ?? "Unable to delete slot."
       ) as Route
@@ -217,17 +177,25 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
             </div>
             <div className="flex flex-wrap gap-3">
               <a
-                href={buildSlotsUrl(accessKey)}
+                href={buildSlotsUrl()}
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
               >
                 Refresh
               </a>
               <a
-                href={accessKey ? `/admin?access=${encodeURIComponent(accessKey)}` : "/admin"}
+                href="/admin"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ink/92"
               >
                 Back to dashboard
               </a>
+              <form action={adminSignOutAction}>
+                <button
+                  type="submit"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-rose-300 hover:text-rose-700"
+                >
+                  Sign out
+                </button>
+              </form>
             </div>
           </div>
         </section>
@@ -253,7 +221,6 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
 
           </div>
           <form action={createSlotAction} className="mt-8 grid gap-4 lg:grid-cols-2">
-            <input type="hidden" name="access" value={accessKey} />
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-ink">Title</span>
               <input
@@ -319,7 +286,6 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
                   </div>
 
                   <form action={deleteSlotAction}>
-                    <input type="hidden" name="access" value={accessKey} />
                     <input type="hidden" name="slotId" value={slot.id} />
                     <button
                       type="submit"
@@ -331,7 +297,6 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
                 </div>
 
                 <form action={updateSlotAction} className="mt-6 grid gap-4 lg:grid-cols-2">
-                  <input type="hidden" name="access" value={accessKey} />
                   <input type="hidden" name="slotId" value={slot.id} />
                   <label className="block">
                     <span className="mb-2 block text-sm font-medium text-ink">Title</span>

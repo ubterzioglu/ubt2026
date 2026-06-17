@@ -1,32 +1,9 @@
-import { getAllAppointments, getAllAppointmentSlots, hasAdminAccess } from "@/lib/appointments";
+import { getAllAppointments, getAllAppointmentSlots } from "@/lib/appointments";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAllCvReviewRequests } from "@/lib/cv-reviews";
 import { getAllNewsUpdatesAdmin } from "@/lib/news-updates";
-
-interface AdminPageProps {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") {
-    return value;
-  }
-
-  if (Array.isArray(value)) {
-    return value[0] ?? "";
-  }
-
-  return "";
-}
-
-function buildAdminUrl(path: string, accessKey: string): string {
-  const params = new URLSearchParams();
-
-  if (accessKey) {
-    params.set("access", accessKey);
-  }
-
-  return params.size > 0 ? `${path}?${params.toString()}` : path;
-}
+import { AdminGate } from "@/app/admin/_components/admin-gate";
+import { adminSignOutAction } from "@/app/admin/_actions";
 
 function formatSlotTime(
   startsAt: string,
@@ -57,46 +34,11 @@ function formatSlotTime(
   )}`;
 }
 
-export default async function AdminPage({ searchParams }: AdminPageProps) {
-  const params = searchParams ? await searchParams : {};
-  const accessKey = readParam(params.access);
-  const hasAccess = hasAdminAccess(accessKey);
+export default async function AdminPage() {
+  const hasAccess = await isAdminAuthenticated();
 
   if (!hasAccess) {
-    return (
-      <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <section className="section-panel px-6 py-8 sm:px-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-                Admin access
-              </p>
-              <h1 className="mt-3 font-body text-[clamp(2rem,5vw,2.6rem)] font-semibold tracking-[-0.03em] text-ink">
-                Enter the admin key
-              </h1>
-              <p className="mt-3 text-sm leading-7 text-ink/72 sm:text-base">
-                This lightweight gate protects the appointment and CV review admin pages until a
-                fuller authentication flow is added.
-              </p>
-            <form action="/admin" className="mt-8 space-y-4">
-              <label className="block">
-                <span className="mb-2 block text-sm font-medium text-ink">Access key</span>
-                <input
-                  type="password"
-                  name="access"
-                  className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-                />
-              </label>
-              <button
-                type="submit"
-                className="inline-flex min-h-[46px] items-center justify-center rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent/95"
-              >
-                Open admin panel
-              </button>
-            </form>
-          </section>
-        </div>
-      </main>
-    );
+    return <AdminGate redirectTo="/admin" submitLabel="Open admin panel" />;
   }
 
   const [slotsResult, appointmentsResult, cvReviewsResult, newsResult] = await Promise.all([
@@ -136,35 +78,43 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             </div>
             <div className="flex flex-wrap gap-3">
               <a
-                href={buildAdminUrl("/admin/slots", accessKey)}
+                href="/admin/slots"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent/95"
               >
                 Manage slots
               </a>
               <a
-                href={buildAdminUrl("/admin/appointments", accessKey)}
+                href="/admin/appointments"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
               >
                 Review appointments
               </a>
               <a
-                href={buildAdminUrl("/admin/cv-reviews", accessKey)}
+                href="/admin/cv-reviews"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
               >
                 CV review queue
               </a>
               <a
-                href={buildAdminUrl("/admin/news", accessKey)}
+                href="/admin/news"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
               >
                 Manage news
               </a>
               <a
-                href={buildAdminUrl("/admin/bookmarks", accessKey)}
+                href="/admin/bookmarks"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
               >
                 Manage bookmarks
               </a>
+              <form action={adminSignOutAction}>
+                <button
+                  type="submit"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-rose-300 hover:text-rose-700"
+                >
+                  Sign out
+                </button>
+              </form>
             </div>
           </div>
         </section>
@@ -225,7 +175,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 <h2 className="mt-2 font-body text-2xl font-semibold text-ink">Next availability</h2>
               </div>
               <a
-                href={buildAdminUrl("/admin/slots", accessKey)}
+                href="/admin/slots"
                 className="text-sm font-semibold text-accent hover:text-accent/80"
               >
                 View all
@@ -268,7 +218,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 <h2 className="mt-2 font-body text-2xl font-semibold text-ink">Latest bookings</h2>
               </div>
               <a
-                href={buildAdminUrl("/admin/appointments", accessKey)}
+                href="/admin/appointments"
                 className="text-sm font-semibold text-accent hover:text-accent/80"
               >
                 View all
@@ -318,7 +268,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 <h2 className="mt-2 font-body text-2xl font-semibold text-ink">Latest CV reviews</h2>
               </div>
               <a
-                href={buildAdminUrl("/admin/cv-reviews", accessKey)}
+                href="/admin/cv-reviews"
                 className="text-sm font-semibold text-accent hover:text-accent/80"
               >
                 View all

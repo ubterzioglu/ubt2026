@@ -1,7 +1,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { hasAdminAccess } from "@/lib/appointments";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { AdminGate } from "@/app/admin/_components/admin-gate";
+import { adminSignOutAction } from "@/app/admin/_actions";
 import {
   getAllBookmarksAdmin,
   createBookmark,
@@ -21,40 +23,10 @@ function readParam(value: string | string[] | undefined): string {
 
 export default async function AdminBookmarksPage({ searchParams }: AdminBookmarksPageProps) {
   const params = searchParams ? await searchParams : {};
-  const accessKey = readParam(params.access);
-  const hasAccess = hasAdminAccess(accessKey);
+  const hasAccess = await isAdminAuthenticated();
 
   if (!hasAccess) {
-    return (
-      <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <section className="section-panel px-6 py-8 sm:px-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-              Admin access
-            </p>
-            <h1 className="mt-3 font-body text-[clamp(2rem,5vw,2.6rem)] font-semibold tracking-[-0.03em] text-ink">
-              Enter the admin key
-            </h1>
-            <form action="/admin/bookmarks" className="mt-8 space-y-4">
-              <label className="block">
-                <span className="mb-2 block text-sm font-medium text-ink">Access key</span>
-                <input
-                  type="password"
-                  name="access"
-                  className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-                />
-              </label>
-              <button
-                type="submit"
-                className="inline-flex min-h-[46px] items-center justify-center rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent/95"
-              >
-                Open bookmarks manager
-              </button>
-            </form>
-          </section>
-        </div>
-      </main>
-    );
+    return <AdminGate redirectTo="/admin/bookmarks" submitLabel="Open bookmarks manager" />;
   }
 
   const bookmarksResult = await getAllBookmarksAdmin();
@@ -62,6 +34,9 @@ export default async function AdminBookmarksPage({ searchParams }: AdminBookmark
 
   async function createAction(formData: FormData) {
     "use server";
+    if (!(await isAdminAuthenticated())) {
+      redirect("/admin/bookmarks" as Parameters<typeof redirect>[0]);
+    }
     const title = (formData.get("title") as string | null) ?? "";
     const summary = (formData.get("summary") as string | null) ?? "";
     const href = (formData.get("href") as string | null) ?? "";
@@ -80,37 +55,34 @@ export default async function AdminBookmarksPage({ searchParams }: AdminBookmark
     });
 
     revalidatePath("/admin/bookmarks");
-    const target = accessKey
-      ? `/admin/bookmarks?access=${encodeURIComponent(accessKey)}&created=1`
-      : "/admin/bookmarks?created=1";
-    redirect(target as Parameters<typeof redirect>[0]);
+    redirect("/admin/bookmarks?created=1" as Parameters<typeof redirect>[0]);
   }
 
   async function togglePublishAction(formData: FormData) {
     "use server";
+    if (!(await isAdminAuthenticated())) {
+      redirect("/admin/bookmarks" as Parameters<typeof redirect>[0]);
+    }
     const id = (formData.get("id") as string | null) ?? "";
     const current = formData.get("isPublished") === "true";
     if (id) {
       await updateBookmark(id, { isPublished: !current });
     }
     revalidatePath("/admin/bookmarks");
-    const toggleTarget = accessKey
-      ? `/admin/bookmarks?access=${encodeURIComponent(accessKey)}`
-      : "/admin/bookmarks";
-    redirect(toggleTarget as Parameters<typeof redirect>[0]);
+    redirect("/admin/bookmarks" as Parameters<typeof redirect>[0]);
   }
 
   async function deleteAction(formData: FormData) {
     "use server";
+    if (!(await isAdminAuthenticated())) {
+      redirect("/admin/bookmarks" as Parameters<typeof redirect>[0]);
+    }
     const id = (formData.get("id") as string | null) ?? "";
     if (id) {
       await deleteBookmark(id);
     }
     revalidatePath("/admin/bookmarks");
-    const deleteTarget = accessKey
-      ? `/admin/bookmarks?access=${encodeURIComponent(accessKey)}`
-      : "/admin/bookmarks";
-    redirect(deleteTarget as Parameters<typeof redirect>[0]);
+    redirect("/admin/bookmarks" as Parameters<typeof redirect>[0]);
   }
 
   return (
@@ -126,14 +98,22 @@ export default async function AdminBookmarksPage({ searchParams }: AdminBookmark
                 Bookmarks
               </h1>
             </div>
-            <a
-              href={
-                accessKey ? `/admin?access=${encodeURIComponent(accessKey)}` : "/admin"
-              }
-              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ink/92"
-            >
-              Back to dashboard
-            </a>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="/admin"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ink/92"
+              >
+                Back to dashboard
+              </a>
+              <form action={adminSignOutAction}>
+                <button
+                  type="submit"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-rose-300 hover:text-rose-700"
+                >
+                  Sign out
+                </button>
+              </form>
+            </div>
           </div>
         </section>
 

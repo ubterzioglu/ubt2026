@@ -2,7 +2,9 @@ import type { Route } from "next";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { hasAdminAccess } from "@/lib/appointments";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { AdminGate } from "@/app/admin/_components/admin-gate";
+import { adminSignOutAction } from "@/app/admin/_actions";
 import { getAllCvReviewRequests, updateCvReviewRequest } from "@/lib/cv-reviews";
 
 interface AdminCvReviewsPageProps {
@@ -22,12 +24,10 @@ function readParam(value: string | string[] | undefined): string {
 }
 
 function buildCvReviewsUrl(
-  accessKey: string,
   status?: "success" | "error",
   message?: string
 ): string {
   const params = new URLSearchParams();
-  if (accessKey) params.set("access", accessKey);
   if (status) params.set("status", status);
   if (message) params.set("message", message);
   const query = params.toString();
@@ -38,49 +38,18 @@ export default async function AdminCvReviewsPage({
   searchParams
 }: AdminCvReviewsPageProps) {
   const params = searchParams ? await searchParams : {};
-  const accessKey = readParam(params.access);
-  const hasAccess = hasAdminAccess(accessKey);
+  const hasAccess = await isAdminAuthenticated();
   const status = readParam(params.status) as "success" | "error" | "";
   const message = readParam(params.message);
 
   if (!hasAccess) {
-    return (
-      <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <section className="section-panel px-6 py-8 sm:px-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-              Admin access
-            </p>
-            <h1 className="mt-3 font-body text-[clamp(2rem,5vw,2.6rem)] font-semibold tracking-[-0.03em] text-ink">
-              Enter the admin key
-            </h1>
-            <form action="/admin/cv-reviews" className="mt-8 space-y-4">
-              <label className="block">
-                <span className="mb-2 block text-sm font-medium text-ink">Access key</span>
-                <input
-                  type="password"
-                  name="access"
-                  className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
-                />
-              </label>
-              <button
-                type="submit"
-                className="inline-flex min-h-[46px] items-center justify-center rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent/95"
-              >
-                Open CV review queue
-              </button>
-            </form>
-          </section>
-        </div>
-      </main>
-    );
+    return <AdminGate redirectTo="/admin/cv-reviews" submitLabel="Open CV review queue" />;
   }
 
   async function approveAction(formData: FormData) {
     "use server";
-    const access = String(formData.get("access") ?? "");
-    if (!hasAdminAccess(access)) {
-      redirect(buildCvReviewsUrl("", "error", "Access denied.") as Route);
+    if (!(await isAdminAuthenticated())) {
+      redirect("/admin/cv-reviews" as Route);
     }
     const requestId = String(formData.get("requestId") ?? "");
     const result = await updateCvReviewRequest(requestId, { status: "approved" });
@@ -88,7 +57,6 @@ export default async function AdminCvReviewsPage({
     revalidatePath("/");
     redirect(
       buildCvReviewsUrl(
-        access,
         result.ok ? "success" : "error",
         result.ok ? "Request approved." : result.errorMessage ?? "Unable to approve."
       ) as Route
@@ -97,9 +65,8 @@ export default async function AdminCvReviewsPage({
 
   async function markCvReviewedAction(formData: FormData) {
     "use server";
-    const access = String(formData.get("access") ?? "");
-    if (!hasAdminAccess(access)) {
-      redirect(buildCvReviewsUrl("", "error", "Access denied.") as Route);
+    if (!(await isAdminAuthenticated())) {
+      redirect("/admin/cv-reviews" as Route);
     }
     const requestId = String(formData.get("requestId") ?? "");
     const result = await updateCvReviewRequest(requestId, { cvReviewed: true });
@@ -107,7 +74,6 @@ export default async function AdminCvReviewsPage({
     revalidatePath("/");
     redirect(
       buildCvReviewsUrl(
-        access,
         result.ok ? "success" : "error",
         result.ok ? "CV marked as reviewed." : result.errorMessage ?? "Unable to update."
       ) as Route
@@ -116,9 +82,8 @@ export default async function AdminCvReviewsPage({
 
   async function markLinkedinReviewedAction(formData: FormData) {
     "use server";
-    const access = String(formData.get("access") ?? "");
-    if (!hasAdminAccess(access)) {
-      redirect(buildCvReviewsUrl("", "error", "Access denied.") as Route);
+    if (!(await isAdminAuthenticated())) {
+      redirect("/admin/cv-reviews" as Route);
     }
     const requestId = String(formData.get("requestId") ?? "");
     const result = await updateCvReviewRequest(requestId, { linkedinReviewed: true });
@@ -126,7 +91,6 @@ export default async function AdminCvReviewsPage({
     revalidatePath("/");
     redirect(
       buildCvReviewsUrl(
-        access,
         result.ok ? "success" : "error",
         result.ok ? "LinkedIn marked as reviewed." : result.errorMessage ?? "Unable to update."
       ) as Route
@@ -148,12 +112,22 @@ export default async function AdminCvReviewsPage({
                 Submitted CV review requests
               </h1>
             </div>
-            <a
-              href={accessKey ? `/admin?access=${encodeURIComponent(accessKey)}` : "/admin"}
-              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ink/92"
-            >
-              Back to dashboard
-            </a>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="/admin"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ink/92"
+              >
+                Back to dashboard
+              </a>
+              <form action={adminSignOutAction}>
+                <button
+                  type="submit"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-rose-300 hover:text-rose-700"
+                >
+                  Sign out
+                </button>
+              </form>
+            </div>
           </div>
         </section>
 
@@ -241,7 +215,6 @@ export default async function AdminCvReviewsPage({
                   <div className="flex flex-wrap gap-2 lg:flex-col lg:items-end">
                     {request.status !== "approved" && (
                       <form action={approveAction}>
-                        <input type="hidden" name="access" value={accessKey} />
                         <input type="hidden" name="requestId" value={request.id} />
                         <button
                           type="submit"
@@ -253,7 +226,6 @@ export default async function AdminCvReviewsPage({
                     )}
                     {!request.cvReviewed && (
                       <form action={markCvReviewedAction}>
-                        <input type="hidden" name="access" value={accessKey} />
                         <input type="hidden" name="requestId" value={request.id} />
                         <button
                           type="submit"
@@ -265,7 +237,6 @@ export default async function AdminCvReviewsPage({
                     )}
                     {!request.linkedinReviewed && (
                       <form action={markLinkedinReviewedAction}>
-                        <input type="hidden" name="access" value={accessKey} />
                         <input type="hidden" name="requestId" value={request.id} />
                         <button
                           type="submit"

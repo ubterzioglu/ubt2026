@@ -1,0 +1,11 @@
+{"t":0,"agent":"system","event":"skill_invoked","skill_name":"superpowers:systematic-debugging"}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":245234}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":252990}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":259574}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":263527}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":267467}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":270351}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":272875}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":275855}
+{"t":0,"agent":"a9bb7dc","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":278401}
