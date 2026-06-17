@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
-import { SITE_NAME } from "@/lib/seo";
+// Inlined to keep this metadata route outside the "server-only" lib/seo graph.
+const SITE_NAME = "Umut Barış Terzioğlu";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
