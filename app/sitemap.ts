@@ -2,8 +2,9 @@ import type { MetadataRoute } from "next";
 
 import { BASE_URL } from "@/lib/seo";
 import { geoLocations } from "@/content/geo";
+import { getBlogPosts } from "@/lib/blog-posts";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -18,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7
+    },
+    {
+      url: `${BASE_URL}/blog`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.7
     }
   ];
 
@@ -28,5 +35,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8
   }));
 
-  return [...staticRoutes, ...geoRoutes];
+  const { items: blogPosts } = await getBlogPosts();
+  const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
+    lastModified: new Date(post.updatedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.6
+  }));
+
+  return [...staticRoutes, ...geoRoutes, ...blogRoutes];
 }

@@ -2,6 +2,7 @@ import { getAllAppointments, getAllAppointmentSlots } from "@/lib/appointments";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAllCvReviewRequests } from "@/lib/cv-reviews";
 import { getAllNewsUpdatesAdmin } from "@/lib/news-updates";
+import { getAllBlogPostsAdmin } from "@/lib/blog-posts";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
 import { adminSignOutAction } from "@/app/admin/_actions";
 
@@ -41,12 +42,14 @@ export default async function AdminPage() {
     return <AdminGate redirectTo="/admin" submitLabel="Open admin panel" />;
   }
 
-  const [slotsResult, appointmentsResult, cvReviewsResult, newsResult] = await Promise.all([
-    getAllAppointmentSlots(),
-    getAllAppointments(),
-    getAllCvReviewRequests(),
-    getAllNewsUpdatesAdmin()
-  ]);
+  const [slotsResult, appointmentsResult, cvReviewsResult, newsResult, blogResult] =
+    await Promise.all([
+      getAllAppointmentSlots(),
+      getAllAppointments(),
+      getAllCvReviewRequests(),
+      getAllNewsUpdatesAdmin(),
+      getAllBlogPostsAdmin()
+    ]);
   const now = new Date();
   const openSlots = slotsResult.slots.filter(
     (slot) => slot.isPublic && !slot.isBooked && new Date(slot.startsAt) > now
@@ -102,6 +105,12 @@ export default async function AdminPage() {
                 Manage news
               </a>
               <a
+                href="/admin/blog"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+              >
+                Manage blog
+              </a>
+              <a
                 href="/admin/bookmarks"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
               >
@@ -119,7 +128,7 @@ export default async function AdminPage() {
           </div>
         </section>
 
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <article className="section-panel px-6 py-6">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               Open slots
@@ -162,6 +171,15 @@ export default async function AdminPage() {
               {newsResult.items.length}
             </p>
             <p className="mt-2 text-sm text-ink/68">Published and draft news &amp; update cards.</p>
+          </article>
+          <article className="section-panel px-6 py-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+              Blog posts
+            </p>
+            <p className="mt-3 font-body text-4xl font-semibold text-ink">
+              {blogResult.items.length}
+            </p>
+            <p className="mt-2 text-sm text-ink/68">Published and draft blog posts.</p>
           </article>
         </section>
 

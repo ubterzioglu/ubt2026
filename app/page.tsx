@@ -325,7 +325,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="text-xs text-ink/40">
-          Published <time dateTime="2026-04-06">April 6, 2026</time> · Last updated <time dateTime="2026-04-12">April 12, 2026</time>
+          Published <time dateTime="2026-04-06">April 6, 2026</time> · Last updated <time dateTime="2026-06-17">June 17, 2026</time>
         </p>
       </div>
 
@@ -752,23 +752,33 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <div className="mx-auto max-w-7xl border-t border-line/70 py-8 text-center text-sm text-ink/55">
           <div>| ©2026 | UBT | All rights reserved. | Without a test you cannot be the best! |</div>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-            <a
-              href="https://www.spindorai.com"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/blog"
               className="text-accent/70 hover:text-accent transition-colors"
             >
-              Seo Aracı
+              Blog
+            </Link>
+            <span className="text-ink/30">·</span>
+            <a
+              href="https://chatio.com.tr/"
+              target="_blank"
+              rel="noopener noreferrer dofollow"
+              className="text-accent/70 hover:text-accent transition-colors"
+            >
+              Canlı Destek Yazılımı
             </a>
             <span className="text-ink/30">·</span>
             <a
-              href="https://aryateknoloji.com"
+              href="https://www.spindorai.com/seo/en-iyi-seo-ajansi"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer dofollow"
               className="text-accent/70 hover:text-accent transition-colors"
             >
-              Arya Teknoloji
+              Seo Ajansı
             </a>
+          </div>
+          <div className="mt-1 text-xs text-ink/45">
+            Spindora Tarafından Seosu Yapılmıştır.
           </div>
         </div>
       </footer>

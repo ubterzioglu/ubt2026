@@ -11,6 +11,7 @@ const ADMIN_PATHS = [
   "/admin/appointments",
   "/admin/cv-reviews",
   "/admin/news",
+  "/admin/blog",
   "/admin/bookmarks"
 ] as const;
 

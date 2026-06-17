@@ -47,6 +47,19 @@ export interface NewsUpdateItem {
   createdAt: string;
 }
 
+export interface BlogPostItem {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  content: string;
+  coverImageUrl: string | null;
+  isPublished: boolean;
+  publishedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CtaLink {
   label: string;
   href: string;
