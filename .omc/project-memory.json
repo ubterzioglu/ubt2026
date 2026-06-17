@@ -238,6 +238,12 @@
       "type": "file"
     },
     {
+      "path": "app\\opengraph-image.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1781733309537,
+      "type": "file"
+    },
+    {
       "path": "app\\admin\\_actions.ts",
       "accessCount": 3,
       "lastAccessed": 1781729804360,
@@ -283,6 +289,12 @@
       "path": "app\\admin\\_components\\admin-gate.tsx",
       "accessCount": 2,
       "lastAccessed": 1781729804060,
+      "type": "file"
+    },
+    {
+      "path": "app\\manifest.ts",
+      "accessCount": 2,
+      "lastAccessed": 1781733249517,
       "type": "file"
     }
   ],
