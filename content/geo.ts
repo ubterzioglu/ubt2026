@@ -25,7 +25,7 @@ export const geoLocations: GeoLocation[] = [
     longitude: 7.4653,
     title: "QA Engineer in Dortmund, Germany — Umut Barış Terzioğlu",
     description:
-      "Senior QA Engineer based in Dortmund. Test strategy, automation, and quality leadership for software teams across NRW and Germany. 15+ years of enterprise testing experience.",
+      "Senior QA Engineer based in Dortmund. Test strategy, automation, and quality leadership for software teams across NRW and Germany. 18+ years of enterprise testing experience.",
     keywords: [
       "QA Engineer Dortmund",
       "Software Testing Dortmund",
@@ -72,7 +72,7 @@ export const geoLocations: GeoLocation[] = [
     longitude: 10.4515,
     title: "QA Engineer in Germany — Umut Barış Terzioğlu",
     description:
-      "Senior Software QA Engineer operating in Germany. 15+ years delivering test strategy, automation, and quality engineering for enterprise clients. Available for consulting, remote, and on-site engagements.",
+      "Senior Software QA Engineer operating in Germany. 18+ years delivering test strategy, automation, and quality engineering for enterprise clients. Available for consulting, remote, and on-site engagements.",
     keywords: [
       "QA Engineer Germany",
       "Software Testing Germany",

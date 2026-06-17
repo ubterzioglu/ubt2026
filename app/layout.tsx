@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 
 import { JsonLd } from "@/components/json-ld";
@@ -10,6 +10,12 @@ import "./globals.css";
 export const metadata: Metadata = buildMetadata({
   canonical: "/"
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#1B7A6E"
+};
 
 export default function RootLayout({
   children

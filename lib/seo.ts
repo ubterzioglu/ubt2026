@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 export const BASE_URL = "https://ubterzioglu.de";
 export const SITE_NAME = "Umut Barış Terzioğlu";
 export const BRAND_SUFFIX = "Senior QA Engineer";
-export const DEFAULT_OG_IMAGE = `${BASE_URL}/og-default.png`;
 
 export const defaultKeywords = [
   "QA Engineer Germany",
@@ -39,12 +38,17 @@ export function buildMetadata(input: PageSeoInput = {}): Metadata {
   const title = input.title ?? `${SITE_NAME} — Senior QA Engineer in Dortmund, Germany`;
   const description =
     input.description ??
-    "Portfolio of Umut Barış Terzioğlu — Senior Software Quality Assurance Engineer with 15+ years in test strategy, automation, and enterprise delivery.";
+    "Portfolio of Umut Barış Terzioğlu — Senior Software Quality Assurance Engineer with 18+ years in test strategy, automation, and enterprise delivery.";
   const canonical = input.canonical
     ? `${BASE_URL}${input.canonical}`
     : BASE_URL;
-  const ogImage = input.ogImage ?? DEFAULT_OG_IMAGE;
   const ogType = input.ogType ?? "website";
+
+  // When no explicit ogImage is passed, omit the images field so Next.js applies
+  // the file-based opengraph-image.tsx / twitter convention automatically.
+  const ogImages = input.ogImage
+    ? [{ url: input.ogImage, width: 1200, height: 630, alt: title }]
+    : undefined;
 
   return {
     title: {
@@ -57,7 +61,15 @@ export function buildMetadata(input: PageSeoInput = {}): Metadata {
     creator: SITE_NAME,
     metadataBase: new URL(BASE_URL),
     alternates: {
-      canonical
+      canonical,
+      languages: {
+        en: canonical,
+        "x-default": canonical
+      }
+    },
+    icons: {
+      icon: "/icon",
+      apple: "/apple-icon"
     },
     robots: input.noIndex
       ? { index: false, follow: false }
@@ -79,20 +91,13 @@ export function buildMetadata(input: PageSeoInput = {}): Metadata {
       siteName: SITE_NAME,
       type: ogType,
       locale: "en_US",
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: title
-        }
-      ]
+      ...(ogImages ? { images: ogImages } : {})
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [ogImage]
+      ...(input.ogImage ? { images: [input.ogImage] } : {})
     }
   };
 }

@@ -11,7 +11,7 @@ export function buildPersonSchema() {
     image: `${BASE_URL}/logoubt.png`,
     jobTitle: "Senior Software Quality Assurance Engineer",
     description:
-      "Senior Software QA Engineer with 15+ years of experience in test strategy, automation, CI/CD, and enterprise delivery. Based in Dortmund, Germany.",
+      "Senior Software QA Engineer with 18+ years of experience in test strategy, automation, CI/CD, and enterprise delivery. Based in Dortmund, Germany.",
     worksFor: {
       "@type": "Organization",
       name: "Swisslog GmbH",
@@ -97,7 +97,7 @@ export function buildProfilePageSchema() {
     url: BASE_URL,
     name: `${SITE_NAME} — Senior QA Engineer Portfolio`,
     description:
-      "Portfolio and professional profile of Umut Barış Terzioğlu — Senior Software QA Engineer with 15+ years in test strategy, automation, and enterprise delivery.",
+      "Portfolio and professional profile of Umut Barış Terzioğlu — Senior Software QA Engineer with 18+ years in test strategy, automation, and enterprise delivery.",
     mainEntity: {
       "@id": `${BASE_URL}/#person`
     }

@@ -28,7 +28,7 @@ export const aboutParagraphs: AboutSection[] = [
   {
     title: "Professional Summary",
     items: [
-      "Senior Software Quality Assurance Engineer with 15+ years of experience.",
+      "Senior Software Quality Assurance Engineer with 18+ years of experience.",
       "Experienced in test management, automation, and process optimization in enterprise environments.",
       "Led global testing initiatives and built scalable automation frameworks across complex systems.",
       "Strong expertise in Agile/SCRUM, CI/CD pipelines, and modern QA practices focused on efficiency and reliability.",
@@ -345,7 +345,7 @@ export const privateProjectsIntroParagraph = "Beyond enterprise work, UBT builds
 export const faqItems = [
   {
     question: "What does Umut Barış Terzioğlu do?",
-    answer: "Umut Barış Terzioğlu is a Senior Software Quality Assurance Engineer with 15+ years of experience in test strategy, automation, enterprise delivery, and quality leadership."
+    answer: "Umut Barış Terzioğlu is a Senior Software Quality Assurance Engineer with 18+ years of experience in test strategy, automation, enterprise delivery, and quality leadership."
   },
   {
     question: "Where is Umut Barış Terzioğlu based?",
