@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1781729316353,
+  "lastScanned": 1782129551329,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -70,28 +70,31 @@
       "public",
       "scripts"
     ],
-    "gitBranches": null
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
   },
   "customNotes": [],
   "directoryMap": {
     "app": {
       "path": "app",
       "purpose": "Application code",
-      "fileCount": 6,
-      "lastAccessed": 1781729316266,
+      "fileCount": 10,
+      "lastAccessed": 1782129551216,
       "keyFiles": [
+        "apple-icon.tsx",
         "globals.css",
+        "icon.tsx",
         "layout.tsx",
-        "not-found.tsx",
-        "page.tsx",
-        "robots.ts"
+        "manifest.ts"
       ]
     },
     "components": {
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1781729316267,
+      "lastAccessed": 1782129551217,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -104,7 +107,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1781729316285,
+      "lastAccessed": 1782129551276,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -117,7 +120,7 @@
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1781729316330,
+      "lastAccessed": 1782129551277,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -127,28 +130,21 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 10,
-      "lastAccessed": 1781729316330,
+      "fileCount": 12,
+      "lastAccessed": 1782129551278,
       "keyFiles": [
+        "admin-auth.ts",
         "appointment-url.ts",
         "appointments.ts",
-        "cv-review-url.ts",
-        "cv-reviews.ts",
-        "email.ts"
+        "blog-posts.ts",
+        "cv-review-url.ts"
       ]
-    },
-    "plan": {
-      "path": "plan",
-      "purpose": null,
-      "fileCount": 0,
-      "lastAccessed": 1781729316331,
-      "keyFiles": []
     },
     "ppimage": {
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1781729316332,
+      "lastAccessed": 1782129551279,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -161,7 +157,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1781729316332,
+      "lastAccessed": 1782129551279,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -172,7 +168,7 @@
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 2,
-      "lastAccessed": 1781729316333,
+      "lastAccessed": 1782129551280,
       "keyFiles": [
         "convert-cvopt-to-reviews.mjs",
         "migrate-cvopt-participants.mjs"
@@ -182,7 +178,7 @@
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1781729316333,
+      "lastAccessed": 1782129551280,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -192,7 +188,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1781729316333,
+      "lastAccessed": 1782129551281,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -203,14 +199,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1781729316333,
+      "lastAccessed": 1782129551282,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
-      "fileCount": 11,
-      "lastAccessed": 1781729316337,
+      "fileCount": 12,
+      "lastAccessed": 1782129551285,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -220,81 +216,39 @@
   },
   "hotPaths": [
     {
+      "path": "lib\\blog-posts.ts",
+      "accessCount": 1,
+      "lastAccessed": 1782130996728,
+      "type": "file"
+    },
+    {
       "path": "app\\admin\\page.tsx",
-      "accessCount": 12,
-      "lastAccessed": 1781729788923,
+      "accessCount": 1,
+      "lastAccessed": 1782131015161,
       "type": "file"
     },
     {
-      "path": "app\\admin",
-      "accessCount": 5,
-      "lastAccessed": 1781730225119,
-      "type": "directory"
-    },
-    {
-      "path": "app\\admin\\appointments\\page.tsx",
-      "accessCount": 4,
-      "lastAccessed": 1781730205652,
+      "path": "app\\admin\\blog\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1782131015226,
       "type": "file"
     },
     {
-      "path": "app\\opengraph-image.tsx",
-      "accessCount": 4,
-      "lastAccessed": 1781733309537,
+      "path": "app\\blog\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1782131024351,
       "type": "file"
-    },
-    {
-      "path": "app\\admin\\_actions.ts",
-      "accessCount": 3,
-      "lastAccessed": 1781729804360,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\slots\\page.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1781729877756,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\cv-reviews\\page.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1781729910952,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\news\\page.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1781729952337,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\bookmarks\\page.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1781729991941,
-      "type": "file"
-    },
-    {
-      "path": "lib\\appointments.ts",
-      "accessCount": 2,
-      "lastAccessed": 1781729567379,
-      "type": "directory"
     },
     {
       "path": "lib\\admin-auth.ts",
-      "accessCount": 2,
-      "lastAccessed": 1781729803577,
+      "accessCount": 1,
+      "lastAccessed": 1782131024880,
       "type": "file"
     },
     {
-      "path": "app\\admin\\_components\\admin-gate.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1781729804060,
-      "type": "file"
-    },
-    {
-      "path": "app\\manifest.ts",
-      "accessCount": 2,
-      "lastAccessed": 1781733249517,
+      "path": "supabase\\migrations\\20260617120000_create_blog_posts.sql",
+      "accessCount": 1,
+      "lastAccessed": 1782131032152,
       "type": "file"
     }
   ],

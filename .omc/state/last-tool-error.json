@@ -1,7 +1,0 @@
-{
-  "tool_name": "PowerShell",
-  "tool_input_preview": "{\"command\":\"# Wire the (misspelled-in-file) access token into the correctly-named env var for the CLI\\n$envFile = Get-Content .env.local\\n$token = ($envFile | Where-Object { $_ -match '^\\\\s*SUPABASE_A...",
-  "error": "Exit code 1\ntoken wired: len 44\r\n--- retry migration list (Management API auth) ---\r\n\u001b[31;1mInitialising login role...\u001b[0m\r\n\u001b[31;1munexpected login role status 401: {\"message\":\"Unauthorized\"}\u001b[0m\r\n\u001b[31;1mConnect to your database by setting the env var correctly: SUPABASE_DB_PASSWORD\u001b[0m",
-  "timestamp": "2026-06-17T21:55:32.160Z",
-  "retry_count": 4
-}
