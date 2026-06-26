@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -52,17 +53,20 @@ const PRIORITY_OPTIONS: { value: ProjectTaskPriority; label: string }[] = [
 const OWNER_OPTIONS = ["Umut", "Baran", "Şahin", "Ortak", "Backlog"];
 
 const STATUS_BADGE: Record<ProjectTaskStatus, string> = {
-  todo: "border border-white/12 bg-white/[0.06] text-white/65",
-  in_progress: "border border-cyan-400/30 bg-cyan-400/10 text-cyan-300",
-  done: "border border-emerald-400/25 bg-emerald-400/10 text-emerald-300",
-  blocked: "border border-[#ff2247]/35 bg-[#ff2247]/10 text-[#ff8aa0]"
+  todo: "border border-white/[0.14] bg-gradient-to-b from-white/[0.10] to-white/[0.02] text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
+  in_progress:
+    "border border-cyan-400/35 bg-gradient-to-b from-cyan-400/[0.18] to-cyan-400/[0.04] text-cyan-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_10px_-2px_rgba(34,211,238,0.45)]",
+  done: "border border-emerald-400/35 bg-gradient-to-b from-emerald-400/[0.16] to-emerald-400/[0.04] text-emerald-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_2px_10px_-2px_rgba(16,185,129,0.4)]",
+  blocked:
+    "border border-[#ff2247]/40 bg-gradient-to-b from-[#ff2247]/[0.20] to-[#ff2247]/[0.04] text-[#ff9fb0] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_2px_10px_-2px_rgba(255,34,71,0.45)]"
 };
 
 const PRIORITY_BADGE: Record<ProjectTaskPriority, string> = {
-  low: "border border-white/10 bg-white/[0.04] text-white/45",
-  normal: "border border-white/12 bg-white/[0.06] text-white/65",
-  high: "border border-violet-400/35 bg-violet-400/12 text-violet-200",
-  top5: "border border-[#ff2d95]/45 bg-[#ff2d95]/15 text-[#ff7bc0]"
+  low: "border border-white/10 bg-gradient-to-b from-white/[0.06] to-transparent text-white/50",
+  normal:
+    "border border-white/[0.14] bg-gradient-to-b from-white/[0.10] to-white/[0.02] text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
+  high: "border border-violet-400/40 bg-gradient-to-b from-violet-400/[0.20] to-violet-400/[0.05] text-violet-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_10px_-2px_rgba(168,85,247,0.5)]",
+  top5: "border border-[#ff2d95]/50 bg-gradient-to-b from-[#ff2d95]/[0.28] to-[#ff2d95]/[0.06] text-[#ffd0e6] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_3px_14px_-3px_rgba(255,45,149,0.6)]"
 };
 
 function parseStatus(value: string): ProjectTaskStatus {
@@ -219,13 +223,46 @@ export default async function DmPage({ searchParams }: DmPageProps) {
       />
 
       <div className="animate-reveal mx-auto flex max-w-6xl flex-col gap-6">
-        {/* Header */}
+        {/* Header — large hero */}
         <section className={cardClass}>
-          <div className={`${cardInnerClass} relative overflow-hidden px-5 py-4 sm:px-6`}>
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
-            />
+          <div className={`${cardInnerClass} relative overflow-hidden`}>
+            {/* Hero image */}
+            <div className="relative h-44 w-full sm:h-56 lg:h-72">
+              <Image
+                src="/dm/listehero.png"
+                alt="DesireMap ekibi"
+                fill
+                priority
+                sizes="(min-width: 1024px) 1100px, 100vw"
+                className="object-cover object-center"
+              />
+              {/* Neon brand wash to fuse the photo with the palette */}
+              <div
+                aria-hidden
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(115deg, rgba(255,45,149,0.20) 0%, rgba(168,85,247,0.06) 50%, rgba(34,211,238,0.18) 100%)"
+                }}
+              />
+              {/* Bottom scrim for legibility */}
+              <div
+                aria-hidden
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(10,7,18,0) 30%, rgba(10,7,18,0.55) 70%, rgba(10,7,18,0.95) 100%)"
+                }}
+              />
+              {/* Top sheen */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
+              />
+            </div>
+
+            {/* Overlaid header content */}
+            <div className="absolute inset-x-0 bottom-0 px-5 py-4 sm:px-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
                 <span
@@ -266,6 +303,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                   </button>
                 </form>
               </div>
+            </div>
             </div>
           </div>
         </section>

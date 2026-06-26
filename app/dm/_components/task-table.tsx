@@ -46,6 +46,14 @@ const PRIORITY_SHORT: Record<ProjectTaskPriority, string> = {
   top5: "İlk 5"
 };
 
+/** Glowing leading dot per status — gives the chip a premium indicator feel. */
+const STATUS_DOT: Record<ProjectTaskStatus, string> = {
+  todo: "bg-white/70 shadow-[0_0_6px_rgba(255,255,255,0.7)]",
+  in_progress: "bg-cyan-300 shadow-[0_0_7px_rgba(34,211,238,0.9)]",
+  done: "bg-emerald-300 shadow-[0_0_7px_rgba(16,185,129,0.9)]",
+  blocked: "bg-[#ff5572] shadow-[0_0_7px_rgba(255,34,71,0.9)]"
+};
+
 export function TaskTable({
   tasks,
   statusOptions,
@@ -210,7 +218,7 @@ export function TaskTable({
           }}
         />
         {/* Column header (md+) */}
-        <div className="hidden border-b border-white/[0.07] bg-white/[0.025] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40 md:grid md:grid-cols-[minmax(0,1fr)_5.5rem_8rem_8.5rem_5.5rem] md:items-center md:gap-3">
+        <div className="hidden border-b border-white/[0.07] bg-white/[0.025] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40 md:grid md:grid-cols-[minmax(0,1fr)_5.5rem_8rem_9.5rem_5.5rem] md:items-center md:gap-3">
           <span>Görev</span>
           <span>Sorumlu</span>
           <span>Kategori</span>
@@ -227,7 +235,7 @@ export function TaskTable({
             {visible.map((task) => (
               <li
                 key={task.id}
-                className={`px-4 py-2.5 transition hover:bg-white/[0.02] md:grid md:grid-cols-[minmax(0,1fr)_5.5rem_8rem_8.5rem_5.5rem] md:items-center md:gap-3 ${
+                className={`px-4 py-2.5 transition hover:bg-white/[0.02] md:grid md:grid-cols-[minmax(0,1fr)_5.5rem_8rem_9.5rem_5.5rem] md:items-center md:gap-3 ${
                   task.status === "done" ? "opacity-55" : ""
                 }`}
               >
@@ -275,12 +283,16 @@ export function TaskTable({
                 {/* Status / priority */}
                 <div className="mt-1.5 flex flex-nowrap items-center gap-1.5 md:mt-0">
                   <span
-                    className={`shrink-0 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] ${statusBadge[task.status]}`}
+                    className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-[3px] text-[9px] font-semibold uppercase tracking-[0.1em] ${statusBadge[task.status]}`}
                   >
+                    <span
+                      aria-hidden
+                      className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[task.status]}`}
+                    />
                     {STATUS_SHORT[task.status]}
                   </span>
                   <span
-                    className={`shrink-0 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] ${priorityBadge[task.priority]}`}
+                    className={`inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-2 py-[3px] text-[9px] font-semibold uppercase tracking-[0.1em] ${priorityBadge[task.priority]}`}
                   >
                     {PRIORITY_SHORT[task.priority]}
                   </span>

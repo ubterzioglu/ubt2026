@@ -217,14 +217,14 @@
   "hotPaths": [
     {
       "path": "app\\dm\\page.tsx",
-      "accessCount": 41,
-      "lastAccessed": 1782495646369,
+      "accessCount": 51,
+      "lastAccessed": 1782496270571,
       "type": "file"
     },
     {
       "path": "app\\dm\\_components\\task-table.tsx",
-      "accessCount": 22,
-      "lastAccessed": 1782495588012,
+      "accessCount": 27,
+      "lastAccessed": 1782496082541,
       "type": "file"
     },
     {
@@ -489,6 +489,12 @@
       "path": "app\\batubt\\_components\\batubt-login.tsx",
       "accessCount": 1,
       "lastAccessed": 1782495458923,
+      "type": "file"
+    },
+    {
+      "path": "dmgorsel\\listehero.png",
+      "accessCount": 1,
+      "lastAccessed": 1782496214801,
       "type": "file"
     }
   ],
