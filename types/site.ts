@@ -77,6 +77,36 @@ export interface ProjectTaskItem {
   updatedAt: string;
 }
 
+export type TestFindingStatus =
+  | "open"
+  | "investigating"
+  | "resolved"
+  | "wontfix";
+export type TestFindingSeverity = "low" | "normal" | "high" | "critical";
+
+export interface TestFindingItem {
+  id: string;
+  title: string;
+  area: string;
+  owner: string;
+  status: TestFindingStatus;
+  severity: TestFindingSeverity;
+  /** Signed URL for the screenshot, or null when none is attached. */
+  screenshotUrl: string | null;
+  commentCount: number;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FindingComment {
+  id: string;
+  findingId: string;
+  body: string;
+  author: string;
+  createdAt: string;
+}
+
 export type FooterClientStatus = "pending" | "added" | "verified";
 
 export interface FooterClientItem {

@@ -6,6 +6,7 @@ import { isTasksAdminAuthenticated } from "@/lib/admin-auth";
 import { tasksSignInAction, tasksSignOutAction } from "@/app/dm/_actions";
 import { DmLogin } from "@/app/dm/_components/dm-login";
 import { TaskTable } from "@/app/dm/_components/task-table";
+import { FindingsTab } from "@/app/dm/_components/findings-tab";
 import {
   DM_AMBIENT_BACKGROUND,
   DM_BRAND_GRADIENT,
@@ -18,9 +19,23 @@ import {
   updateProjectTask,
   deleteProjectTask
 } from "@/lib/project-tasks";
+import {
+  getAllFindingsAdmin,
+  getFindingByIdAdmin,
+  getFindingCommentsAdmin,
+  createFinding,
+  updateFinding,
+  deleteFinding,
+  addComment,
+  deleteComment,
+  normalizeFindingStatus,
+  normalizeFindingSeverity
+} from "@/lib/test-findings";
 import type {
   ProjectTaskPriority,
-  ProjectTaskStatus
+  ProjectTaskStatus,
+  TestFindingSeverity,
+  TestFindingStatus
 } from "@/types/site";
 
 interface DmPageProps {
@@ -69,6 +84,42 @@ const PRIORITY_BADGE: Record<ProjectTaskPriority, string> = {
   top5: "border border-[#ff2d95]/50 bg-gradient-to-b from-[#ff2d95]/[0.28] to-[#ff2d95]/[0.06] text-[#ffd0e6] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_3px_14px_-3px_rgba(255,45,149,0.6)]"
 };
 
+const FINDING_STATUS_OPTIONS: { value: TestFindingStatus; label: string }[] = [
+  { value: "open", label: "Açık" },
+  { value: "investigating", label: "İnceleniyor" },
+  { value: "resolved", label: "Çözüldü" },
+  { value: "wontfix", label: "Geçersiz" }
+];
+
+const FINDING_SEVERITY_OPTIONS: {
+  value: TestFindingSeverity;
+  label: string;
+}[] = [
+  { value: "low", label: "Düşük" },
+  { value: "normal", label: "Normal" },
+  { value: "high", label: "Yüksek" },
+  { value: "critical", label: "Kritik" }
+];
+
+const FINDING_STATUS_BADGE: Record<TestFindingStatus, string> = {
+  open: "border border-[#ff2247]/40 bg-gradient-to-b from-[#ff2247]/[0.20] to-[#ff2247]/[0.04] text-[#ff9fb0] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_2px_10px_-2px_rgba(255,34,71,0.45)]",
+  investigating:
+    "border border-amber-400/40 bg-gradient-to-b from-amber-400/[0.20] to-amber-400/[0.04] text-amber-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_10px_-2px_rgba(251,191,36,0.5)]",
+  resolved:
+    "border border-emerald-400/35 bg-gradient-to-b from-emerald-400/[0.16] to-emerald-400/[0.04] text-emerald-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_2px_10px_-2px_rgba(16,185,129,0.4)]",
+  wontfix:
+    "border border-white/[0.14] bg-gradient-to-b from-white/[0.10] to-white/[0.02] text-white/65 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+};
+
+const FINDING_SEVERITY_BADGE: Record<TestFindingSeverity, string> = {
+  low: "border border-white/10 bg-gradient-to-b from-white/[0.06] to-transparent text-white/50",
+  normal:
+    "border border-white/[0.14] bg-gradient-to-b from-white/[0.10] to-white/[0.02] text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
+  high: "border border-violet-400/40 bg-gradient-to-b from-violet-400/[0.20] to-violet-400/[0.05] text-violet-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_10px_-2px_rgba(168,85,247,0.5)]",
+  critical:
+    "border border-[#ff2d95]/50 bg-gradient-to-b from-[#ff2d95]/[0.28] to-[#ff2d95]/[0.06] text-[#ffd0e6] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_3px_14px_-3px_rgba(255,45,149,0.6)]"
+};
+
 function parseStatus(value: string): ProjectTaskStatus {
   return STATUS_OPTIONS.some((option) => option.value === value)
     ? (value as ProjectTaskStatus)
@@ -102,11 +153,35 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     );
   }
 
-  const tasksResult = await getAllProjectTasksAdmin();
+  const tabParam = readParam(params.tab);
+  const activeTab: "tasks" | "findings" =
+    tabParam === "findings" ? "findings" : "tasks";
   const createdParam = readParam(params.created);
   const updatedParam = readParam(params.updated);
+  const errorParam = readParam(params.error);
   const editId = readParam(params.edit);
-  const editing = editId ? await getProjectTaskByIdAdmin(editId) : null;
+
+  const tasksResult = await getAllProjectTasksAdmin();
+  const editing =
+    activeTab === "tasks" && editId
+      ? await getProjectTaskByIdAdmin(editId)
+      : null;
+
+  // Findings data — fetched regardless so the stats/tab badge are accurate,
+  // but the editing/selected lookups only run on the findings tab.
+  const findingsResult = await getAllFindingsAdmin();
+  const editingFinding =
+    activeTab === "findings" && editId
+      ? await getFindingByIdAdmin(editId)
+      : null;
+  const selectedFindingId = readParam(params.finding);
+  const selectedFinding =
+    activeTab === "findings" && selectedFindingId
+      ? findingsResult.items.find((f) => f.id === selectedFindingId) ?? null
+      : null;
+  const selectedComments = selectedFinding
+    ? await getFindingCommentsAdmin(selectedFinding.id)
+    : [];
 
   async function createAction(formData: FormData) {
     "use server";
@@ -183,8 +258,141 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     redirect("/dm" as Parameters<typeof redirect>[0]);
   }
 
+  // --- Test findings actions ---
+
+  function findingFile(formData: FormData): File | null {
+    const value = formData.get("screenshot");
+    return value instanceof File && value.size > 0 ? value : null;
+  }
+
+  async function createFindingAction(formData: FormData) {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const result = await createFinding(
+      {
+        title: (formData.get("title") as string | null) ?? "",
+        area: (formData.get("area") as string | null) ?? "",
+        owner: (formData.get("owner") as string | null) ?? "Ortak",
+        status: normalizeFindingStatus(
+          (formData.get("status") as string | null) ?? "open"
+        ),
+        severity: normalizeFindingSeverity(
+          (formData.get("severity") as string | null) ?? "normal"
+        ),
+        sortOrder: 0
+      },
+      findingFile(formData)
+    );
+    revalidatePath("/dm");
+    const target = result.ok
+      ? "/dm?tab=findings&created=1"
+      : `/dm?tab=findings&error=${encodeURIComponent(result.errorMessage ?? "1")}`;
+    redirect(target as Parameters<typeof redirect>[0]);
+  }
+
+  async function updateFindingAction(formData: FormData) {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (!id) {
+      redirect("/dm?tab=findings" as Parameters<typeof redirect>[0]);
+    }
+    const result = await updateFinding(
+      id,
+      {
+        title: (formData.get("title") as string | null) ?? "",
+        area: (formData.get("area") as string | null) ?? "",
+        owner: (formData.get("owner") as string | null) ?? "Ortak",
+        status: normalizeFindingStatus(
+          (formData.get("status") as string | null) ?? "open"
+        ),
+        severity: normalizeFindingSeverity(
+          (formData.get("severity") as string | null) ?? "normal"
+        )
+      },
+      findingFile(formData)
+    );
+    revalidatePath("/dm");
+    const target = result.ok
+      ? "/dm?tab=findings&updated=1"
+      : `/dm?tab=findings&error=${encodeURIComponent(result.errorMessage ?? "1")}`;
+    redirect(target as Parameters<typeof redirect>[0]);
+  }
+
+  async function deleteFindingAction(formData: FormData) {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (id) {
+      await deleteFinding(id);
+    }
+    revalidatePath("/dm");
+    redirect("/dm?tab=findings" as Parameters<typeof redirect>[0]);
+  }
+
+  async function resolveFindingAction(formData: FormData) {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (id) {
+      await updateFinding(id, { status: "resolved" });
+    }
+    revalidatePath("/dm");
+    redirect("/dm?tab=findings" as Parameters<typeof redirect>[0]);
+  }
+
+  async function addCommentAction(formData: FormData) {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const findingId = (formData.get("finding") as string | null) ?? "";
+    const body = (formData.get("body") as string | null) ?? "";
+    const author = (formData.get("author") as string | null) ?? "Ortak";
+    if (findingId) {
+      await addComment(findingId, body, author);
+    }
+    revalidatePath("/dm");
+    redirect(
+      `/dm?tab=findings&finding=${findingId}#yorumlar` as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function deleteCommentAction(formData: FormData) {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    const findingId = (formData.get("finding") as string | null) ?? "";
+    if (id) {
+      await deleteComment(id);
+    }
+    revalidatePath("/dm");
+    redirect(
+      `/dm?tab=findings&finding=${findingId}#yorumlar` as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
   const allTasks = tasksResult.items;
   const owners = Array.from(new Set(allTasks.map((task) => task.owner)));
+
+  const allFindings = findingsResult.items;
+  const findingOwners = Array.from(
+    new Set(allFindings.map((f) => f.owner))
+  );
 
   const doneCount = allTasks.filter((task) => task.status === "done").length;
   const top5Count = allTasks.filter((task) => task.priority === "top5").length;
@@ -308,17 +516,67 @@ export default async function DmPage({ searchParams }: DmPageProps) {
           </div>
         </section>
 
+        {/* Tab strip */}
+        <nav className={cardClass}>
+          <div className={`${cardInnerClass} flex gap-1.5 p-1.5`}>
+            {(
+              [
+                { key: "tasks", label: "Görevler", count: allTasks.length },
+                {
+                  key: "findings",
+                  label: "Test bulguları",
+                  count: allFindings.length
+                }
+              ] as const
+            ).map((tab) => {
+              const isActive = activeTab === tab.key;
+              return (
+                <a
+                  key={tab.key}
+                  href={`/dm?tab=${tab.key}`}
+                  className={`flex flex-1 items-center justify-center gap-2 rounded-[1.1rem] px-4 py-2.5 text-xs font-semibold tracking-tight transition ${
+                    isActive
+                      ? "text-white shadow-[0_10px_30px_-10px_rgba(255,45,149,0.7)] ring-1 ring-inset ring-white/15"
+                      : "text-white/55 hover:bg-white/[0.04] hover:text-white"
+                  }`}
+                  style={
+                    isActive ? { backgroundImage: DM_BRAND_GRADIENT } : undefined
+                  }
+                >
+                  {tab.label}
+                  <span
+                    className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums ${
+                      isActive
+                        ? "bg-white/20 text-white"
+                        : "bg-white/[0.06] text-white/50"
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+        </nav>
+
         {createdParam === "1" && (
           <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-xs font-medium text-emerald-300">
-            Görev eklendi.
+            {activeTab === "findings" ? "Bulgu eklendi." : "Görev eklendi."}
           </div>
         )}
         {updatedParam === "1" && (
           <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-xs font-medium text-emerald-300">
-            Görev güncellendi.
+            {activeTab === "findings" ? "Bulgu güncellendi." : "Görev güncellendi."}
           </div>
         )}
+        {errorParam ? (
+          <div className="rounded-[1.1rem] border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-xs font-medium text-rose-200">
+            {errorParam}
+          </div>
+        ) : null}
 
+        {activeTab === "tasks" ? (
+        <>
         {/* Stats */}
         <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -556,6 +814,30 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             />
           </div>
         </section>
+        </>
+        ) : (
+          <FindingsTab
+            findings={allFindings}
+            owners={findingOwners}
+            ownerOptions={OWNER_OPTIONS}
+            statusOptions={FINDING_STATUS_OPTIONS}
+            severityOptions={FINDING_SEVERITY_OPTIONS}
+            statusBadge={FINDING_STATUS_BADGE}
+            severityBadge={FINDING_SEVERITY_BADGE}
+            editing={editingFinding}
+            selected={selectedFinding}
+            comments={selectedComments}
+            cardClass={cardClass}
+            cardInnerClass={cardInnerClass}
+            inputClass={inputClass}
+            createAction={createFindingAction}
+            updateAction={updateFindingAction}
+            deleteAction={deleteFindingAction}
+            resolveAction={resolveFindingAction}
+            addCommentAction={addCommentAction}
+            deleteCommentAction={deleteCommentAction}
+          />
+        )}
       </div>
     </main>
   );
