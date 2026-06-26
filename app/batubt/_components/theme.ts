@@ -1,24 +1,26 @@
 /**
- * BatuBT brand theme tokens, derived from the `loginhero.png` mascot lockup:
- * jet-black field, pixel-font white, with gold · violet · orange accents from
- * the two robot characters. Scoped to the `/batubt` route so it never touches
- * the global site theme or the shared admin gate.
+ * BatuBT brand theme tokens. Palette priority: black (1) · yellow (2) ·
+ * violet (3), with white text. Yellow is the Almanya-101 mustard / Google
+ * yellow (#FBBC05). Scoped to the `/batubt` route so it never touches the
+ * global site theme or the shared admin gate.
  */
 
 /** Core accent hexes (kept as named constants so JSX can reference them). */
-export const BATUBT_GOLD = "#F5C518";
+export const BATUBT_YELLOW = "#FBBC05"; // Google / hardal sarısı (Almanya 101)
 export const BATUBT_VIOLET = "#A855F7";
-export const BATUBT_ORANGE = "#FB923C";
 
-/** Tri-color brand gradient used for borders, the logo tile and the CTA. */
+/**
+ * Tri-color brand gradient used for borders, the logo tile and the CTA.
+ * Yellow-led (per palette priority) resolving into violet.
+ */
 export const BATUBT_BRAND_GRADIENT =
-  "linear-gradient(115deg, #F5C518 0%, #FB923C 42%, #A855F7 100%)";
+  "linear-gradient(115deg, #FBBC05 0%, #FFD34E 38%, #A855F7 100%)";
 
-/** Full-page ambient background: warm gold glow top-left, violet bottom-right. */
+/** Full-page ambient background: yellow glow top-left, violet bottom-right. */
 export const BATUBT_AMBIENT_BACKGROUND =
-  "radial-gradient(55% 50% at 16% 10%, rgba(245,197,24,0.20), transparent 60%)," +
-  "radial-gradient(48% 48% at 88% 6%, rgba(251,146,60,0.16), transparent 58%)," +
-  "radial-gradient(70% 75% at 52% 120%, rgba(168,85,247,0.20), transparent 60%)," +
+  "radial-gradient(55% 50% at 16% 10%, rgba(251,188,5,0.20), transparent 60%)," +
+  "radial-gradient(48% 48% at 88% 6%, rgba(251,188,5,0.10), transparent 58%)," +
+  "radial-gradient(70% 75% at 52% 120%, rgba(168,85,247,0.22), transparent 60%)," +
   "linear-gradient(180deg, #0a0a0d 0%, #07070a 55%, #050507 100%)";
 
 /** Subtle grid texture, masked toward the top so it fades into the glow. */

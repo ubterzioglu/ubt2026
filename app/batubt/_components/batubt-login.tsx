@@ -22,7 +22,7 @@ interface BatubtLoginProps {
  * ULTRA-PREMIUM BatuBT login. Self-contained dark entrance scoped to the
  * `/batubt` route: a two-column split pairing the `loginsol.png` mascot artwork
  * (left showcase) with a glass auth card (right) built on the brand's
- * gold · orange · violet palette. All treatment is inline so it never touches
+ * black · yellow · violet palette. All treatment is inline so it never touches
  * the global site theme nor the shared admin gate used elsewhere.
  */
 export function BatubtLogin({
@@ -50,7 +50,7 @@ export function BatubtLogin({
       <div
         aria-hidden
         className="animate-float pointer-events-none absolute -left-24 top-16 -z-10 h-72 w-72 rounded-full blur-[130px]"
-        style={{ background: "rgba(245,197,24,0.30)" }}
+        style={{ background: "rgba(251,188,5,0.30)" }}
       />
       <div
         aria-hidden
@@ -60,7 +60,7 @@ export function BatubtLogin({
       <div
         aria-hidden
         className="animate-float pointer-events-none absolute left-1/2 top-1/2 -z-10 h-64 w-64 -translate-x-1/2 rounded-full blur-[150px]"
-        style={{ background: "rgba(251,146,60,0.20)" }}
+        style={{ background: "rgba(168,85,247,0.18)" }}
       />
 
       {/* Card shell with tri-color gradient border */}
@@ -85,7 +85,7 @@ export function BatubtLogin({
               className="absolute inset-0"
               style={{
                 background:
-                  "linear-gradient(115deg, rgba(245,197,24,0.12) 0%, rgba(251,146,60,0.06) 45%, rgba(168,85,247,0.20) 100%)," +
+                  "linear-gradient(115deg, rgba(251,188,5,0.12) 0%, rgba(255,211,78,0.06) 45%, rgba(168,85,247,0.20) 100%)," +
                   "linear-gradient(180deg, rgba(8,8,11,0.05) 0%, rgba(8,8,11,0.45) 80%, rgba(8,8,11,0.88) 100%)"
               }}
             />
@@ -110,7 +110,7 @@ export function BatubtLogin({
                     className="font-body text-2xl font-extrabold tracking-tight text-transparent"
                     style={{
                       backgroundImage:
-                        "linear-gradient(100deg, #F5C518, #FB923C 55%, #A855F7)",
+                        "linear-gradient(100deg, #FBBC05, #FFD34E 55%, #A855F7)",
                       WebkitBackgroundClip: "text",
                       backgroundClip: "text"
                     }}
@@ -164,19 +164,19 @@ export function BatubtLogin({
               <span
                 className="ml-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]"
                 style={{
-                  borderColor: "rgba(245,197,24,0.35)",
-                  background: "rgba(245,197,24,0.10)",
-                  color: "#F5C518"
+                  borderColor: "rgba(251,188,5,0.35)",
+                  background: "rgba(251,188,5,0.10)",
+                  color: "#FBBC05"
                 }}
               >
                 <span className="relative flex h-1.5 w-1.5">
                   <span
                     className="absolute inline-flex h-full w-full animate-ping rounded-full"
-                    style={{ background: "rgba(245,197,24,0.7)" }}
+                    style={{ background: "rgba(251,188,5,0.7)" }}
                   />
                   <span
                     className="relative inline-flex h-1.5 w-1.5 rounded-full"
-                    style={{ background: "#F5C518" }}
+                    style={{ background: "#FBBC05" }}
                   />
                 </span>
                 Secure
@@ -190,10 +190,10 @@ export function BatubtLogin({
             >
               {eyebrow}
             </p>
-            <h1 className="mt-3 font-body text-[clamp(1.9rem,5vw,2.5rem)] font-bold leading-[1.05] tracking-[-0.035em] text-white">
+            <h1 className="mt-3 font-body text-[clamp(1.55rem,4vw,2rem)] font-bold leading-[1.08] tracking-[-0.035em] text-white">
               {title}
             </h1>
-            <p className="mt-3.5 text-sm leading-7 text-white/55">
+            <p className="mt-3 text-[13px] leading-6 text-white/55">
               {description}
             </p>
 
@@ -206,7 +206,7 @@ export function BatubtLogin({
                 <div className="group relative">
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/30 transition group-focus-within:text-[#F5C518]"
+                    className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/30 transition group-focus-within:text-[#FBBC05]"
                   >
                     <svg
                       width="18"
@@ -227,13 +227,13 @@ export function BatubtLogin({
                     name="access"
                     autoComplete="current-password"
                     placeholder="••••••••••••"
-                    className="w-full rounded-[1.05rem] border border-white/10 bg-white/[0.04] py-3.5 pl-11 pr-4 text-sm text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#F5C518]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#F5C518]/15"
+                    className="w-full rounded-[1.05rem] border border-white/10 bg-white/[0.04] py-3.5 pl-11 pr-4 text-sm text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#FBBC05]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#FBBC05]/15"
                   />
                 </div>
               </label>
               <button
                 type="submit"
-                className="group relative inline-flex min-h-[52px] w-full items-center justify-center gap-2 overflow-hidden rounded-[1.05rem] px-6 py-3.5 text-sm font-bold tracking-tight text-black shadow-[0_16px_50px_-12px_rgba(245,197,24,0.6)] ring-1 ring-inset ring-white/20 transition duration-300 hover:shadow-[0_20px_60px_-12px_rgba(168,85,247,0.7)] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/60"
+                className="group relative inline-flex min-h-[52px] w-full items-center justify-center gap-2 overflow-hidden rounded-[1.05rem] px-6 py-3.5 text-sm font-bold tracking-tight text-black shadow-[0_16px_50px_-12px_rgba(251,188,5,0.6)] ring-1 ring-inset ring-white/20 transition duration-300 hover:shadow-[0_20px_60px_-12px_rgba(168,85,247,0.7)] focus:outline-none focus:ring-2 focus:ring-[#FBBC05]/60"
                 style={{ backgroundImage: BATUBT_BRAND_GRADIENT }}
               >
                 <span
