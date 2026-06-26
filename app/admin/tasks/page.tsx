@@ -1,9 +1,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { isTasksAdminAuthenticated } from "@/lib/admin-auth";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
-import { adminSignOutAction } from "@/app/admin/_actions";
+import { tasksSignInAction, tasksSignOutAction } from "@/app/admin/_actions";
 import {
   getAllProjectTasksAdmin,
   getProjectTaskByIdAdmin,
@@ -91,10 +91,16 @@ export default async function AdminTasksPage({
   searchParams
 }: AdminTasksPageProps) {
   const params = searchParams ? await searchParams : {};
-  const hasAccess = await isAdminAuthenticated();
+  const hasAccess = await isTasksAdminAuthenticated();
 
   if (!hasAccess) {
-    return <AdminGate redirectTo="/admin/tasks" submitLabel="Görev panosunu aç" />;
+    return (
+      <AdminGate
+        redirectTo="/admin/tasks"
+        submitLabel="Görev panosunu aç"
+        signInAction={tasksSignInAction}
+      />
+    );
   }
 
   const tasksResult = await getAllProjectTasksAdmin();
@@ -107,7 +113,7 @@ export default async function AdminTasksPage({
 
   async function createAction(formData: FormData) {
     "use server";
-    if (!(await isAdminAuthenticated())) {
+    if (!(await isTasksAdminAuthenticated())) {
       redirect("/admin/tasks" as Parameters<typeof redirect>[0]);
     }
     await createProjectTask({
@@ -129,7 +135,7 @@ export default async function AdminTasksPage({
 
   async function updateAction(formData: FormData) {
     "use server";
-    if (!(await isAdminAuthenticated())) {
+    if (!(await isTasksAdminAuthenticated())) {
       redirect("/admin/tasks" as Parameters<typeof redirect>[0]);
     }
     const id = (formData.get("id") as string | null) ?? "";
@@ -155,7 +161,7 @@ export default async function AdminTasksPage({
 
   async function inlineStatusAction(formData: FormData) {
     "use server";
-    if (!(await isAdminAuthenticated())) {
+    if (!(await isTasksAdminAuthenticated())) {
       redirect("/admin/tasks" as Parameters<typeof redirect>[0]);
     }
     const id = (formData.get("id") as string | null) ?? "";
@@ -169,7 +175,7 @@ export default async function AdminTasksPage({
 
   async function deleteAction(formData: FormData) {
     "use server";
-    if (!(await isAdminAuthenticated())) {
+    if (!(await isTasksAdminAuthenticated())) {
       redirect("/admin/tasks" as Parameters<typeof redirect>[0]);
     }
     const id = (formData.get("id") as string | null) ?? "";
@@ -229,7 +235,7 @@ export default async function AdminTasksPage({
               >
                 Panoya dön
               </a>
-              <form action={adminSignOutAction}>
+              <form action={tasksSignOutAction}>
                 <button
                   type="submit"
                   className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-rose-300 hover:text-rose-700"

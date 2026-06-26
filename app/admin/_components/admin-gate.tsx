@@ -7,6 +7,12 @@ interface AdminGateProps {
   title?: string;
   /** Submit button label. */
   submitLabel?: string;
+  /**
+   * Override the sign-in server action. Defaults to the shared appointment-
+   * admin gate; pass a self-contained action (e.g. the task board's) to use a
+   * different key/cookie. Such an action handles its own redirect.
+   */
+  signInAction?: (formData: FormData) => void | Promise<void>;
 }
 
 /**
@@ -16,9 +22,10 @@ interface AdminGateProps {
 export function AdminGate({
   redirectTo,
   title = "Enter the admin key",
-  submitLabel = "Open admin panel"
+  submitLabel = "Open admin panel",
+  signInAction
 }: AdminGateProps) {
-  const signIn = adminSignInAction.bind(null, redirectTo);
+  const signIn = signInAction ?? adminSignInAction.bind(null, redirectTo);
 
   return (
     <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">

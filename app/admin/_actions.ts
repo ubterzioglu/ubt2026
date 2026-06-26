@@ -3,7 +3,12 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
-import { signInAdmin, signOutAdmin } from "@/lib/admin-auth";
+import {
+  signInAdmin,
+  signOutAdmin,
+  signInTasksAdmin,
+  signOutTasksAdmin
+} from "@/lib/admin-auth";
 
 const ADMIN_PATHS = [
   "/admin",
@@ -48,4 +53,23 @@ export async function adminSignInAction(
 export async function adminSignOutAction(): Promise<void> {
   await signOutAdmin();
   redirect("/admin" as Route);
+}
+
+/**
+ * Task-board gate sign-in. Validates against the task-board key
+ * (DESIREMAPTODO_ADMIN_ACCESS_KEY) and stores its own cookie, so the board
+ * can be shared independently of the appointment-admin key.
+ */
+export async function tasksSignInAction(formData: FormData): Promise<void> {
+  const candidate = String(formData.get("access") ?? "");
+  await signInTasksAdmin(candidate);
+  redirect("/admin/tasks" as Route);
+}
+
+/**
+ * Sign out of the task board and return to its gate.
+ */
+export async function tasksSignOutAction(): Promise<void> {
+  await signOutTasksAdmin();
+  redirect("/admin/tasks" as Route);
 }
