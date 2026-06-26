@@ -270,16 +270,16 @@
       "type": "file"
     },
     {
+      "path": "app\\batubt\\page.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1782499677788,
+      "type": "file"
+    },
+    {
       "path": "types\\site.ts",
       "accessCount": 6,
       "lastAccessed": 1782493983187,
       "type": "directory"
-    },
-    {
-      "path": "app\\batubt\\page.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1782496959429,
-      "type": "file"
     },
     {
       "path": "app\\batubt\\_components\\batubt-login.tsx",
@@ -306,6 +306,12 @@
       "type": "directory"
     },
     {
+      "path": "supabase\\migrations\\20260626120000_create_project_tasks.sql",
+      "accessCount": 3,
+      "lastAccessed": 1782499870461,
+      "type": "file"
+    },
+    {
       "path": "lib\\appointments.ts",
       "accessCount": 2,
       "lastAccessed": 1782491437832,
@@ -330,12 +336,6 @@
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260626120000_create_project_tasks.sql",
-      "accessCount": 2,
-      "lastAccessed": 1782492935939,
-      "type": "file"
-    },
-    {
       "path": "app\\dm\\_actions.ts",
       "accessCount": 2,
       "lastAccessed": 1782493667893,
@@ -352,6 +352,12 @@
       "accessCount": 2,
       "lastAccessed": 1782496783605,
       "type": "file"
+    },
+    {
+      "path": "lib",
+      "accessCount": 2,
+      "lastAccessed": 1782499862257,
+      "type": "directory"
     },
     {
       "path": "supabase\\migrations\\20260617120000_create_blog_posts.sql",
@@ -412,12 +418,6 @@
       "accessCount": 1,
       "lastAccessed": 1782489801435,
       "type": "file"
-    },
-    {
-      "path": "lib",
-      "accessCount": 1,
-      "lastAccessed": 1782491403494,
-      "type": "directory"
     },
     {
       "path": "docs\\superpowers\\specs\\2026-06-26-dm-board-design.md",
@@ -508,6 +508,12 @@
       "accessCount": 1,
       "lastAccessed": 1782497096279,
       "type": "file"
+    },
+    {
+      "path": "lib\\featured-items.ts",
+      "accessCount": 1,
+      "lastAccessed": 1782499870557,
+      "type": "directory"
     }
   ],
   "userDirectives": []
