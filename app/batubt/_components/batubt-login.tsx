@@ -20,8 +20,8 @@ interface BatubtLoginProps {
 
 /**
  * ULTRA-PREMIUM BatuBT login. Self-contained dark entrance scoped to the
- * `/batubt` route: the `loginhero.png` mascot banner sits in a showcase panel
- * over a jet-black field, paired with a glass auth card built on the brand's
+ * `/batubt` route: a two-column split pairing the `loginsol.png` mascot artwork
+ * (left showcase) with a glass auth card (right) built on the brand's
  * gold · orange · violet palette. All treatment is inline so it never touches
  * the global site theme nor the shared admin gate used elsewhere.
  */
@@ -65,37 +65,72 @@ export function BatubtLogin({
 
       {/* Card shell with tri-color gradient border */}
       <div
-        className="animate-reveal w-full max-w-md rounded-[2rem] p-[1.5px] shadow-[0_50px_140px_-30px_rgba(0,0,0,0.9)]"
+        className="animate-reveal w-full max-w-5xl rounded-[2rem] p-[1.5px] shadow-[0_50px_140px_-30px_rgba(0,0,0,0.9)]"
         style={{ backgroundImage: BATUBT_BRAND_GRADIENT }}
       >
-        <div className="overflow-hidden rounded-[1.92rem] bg-[#08080b]/90 backdrop-blur-2xl">
-          {/* Hero showcase — mascot banner over jet black */}
-          <div className="relative px-6 pt-8 sm:px-8">
-            <div className="relative overflow-hidden rounded-[1.3rem] bg-black ring-1 ring-white/10">
-              {/* Spotlight wash behind the banner */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(70% 120% at 78% 50%, rgba(168,85,247,0.22), transparent 60%)," +
-                    "radial-gradient(60% 120% at 12% 50%, rgba(245,197,24,0.14), transparent 62%)"
-                }}
-              />
-              <Image
-                src="/batubt/loginhero.png"
-                alt="BatuBT"
-                width={960}
-                height={240}
-                priority
-                sizes="(min-width: 640px) 420px, 88vw"
-                className="relative w-full object-contain"
-              />
+        <div className="grid overflow-hidden rounded-[1.92rem] bg-[#08080b]/90 backdrop-blur-2xl lg:grid-cols-[1fr_1fr]">
+          {/* Left showcase — mascot artwork */}
+          <div className="relative hidden min-h-[560px] overflow-hidden lg:block">
+            <Image
+              src="/batubt/loginsol.png"
+              alt="BatuBT"
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 0px"
+              className="object-cover"
+            />
+            {/* Brand color wash to fuse the artwork with the dark card */}
+            <div
+              aria-hidden
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(115deg, rgba(245,197,24,0.12) 0%, rgba(251,146,60,0.06) 45%, rgba(168,85,247,0.20) 100%)," +
+                  "linear-gradient(180deg, rgba(8,8,11,0.05) 0%, rgba(8,8,11,0.45) 80%, rgba(8,8,11,0.88) 100%)"
+              }}
+            />
+            {/* Inner edge sheen */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10"
+            />
+            {/* Overlaid brand lockup */}
+            <div className="absolute inset-x-0 bottom-0 p-8">
+              <div className="flex items-center gap-3">
+                <span
+                  className="relative flex h-12 w-12 items-center justify-center rounded-2xl ring-1 ring-white/20"
+                  style={{ backgroundImage: BATUBT_BRAND_GRADIENT }}
+                >
+                  <span className="font-body text-lg font-extrabold tracking-tight text-black drop-shadow">
+                    B
+                  </span>
+                </span>
+                <div className="leading-tight">
+                  <p
+                    className="font-body text-2xl font-extrabold tracking-tight text-transparent"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(100deg, #F5C518, #FB923C 55%, #A855F7)",
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text"
+                    }}
+                  >
+                    {brand}
+                  </p>
+                  <p className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/55">
+                    {subtitle}
+                  </p>
+                </div>
+              </div>
+              <p className="mt-4 max-w-sm text-sm leading-6 text-white/70">
+                Müşteri footer kodlarının iç yönetim panosu. Erişim anahtarınla
+                devam et.
+              </p>
             </div>
           </div>
 
-          {/* Form side */}
-          <div className="relative px-7 py-8 sm:px-9 sm:py-9">
+          {/* Right side — form + info */}
+          <div className="relative px-7 py-9 sm:px-10 sm:py-11">
             {/* Top sheen */}
             <div
               aria-hidden
@@ -106,36 +141,28 @@ export function BatubtLogin({
               }}
             />
 
-            {/* Brand + status row */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            {/* Mobile brand (left showcase hidden on small screens) */}
+            <div className="mb-8 flex items-center justify-between lg:mb-9">
+              <div className="flex items-center gap-3 lg:hidden">
                 <span
-                  className="relative flex h-11 w-11 items-center justify-center rounded-2xl ring-1 ring-white/20"
+                  className="relative flex h-10 w-10 items-center justify-center rounded-xl ring-1 ring-white/20"
                   style={{ backgroundImage: BATUBT_BRAND_GRADIENT }}
                 >
-                  <span className="font-body text-base font-extrabold tracking-tight text-black drop-shadow">
+                  <span className="font-body text-base font-extrabold tracking-tight text-black">
                     B
                   </span>
                 </span>
                 <div className="leading-tight">
-                  <p
-                    className="font-body text-lg font-extrabold tracking-tight text-transparent"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(100deg, #F5C518, #FB923C 55%, #A855F7)",
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text"
-                    }}
-                  >
+                  <p className="font-body text-sm font-bold tracking-tight text-white">
                     {brand}
                   </p>
-                  <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-white/50">
+                  <p className="text-[11px] font-medium text-white/45">
                     {subtitle}
                   </p>
                 </div>
               </div>
               <span
-                className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]"
+                className="ml-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]"
                 style={{
                   borderColor: "rgba(245,197,24,0.35)",
                   background: "rgba(245,197,24,0.10)",
@@ -157,20 +184,18 @@ export function BatubtLogin({
             </div>
 
             {/* Headline */}
-            <div className="mt-8">
-              <p
-                className="text-[11px] font-semibold uppercase tracking-[0.34em]"
-                style={{ color: "#d8b4fe" }}
-              >
-                {eyebrow}
-              </p>
-              <h1 className="mt-3 font-body text-[clamp(1.8rem,6vw,2.35rem)] font-bold leading-[1.05] tracking-[-0.035em] text-white">
-                {title}
-              </h1>
-              <p className="mt-3.5 text-sm leading-7 text-white/55">
-                {description}
-              </p>
-            </div>
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.34em]"
+              style={{ color: "#d8b4fe" }}
+            >
+              {eyebrow}
+            </p>
+            <h1 className="mt-3 font-body text-[clamp(1.9rem,5vw,2.5rem)] font-bold leading-[1.05] tracking-[-0.035em] text-white">
+              {title}
+            </h1>
+            <p className="mt-3.5 text-sm leading-7 text-white/55">
+              {description}
+            </p>
 
             {/* Form */}
             <form action={signIn} className="mt-8 space-y-5">
