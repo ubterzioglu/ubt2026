@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { isBatubtAuthenticated } from "@/lib/admin-auth";
-import { AdminGate } from "@/app/admin/_components/admin-gate";
+import { BatubtLogin } from "@/app/batubt/_components/batubt-login";
 import { batubtSignInAction, batubtSignOutAction } from "@/app/batubt/_actions";
 import {
   getAllFooterClientsAdmin,
@@ -74,9 +74,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
 
   if (!hasAccess) {
     return (
-      <AdminGate
-        redirectTo="/batubt"
-        variant="dark"
+      <BatubtLogin
         brand="BatuBT"
         subtitle="Footer Yönetimi"
         footerCaption="ubterzioglu.de · internal"
@@ -84,7 +82,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
         title="Footer kod yönetimi"
         description="Müşteri domainlerine girilecek footer kodlarını bu özel pano üzerinden yönetiyoruz. Devam etmek için erişim anahtarını gir."
         submitLabel="Panoyu aç"
-        signInAction={batubtSignInAction}
+        signIn={batubtSignInAction}
       />
     );
   }
