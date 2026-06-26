@@ -466,6 +466,12 @@
       "accessCount": 1,
       "lastAccessed": 1782494692273,
       "type": "file"
+    },
+    {
+      "path": "public\\logoubt.png",
+      "accessCount": 1,
+      "lastAccessed": 1782495077587,
+      "type": "file"
     }
   ],
   "userDirectives": []
