@@ -94,39 +94,6 @@ export function BatubtLogin({
               aria-hidden
               className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10"
             />
-            {/* Overlaid brand lockup */}
-            <div className="absolute inset-x-0 bottom-0 p-8">
-              <div className="flex items-center gap-3">
-                <span
-                  className="relative flex h-12 w-12 items-center justify-center rounded-2xl ring-1 ring-white/20"
-                  style={{ backgroundImage: BATUBT_BRAND_GRADIENT }}
-                >
-                  <span className="font-body text-lg font-extrabold tracking-tight text-black drop-shadow">
-                    B
-                  </span>
-                </span>
-                <div className="leading-tight">
-                  <p
-                    className="font-body text-2xl font-extrabold tracking-tight text-transparent"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(100deg, #FBBC05, #FFD34E 55%, #A855F7)",
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text"
-                    }}
-                  >
-                    {brand}
-                  </p>
-                  <p className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/55">
-                    {subtitle}
-                  </p>
-                </div>
-              </div>
-              <p className="mt-4 max-w-sm text-sm leading-6 text-white/70">
-                Müşteri footer kodlarının iç yönetim panosu. Erişim anahtarınla
-                devam et.
-              </p>
-            </div>
           </div>
 
           {/* Right side — form + info */}

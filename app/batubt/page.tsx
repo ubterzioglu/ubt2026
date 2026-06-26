@@ -1,9 +1,11 @@
+import Image from "next/image";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { isBatubtAuthenticated } from "@/lib/admin-auth";
 import { BatubtLogin } from "@/app/batubt/_components/batubt-login";
 import { batubtSignInAction, batubtSignOutAction } from "@/app/batubt/_actions";
+import { BATUBT_BRAND_GRADIENT } from "@/app/batubt/_components/theme";
 import {
   getAllFooterClientsAdmin,
   getFooterClientByIdAdmin,
@@ -36,9 +38,12 @@ const STATUS_OPTIONS: { value: FooterClientStatus; label: string }[] = [
 
 const STATUS_BADGE: Record<FooterClientStatus, string> = {
   pending: "border-amber-400/30 bg-amber-400/10 text-amber-300",
-  added: "border-sky-400/30 bg-sky-400/10 text-sky-300",
+  added: "border-violet-400/30 bg-violet-400/10 text-violet-300",
   verified: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
 };
+
+// BatuBT accent (yellow) — used in place of the global teal `accent` token.
+const YELLOW = "#FBBC05";
 
 function statusLabel(value: FooterClientStatus): string {
   return STATUS_OPTIONS.find((option) => option.value === value)?.label ?? value;
@@ -64,9 +69,9 @@ function normalizeDomainHref(domain: string): string | null {
 
 // Shared dark input styling so the form reads as one premium glass surface.
 const darkInput =
-  "w-full rounded-[0.95rem] border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-accent/55 focus:bg-white/[0.06] focus:ring-4 focus:ring-accent/12";
+  "w-full rounded-[0.9rem] border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-[13px] text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#FBBC05]/55 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#FBBC05]/12";
 const darkLabel =
-  "mb-1.5 block text-xs font-semibold uppercase tracking-[0.14em] text-white/50";
+  "mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50";
 
 export default async function BatubtPage({ searchParams }: BatubtPageProps) {
   const params = searchParams ? await searchParams : {};
@@ -190,24 +195,27 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
     return qs ? `/batubt?${qs}` : "/batubt";
   }
 
-  const chipBase =
-    "rounded-full px-3 py-1 text-xs font-semibold transition";
-  const chipActive = "bg-accent text-white shadow-[0_8px_24px_-8px_rgba(27,122,110,0.7)]";
+  const chipBase = "rounded-full px-3 py-1 text-[11px] font-semibold transition";
+  const chipActive =
+    "bg-[#FBBC05] text-black shadow-[0_8px_24px_-8px_rgba(251,188,5,0.6)]";
   const chipIdle =
-    "border border-white/10 bg-white/[0.04] text-white/70 hover:border-accent/40 hover:text-white";
+    "border border-white/10 bg-white/[0.04] text-white/70 hover:border-[#FBBC05]/40 hover:text-white";
+
+  // Open the add-form accordion automatically only while editing a record.
+  const formOpen = Boolean(editing);
 
   return (
-    <main className="relative isolate min-h-screen overflow-hidden bg-[#070b10] px-4 py-8 sm:px-6 lg:px-8">
-      {/* Ambient glow field — same visual language as the gate */}
+    <main className="relative isolate min-h-screen overflow-hidden bg-[#070709] px-4 py-8 sm:px-6 lg:px-8">
+      {/* Ambient glow field — black · yellow · violet */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(55% 45% at 15% 8%, rgba(27,122,110,0.28), transparent 60%)," +
-            "radial-gradient(45% 45% at 88% 4%, rgba(202,124,71,0.18), transparent 58%)," +
-            "radial-gradient(70% 70% at 50% 120%, rgba(27,122,110,0.14), transparent 60%)," +
-            "linear-gradient(180deg, #080c12 0%, #06090d 55%, #04060a 100%)"
+            "radial-gradient(55% 45% at 15% 8%, rgba(251,188,5,0.16), transparent 60%)," +
+            "radial-gradient(45% 45% at 88% 4%, rgba(168,85,247,0.16), transparent 58%)," +
+            "radial-gradient(70% 70% at 50% 120%, rgba(168,85,247,0.12), transparent 60%)," +
+            "linear-gradient(180deg, #0a0a0d 0%, #08080b 55%, #050507 100%)"
         }}
       />
       <div
@@ -224,21 +232,55 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
         }}
       />
 
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-        {/* Header bar */}
-        <section className="rounded-[1.6rem] border border-white/10 bg-white/[0.03] px-6 py-5 backdrop-blur-xl sm:px-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-5">
+        {/* Header card — premium hero banner on top */}
+        <section className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl">
+          {/* Hero showcase */}
+          <div className="relative border-b border-white/10 bg-black">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(60% 120% at 80% 50%, rgba(168,85,247,0.22), transparent 60%)," +
+                  "radial-gradient(55% 120% at 14% 50%, rgba(251,188,5,0.14), transparent 62%)"
+              }}
+            />
+            <Image
+              src="/batubt/loginhero.png"
+              alt="BatuBT"
+              width={1920}
+              height={480}
+              priority
+              sizes="(min-width: 1152px) 1100px, 92vw"
+              className="relative mx-auto block w-full max-w-3xl object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.85)]"
+            />
+            {/* Bottom fade into the card */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-[#08080b]"
+            />
+          </div>
+
+          {/* Title + sign-out row */}
+          <div className="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <div className="flex items-center gap-3">
-              <span className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-accent to-[#0f4f47] shadow-lg shadow-accent/30 ring-1 ring-white/15">
-                <span className="font-body text-base font-extrabold tracking-tight text-white">
+              <span
+                className="relative flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-white/15"
+                style={{ backgroundImage: BATUBT_BRAND_GRADIENT }}
+              >
+                <span className="font-body text-sm font-extrabold tracking-tight text-black">
                   B
                 </span>
               </span>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent/90">
+                <p
+                  className="text-[10px] font-semibold uppercase tracking-[0.28em]"
+                  style={{ color: YELLOW }}
+                >
                   BatuBT
                 </p>
-                <h1 className="font-body text-[clamp(1.5rem,4vw,2rem)] font-bold tracking-[-0.03em] text-white">
+                <h1 className="font-body text-[clamp(1.2rem,3vw,1.6rem)] font-bold tracking-[-0.03em] text-white">
                   Footer kod yönetimi
                 </h1>
               </div>
@@ -246,7 +288,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
             <form action={batubtSignOutAction}>
               <button
                 type="submit"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:border-rose-400/40 hover:text-rose-300"
+                className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:text-rose-300"
               >
                 Çıkış yap
               </button>
@@ -256,34 +298,34 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
 
         {/* Feedback banners */}
         {createdParam === "1" && (
-          <div className="rounded-[1.2rem] border border-emerald-400/25 bg-emerald-400/10 px-5 py-4 text-sm font-medium text-emerald-200">
+          <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-[13px] font-medium text-emerald-200">
             Kayıt eklendi.
           </div>
         )}
         {updatedParam === "1" && (
-          <div className="rounded-[1.2rem] border border-emerald-400/25 bg-emerald-400/10 px-5 py-4 text-sm font-medium text-emerald-200">
+          <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-[13px] font-medium text-emerald-200">
             Kayıt güncellendi.
           </div>
         )}
         {deletedParam === "1" && (
-          <div className="rounded-[1.2rem] border border-rose-400/25 bg-rose-400/10 px-5 py-4 text-sm font-medium text-rose-200">
+          <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
             Kayıt silindi.
           </div>
         )}
         {result.source === "env-missing" && (
-          <div className="rounded-[1.2rem] border border-amber-400/25 bg-amber-400/10 px-5 py-4 text-sm font-medium text-amber-200">
+          <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
             Supabase bağlantısı yapılandırılmamış (SUPABASE_SERVICE_ROLE_KEY
             eksik). Kayıtlar yüklenemiyor.
           </div>
         )}
         {result.source === "error" && (
-          <div className="rounded-[1.2rem] border border-rose-400/25 bg-rose-400/10 px-5 py-4 text-sm font-medium text-rose-200">
+          <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
             Kayıtlar yüklenirken hata oluştu: {result.errorMessage}
           </div>
         )}
 
         {/* Stats */}
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { label: "Toplam", value: allClients.length },
             { label: "Beklemede", value: pendingCount },
@@ -292,42 +334,71 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
           ].map((stat) => (
             <article
               key={stat.label}
-              className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] px-6 py-5 backdrop-blur-xl"
+              className="rounded-[1.2rem] border border-white/10 bg-white/[0.03] px-5 py-4 backdrop-blur-xl"
             >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent/90">
+              <p
+                className="text-[10px] font-semibold uppercase tracking-[0.2em]"
+                style={{ color: YELLOW }}
+              >
                 {stat.label}
               </p>
-              <p className="mt-2 font-body text-3xl font-bold text-white">
+              <p className="mt-1.5 font-body text-2xl font-bold text-white">
                 {stat.value}
               </p>
             </article>
           ))}
         </section>
 
-        {/* Add / edit form */}
-        <section className="rounded-[1.6rem] border border-white/10 bg-white/[0.03] px-6 py-6 backdrop-blur-xl sm:px-8">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="font-body text-xl font-semibold text-white">
+        {/* Add / edit form — collapsed-by-default accordion */}
+        <details
+          open={formOpen}
+          className="group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl"
+        >
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 sm:px-8 [&::-webkit-details-marker]:hidden">
+            <h2 className="flex items-center gap-2 font-body text-base font-semibold text-white">
+              <span
+                className="flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold text-black"
+                style={{ backgroundImage: BATUBT_BRAND_GRADIENT }}
+              >
+                +
+              </span>
               {editing ? "Kaydı düzenle" : "Yeni kayıt ekle"}
             </h2>
-            {editing ? (
-              <a
-                href="/batubt"
-                className="text-sm font-semibold text-accent hover:text-accent/80"
+            <span className="flex items-center gap-3">
+              {editing ? (
+                <a
+                  href="/batubt"
+                  className="text-[13px] font-semibold"
+                  style={{ color: YELLOW }}
+                >
+                  İptal
+                </a>
+              ) : null}
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-white/40 transition-transform duration-200 group-open:rotate-180"
               >
-                Düzenlemeyi iptal et
-              </a>
-            ) : null}
-          </div>
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </span>
+          </summary>
+
           <form
             action={editing ? updateAction : createAction}
-            className="mt-6 space-y-4"
+            className="space-y-4 px-6 pb-6 pt-1 sm:px-8"
           >
             {editing ? <input type="hidden" name="id" value={editing.id} /> : null}
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
                 <span className={darkLabel}>
-                  Müşteri / metin <span className="text-accent">*</span>
+                  Müşteri / metin <span style={{ color: YELLOW }}>*</span>
                 </span>
                 <input
                   type="text"
@@ -384,7 +455,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
                     <option
                       key={option.value}
                       value={option.value}
-                      className="bg-[#0b1118] text-white"
+                      className="bg-[#0b0b12] text-white"
                     >
                       {option.label}
                     </option>
@@ -407,7 +478,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
                   rows={5}
                   defaultValue={editing?.footerCode ?? ""}
                   placeholder="Siteye gömülecek footer HTML/JS kodu…"
-                  className={`${darkInput} font-mono text-[13px] leading-6`}
+                  className={`${darkInput} font-mono leading-6`}
                 />
               </label>
               <label className="block sm:col-span-2">
@@ -424,23 +495,20 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
             </div>
             <button
               type="submit"
-              className="inline-flex min-h-[48px] items-center justify-center rounded-[1rem] px-6 py-3 text-sm font-bold tracking-tight text-white shadow-[0_12px_40px_-8px_rgba(27,122,110,0.7)] ring-1 ring-inset ring-white/15 transition hover:shadow-[0_16px_50px_-8px_rgba(27,122,110,0.85)]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(110deg, rgb(27,122,110) 0%, rgb(34,150,135) 50%, rgb(27,122,110) 100%)"
-              }}
+              className="inline-flex min-h-[44px] items-center justify-center rounded-[0.9rem] px-6 py-2.5 text-[13px] font-bold tracking-tight text-black shadow-[0_12px_40px_-8px_rgba(251,188,5,0.5)] ring-1 ring-inset ring-white/15 transition hover:shadow-[0_16px_50px_-8px_rgba(168,85,247,0.6)]"
+              style={{ backgroundImage: BATUBT_BRAND_GRADIENT }}
             >
               {editing ? "Değişiklikleri kaydet" : "Kayıt ekle"}
             </button>
           </form>
-        </section>
+        </details>
 
         {/* Filters */}
-        <section className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] px-6 py-5 backdrop-blur-xl sm:px-8">
+        <section className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] px-6 py-4 backdrop-blur-xl sm:px-8">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
             {owners.length > 0 && (
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
                   Sahip
                 </span>
                 <a
@@ -463,7 +531,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
               </div>
             )}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
                 Durum
               </span>
               <a
@@ -488,9 +556,9 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
         </section>
 
         {/* List */}
-        <section className="space-y-4">
+        <section className="space-y-3">
           {visibleClients.length === 0 ? (
-            <p className="rounded-[1.4rem] border border-dashed border-white/15 px-5 py-8 text-center text-sm text-white/50">
+            <p className="rounded-[1.3rem] border border-dashed border-white/15 px-5 py-8 text-center text-[13px] text-white/50">
               {allClients.length === 0
                 ? "Henüz kayıt yok. Yukarıdan ilk müşteriyi ekle."
                 : "Bu filtreyle eşleşen kayıt yok."}
@@ -525,7 +593,7 @@ function FooterClientCard({
   const domainHref = normalizeDomainHref(client.domain);
 
   return (
-    <article className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] px-5 py-5 backdrop-blur-xl sm:px-7">
+    <article className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] px-5 py-4 backdrop-blur-xl sm:px-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -539,18 +607,18 @@ function FooterClientCard({
                 href={domainHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-body text-base font-semibold text-white hover:text-accent"
+                className="font-body text-[15px] font-semibold text-white transition hover:text-[#FBBC05]"
               >
                 {client.domain}
               </a>
             ) : (
-              <span className="font-body text-base font-semibold text-white/50">
+              <span className="font-body text-[15px] font-semibold text-white/50">
                 (domain yok)
               </span>
             )}
           </div>
 
-          <p className="mt-1.5 text-sm font-medium text-white/85">
+          <p className="mt-1.5 text-[13px] font-medium text-white/85">
             {client.clientName}
           </p>
 
@@ -569,12 +637,17 @@ function FooterClientCard({
           </div>
 
           {client.notes ? (
-            <p className="mt-2 text-xs leading-5 text-white/45">{client.notes}</p>
+            <p className="mt-2 text-[11px] leading-5 text-white/45">
+              {client.notes}
+            </p>
           ) : null}
 
           {client.footerCode ? (
             <details className="group mt-3">
-              <summary className="inline-flex cursor-pointer items-center gap-1.5 text-xs font-semibold text-accent/90 hover:text-accent">
+              <summary
+                className="inline-flex cursor-pointer items-center gap-1.5 text-[11px] font-semibold"
+                style={{ color: YELLOW }}
+              >
                 <span>Footer kodunu göster</span>
                 <span className="text-white/30 transition group-open:rotate-90">
                   ›
@@ -585,7 +658,7 @@ function FooterClientCard({
               </pre>
             </details>
           ) : (
-            <p className="mt-3 text-xs italic text-white/30">
+            <p className="mt-3 text-[11px] italic text-white/30">
               Footer kodu henüz girilmemiş.
             </p>
           )}
@@ -598,13 +671,13 @@ function FooterClientCard({
             <select
               name="status"
               defaultValue={client.status}
-              className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-xs font-semibold text-white outline-none transition focus:border-accent/55"
+              className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-white outline-none transition focus:border-[#FBBC05]/55"
             >
               {STATUS_OPTIONS.map((option) => (
                 <option
                   key={option.value}
                   value={option.value}
-                  className="bg-[#0b1118] text-white"
+                  className="bg-[#0b0b12] text-white"
                 >
                   {option.label}
                 </option>
@@ -612,7 +685,7 @@ function FooterClientCard({
             </select>
             <button
               type="submit"
-              className="inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:border-accent/40 hover:text-accent"
+              className="inline-flex min-h-[32px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-white/80 transition hover:border-[#FBBC05]/40 hover:text-[#FBBC05]"
             >
               Uygula
             </button>
@@ -620,7 +693,7 @@ function FooterClientCard({
           <div className="flex items-center gap-2">
             <a
               href={`/batubt?edit=${client.id}`}
-              className="inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:border-accent/40 hover:text-accent"
+              className="inline-flex min-h-[32px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-white/80 transition hover:border-[#FBBC05]/40 hover:text-[#FBBC05]"
             >
               Düzenle
             </a>
@@ -628,7 +701,7 @@ function FooterClientCard({
               <input type="hidden" name="id" value={client.id} />
               <button
                 type="submit"
-                className="inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
+                className="inline-flex min-h-[32px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
               >
                 Sil
               </button>
