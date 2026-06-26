@@ -26,6 +26,26 @@ interface TaskTableProps {
 
 const ALL = "__all__";
 
+/**
+ * Compact badge labels for the list rows only — the form dropdowns keep the
+ * full, descriptive labels (e.g. "Yapılacak", "Devam ediyor"). Short labels
+ * keep the status/priority chips on a single line so they never overlap the
+ * neighbouring columns.
+ */
+const STATUS_SHORT: Record<ProjectTaskStatus, string> = {
+  todo: "Açık",
+  in_progress: "Devam",
+  done: "Bitti",
+  blocked: "Bloke"
+};
+
+const PRIORITY_SHORT: Record<ProjectTaskPriority, string> = {
+  low: "Düşük",
+  normal: "Normal",
+  high: "Yüksek",
+  top5: "İlk 5"
+};
+
 export function TaskTable({
   tasks,
   statusOptions,
@@ -40,18 +60,6 @@ export function TaskTable({
   const [owner, setOwner] = useState<string>(ALL);
   const [status, setStatus] = useState<string>(ALL);
   const [priority, setPriority] = useState<string>(ALL);
-
-  const statusText = useMemo(() => {
-    const map = new Map<string, string>();
-    statusOptions.forEach((option) => map.set(option.value, option.label));
-    return map;
-  }, [statusOptions]);
-
-  const priorityText = useMemo(() => {
-    const map = new Map<string, string>();
-    priorityOptions.forEach((option) => map.set(option.value, option.label));
-    return map;
-  }, [priorityOptions]);
 
   const visible = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase("tr-TR");
@@ -202,11 +210,11 @@ export function TaskTable({
           }}
         />
         {/* Column header (md+) */}
-        <div className="hidden border-b border-white/[0.07] bg-white/[0.025] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40 md:grid md:grid-cols-[minmax(0,1fr)_8rem_9rem_12rem_7rem] md:items-center md:gap-3">
+        <div className="hidden border-b border-white/[0.07] bg-white/[0.025] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40 md:grid md:grid-cols-[minmax(0,1fr)_5.5rem_8rem_8.5rem_5.5rem] md:items-center md:gap-3">
           <span>Görev</span>
           <span>Sorumlu</span>
           <span>Kategori</span>
-          <span>Durum / Öncelik</span>
+          <span>Durum</span>
           <span className="text-right">İşlem</span>
         </div>
 
@@ -219,7 +227,7 @@ export function TaskTable({
             {visible.map((task) => (
               <li
                 key={task.id}
-                className={`px-4 py-2.5 transition hover:bg-white/[0.02] md:grid md:grid-cols-[minmax(0,1fr)_8rem_9rem_12rem_7rem] md:items-center md:gap-3 ${
+                className={`px-4 py-2.5 transition hover:bg-white/[0.02] md:grid md:grid-cols-[minmax(0,1fr)_5.5rem_8rem_8.5rem_5.5rem] md:items-center md:gap-3 ${
                   task.status === "done" ? "opacity-55" : ""
                 }`}
               >
@@ -251,31 +259,31 @@ export function TaskTable({
                   </span>
                 </div>
 
-                {/* Category */}
-                <div className="mt-1 md:mt-0">
-                  <span className="truncate text-[11px] text-white/55 md:text-xs">
+                {/* Category (+ due target) */}
+                <div className="mt-1 min-w-0 md:mt-0">
+                  <span className="block truncate text-[11px] text-white/55 md:text-xs">
                     <span className="text-white/35 md:hidden">Kategori: </span>
                     {task.category || "Genel"}
                   </span>
-                </div>
-
-                {/* Status / priority / due */}
-                <div className="mt-1.5 flex flex-wrap items-center gap-1.5 md:mt-0">
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] ${statusBadge[task.status]}`}
-                  >
-                    {statusText.get(task.status) ?? task.status}
-                  </span>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] ${priorityBadge[task.priority]}`}
-                  >
-                    {priorityText.get(task.priority) ?? task.priority}
-                  </span>
                   {task.dueTarget ? (
-                    <span className="rounded-full border border-white/10 bg-white/[0.05] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/45">
+                    <span className="block truncate text-[10px] text-white/35" title={task.dueTarget}>
                       {task.dueTarget}
                     </span>
                   ) : null}
+                </div>
+
+                {/* Status / priority */}
+                <div className="mt-1.5 flex flex-nowrap items-center gap-1.5 md:mt-0">
+                  <span
+                    className={`shrink-0 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] ${statusBadge[task.status]}`}
+                  >
+                    {STATUS_SHORT[task.status]}
+                  </span>
+                  <span
+                    className={`shrink-0 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] ${priorityBadge[task.priority]}`}
+                  >
+                    {PRIORITY_SHORT[task.priority]}
+                  </span>
                 </div>
 
                 {/* Actions */}

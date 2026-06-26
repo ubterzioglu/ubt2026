@@ -302,25 +302,64 @@ export default async function DmPage({ searchParams }: DmPageProps) {
           ))}
         </section>
 
-        {/* Add / edit form */}
+        {/* Add / edit form — collapsed accordion (auto-opens when editing) */}
         <section className={cardClass}>
-          <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="font-body text-sm font-semibold text-white">
+          <details
+            open={Boolean(editing)}
+            className={`group/acc overflow-hidden rounded-[1.55rem] ${cardInnerClass}`}
+          >
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 transition hover:bg-white/[0.02] sm:px-5 [&::-webkit-details-marker]:hidden">
+              <h2 className="flex items-center gap-2 font-body text-sm font-semibold text-white">
+                <span
+                  className="flex h-6 w-6 items-center justify-center rounded-lg text-white shadow-sm ring-1 ring-white/15"
+                  style={{ backgroundImage: DM_BRAND_GRADIENT }}
+                  aria-hidden
+                >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 5v14" />
+                    <path d="M5 12h14" />
+                  </svg>
+                </span>
                 {editing ? "Görevi düzenle" : "Yeni görev ekle"}
               </h2>
-              {editing ? (
-                <a
-                  href="/dm"
-                  className="text-xs font-semibold text-[#67e8f9] transition hover:text-[#67e8f9]/80"
+              <span className="flex items-center gap-3">
+                {editing ? (
+                  <a
+                    href="/dm"
+                    className="text-xs font-semibold text-[#67e8f9] transition hover:text-[#67e8f9]/80"
+                  >
+                    İptal
+                  </a>
+                ) : null}
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-white/45 transition-transform duration-300 group-open/acc:rotate-180"
+                  aria-hidden
                 >
-                  Düzenlemeyi iptal et
-                </a>
-              ) : null}
-            </div>
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div className="border-t border-white/[0.06] px-4 pb-4 pt-3 sm:px-5">
             <form
               action={editing ? updateAction : createAction}
-              className="mt-4 space-y-3"
+              className="space-y-3"
             >
               {editing ? <input type="hidden" name="id" value={editing.id} /> : null}
               <div className="grid gap-3 sm:grid-cols-2">
@@ -460,7 +499,8 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                 {editing ? "Değişiklikleri kaydet" : "Görev ekle"}
               </button>
             </form>
-          </div>
+            </div>
+          </details>
         </section>
 
         {/* Task list — search, filter, single flat list */}

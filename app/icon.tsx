@@ -21,12 +21,10 @@ export default function Icon() {
         }}
       >
         <svg width="32" height="32" viewBox="0 0 100 100">
-          {/* Red outer disc — gives the white ring something to read against */}
-          <circle cx="50" cy="50" r="49" fill={RED} />
-          {/* White ring border (visible gap between r=49 red disc and r=40 yin-yang) */}
-          <circle cx="50" cy="50" r="40" fill={WHITE} />
-          {/* Yin-yang body sits inside the white ring */}
-          {/* White (right) half via the white disc above; red (left) half + S curve */}
+          {/* Yin-yang disc only — everything outside the circle stays transparent */}
+          {/* White (right) half: the disc base */}
+          <circle cx="50" cy="50" r="38" fill={WHITE} />
+          {/* Red (left) half + S curve sitting on top of the white disc */}
           <path
             d="M50 12 A38 38 0 0 0 50 88 A19 19 0 0 1 50 50 A19 19 0 0 0 50 12 Z"
             fill={RED}
