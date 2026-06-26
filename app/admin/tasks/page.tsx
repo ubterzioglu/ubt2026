@@ -97,6 +97,10 @@ export default async function AdminTasksPage({
     return (
       <AdminGate
         redirectTo="/admin/tasks"
+        variant="dark"
+        eyebrow="Admin erişimi"
+        title="DesireMap görev panosu"
+        description="Bu özel pano DesireMap görev yönetimine erişimi korur. Devam etmek için admin anahtarını gir."
         submitLabel="Görev panosunu aç"
         signInAction={tasksSignInAction}
       />

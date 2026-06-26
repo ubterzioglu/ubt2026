@@ -216,9 +216,33 @@
   },
   "hotPaths": [
     {
+      "path": "app\\admin\\tasks\\page.tsx",
+      "accessCount": 9,
+      "lastAccessed": 1782491645609,
+      "type": "file"
+    },
+    {
       "path": "app\\admin\\page.tsx",
       "accessCount": 6,
       "lastAccessed": 1782483583337,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\_components\\admin-gate.tsx",
+      "accessCount": 6,
+      "lastAccessed": 1782491633689,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\_actions.ts",
+      "accessCount": 5,
+      "lastAccessed": 1782491494490,
+      "type": "file"
+    },
+    {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 4,
+      "lastAccessed": 1782491476578,
       "type": "file"
     },
     {
@@ -228,9 +252,21 @@
       "type": "directory"
     },
     {
-      "path": "app\\admin\\_actions.ts",
+      "path": "app\\icon.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1782490318459,
+      "type": "file"
+    },
+    {
+      "path": "app\\apple-icon.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1782490326666,
+      "type": "file"
+    },
+    {
+      "path": "lib\\appointments.ts",
       "accessCount": 2,
-      "lastAccessed": 1782483548328,
+      "lastAccessed": 1782491437832,
       "type": "file"
     },
     {
@@ -258,18 +294,6 @@
       "type": "file"
     },
     {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 1,
-      "lastAccessed": 1782483233943,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\_components\\admin-gate.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1782483234821,
-      "type": "file"
-    },
-    {
       "path": "supabase\\migrations\\20260626120000_create_project_tasks.sql",
       "accessCount": 1,
       "lastAccessed": 1782483320879,
@@ -291,12 +315,6 @@
       "path": "supabase\\migrations\\20260626121000_seed_project_tasks.sql",
       "accessCount": 1,
       "lastAccessed": 1782483452139,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\tasks\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1782483535880,
       "type": "file"
     },
     {
@@ -327,6 +345,36 @@
       "path": "verify-top5.mjs",
       "accessCount": 1,
       "lastAccessed": 1782486546053,
+      "type": "file"
+    },
+    {
+      "path": "app\\manifest.ts",
+      "accessCount": 1,
+      "lastAccessed": 1782489801435,
+      "type": "file"
+    },
+    {
+      "path": "lib",
+      "accessCount": 1,
+      "lastAccessed": 1782491403494,
+      "type": "directory"
+    },
+    {
+      "path": "app\\globals.css",
+      "accessCount": 1,
+      "lastAccessed": 1782491578593,
+      "type": "file"
+    },
+    {
+      "path": "tailwind.config.ts",
+      "accessCount": 1,
+      "lastAccessed": 1782491579656,
+      "type": "file"
+    },
+    {
+      "path": "app\\layout.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1782491579713,
       "type": "file"
     }
   ],
