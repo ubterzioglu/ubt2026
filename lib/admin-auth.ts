@@ -112,7 +112,7 @@ export async function signInTasksAdmin(candidate: string): Promise<boolean> {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
-    path: "/admin",
+    path: "/dm",
     maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
   });
 
@@ -124,5 +124,5 @@ export async function signInTasksAdmin(candidate: string): Promise<boolean> {
  */
 export async function signOutTasksAdmin(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete({ name: TASKS_ADMIN_ACCESS_COOKIE, path: "/admin" });
+  cookieStore.delete({ name: TASKS_ADMIN_ACCESS_COOKIE, path: "/dm" });
 }

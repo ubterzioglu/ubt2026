@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"set -a\\nwhile IFS= read -r line || [ -n \\\"$line\\\" ]; do\\n  case \\\"$line\\\" in\\n    ''|\\\\#*) continue ;;\\n  esac\\n  if [[ \\\"$line\\\" == *\\\"=\\\"* ]]; then\\n    name=\\\"${line%%=*}\\\"; value=\\\"${l...",
-  "error": "Exit code 1\nnode:internal/modules/package_json_reader:301\r\n  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);\r\n        ^\r\n\r\nError [ERR_MODULE_NOT_FOUND]: Cannot find package '@supabase/supabase-js' imported from C:\\Users\\BARIS-~1\\AppData\\Local\\Temp\\claude\\c--temp-private-ubt2026\\7ce53b48-82b7-4e2b-afc6-dc70fb718708\\scratchpad\\verify-tasks.mjs\r\n    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)\r\n    at packageResolve (node:internal/modules/esm...",
-  "timestamp": "2026-06-26T14:59:24.410Z",
-  "retry_count": 1
-}

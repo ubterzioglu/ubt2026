@@ -216,39 +216,39 @@
   },
   "hotPaths": [
     {
-      "path": "app\\admin\\tasks\\page.tsx",
-      "accessCount": 9,
-      "lastAccessed": 1782491645609,
-      "type": "file"
-    },
-    {
       "path": "app\\admin\\page.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1782483583337,
+      "accessCount": 12,
+      "lastAccessed": 1782493055156,
       "type": "file"
     },
     {
-      "path": "app\\admin\\_components\\admin-gate.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1782491633689,
+      "path": "app\\admin\\tasks\\page.tsx",
+      "accessCount": 11,
+      "lastAccessed": 1782492905474,
       "type": "file"
     },
     {
       "path": "app\\admin\\_actions.ts",
-      "accessCount": 5,
-      "lastAccessed": 1782491494490,
+      "accessCount": 11,
+      "lastAccessed": 1782493266597,
       "type": "file"
     },
     {
       "path": "lib\\admin-auth.ts",
-      "accessCount": 4,
-      "lastAccessed": 1782491476578,
+      "accessCount": 9,
+      "lastAccessed": 1782492999399,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\_components\\admin-gate.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1782492914399,
       "type": "file"
     },
     {
       "path": "types\\site.ts",
-      "accessCount": 3,
-      "lastAccessed": 1782483335448,
+      "accessCount": 4,
+      "lastAccessed": 1782492926167,
       "type": "directory"
     },
     {
@@ -270,9 +270,39 @@
       "type": "file"
     },
     {
+      "path": "tailwind.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1782492427714,
+      "type": "file"
+    },
+    {
+      "path": "app\\layout.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1782492439141,
+      "type": "file"
+    },
+    {
       "path": "package.json",
-      "accessCount": 1,
-      "lastAccessed": 1782483192277,
+      "accessCount": 2,
+      "lastAccessed": 1782492881825,
+      "type": "file"
+    },
+    {
+      "path": ".env.local",
+      "accessCount": 2,
+      "lastAccessed": 1782492894783,
+      "type": "directory"
+    },
+    {
+      "path": "lib\\project-tasks.ts",
+      "accessCount": 2,
+      "lastAccessed": 1782492905610,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260626120000_create_project_tasks.sql",
+      "accessCount": 2,
+      "lastAccessed": 1782492935939,
       "type": "file"
     },
     {
@@ -294,18 +324,6 @@
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260626120000_create_project_tasks.sql",
-      "accessCount": 1,
-      "lastAccessed": 1782483320879,
-      "type": "file"
-    },
-    {
-      "path": "lib\\project-tasks.ts",
-      "accessCount": 1,
-      "lastAccessed": 1782483370046,
-      "type": "file"
-    },
-    {
       "path": "supabase\\migrations\\20260410090000_seed_bookmarks.sql",
       "accessCount": 1,
       "lastAccessed": 1782483383413,
@@ -316,12 +334,6 @@
       "accessCount": 1,
       "lastAccessed": 1782483452139,
       "type": "file"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 1,
-      "lastAccessed": 1782485741435,
-      "type": "directory"
     },
     {
       "path": "verify-tasks.mjs",
@@ -366,15 +378,21 @@
       "type": "file"
     },
     {
-      "path": "tailwind.config.ts",
+      "path": "docs\\superpowers\\specs\\2026-06-26-dm-board-design.md",
       "accessCount": 1,
-      "lastAccessed": 1782491579656,
+      "lastAccessed": 1782492940399,
       "type": "file"
     },
     {
-      "path": "app\\layout.tsx",
+      "path": "app\\dm\\_actions.ts",
       "accessCount": 1,
-      "lastAccessed": 1782491579713,
+      "lastAccessed": 1782492965085,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1782493156760,
       "type": "file"
     }
   ],
