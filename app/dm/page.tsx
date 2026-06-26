@@ -227,14 +227,14 @@ export default async function DmPage({ searchParams }: DmPageProps) {
         <section className={cardClass}>
           <div className={`${cardInnerClass} relative overflow-hidden`}>
             {/* Hero image */}
-            <div className="relative h-44 w-full sm:h-56 lg:h-72">
+            <div className="relative h-56 w-full sm:h-72 lg:h-[22rem]">
               <Image
                 src="/dm/listehero.png"
                 alt="DesireMap ekibi"
                 fill
                 priority
                 sizes="(min-width: 1024px) 1100px, 100vw"
-                className="object-cover object-center"
+                className="object-cover object-top"
               />
               {/* Neon brand wash to fuse the photo with the palette */}
               <div
@@ -245,13 +245,13 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                     "linear-gradient(115deg, rgba(255,45,149,0.20) 0%, rgba(168,85,247,0.06) 50%, rgba(34,211,238,0.18) 100%)"
                 }}
               />
-              {/* Bottom scrim for legibility */}
+              {/* Bottom scrim for legibility — kept low so faces stay clear */}
               <div
                 aria-hidden
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(180deg, rgba(10,7,18,0) 30%, rgba(10,7,18,0.55) 70%, rgba(10,7,18,0.95) 100%)"
+                    "linear-gradient(180deg, rgba(10,7,18,0) 58%, rgba(10,7,18,0.45) 80%, rgba(10,7,18,0.95) 100%)"
                 }}
               />
               {/* Top sheen */}
