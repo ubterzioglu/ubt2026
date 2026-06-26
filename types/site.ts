@@ -60,6 +60,23 @@ export interface BlogPostItem {
   updatedAt: string;
 }
 
+export type ProjectTaskStatus = "todo" | "in_progress" | "done" | "blocked";
+export type ProjectTaskPriority = "low" | "normal" | "high" | "top5";
+
+export interface ProjectTaskItem {
+  id: string;
+  title: string;
+  owner: string;
+  category: string;
+  status: ProjectTaskStatus;
+  priority: ProjectTaskPriority;
+  dueTarget: string;
+  notes: string;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CtaLink {
   label: string;
   href: string;

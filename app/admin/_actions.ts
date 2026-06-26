@@ -12,7 +12,8 @@ const ADMIN_PATHS = [
   "/admin/cv-reviews",
   "/admin/news",
   "/admin/blog",
-  "/admin/bookmarks"
+  "/admin/bookmarks",
+  "/admin/tasks"
 ] as const;
 
 type AdminPath = (typeof ADMIN_PATHS)[number];

@@ -3,6 +3,7 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAllCvReviewRequests } from "@/lib/cv-reviews";
 import { getAllNewsUpdatesAdmin } from "@/lib/news-updates";
 import { getAllBlogPostsAdmin } from "@/lib/blog-posts";
+import { getAllProjectTasksAdmin } from "@/lib/project-tasks";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
 import { adminSignOutAction } from "@/app/admin/_actions";
 
@@ -42,14 +43,24 @@ export default async function AdminPage() {
     return <AdminGate redirectTo="/admin" submitLabel="Open admin panel" />;
   }
 
-  const [slotsResult, appointmentsResult, cvReviewsResult, newsResult, blogResult] =
-    await Promise.all([
-      getAllAppointmentSlots(),
-      getAllAppointments(),
-      getAllCvReviewRequests(),
-      getAllNewsUpdatesAdmin(),
-      getAllBlogPostsAdmin()
-    ]);
+  const [
+    slotsResult,
+    appointmentsResult,
+    cvReviewsResult,
+    newsResult,
+    blogResult,
+    tasksResult
+  ] = await Promise.all([
+    getAllAppointmentSlots(),
+    getAllAppointments(),
+    getAllCvReviewRequests(),
+    getAllNewsUpdatesAdmin(),
+    getAllBlogPostsAdmin(),
+    getAllProjectTasksAdmin()
+  ]);
+  const openTasks = tasksResult.items.filter(
+    (task) => task.status !== "done"
+  );
   const now = new Date();
   const openSlots = slotsResult.slots.filter(
     (slot) => slot.isPublic && !slot.isBooked && new Date(slot.startsAt) > now
@@ -116,6 +127,12 @@ export default async function AdminPage() {
               >
                 Manage bookmarks
               </a>
+              <a
+                href="/admin/tasks"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+              >
+                Görev panosu
+              </a>
               <form action={adminSignOutAction}>
                 <button
                   type="submit"
@@ -128,7 +145,7 @@ export default async function AdminPage() {
           </div>
         </section>
 
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7">
           <article className="section-panel px-6 py-6">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               Open slots
@@ -180,6 +197,15 @@ export default async function AdminPage() {
               {blogResult.items.length}
             </p>
             <p className="mt-2 text-sm text-ink/68">Published and draft blog posts.</p>
+          </article>
+          <article className="section-panel px-6 py-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+              Açık görev
+            </p>
+            <p className="mt-3 font-body text-4xl font-semibold text-ink">
+              {openTasks.length}
+            </p>
+            <p className="mt-2 text-sm text-ink/68">DesireMap planlama panosunda bekleyen görevler.</p>
           </article>
         </section>
 
