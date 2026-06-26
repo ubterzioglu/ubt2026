@@ -316,6 +316,18 @@
       "accessCount": 1,
       "lastAccessed": 1782486003792,
       "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260626122000_fix_project_tasks_top5.sql",
+      "accessCount": 1,
+      "lastAccessed": 1782486518591,
+      "type": "file"
+    },
+    {
+      "path": "verify-top5.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1782486546053,
+      "type": "file"
     }
   ],
   "userDirectives": []
