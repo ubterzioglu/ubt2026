@@ -2,9 +2,14 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { isTasksAdminAuthenticated } from "@/lib/admin-auth";
-import { AdminGate } from "@/app/admin/_components/admin-gate";
 import { tasksSignInAction, tasksSignOutAction } from "@/app/dm/_actions";
+import { DmLogin } from "@/app/dm/_components/dm-login";
 import { TaskTable } from "@/app/dm/_components/task-table";
+import {
+  DM_AMBIENT_BACKGROUND,
+  DM_BRAND_GRADIENT,
+  DM_GRID_TEXTURE
+} from "@/app/dm/_components/theme";
 import {
   getAllProjectTasksAdmin,
   getProjectTaskByIdAdmin,
@@ -28,7 +33,7 @@ function readParam(value: string | string[] | undefined): string {
 }
 
 const inputClass =
-  "w-full rounded-[0.85rem] border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-accent/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-accent/15";
+  "w-full rounded-[0.85rem] border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#ff2d95]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#ff2d95]/15";
 
 const STATUS_OPTIONS: { value: ProjectTaskStatus; label: string }[] = [
   { value: "todo", label: "Yapılacak" },
@@ -47,17 +52,17 @@ const PRIORITY_OPTIONS: { value: ProjectTaskPriority; label: string }[] = [
 const OWNER_OPTIONS = ["Umut", "Baran", "Şahin", "Ortak", "Backlog"];
 
 const STATUS_BADGE: Record<ProjectTaskStatus, string> = {
-  todo: "border border-white/10 bg-white/[0.06] text-white/60",
-  in_progress: "border border-sky-400/25 bg-sky-400/10 text-sky-300",
+  todo: "border border-white/12 bg-white/[0.06] text-white/65",
+  in_progress: "border border-cyan-400/30 bg-cyan-400/10 text-cyan-300",
   done: "border border-emerald-400/25 bg-emerald-400/10 text-emerald-300",
-  blocked: "border border-rose-400/25 bg-rose-400/10 text-rose-300"
+  blocked: "border border-[#ff2247]/35 bg-[#ff2247]/10 text-[#ff8aa0]"
 };
 
 const PRIORITY_BADGE: Record<ProjectTaskPriority, string> = {
   low: "border border-white/10 bg-white/[0.04] text-white/45",
-  normal: "border border-white/10 bg-white/[0.06] text-white/60",
-  high: "border border-amber-400/25 bg-amber-400/10 text-amber-300",
-  top5: "border border-accent/40 bg-accent/15 text-accent"
+  normal: "border border-white/12 bg-white/[0.06] text-white/65",
+  high: "border border-violet-400/35 bg-violet-400/12 text-violet-200",
+  top5: "border border-[#ff2d95]/45 bg-[#ff2d95]/15 text-[#ff7bc0]"
 };
 
 function parseStatus(value: string): ProjectTaskStatus {
@@ -83,14 +88,12 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   if (!hasAccess) {
     return (
-      <AdminGate
-        redirectTo="/dm"
-        variant="dark"
+      <DmLogin
+        signIn={tasksSignInAction}
         eyebrow="Admin erişimi"
         title="DesireMap görev panosu"
         description="Bu özel pano DesireMap görev yönetimine erişimi korur. Devam etmek için admin anahtarını gir."
         submitLabel="Görev panosunu aç"
-        signInAction={tasksSignInAction}
       />
     );
   }
@@ -185,45 +188,34 @@ export default async function DmPage({ searchParams }: DmPageProps) {
   const cardClass =
     "rounded-[1.6rem] bg-gradient-to-b from-white/12 via-white/[0.04] to-transparent p-[1.3px] shadow-[0_30px_90px_-30px_rgba(0,0,0,0.85)]";
   const cardInnerClass =
-    "rounded-[1.55rem] bg-[#0b1118]/85 backdrop-blur-2xl";
+    "rounded-[1.55rem] bg-[#0a0712]/85 backdrop-blur-2xl";
 
   return (
-    <main className="relative isolate min-h-screen overflow-hidden bg-[#070b10] px-4 py-8 sm:px-6 lg:px-8">
-      {/* Ambient glow field */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-        style={{
-          background:
-            "radial-gradient(60% 55% at 18% 8%, rgba(27,122,110,0.30), transparent 60%)," +
-            "radial-gradient(48% 50% at 88% 4%, rgba(202,124,71,0.18), transparent 58%)," +
-            "radial-gradient(70% 80% at 50% 118%, rgba(27,122,110,0.16), transparent 60%)," +
-            "linear-gradient(180deg, #080c12 0%, #06090d 55%, #04060a 100%)"
-        }}
-      />
+    <main
+      className="relative isolate min-h-screen overflow-hidden px-4 py-8 sm:px-6 lg:px-8"
+      style={{ background: DM_AMBIENT_BACKGROUND }}
+    >
       {/* Fine grid texture */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 opacity-[0.3]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px)," +
-            "linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          maskImage:
-            "radial-gradient(120% 70% at 50% 0%, black, transparent 75%)",
-          WebkitMaskImage:
-            "radial-gradient(120% 70% at 50% 0%, black, transparent 75%)"
-        }}
+        style={DM_GRID_TEXTURE}
       />
-      {/* Floating accent orbs */}
+      {/* Floating neon orbs */}
       <div
         aria-hidden
-        className="animate-float pointer-events-none absolute -left-28 top-32 -z-10 h-72 w-72 rounded-full bg-accent/20 blur-[120px]"
+        className="animate-float pointer-events-none absolute -left-28 top-32 -z-10 h-72 w-72 rounded-full blur-[120px]"
+        style={{ background: "rgba(255,45,149,0.22)" }}
       />
       <div
         aria-hidden
-        className="animate-drift pointer-events-none absolute -right-24 top-[40rem] -z-10 h-80 w-80 rounded-full bg-sunrise/15 blur-[130px]"
+        className="animate-drift pointer-events-none absolute -right-24 top-[40rem] -z-10 h-80 w-80 rounded-full blur-[130px]"
+        style={{ background: "rgba(34,211,238,0.18)" }}
+      />
+      <div
+        aria-hidden
+        className="animate-float pointer-events-none absolute left-[35%] top-[18rem] -z-10 h-64 w-64 rounded-full blur-[140px]"
+        style={{ background: "rgba(168,85,247,0.16)" }}
       />
 
       <div className="animate-reveal mx-auto flex max-w-6xl flex-col gap-6">
@@ -236,14 +228,20 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             />
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-[#0f4f47] shadow-lg shadow-accent/30 ring-1 ring-white/15">
+                <span
+                  className="relative flex h-9 w-9 items-center justify-center rounded-xl shadow-lg shadow-[#ff2d95]/30 ring-1 ring-white/15"
+                  style={{ backgroundImage: DM_BRAND_GRADIENT }}
+                >
                   <span className="font-body text-sm font-extrabold tracking-tight text-white">
                     D
                   </span>
                   <span className="absolute -inset-px rounded-xl ring-1 ring-inset ring-white/10" />
                 </span>
                 <div className="leading-tight">
-                  <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-accent/90">
+                  <p
+                    className="text-[9px] font-semibold uppercase tracking-[0.28em]"
+                    style={{ color: "#f0abfc" }}
+                  >
                     Proje yönetimi
                   </p>
                   <h1 className="mt-0.5 font-body text-[clamp(1.1rem,2.6vw,1.5rem)] font-bold tracking-[-0.035em] text-white">
@@ -293,7 +291,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
           ].map((stat) => (
             <article key={stat.label} className={cardClass}>
               <div className={`${cardInnerClass} px-4 py-3`}>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-accent/90">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#f0abfc]/90">
                   {stat.label}
                 </p>
                 <p className="mt-1 font-body text-xl font-bold text-white">
@@ -314,7 +312,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
               {editing ? (
                 <a
                   href="/dm"
-                  className="text-xs font-semibold text-accent transition hover:text-accent/80"
+                  className="text-xs font-semibold text-[#67e8f9] transition hover:text-[#67e8f9]/80"
                 >
                   Düzenlemeyi iptal et
                 </a>
@@ -328,7 +326,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="block sm:col-span-2">
                   <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
-                    Görev <span className="text-accent">*</span>
+                    Görev <span className="text-[#ff2d95]">*</span>
                   </span>
                   <input
                     type="text"
@@ -385,7 +383,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                       <option
                         key={option.value}
                         value={option.value}
-                        className="bg-[#0b1118] text-white"
+                        className="bg-[#0a0712] text-white"
                       >
                         {option.label}
                       </option>
@@ -405,7 +403,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                       <option
                         key={option.value}
                         value={option.value}
-                        className="bg-[#0b1118] text-white"
+                        className="bg-[#0a0712] text-white"
                       >
                         {option.label}
                       </option>
@@ -452,15 +450,12 @@ export default async function DmPage({ searchParams }: DmPageProps) {
               </div>
               <button
                 type="submit"
-                className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-[0.85rem] px-5 py-2.5 text-xs font-bold tracking-tight text-white shadow-[0_12px_40px_-8px_rgba(27,122,110,0.7)] ring-1 ring-inset ring-white/15 transition duration-300 hover:shadow-[0_16px_50px_-8px_rgba(27,122,110,0.85)] focus:outline-none focus:ring-2 focus:ring-accent/60"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(110deg, rgb(27,122,110) 0%, rgb(34,150,135) 50%, rgb(27,122,110) 100%)"
-                }}
+                className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-[0.85rem] px-5 py-2.5 text-xs font-bold tracking-tight text-white shadow-[0_14px_44px_-10px_rgba(255,45,149,0.65)] ring-1 ring-inset ring-white/15 transition duration-300 hover:shadow-[0_18px_56px_-10px_rgba(168,85,247,0.85)] focus:outline-none focus:ring-2 focus:ring-[#ff2d95]/60"
+                style={{ backgroundImage: DM_BRAND_GRADIENT }}
               >
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+                  className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full"
                 />
                 {editing ? "Değişiklikleri kaydet" : "Görev ekle"}
               </button>

@@ -82,7 +82,7 @@ export function TaskTable({
     priority !== ALL;
 
   const selectClass =
-    "rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/80 outline-none transition focus:border-accent/55 focus:bg-white/[0.06]";
+    "rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/80 outline-none transition focus:border-[#ff2d95]/55 focus:bg-white/[0.06]";
 
   return (
     <div className="space-y-3">
@@ -112,7 +112,7 @@ export function TaskTable({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Görev, sorumlu, kategori, not ara…"
-            className="w-full rounded-lg border border-white/10 bg-white/[0.04] py-2 pl-9 pr-3 text-xs text-white placeholder:text-white/30 outline-none transition focus:border-accent/55 focus:bg-white/[0.06]"
+            className="w-full rounded-lg border border-white/10 bg-white/[0.04] py-2 pl-9 pr-3 text-xs text-white placeholder:text-white/30 outline-none transition focus:border-[#ff2d95]/55 focus:bg-white/[0.06] focus:ring-2 focus:ring-[#ff2d95]/15"
           />
         </div>
 
@@ -123,11 +123,11 @@ export function TaskTable({
             className={selectClass}
             aria-label="Sorumlu filtresi"
           >
-            <option value={ALL} className="bg-[#0b1118] text-white">
+            <option value={ALL} className="bg-[#0a0712] text-white">
               Sorumlu: Tümü
             </option>
             {owners.map((value) => (
-              <option key={value} value={value} className="bg-[#0b1118] text-white">
+              <option key={value} value={value} className="bg-[#0a0712] text-white">
                 {value}
               </option>
             ))}
@@ -138,14 +138,14 @@ export function TaskTable({
             className={selectClass}
             aria-label="Durum filtresi"
           >
-            <option value={ALL} className="bg-[#0b1118] text-white">
+            <option value={ALL} className="bg-[#0a0712] text-white">
               Durum: Tümü
             </option>
             {statusOptions.map((option) => (
               <option
                 key={option.value}
                 value={option.value}
-                className="bg-[#0b1118] text-white"
+                className="bg-[#0a0712] text-white"
               >
                 {option.label}
               </option>
@@ -157,14 +157,14 @@ export function TaskTable({
             className={selectClass}
             aria-label="Öncelik filtresi"
           >
-            <option value={ALL} className="bg-[#0b1118] text-white">
+            <option value={ALL} className="bg-[#0a0712] text-white">
               Öncelik: Tümü
             </option>
             {priorityOptions.map((option) => (
               <option
                 key={option.value}
                 value={option.value}
-                className="bg-[#0b1118] text-white"
+                className="bg-[#0a0712] text-white"
               >
                 {option.label}
               </option>
@@ -179,7 +179,7 @@ export function TaskTable({
                 setStatus(ALL);
                 setPriority(ALL);
               }}
-              className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/60 transition hover:border-accent/40 hover:text-white"
+              className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/60 transition hover:border-[#67e8f9]/45 hover:text-white"
             >
               Temizle
             </button>
@@ -191,9 +191,18 @@ export function TaskTable({
       </div>
 
       {/* Single flat list */}
-      <div className="overflow-hidden rounded-xl border border-white/[0.07] bg-[#0b1118]/70">
+      <div className="relative overflow-hidden rounded-xl border border-white/[0.07] bg-[#0a0712]/70">
+        {/* Neon top edge */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-px"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent, rgba(255,45,149,0.5), rgba(168,85,247,0.5), rgba(34,211,238,0.5), transparent)"
+          }}
+        />
         {/* Column header (md+) */}
-        <div className="hidden border-b border-white/[0.07] bg-white/[0.03] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40 md:grid md:grid-cols-[minmax(0,1fr)_8rem_9rem_12rem_7rem] md:items-center md:gap-3">
+        <div className="hidden border-b border-white/[0.07] bg-white/[0.025] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40 md:grid md:grid-cols-[minmax(0,1fr)_8rem_9rem_12rem_7rem] md:items-center md:gap-3">
           <span>Görev</span>
           <span>Sorumlu</span>
           <span>Kategori</span>
@@ -298,7 +307,7 @@ export function TaskTable({
                   <a
                     href={`/dm?edit=${task.id}`}
                     title="Düzenle"
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/10 bg-white/[0.04] text-white/70 transition hover:border-accent/40 hover:text-white"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/10 bg-white/[0.04] text-white/70 transition hover:border-[#67e8f9]/45 hover:text-[#67e8f9]"
                   >
                     <svg
                       width="13"

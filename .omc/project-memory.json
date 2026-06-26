@@ -217,8 +217,8 @@
   "hotPaths": [
     {
       "path": "app\\dm\\page.tsx",
-      "accessCount": 19,
-      "lastAccessed": 1782494119314,
+      "accessCount": 36,
+      "lastAccessed": 1782494718700,
       "type": "file"
     },
     {
@@ -252,6 +252,12 @@
       "type": "file"
     },
     {
+      "path": "app\\dm\\_components\\task-table.tsx",
+      "accessCount": 10,
+      "lastAccessed": 1782494723952,
+      "type": "file"
+    },
+    {
       "path": "app\\icon.tsx",
       "accessCount": 6,
       "lastAccessed": 1782493537509,
@@ -267,6 +273,24 @@
       "path": "types\\site.ts",
       "accessCount": 6,
       "lastAccessed": 1782493983187,
+      "type": "directory"
+    },
+    {
+      "path": "app\\dm\\_components\\dm-login.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1782494759447,
+      "type": "file"
+    },
+    {
+      "path": "lib\\project-tasks.ts",
+      "accessCount": 4,
+      "lastAccessed": 1782494784489,
+      "type": "file"
+    },
+    {
+      "path": ".env.local",
+      "accessCount": 3,
+      "lastAccessed": 1782494596936,
       "type": "directory"
     },
     {
@@ -291,18 +315,6 @@
       "path": "package.json",
       "accessCount": 2,
       "lastAccessed": 1782492881825,
-      "type": "file"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 2,
-      "lastAccessed": 1782492894783,
-      "type": "directory"
-    },
-    {
-      "path": "lib\\project-tasks.ts",
-      "accessCount": 2,
-      "lastAccessed": 1782492905610,
       "type": "file"
     },
     {
@@ -396,12 +408,6 @@
       "type": "file"
     },
     {
-      "path": "app\\dm\\_components\\task-table.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1782493915532,
-      "type": "file"
-    },
-    {
       "path": "docs\\superpowers\\specs\\2026-06-26-batubt-footer-clients-design.md",
       "accessCount": 1,
       "lastAccessed": 1782493933932,
@@ -447,6 +453,18 @@
       "path": "app\\dm\\_components\\theme.ts",
       "accessCount": 1,
       "lastAccessed": 1782494483952,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm",
+      "accessCount": 1,
+      "lastAccessed": 1782494600663,
+      "type": "directory"
+    },
+    {
+      "path": "_verify_footer.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1782494692273,
       "type": "file"
     }
   ],
