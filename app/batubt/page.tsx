@@ -556,7 +556,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
         </section>
 
         {/* List */}
-        <section className="space-y-3">
+        <section className="space-y-2">
           {visibleClients.length === 0 ? (
             <p className="rounded-[1.3rem] border border-dashed border-white/15 px-5 py-8 text-center text-[13px] text-white/50">
               {allClients.length === 0
@@ -591,87 +591,63 @@ function FooterClientCard({
   deleteAction
 }: FooterClientCardProps) {
   const domainHref = normalizeDomainHref(client.domain);
+  const ownerLine = [client.owner, client.responsible].filter(Boolean).join(" · ");
 
   return (
-    <article className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] px-5 py-4 backdrop-blur-xl sm:px-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] ${STATUS_BADGE[client.status]}`}
-            >
-              {statusLabel(client.status)}
-            </span>
-            {domainHref ? (
-              <a
-                href={domainHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-body text-[15px] font-semibold text-white transition hover:text-[#FBBC05]"
-              >
-                {client.domain}
-              </a>
-            ) : (
-              <span className="font-body text-[15px] font-semibold text-white/50">
-                (domain yok)
-              </span>
-            )}
-          </div>
+    <article className="rounded-[0.95rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20">
+      {/* Single compact row */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2.5 sm:flex-nowrap">
+        {/* 1) Status badge */}
+        <span
+          className={`inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] ${STATUS_BADGE[client.status]}`}
+        >
+          {statusLabel(client.status)}
+        </span>
 
-          <p className="mt-1.5 text-[13px] font-medium text-white/85">
-            {client.clientName}
-          </p>
+        {/* 2) Site (clickable URL) — primary, takes remaining width */}
+        {domainHref ? (
+          <a
+            href={domainHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="min-w-0 flex-1 truncate font-body text-[14px] font-semibold text-white transition hover:text-[#FBBC05]"
+            title={client.domain}
+          >
+            {client.domain}
+          </a>
+        ) : (
+          <span className="min-w-0 flex-1 truncate font-body text-[14px] font-semibold text-white/50">
+            (domain yok)
+          </span>
+        )}
 
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px]">
-            {client.owner ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-white/60">
-                <span className="text-white/35">Sahip:</span> {client.owner}
-              </span>
-            ) : null}
-            {client.responsible ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-white/60">
-                <span className="text-white/35">Sorumlu:</span>{" "}
-                {client.responsible}
-              </span>
-            ) : null}
-          </div>
+        {/* 3) Owner / responsible (hidden on very small screens) */}
+        {ownerLine ? (
+          <span className="hidden shrink-0 truncate text-[11px] text-white/45 md:inline">
+            {ownerLine}
+          </span>
+        ) : null}
 
-          {client.notes ? (
-            <p className="mt-2 text-[11px] leading-5 text-white/45">
-              {client.notes}
-            </p>
-          ) : null}
+        {/* 4) Footer-code indicator */}
+        <span
+          className={`hidden shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] sm:inline-flex ${
+            client.footerCode
+              ? "border border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
+              : "border border-white/10 bg-white/[0.04] text-white/40"
+          }`}
+          title={client.footerCode ? "Footer kodu girilmiş" : "Footer kodu yok"}
+        >
+          {client.footerCode ? "kod ✓" : "kod —"}
+        </span>
 
-          {client.footerCode ? (
-            <details className="group mt-3">
-              <summary
-                className="inline-flex cursor-pointer items-center gap-1.5 text-[11px] font-semibold"
-                style={{ color: YELLOW }}
-              >
-                <span>Footer kodunu göster</span>
-                <span className="text-white/30 transition group-open:rotate-90">
-                  ›
-                </span>
-              </summary>
-              <pre className="mt-2 max-h-72 overflow-auto rounded-[0.9rem] border border-white/10 bg-black/40 p-4 text-[12px] leading-5 text-white/75">
-                <code>{client.footerCode}</code>
-              </pre>
-            </details>
-          ) : (
-            <p className="mt-3 text-[11px] italic text-white/30">
-              Footer kodu henüz girilmemiş.
-            </p>
-          )}
-        </div>
-
-        {/* Actions */}
-        <div className="flex flex-wrap items-center gap-2 lg:flex-col lg:items-end">
-          <form action={inlineStatusAction} className="flex items-center gap-2">
+        {/* 5) Actions */}
+        <div className="flex shrink-0 items-center gap-1.5">
+          <form action={inlineStatusAction} className="flex items-center gap-1.5">
             <input type="hidden" name="id" value={client.id} />
             <select
               name="status"
               defaultValue={client.status}
-              className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-white outline-none transition focus:border-[#FBBC05]/55"
+              className="rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white outline-none transition focus:border-[#FBBC05]/55"
             >
               {STATUS_OPTIONS.map((option) => (
                 <option
@@ -685,30 +661,53 @@ function FooterClientCard({
             </select>
             <button
               type="submit"
-              className="inline-flex min-h-[32px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-white/80 transition hover:border-[#FBBC05]/40 hover:text-[#FBBC05]"
+              className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-[#FBBC05]/40 hover:text-[#FBBC05]"
             >
               Uygula
             </button>
           </form>
-          <div className="flex items-center gap-2">
-            <a
-              href={`/batubt?edit=${client.id}`}
-              className="inline-flex min-h-[32px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-white/80 transition hover:border-[#FBBC05]/40 hover:text-[#FBBC05]"
+          <a
+            href={`/batubt?edit=${client.id}`}
+            className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-[#FBBC05]/40 hover:text-[#FBBC05]"
+          >
+            Düzenle
+          </a>
+          <form action={deleteAction}>
+            <input type="hidden" name="id" value={client.id} />
+            <button
+              type="submit"
+              className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
             >
-              Düzenle
-            </a>
-            <form action={deleteAction}>
-              <input type="hidden" name="id" value={client.id} />
-              <button
-                type="submit"
-                className="inline-flex min-h-[32px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
-              >
-                Sil
-              </button>
-            </form>
-          </div>
+              Sil
+            </button>
+          </form>
         </div>
       </div>
+
+      {/* Optional second row: notes + footer-code reveal (only if present) */}
+      {client.notes || client.footerCode ? (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-white/[0.06] px-4 py-2">
+          {client.notes ? (
+            <span className="text-[11px] text-white/45">{client.notes}</span>
+          ) : null}
+          {client.footerCode ? (
+            <details className="group">
+              <summary
+                className="inline-flex cursor-pointer list-none items-center gap-1.5 text-[11px] font-semibold [&::-webkit-details-marker]:hidden"
+                style={{ color: YELLOW }}
+              >
+                <span>Footer kodunu göster</span>
+                <span className="text-white/30 transition group-open:rotate-90">
+                  ›
+                </span>
+              </summary>
+              <pre className="mt-2 max-h-72 w-full overflow-auto rounded-[0.9rem] border border-white/10 bg-black/40 p-4 text-[12px] leading-5 text-white/75">
+                <code>{client.footerCode}</code>
+              </pre>
+            </details>
+          ) : null}
+        </div>
+      ) : null}
     </article>
   );
 }
