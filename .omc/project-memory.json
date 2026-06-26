@@ -216,9 +216,27 @@
   },
   "hotPaths": [
     {
+      "path": "app\\dm\\page.tsx",
+      "accessCount": 19,
+      "lastAccessed": 1782494119314,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\_components\\admin-gate.tsx",
+      "accessCount": 15,
+      "lastAccessed": 1782494362398,
+      "type": "file"
+    },
+    {
       "path": "app\\admin\\page.tsx",
       "accessCount": 12,
       "lastAccessed": 1782493055156,
+      "type": "file"
+    },
+    {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 12,
+      "lastAccessed": 1782494039136,
       "type": "file"
     },
     {
@@ -234,34 +252,22 @@
       "type": "file"
     },
     {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 9,
-      "lastAccessed": 1782492999399,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\_components\\admin-gate.tsx",
-      "accessCount": 8,
-      "lastAccessed": 1782492914399,
-      "type": "file"
-    },
-    {
-      "path": "types\\site.ts",
-      "accessCount": 4,
-      "lastAccessed": 1782492926167,
-      "type": "directory"
-    },
-    {
       "path": "app\\icon.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1782490318459,
+      "accessCount": 6,
+      "lastAccessed": 1782493537509,
       "type": "file"
     },
     {
       "path": "app\\apple-icon.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1782490326666,
+      "accessCount": 6,
+      "lastAccessed": 1782493538997,
       "type": "file"
+    },
+    {
+      "path": "types\\site.ts",
+      "accessCount": 6,
+      "lastAccessed": 1782493983187,
+      "type": "directory"
     },
     {
       "path": "lib\\appointments.ts",
@@ -303,6 +309,18 @@
       "path": "supabase\\migrations\\20260626120000_create_project_tasks.sql",
       "accessCount": 2,
       "lastAccessed": 1782492935939,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_actions.ts",
+      "accessCount": 2,
+      "lastAccessed": 1782493667893,
+      "type": "file"
+    },
+    {
+      "path": "app\\globals.css",
+      "accessCount": 2,
+      "lastAccessed": 1782494387702,
       "type": "file"
     },
     {
@@ -372,27 +390,63 @@
       "type": "directory"
     },
     {
-      "path": "app\\globals.css",
-      "accessCount": 1,
-      "lastAccessed": 1782491578593,
-      "type": "file"
-    },
-    {
       "path": "docs\\superpowers\\specs\\2026-06-26-dm-board-design.md",
       "accessCount": 1,
       "lastAccessed": 1782492940399,
       "type": "file"
     },
     {
-      "path": "app\\dm\\_actions.ts",
+      "path": "app\\dm\\_components\\task-table.tsx",
       "accessCount": 1,
-      "lastAccessed": 1782492965085,
+      "lastAccessed": 1782493915532,
       "type": "file"
     },
     {
-      "path": "app\\dm\\page.tsx",
+      "path": "docs\\superpowers\\specs\\2026-06-26-batubt-footer-clients-design.md",
       "accessCount": 1,
-      "lastAccessed": 1782493156760,
+      "lastAccessed": 1782493933932,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260626130000_create_footer_clients.sql",
+      "accessCount": 1,
+      "lastAccessed": 1782493973672,
+      "type": "file"
+    },
+    {
+      "path": "lib\\footer-clients.ts",
+      "accessCount": 1,
+      "lastAccessed": 1782494075239,
+      "type": "file"
+    },
+    {
+      "path": "next.config.ts",
+      "accessCount": 1,
+      "lastAccessed": 1782494154848,
+      "type": "file"
+    },
+    {
+      "path": "app\\batubt\\_actions.ts",
+      "accessCount": 1,
+      "lastAccessed": 1782494165264,
+      "type": "file"
+    },
+    {
+      "path": "app\\batubt\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1782494263263,
+      "type": "file"
+    },
+    {
+      "path": "dmgorsel\\loginhero.jpeg",
+      "accessCount": 1,
+      "lastAccessed": 1782494459281,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\theme.ts",
+      "accessCount": 1,
+      "lastAccessed": 1782494483952,
       "type": "file"
     }
   ],

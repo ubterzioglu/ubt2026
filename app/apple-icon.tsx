@@ -17,15 +17,16 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: WHITE
+          background: "transparent"
         }}
       >
         <svg width="180" height="180" viewBox="0 0 100 100">
-          {/* Thin red outer boundary so the icon edge reads on white surfaces */}
-          <circle cx="50" cy="50" r="49" fill={WHITE} stroke={RED} strokeWidth="2" />
-          {/* White ring border: the gap between r=49 and the r=38 yin-yang */}
-          <circle cx="50" cy="50" r="38" fill={WHITE} />
-          {/* Left (red) half + the interlocking S curve */}
+          {/* Red outer disc — gives the white ring something to read against */}
+          <circle cx="50" cy="50" r="49" fill={RED} />
+          {/* White ring border (visible gap between r=49 red disc and r=40 yin-yang) */}
+          <circle cx="50" cy="50" r="40" fill={WHITE} />
+          {/* Yin-yang body sits inside the white ring */}
+          {/* White (right) half via the white disc above; red (left) half + S curve */}
           <path
             d="M50 12 A38 38 0 0 0 50 88 A19 19 0 0 1 50 50 A19 19 0 0 0 50 12 Z"
             fill={RED}

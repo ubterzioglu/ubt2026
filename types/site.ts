@@ -77,6 +77,22 @@ export interface ProjectTaskItem {
   updatedAt: string;
 }
 
+export type FooterClientStatus = "pending" | "added" | "verified";
+
+export interface FooterClientItem {
+  id: string;
+  clientName: string;
+  domain: string;
+  owner: string;
+  responsible: string;
+  footerCode: string;
+  status: FooterClientStatus;
+  notes: string;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CtaLink {
   label: string;
   href: string;

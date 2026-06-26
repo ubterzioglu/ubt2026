@@ -25,6 +25,10 @@ interface AdminGateProps {
   eyebrow?: string;
   /** Brand name shown in the dark variant's header. */
   brand?: string;
+  /** Small caption under the brand name in the dark variant's header. */
+  subtitle?: string;
+  /** Footer caption below the dark variant's card. */
+  footerCaption?: string;
   /** Supporting copy under the title. */
   description?: string;
 }
@@ -44,6 +48,8 @@ export function AdminGate({
   variant = "light",
   eyebrow = "Admin access",
   brand = "DesireMap",
+  subtitle = "Todo Dashboard",
+  footerCaption = "desiremap.de · internal",
   description = DEFAULT_DESCRIPTION
 }: AdminGateProps) {
   const signIn = signInAction ?? adminSignInAction.bind(null, redirectTo);
@@ -56,6 +62,8 @@ export function AdminGate({
         submitLabel={submitLabel}
         eyebrow={eyebrow}
         brand={brand}
+        subtitle={subtitle}
+        footerCaption={footerCaption}
         description={description}
       />
     );
@@ -103,6 +111,8 @@ interface DarkAdminGateProps {
   submitLabel: string;
   eyebrow: string;
   brand: string;
+  subtitle: string;
+  footerCaption: string;
   description: string;
 }
 
@@ -117,6 +127,8 @@ function DarkAdminGate({
   submitLabel,
   eyebrow,
   brand,
+  subtitle,
+  footerCaption,
   description
 }: DarkAdminGateProps) {
   return (
@@ -182,7 +194,7 @@ function DarkAdminGate({
                     {brand}
                   </p>
                   <p className="text-[11px] font-medium text-white/45">
-                    Todo Dashboard
+                    {subtitle}
                   </p>
                 </div>
               </div>
@@ -293,7 +305,7 @@ function DarkAdminGate({
 
         {/* Sub-card caption */}
         <p className="mt-6 text-center text-[11px] font-medium uppercase tracking-[0.28em] text-white/25">
-          desiremap.de · internal
+          {footerCaption}
         </p>
       </div>
     </main>
