@@ -8,6 +8,7 @@ import { DmLogin } from "@/app/dm/_components/dm-login";
 import { TaskTable } from "@/app/dm/_components/task-table";
 import { FindingsTab } from "@/app/dm/_components/findings-tab";
 import { SocialTab } from "@/app/dm/_components/social-tab";
+import { InfoTab } from "@/app/dm/_components/info-tab";
 import {
   DM_AMBIENT_BACKGROUND,
   DM_BRAND_GRADIENT,
@@ -156,12 +157,14 @@ export default async function DmPage({ searchParams }: DmPageProps) {
   }
 
   const tabParam = readParam(params.tab);
-  const activeTab: "tasks" | "findings" | "social" =
+  const activeTab: "tasks" | "findings" | "social" | "info" =
     tabParam === "findings"
       ? "findings"
       : tabParam === "social"
         ? "social"
-        : "tasks";
+        : tabParam === "info"
+          ? "info"
+          : "tasks";
   const createdParam = readParam(params.created);
   const updatedParam = readParam(params.updated);
   const errorParam = readParam(params.error);
@@ -559,6 +562,11 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                   key: "social",
                   label: "İçerik",
                   count: allSocialPosts.length
+                },
+                {
+                  key: "info",
+                  label: "Önemli bilgiler",
+                  count: 6
                 }
               ] as const
             ).map((tab) => {
@@ -870,13 +878,15 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             addCommentAction={addCommentAction}
             deleteCommentAction={deleteCommentAction}
           />
-        ) : (
+        ) : activeTab === "social" ? (
           <SocialTab
             posts={allSocialPosts}
             cardClass={cardClass}
             cardInnerClass={cardInnerClass}
             toggleShareAction={toggleShareAction}
           />
+        ) : (
+          <InfoTab cardClass={cardClass} cardInnerClass={cardInnerClass} />
         )}
       </div>
     </main>
