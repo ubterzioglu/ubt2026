@@ -108,13 +108,21 @@ export interface FindingComment {
 }
 
 /** Social platforms a content post can be marked as shared on. */
-export type SocialPlatform = "instagram" | "facebook" | "x" | "tiktok";
+export type SocialPlatform =
+  | "instagram"
+  | "facebook"
+  | "x"
+  | "tiktok"
+  | "reddit"
+  | "linkedin";
 
 export const SOCIAL_PLATFORMS: readonly SocialPlatform[] = [
   "instagram",
   "facebook",
   "x",
-  "tiktok"
+  "tiktok",
+  "reddit",
+  "linkedin"
 ];
 
 /**

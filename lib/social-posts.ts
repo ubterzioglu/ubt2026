@@ -12,12 +12,15 @@ const SHARED_COLUMN: Record<SocialPlatform, string> = {
   instagram: "shared_instagram",
   facebook: "shared_facebook",
   x: "shared_x",
-  tiktok: "shared_tiktok"
+  tiktok: "shared_tiktok",
+  reddit: "shared_reddit",
+  linkedin: "shared_linkedin"
 };
 
 const POST_COLUMNS =
   "id, post_number, category, title, summary, canva_prompt, instagram_caption, " +
-  "shared_instagram, shared_facebook, shared_x, shared_tiktok, created_at, updated_at";
+  "shared_instagram, shared_facebook, shared_x, shared_tiktok, shared_reddit, " +
+  "shared_linkedin, created_at, updated_at";
 
 interface SupabaseSocialPostRow {
   id: string;
@@ -31,6 +34,8 @@ interface SupabaseSocialPostRow {
   shared_facebook: boolean;
   shared_x: boolean;
   shared_tiktok: boolean;
+  shared_reddit: boolean;
+  shared_linkedin: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -81,7 +86,9 @@ function toSocialPostItem(row: SupabaseSocialPostRow): SocialPostItem {
       instagram: row.shared_instagram,
       facebook: row.shared_facebook,
       x: row.shared_x,
-      tiktok: row.shared_tiktok
+      tiktok: row.shared_tiktok,
+      reddit: row.shared_reddit,
+      linkedin: row.shared_linkedin
     },
     createdAt: row.created_at,
     updatedAt: row.updated_at
