@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"set -a; source .env.local 2>/dev/null; set +a\\ncurl -s -H \\\"apikey: $SUPABASE_SERVICE_ROLE_KEY\\\" -H \\\"Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY\\\" \\\\\\n  \\\"$NEXT_PUBLIC_SUPABASE_URL/r...",
+  "error": "Exit code 1\npost 1 canva (first 90 chars):\nnode:internal/modules/cjs/loader:1451\r\n  throw err;\r\n  ^\r\n\r\nError: Cannot find module '/tmp/p1.json'\r\nRequire stack:\r\n- C:\\temp_private\\ubt2026\\[eval]\r\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1448:15)\r\n    at defaultResolveImpl (node:internal/modules/cjs/loader:1059:19)\r\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1064:22)\r\n    at Module._load (node:internal/modules/cjs/loader:1234:25)\r\n    at TracingChannel....",
+  "timestamp": "2026-07-01T09:32:35.318Z",
+  "retry_count": 1
+}
