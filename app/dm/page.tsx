@@ -7,6 +7,7 @@ import { tasksSignInAction, tasksSignOutAction } from "@/app/dm/_actions";
 import { DmLogin } from "@/app/dm/_components/dm-login";
 import { TaskTable } from "@/app/dm/_components/task-table";
 import { FindingsTab } from "@/app/dm/_components/findings-tab";
+import { SocialTab } from "@/app/dm/_components/social-tab";
 import {
   DM_AMBIENT_BACKGROUND,
   DM_BRAND_GRADIENT,
@@ -31,6 +32,7 @@ import {
   normalizeFindingStatus,
   normalizeFindingSeverity
 } from "@/lib/test-findings";
+import { getAllSocialPostsAdmin, setPostShared } from "@/lib/social-posts";
 import type {
   ProjectTaskPriority,
   ProjectTaskStatus,
@@ -154,8 +156,12 @@ export default async function DmPage({ searchParams }: DmPageProps) {
   }
 
   const tabParam = readParam(params.tab);
-  const activeTab: "tasks" | "findings" =
-    tabParam === "findings" ? "findings" : "tasks";
+  const activeTab: "tasks" | "findings" | "social" =
+    tabParam === "findings"
+      ? "findings"
+      : tabParam === "social"
+        ? "social"
+        : "tasks";
   const createdParam = readParam(params.created);
   const updatedParam = readParam(params.updated);
   const errorParam = readParam(params.error);
@@ -182,6 +188,9 @@ export default async function DmPage({ searchParams }: DmPageProps) {
   const selectedComments = selectedFinding
     ? await getFindingCommentsAdmin(selectedFinding.id)
     : [];
+
+  // Social content posts — fetched regardless so the tab badge stays accurate.
+  const socialResult = await getAllSocialPostsAdmin();
 
   async function createAction(formData: FormData) {
     "use server";
@@ -386,6 +395,23 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     );
   }
 
+  // --- Social content actions ---
+
+  async function toggleShareAction(formData: FormData) {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    const platform = (formData.get("platform") as string | null) ?? "";
+    const shared = (formData.get("shared") as string | null) === "1";
+    if (id && platform) {
+      await setPostShared(id, platform, shared);
+    }
+    revalidatePath("/dm");
+    redirect("/dm?tab=social" as Parameters<typeof redirect>[0]);
+  }
+
   const allTasks = tasksResult.items;
   const owners = Array.from(new Set(allTasks.map((task) => task.owner)));
 
@@ -393,6 +419,8 @@ export default async function DmPage({ searchParams }: DmPageProps) {
   const findingOwners = Array.from(
     new Set(allFindings.map((f) => f.owner))
   );
+
+  const allSocialPosts = socialResult.items;
 
   const doneCount = allTasks.filter((task) => task.status === "done").length;
   const top5Count = allTasks.filter((task) => task.priority === "top5").length;
@@ -526,6 +554,11 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                   key: "findings",
                   label: "Test bulguları",
                   count: allFindings.length
+                },
+                {
+                  key: "social",
+                  label: "İçerik",
+                  count: allSocialPosts.length
                 }
               ] as const
             ).map((tab) => {
@@ -815,7 +848,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
           </div>
         </section>
         </>
-        ) : (
+        ) : activeTab === "findings" ? (
           <FindingsTab
             findings={allFindings}
             owners={findingOwners}
@@ -836,6 +869,13 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             resolveAction={resolveFindingAction}
             addCommentAction={addCommentAction}
             deleteCommentAction={deleteCommentAction}
+          />
+        ) : (
+          <SocialTab
+            posts={allSocialPosts}
+            cardClass={cardClass}
+            cardInnerClass={cardInnerClass}
+            toggleShareAction={toggleShareAction}
           />
         )}
       </div>

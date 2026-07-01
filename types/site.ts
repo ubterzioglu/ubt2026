@@ -107,6 +107,34 @@ export interface FindingComment {
   createdAt: string;
 }
 
+/** Social platforms a content post can be marked as shared on. */
+export type SocialPlatform = "instagram" | "facebook" | "x" | "tiktok";
+
+export const SOCIAL_PLATFORMS: readonly SocialPlatform[] = [
+  "instagram",
+  "facebook",
+  "x",
+  "tiktok"
+];
+
+/**
+ * A DesireMap content post (Instagram caption + Canva prompt) shown on the
+ * `/dm` "İçerik" board. `shared` tracks, per platform, whether it has been
+ * posted — the icon turns green once toggled on.
+ */
+export interface SocialPostItem {
+  id: string;
+  postNumber: number;
+  category: string;
+  title: string;
+  summary: string;
+  canvaPrompt: string;
+  instagramCaption: string;
+  shared: Record<SocialPlatform, boolean>;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type FooterClientStatus = "pending" | "added" | "verified";
 
 export interface FooterClientItem {
