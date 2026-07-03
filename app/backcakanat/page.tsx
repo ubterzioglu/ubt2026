@@ -1,0 +1,527 @@
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+import { isBakcakanatAuthenticated } from "@/lib/admin-auth";
+import { BakcakanatLogin } from "@/app/backcakanat/_components/bakcakanat-login";
+import {
+  bakcakanatSignInAction,
+  bakcakanatSignOutAction
+} from "@/app/backcakanat/_actions";
+import {
+  BAKCAKANAT_BRAND_GRADIENT,
+  BAKCAKANAT_EMERALD
+} from "@/app/backcakanat/_components/theme";
+import {
+  getAllAkcakanatDomainsAdmin,
+  createAkcakanatDomain,
+  updateAkcakanatDomain,
+  deleteAkcakanatDomain
+} from "@/lib/akcakanat-domains";
+import type { AkcakanatDomainItem } from "@/lib/akcakanat-domains";
+
+export const metadata = {
+  title: "Akçakanat · Domain Yönetimi",
+  robots: { index: false, follow: false }
+};
+
+interface BakcakanatPageProps {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}
+
+function readParam(value: string | string[] | undefined): string {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return value[0] ?? "";
+  return "";
+}
+
+function normalizeSiteHref(site: string): string | null {
+  const trimmed = site.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
+// Shared dark input styling so every cell reads as one premium glass surface.
+const darkInput =
+  "w-full rounded-[0.7rem] border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#34D399]/55 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#34D399]/12";
+const mobileLabel =
+  "mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40 md:hidden";
+
+// One grid template shared by the header row and every data row so the
+// columns stay perfectly aligned: site | domain | hosting | email | yorum | actions.
+const ROW_GRID =
+  "md:grid-cols-[minmax(190px,1.1fr)_1fr_1fr_1fr_1.3fr_auto]";
+
+export default async function BakcakanatPage({
+  searchParams
+}: BakcakanatPageProps) {
+  const params = searchParams ? await searchParams : {};
+  const hasAccess = await isBakcakanatAuthenticated();
+
+  if (!hasAccess) {
+    return (
+      <BakcakanatLogin
+        brand="Akçakanat"
+        subtitle="Domain Yönetimi"
+        footerCaption="ubterzioglu.de · internal"
+        eyebrow="Yönetim erişimi"
+        title="Domain portföy panosu"
+        description="Akçakanat domainlerinin hosting, e-posta ve not kayıtlarını bu özel pano üzerinden yönetiyoruz. Devam etmek için şifreyi gir."
+        submitLabel="Panoyu aç"
+        signIn={bakcakanatSignInAction}
+      />
+    );
+  }
+
+  const result = await getAllAkcakanatDomainsAdmin();
+  const createdParam = readParam(params.created);
+  const updatedParam = readParam(params.updated);
+  const deletedParam = readParam(params.deleted);
+  const errorParam = readParam(params.error);
+
+  async function createAction(formData: FormData) {
+    "use server";
+    if (!(await isBakcakanatAuthenticated())) {
+      redirect("/backcakanat" as Parameters<typeof redirect>[0]);
+    }
+    const outcome = await createAkcakanatDomain({
+      site: (formData.get("site") as string | null) ?? "",
+      domainInfo: (formData.get("domainInfo") as string | null) ?? "",
+      hosting: (formData.get("hosting") as string | null) ?? "",
+      email: (formData.get("email") as string | null) ?? "",
+      comment: (formData.get("comment") as string | null) ?? "",
+      sortOrder: Number.parseInt(
+        (formData.get("sortOrder") as string | null) ?? "0",
+        10
+      )
+    });
+
+    revalidatePath("/backcakanat");
+    redirect(
+      (outcome.ok
+        ? "/backcakanat?created=1"
+        : `/backcakanat?error=${encodeURIComponent(outcome.errorMessage ?? "Kayıt eklenemedi.")}`) as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function updateAction(formData: FormData) {
+    "use server";
+    if (!(await isBakcakanatAuthenticated())) {
+      redirect("/backcakanat" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (!id) {
+      redirect("/backcakanat" as Parameters<typeof redirect>[0]);
+    }
+    const outcome = await updateAkcakanatDomain(id, {
+      domainInfo: (formData.get("domainInfo") as string | null) ?? "",
+      hosting: (formData.get("hosting") as string | null) ?? "",
+      email: (formData.get("email") as string | null) ?? "",
+      comment: (formData.get("comment") as string | null) ?? ""
+    });
+
+    revalidatePath("/backcakanat");
+    redirect(
+      (outcome.ok
+        ? "/backcakanat?updated=1"
+        : `/backcakanat?error=${encodeURIComponent(outcome.errorMessage ?? "Kayıt güncellenemedi.")}`) as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function deleteAction(formData: FormData) {
+    "use server";
+    if (!(await isBakcakanatAuthenticated())) {
+      redirect("/backcakanat" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (id) {
+      await deleteAkcakanatDomain(id);
+    }
+    revalidatePath("/backcakanat");
+    redirect("/backcakanat?deleted=1" as Parameters<typeof redirect>[0]);
+  }
+
+  const domains = result.items;
+  const filledCount = domains.filter(
+    (item) => item.hosting || item.email || item.domainInfo
+  ).length;
+
+  return (
+    <main className="relative isolate min-h-screen overflow-hidden bg-[#060908] px-4 py-8 sm:px-6 lg:px-8">
+      {/* Ambient glow field — black · emerald · sky */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(55% 45% at 15% 8%, rgba(52,211,153,0.14), transparent 60%)," +
+            "radial-gradient(45% 45% at 88% 4%, rgba(56,189,248,0.14), transparent 58%)," +
+            "radial-gradient(70% 70% at 50% 120%, rgba(45,212,191,0.10), transparent 60%)," +
+            "linear-gradient(180deg, #070b0a 0%, #060908 55%, #040606 100%)"
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-10 opacity-[0.3]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)," +
+            "linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+          maskImage: "radial-gradient(120% 80% at 50% 0%, black, transparent 80%)",
+          WebkitMaskImage:
+            "radial-gradient(120% 80% at 50% 0%, black, transparent 80%)"
+        }}
+      />
+
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
+        {/* Header card */}
+        <section className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl">
+          <div className="flex flex-col gap-3 px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+            <div className="flex items-center gap-3">
+              <span
+                className="relative flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-white/15"
+                style={{ backgroundImage: BAKCAKANAT_BRAND_GRADIENT }}
+              >
+                <span className="font-body text-sm font-extrabold tracking-tight text-black">
+                  A
+                </span>
+              </span>
+              <div>
+                <p
+                  className="text-[10px] font-semibold uppercase tracking-[0.28em]"
+                  style={{ color: BAKCAKANAT_EMERALD }}
+                >
+                  Akçakanat
+                </p>
+                <h1 className="font-body text-[clamp(1.2rem,3vw,1.6rem)] font-bold tracking-[-0.03em] text-white">
+                  Domain yönetimi
+                </h1>
+              </div>
+            </div>
+            <form action={bakcakanatSignOutAction}>
+              <button
+                type="submit"
+                className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:text-rose-300"
+              >
+                Çıkış yap
+              </button>
+            </form>
+          </div>
+        </section>
+
+        {/* Feedback banners */}
+        {createdParam === "1" && (
+          <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-[13px] font-medium text-emerald-200">
+            Kayıt eklendi.
+          </div>
+        )}
+        {updatedParam === "1" && (
+          <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-[13px] font-medium text-emerald-200">
+            Kayıt güncellendi.
+          </div>
+        )}
+        {deletedParam === "1" && (
+          <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
+            Kayıt silindi.
+          </div>
+        )}
+        {errorParam && (
+          <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
+            Hata: {errorParam}
+          </div>
+        )}
+        {result.source === "env-missing" && (
+          <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
+            Supabase bağlantısı yapılandırılmamış (SUPABASE_SERVICE_ROLE_KEY
+            eksik). Kayıtlar yüklenemiyor.
+          </div>
+        )}
+        {result.source === "error" && (
+          <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
+            Kayıtlar yüklenirken hata oluştu: {result.errorMessage}
+          </div>
+        )}
+
+        {/* Stats */}
+        <section className="grid gap-3 sm:grid-cols-2">
+          {[
+            { label: "Toplam domain", value: domains.length },
+            { label: "Bilgisi girilmiş", value: filledCount }
+          ].map((stat) => (
+            <article
+              key={stat.label}
+              className="rounded-[1.2rem] border border-white/10 bg-white/[0.03] px-5 py-4 backdrop-blur-xl"
+            >
+              <p
+                className="text-[10px] font-semibold uppercase tracking-[0.2em]"
+                style={{ color: BAKCAKANAT_EMERALD }}
+              >
+                {stat.label}
+              </p>
+              <p className="mt-1.5 font-body text-2xl font-bold text-white">
+                {stat.value}
+              </p>
+            </article>
+          ))}
+        </section>
+
+        {/* Add form — collapsed-by-default accordion */}
+        <details className="group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 sm:px-8 [&::-webkit-details-marker]:hidden">
+            <h2 className="flex items-center gap-2 font-body text-base font-semibold text-white">
+              <span
+                className="flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold text-black"
+                style={{ backgroundImage: BAKCAKANAT_BRAND_GRADIENT }}
+              >
+                +
+              </span>
+              Yeni site ekle
+            </h2>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-white/40 transition-transform duration-200 group-open:rotate-180"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+          <form action={createAction} className="space-y-4 px-6 pb-6 pt-1 sm:px-8">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Site <span style={{ color: BAKCAKANAT_EMERALD }}>*</span>
+                </span>
+                <input
+                  type="text"
+                  name="site"
+                  required
+                  minLength={3}
+                  maxLength={253}
+                  placeholder="ör. example.com"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Domain
+                </span>
+                <input
+                  type="text"
+                  name="domainInfo"
+                  maxLength={300}
+                  placeholder="Kayıt firması / bitiş tarihi…"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Hosting
+                </span>
+                <input
+                  type="text"
+                  name="hosting"
+                  maxLength={300}
+                  placeholder="Hosting sağlayıcı…"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Email
+                </span>
+                <input
+                  type="text"
+                  name="email"
+                  maxLength={300}
+                  placeholder="E-posta sağlayıcı / adres…"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Yorum
+                </span>
+                <input
+                  type="text"
+                  name="comment"
+                  maxLength={1000}
+                  placeholder="Opsiyonel not…"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Sıra
+                </span>
+                <input
+                  type="number"
+                  name="sortOrder"
+                  defaultValue={(domains.length + 1) * 10}
+                  className={darkInput}
+                />
+              </label>
+            </div>
+            <button
+              type="submit"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-[0.9rem] px-6 py-2.5 text-[13px] font-bold tracking-tight text-black shadow-[0_12px_40px_-8px_rgba(52,211,153,0.5)] ring-1 ring-inset ring-white/15 transition hover:shadow-[0_16px_50px_-8px_rgba(56,189,248,0.6)]"
+              style={{ backgroundImage: BAKCAKANAT_BRAND_GRADIENT }}
+            >
+              Site ekle
+            </button>
+          </form>
+        </details>
+
+        {/* Domain table */}
+        <section className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl">
+          {/* Header row (desktop only) */}
+          <div
+            className={`hidden gap-3 border-b border-white/10 px-5 py-3 md:grid ${ROW_GRID}`}
+          >
+            {["Site", "Domain", "Hosting", "Email", "Yorum", ""].map(
+              (heading, index) => (
+                <span
+                  key={`${heading}-${index}`}
+                  className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45"
+                >
+                  {heading}
+                </span>
+              )
+            )}
+          </div>
+
+          {domains.length === 0 ? (
+            <p className="px-5 py-10 text-center text-[13px] text-white/50">
+              Henüz kayıt yok. Yukarıdan ilk siteyi ekle.
+            </p>
+          ) : (
+            domains.map((item) => (
+              <DomainRow
+                key={item.id}
+                item={item}
+                updateAction={updateAction}
+                deleteAction={deleteAction}
+              />
+            ))
+          )}
+        </section>
+      </div>
+    </main>
+  );
+}
+
+interface DomainRowProps {
+  item: AkcakanatDomainItem;
+  updateAction: (formData: FormData) => void | Promise<void>;
+  deleteAction: (formData: FormData) => void | Promise<void>;
+}
+
+/**
+ * One editable table row. The whole row is a single form: "Kaydet" submits the
+ * update action; "Sil" reuses the same form via `formAction` so we never nest
+ * forms (invalid HTML).
+ */
+function DomainRow({ item, updateAction, deleteAction }: DomainRowProps) {
+  const siteHref = normalizeSiteHref(item.site);
+
+  return (
+    <form
+      action={updateAction}
+      className={`grid gap-3 border-b border-white/[0.06] px-5 py-3.5 transition last:border-b-0 hover:bg-white/[0.02] md:items-center ${ROW_GRID}`}
+    >
+      <input type="hidden" name="id" value={item.id} />
+
+      {/* Left column — the site itself (clickable, read-only label) */}
+      <div className="min-w-0">
+        {siteHref ? (
+          <a
+            href={siteHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block truncate font-body text-[14px] font-semibold text-white transition hover:text-[#34D399]"
+            title={item.site}
+          >
+            {item.site}
+          </a>
+        ) : (
+          <span className="block truncate font-body text-[14px] font-semibold text-white/50">
+            (site yok)
+          </span>
+        )}
+      </div>
+
+      <div>
+        <span className={mobileLabel}>Domain</span>
+        <input
+          type="text"
+          name="domainInfo"
+          maxLength={300}
+          defaultValue={item.domainInfo}
+          placeholder="—"
+          className={darkInput}
+        />
+      </div>
+      <div>
+        <span className={mobileLabel}>Hosting</span>
+        <input
+          type="text"
+          name="hosting"
+          maxLength={300}
+          defaultValue={item.hosting}
+          placeholder="—"
+          className={darkInput}
+        />
+      </div>
+      <div>
+        <span className={mobileLabel}>Email</span>
+        <input
+          type="text"
+          name="email"
+          maxLength={300}
+          defaultValue={item.email}
+          placeholder="—"
+          className={darkInput}
+        />
+      </div>
+      <div>
+        <span className={mobileLabel}>Yorum</span>
+        <input
+          type="text"
+          name="comment"
+          maxLength={1000}
+          defaultValue={item.comment}
+          placeholder="—"
+          className={darkInput}
+        />
+      </div>
+
+      {/* Actions */}
+      <div className="flex shrink-0 items-center gap-1.5">
+        <button
+          type="submit"
+          className="inline-flex min-h-[34px] items-center justify-center rounded-full px-3.5 py-1.5 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15 transition hover:shadow-[0_8px_24px_-6px_rgba(52,211,153,0.6)]"
+          style={{ backgroundImage: BAKCAKANAT_BRAND_GRADIENT }}
+        >
+          Kaydet
+        </button>
+        <button
+          type="submit"
+          formAction={deleteAction}
+          className="inline-flex min-h-[34px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[12px] font-semibold text-white/70 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
+        >
+          Sil
+        </button>
+      </div>
+    </form>
+  );
+}

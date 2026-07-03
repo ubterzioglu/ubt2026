@@ -27,6 +27,12 @@ export const TASKS_ADMIN_ACCESS_COOKIE = "ubt_tasks_admin_access";
  */
 export const BATUBT_ADMIN_ACCESS_COOKIE = "ubt_batubt_access";
 
+/**
+ * The Akçakanat domain board (/backcakanat) has its own password/cookie so it
+ * can be shared independently of every other admin key.
+ */
+export const BAKCAKANAT_ACCESS_COOKIE = "ubt_bakcakanat_access";
+
 const ADMIN_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 8; // 8 hours
 
 /**
@@ -180,4 +186,53 @@ export async function signInBatubt(candidate: string): Promise<boolean> {
 export async function signOutBatubt(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete({ name: BATUBT_ADMIN_ACCESS_COOKIE, path: "/batubt" });
+}
+
+/**
+ * Reads the Akçakanat domain-board password (empty string if not configured).
+ * No fallback: the board is gated solely by BAKCAKANAT_PASSWORD.
+ */
+function getBakcakanatPassword(): string {
+  return process.env.BAKCAKANAT_PASSWORD?.trim() ?? "";
+}
+
+/**
+ * True when the current request carries a valid Akçakanat session cookie.
+ */
+export async function isBakcakanatAuthenticated(): Promise<boolean> {
+  const password = getBakcakanatPassword();
+  // No password configured -> gate is open.
+  if (!password) return true;
+  const cookieStore = await cookies();
+  const candidate = cookieStore.get(BAKCAKANAT_ACCESS_COOKIE)?.value ?? "";
+  return candidate.trim() === password;
+}
+
+/**
+ * Validates the supplied password and, when correct, persists it in an
+ * HttpOnly cookie scoped to /backcakanat. Returns whether sign-in succeeded.
+ */
+export async function signInBakcakanat(candidate: string): Promise<boolean> {
+  const password = getBakcakanatPassword();
+  if (!password) return true;
+  if (candidate.trim() !== password) return false;
+
+  const cookieStore = await cookies();
+  cookieStore.set(BAKCAKANAT_ACCESS_COOKIE, password, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/backcakanat",
+    maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
+  });
+
+  return true;
+}
+
+/**
+ * Clears the Akçakanat session cookie (sign out).
+ */
+export async function signOutBakcakanat(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete({ name: BAKCAKANAT_ACCESS_COOKIE, path: "/backcakanat" });
 }
