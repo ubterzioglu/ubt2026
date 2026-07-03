@@ -231,8 +231,19 @@ export async function signInBakcakanat(candidate: string): Promise<boolean> {
 
 /**
  * Clears the Akçakanat session cookie (sign out).
+ *
+ * Expires the cookie with the exact attributes used at sign-in instead of
+ * `cookies().delete()`: the plain deletion Set-Cookie carries no Secure/
+ * HttpOnly/SameSite flags, and browsers can refuse to drop a Secure cookie
+ * (set in production over HTTPS) without attribute parity.
  */
 export async function signOutBakcakanat(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete({ name: BAKCAKANAT_ACCESS_COOKIE, path: "/bakcakanat" });
+  cookieStore.set(BAKCAKANAT_ACCESS_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/bakcakanat",
+    maxAge: 0
+  });
 }
