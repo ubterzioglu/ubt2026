@@ -1,7 +1,0 @@
-{
-  "tool_name": "PowerShell",
-  "tool_input_preview": "{\"command\":\"node \\\"C:\\\\Users\\\\BARIS-~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--temp-private-ubt2026\\\\0a92fdea-3b9c-46b0-b6ee-5281deb47481\\\\scratchpad\\\\add-footer-domains.mjs\\\"\",\"description\":\"Verify all tar...",
-  "error": "Exit code 9\nExisting records: 28\nExisting domains: aianabasis.com, almanya101.de, aryateknoloji.com, askanai.online, bahcede.online, bilincsizsiniz.com, burakakcakanat.com.tr, calcom.club, corteqs.net, devpack.de, dragomanseakayak.com, ejsconsulting.org, firmascope.com, getstaketurk.com, hayrolsun.site, humanconsciousnessdecoded.com, hyped.today, kaanakcakanat.com.tr, londonschoolofcoaching.com, londonschoolofpsychology.com, or-ge.com.tr, payaltr.com, qualtronsinclair.com, samanakcakanat.com.tr,...",
-  "timestamp": "2026-07-03T08:53:52.592Z",
-  "retry_count": 1
-}
