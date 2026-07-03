@@ -251,6 +251,24 @@
       "type": "file"
     },
     {
+      "path": "next.config.ts",
+      "accessCount": 3,
+      "lastAccessed": 1783064572819,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 2,
+      "lastAccessed": 1783064531589,
+      "type": "directory"
+    },
+    {
+      "path": "Dockerfile",
+      "accessCount": 2,
+      "lastAccessed": 1783064570317,
+      "type": "file"
+    },
+    {
       "path": "app\\batubt\\page.tsx",
       "accessCount": 1,
       "lastAccessed": 1783063063746,
@@ -293,12 +311,6 @@
       "type": "file"
     },
     {
-      "path": "next.config.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783063158634,
-      "type": "file"
-    },
-    {
       "path": "supabase\\migrations\\20260703090000_create_akcakanat_domains.sql",
       "accessCount": 1,
       "lastAccessed": 1783063209183,
@@ -332,6 +344,18 @@
       "path": "app\\backcakanat\\page.tsx",
       "accessCount": 1,
       "lastAccessed": 1783063392700,
+      "type": "file"
+    },
+    {
+      "path": "coolify.md",
+      "accessCount": 1,
+      "lastAccessed": 1783064336154,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 1,
+      "lastAccessed": 1783064360825,
       "type": "file"
     }
   ],

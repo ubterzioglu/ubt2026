@@ -13,7 +13,7 @@ import { signInBakcakanat, signOutBakcakanat } from "@/lib/admin-auth";
 export async function bakcakanatSignInAction(formData: FormData): Promise<void> {
   const candidate = String(formData.get("access") ?? "");
   await signInBakcakanat(candidate);
-  redirect("/backcakanat" as Route);
+  redirect("/bakcakanat" as Route);
 }
 
 /**
@@ -21,5 +21,5 @@ export async function bakcakanatSignInAction(formData: FormData): Promise<void> 
  */
 export async function bakcakanatSignOutAction(): Promise<void> {
   await signOutBakcakanat();
-  redirect("/backcakanat" as Route);
+  redirect("/bakcakanat" as Route);
 }

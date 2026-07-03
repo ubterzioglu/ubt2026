@@ -1,7 +1,7 @@
 create extension if not exists "pgcrypto";
 
 -- Domain portfolio board for the Akçakanat sites, managed behind the
--- /backcakanat gate. Left column lists the site; the editable columns track
+-- /bakcakanat gate. Left column lists the site; the editable columns track
 -- where the domain is registered, where it is hosted, which email provider is
 -- attached and a free-form comment.
 -- Admin-managed only; not exposed to anon/authenticated readers.
@@ -37,7 +37,7 @@ for each row
 execute function public.set_akcakanat_domain_updated_at();
 
 -- RLS on, with NO select/insert/update/delete policy for anon/authenticated.
--- All access goes through the service-role client behind the /backcakanat gate.
+-- All access goes through the service-role client behind the /bakcakanat gate.
 alter table public.akcakanat_domains enable row level security;
 
 -- Seed the current portfolio. `on conflict do nothing` keeps re-runs safe and

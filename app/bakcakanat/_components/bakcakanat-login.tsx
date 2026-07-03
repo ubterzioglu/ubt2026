@@ -3,7 +3,7 @@ import {
   BAKCAKANAT_BRAND_GRADIENT,
   BAKCAKANAT_EMERALD,
   BAKCAKANAT_GRID_TEXTURE
-} from "@/app/backcakanat/_components/theme";
+} from "@/app/bakcakanat/_components/theme";
 
 interface BakcakanatLoginProps {
   /** Sign-in server action (handles its own redirect). */

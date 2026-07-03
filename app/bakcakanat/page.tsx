@@ -2,15 +2,15 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { isBakcakanatAuthenticated } from "@/lib/admin-auth";
-import { BakcakanatLogin } from "@/app/backcakanat/_components/bakcakanat-login";
+import { BakcakanatLogin } from "@/app/bakcakanat/_components/bakcakanat-login";
 import {
   bakcakanatSignInAction,
   bakcakanatSignOutAction
-} from "@/app/backcakanat/_actions";
+} from "@/app/bakcakanat/_actions";
 import {
   BAKCAKANAT_BRAND_GRADIENT,
   BAKCAKANAT_EMERALD
-} from "@/app/backcakanat/_components/theme";
+} from "@/app/bakcakanat/_components/theme";
 import {
   getAllAkcakanatDomainsAdmin,
   createAkcakanatDomain,
@@ -82,7 +82,7 @@ export default async function BakcakanatPage({
   async function createAction(formData: FormData) {
     "use server";
     if (!(await isBakcakanatAuthenticated())) {
-      redirect("/backcakanat" as Parameters<typeof redirect>[0]);
+      redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
     const outcome = await createAkcakanatDomain({
       site: (formData.get("site") as string | null) ?? "",
@@ -96,11 +96,11 @@ export default async function BakcakanatPage({
       )
     });
 
-    revalidatePath("/backcakanat");
+    revalidatePath("/bakcakanat");
     redirect(
       (outcome.ok
-        ? "/backcakanat?created=1"
-        : `/backcakanat?error=${encodeURIComponent(outcome.errorMessage ?? "Kayıt eklenemedi.")}`) as Parameters<
+        ? "/bakcakanat?created=1"
+        : `/bakcakanat?error=${encodeURIComponent(outcome.errorMessage ?? "Kayıt eklenemedi.")}`) as Parameters<
         typeof redirect
       >[0]
     );
@@ -109,11 +109,11 @@ export default async function BakcakanatPage({
   async function updateAction(formData: FormData) {
     "use server";
     if (!(await isBakcakanatAuthenticated())) {
-      redirect("/backcakanat" as Parameters<typeof redirect>[0]);
+      redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
     const id = (formData.get("id") as string | null) ?? "";
     if (!id) {
-      redirect("/backcakanat" as Parameters<typeof redirect>[0]);
+      redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
     const outcome = await updateAkcakanatDomain(id, {
       domainInfo: (formData.get("domainInfo") as string | null) ?? "",
@@ -122,11 +122,11 @@ export default async function BakcakanatPage({
       comment: (formData.get("comment") as string | null) ?? ""
     });
 
-    revalidatePath("/backcakanat");
+    revalidatePath("/bakcakanat");
     redirect(
       (outcome.ok
-        ? "/backcakanat?updated=1"
-        : `/backcakanat?error=${encodeURIComponent(outcome.errorMessage ?? "Kayıt güncellenemedi.")}`) as Parameters<
+        ? "/bakcakanat?updated=1"
+        : `/bakcakanat?error=${encodeURIComponent(outcome.errorMessage ?? "Kayıt güncellenemedi.")}`) as Parameters<
         typeof redirect
       >[0]
     );
@@ -135,14 +135,14 @@ export default async function BakcakanatPage({
   async function deleteAction(formData: FormData) {
     "use server";
     if (!(await isBakcakanatAuthenticated())) {
-      redirect("/backcakanat" as Parameters<typeof redirect>[0]);
+      redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
     const id = (formData.get("id") as string | null) ?? "";
     if (id) {
       await deleteAkcakanatDomain(id);
     }
-    revalidatePath("/backcakanat");
-    redirect("/backcakanat?deleted=1" as Parameters<typeof redirect>[0]);
+    revalidatePath("/bakcakanat");
+    redirect("/bakcakanat?deleted=1" as Parameters<typeof redirect>[0]);
   }
 
   const domains = result.items;

@@ -84,7 +84,7 @@ function createServiceClient() {
 
 /**
  * Returns every Akçakanat domain record ordered by manual sort_order, then
- * creation time. Admin-only (service-role) access behind the /backcakanat gate.
+ * creation time. Admin-only (service-role) access behind the /bakcakanat gate.
  */
 export async function getAllAkcakanatDomainsAdmin(): Promise<AkcakanatDomainsResult> {
   const supabase = createServiceClient();

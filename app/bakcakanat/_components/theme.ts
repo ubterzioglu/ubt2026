@@ -2,7 +2,7 @@
  * Akçakanat domain-board theme tokens. Palette: black (1) · emerald (2) ·
  * sky blue (3), with white text — deliberately distinct from the BatuBT
  * (yellow/violet) and DesireMap (magenta/cyan) boards. Scoped to the
- * `/backcakanat` route so it never touches the global site theme.
+ * `/bakcakanat` route so it never touches the global site theme.
  */
 
 /** Core accent hexes (kept as named constants so JSX can reference them). */

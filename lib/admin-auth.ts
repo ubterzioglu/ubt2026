@@ -28,7 +28,7 @@ export const TASKS_ADMIN_ACCESS_COOKIE = "ubt_tasks_admin_access";
 export const BATUBT_ADMIN_ACCESS_COOKIE = "ubt_batubt_access";
 
 /**
- * The Akçakanat domain board (/backcakanat) has its own password/cookie so it
+ * The Akçakanat domain board (/bakcakanat) has its own password/cookie so it
  * can be shared independently of every other admin key.
  */
 export const BAKCAKANAT_ACCESS_COOKIE = "ubt_bakcakanat_access";
@@ -210,7 +210,7 @@ export async function isBakcakanatAuthenticated(): Promise<boolean> {
 
 /**
  * Validates the supplied password and, when correct, persists it in an
- * HttpOnly cookie scoped to /backcakanat. Returns whether sign-in succeeded.
+ * HttpOnly cookie scoped to /bakcakanat. Returns whether sign-in succeeded.
  */
 export async function signInBakcakanat(candidate: string): Promise<boolean> {
   const password = getBakcakanatPassword();
@@ -222,7 +222,7 @@ export async function signInBakcakanat(candidate: string): Promise<boolean> {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
-    path: "/backcakanat",
+    path: "/bakcakanat",
     maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
   });
 
@@ -234,5 +234,5 @@ export async function signInBakcakanat(candidate: string): Promise<boolean> {
  */
 export async function signOutBakcakanat(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete({ name: BAKCAKANAT_ACCESS_COOKIE, path: "/backcakanat" });
+  cookieStore.delete({ name: BAKCAKANAT_ACCESS_COOKIE, path: "/bakcakanat" });
 }
