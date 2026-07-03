@@ -246,8 +246,8 @@
   "hotPaths": [
     {
       "path": "lib\\admin-auth.ts",
-      "accessCount": 6,
-      "lastAccessed": 1783065960365,
+      "accessCount": 14,
+      "lastAccessed": 1783069023037,
       "type": "file"
     },
     {
@@ -258,8 +258,8 @@
     },
     {
       "path": "",
-      "accessCount": 2,
-      "lastAccessed": 1783064531589,
+      "accessCount": 3,
+      "lastAccessed": 1783068960099,
       "type": "directory"
     },
     {
@@ -270,8 +270,26 @@
     },
     {
       "path": "app\\batubt\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783063063746,
+      "accessCount": 2,
+      "lastAccessed": 1783068750094,
+      "type": "file"
+    },
+    {
+      "path": "lib\\footer-clients.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783068761647,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260626130000_create_footer_clients.sql",
+      "accessCount": 2,
+      "lastAccessed": 1783068762634,
+      "type": "file"
+    },
+    {
+      "path": "lib\\appointments.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783069013422,
       "type": "file"
     },
     {
@@ -287,21 +305,9 @@
       "type": "file"
     },
     {
-      "path": "lib\\footer-clients.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783063094480,
-      "type": "file"
-    },
-    {
       "path": "app\\batubt\\_components\\theme.ts",
       "accessCount": 1,
       "lastAccessed": 1783063094952,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260626130000_create_footer_clients.sql",
-      "accessCount": 1,
-      "lastAccessed": 1783063104996,
       "type": "file"
     },
     {
@@ -356,6 +362,24 @@
       "path": "package.json",
       "accessCount": 1,
       "lastAccessed": 1783064360825,
+      "type": "file"
+    },
+    {
+      "path": "app\\batubt",
+      "accessCount": 1,
+      "lastAccessed": 1783068749605,
+      "type": "directory"
+    },
+    {
+      "path": ".env.local",
+      "accessCount": 1,
+      "lastAccessed": 1783068784537,
+      "type": "directory"
+    },
+    {
+      "path": "Domain_List.csv",
+      "accessCount": 1,
+      "lastAccessed": 1783068848623,
       "type": "file"
     }
   ],

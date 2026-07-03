@@ -249,8 +249,10 @@ export function getAdminAccessKey(): string | null {
 export function hasAdminAccess(candidate: string | null | undefined): boolean {
   const accessKey = getAdminAccessKey();
 
+  // Fail closed: a missing APPOINTMENT_ADMIN_ACCESS_KEY (e.g. forgotten on the
+  // production host) must never leave the admin panel publicly reachable.
   if (!accessKey) {
-    return true;
+    return false;
   }
 
   return candidate?.trim() === accessKey;

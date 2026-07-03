@@ -69,9 +69,9 @@ export async function isAdminAuthenticated(): Promise<boolean> {
 export async function signInAdmin(candidate: string): Promise<boolean> {
   const accessKey = getAdminAccessKey();
 
-  // No key configured -> the gate is open, nothing to store.
+  // Fail closed: without a configured key no sign-in is possible.
   if (!accessKey) {
-    return true;
+    return false;
   }
 
   if (candidate.trim() !== accessKey) {
@@ -91,11 +91,18 @@ export async function signInAdmin(candidate: string): Promise<boolean> {
 }
 
 /**
- * Clears the admin session cookie (sign out).
+ * Clears the admin session cookie (sign out). Expires it with the exact
+ * attributes used at sign-in — see signOutBakcakanat for why.
  */
 export async function signOutAdmin(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete({ name: ADMIN_ACCESS_COOKIE, path: "/admin" });
+  cookieStore.set(ADMIN_ACCESS_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/admin",
+    maxAge: 0
+  });
 }
 
 /**
@@ -103,8 +110,8 @@ export async function signOutAdmin(): Promise<void> {
  */
 export async function isTasksAdminAuthenticated(): Promise<boolean> {
   const accessKey = getTasksAdminAccessKey();
-  // No key configured anywhere -> gate is open.
-  if (!accessKey) return true;
+  // Fail closed: no key configured anywhere -> nobody gets in.
+  if (!accessKey) return false;
   const cookieStore = await cookies();
   const candidate = cookieStore.get(TASKS_ADMIN_ACCESS_COOKIE)?.value ?? "";
   return candidate.trim() === accessKey;
@@ -116,7 +123,8 @@ export async function isTasksAdminAuthenticated(): Promise<boolean> {
  */
 export async function signInTasksAdmin(candidate: string): Promise<boolean> {
   const accessKey = getTasksAdminAccessKey();
-  if (!accessKey) return true;
+  // Fail closed: without a configured key no sign-in is possible.
+  if (!accessKey) return false;
   if (candidate.trim() !== accessKey) return false;
 
   const cookieStore = await cookies();
@@ -132,11 +140,18 @@ export async function signInTasksAdmin(candidate: string): Promise<boolean> {
 }
 
 /**
- * Clears the task-board session cookie (sign out).
+ * Clears the task-board session cookie (sign out). Expires it with the exact
+ * attributes used at sign-in — see signOutBakcakanat for why.
  */
 export async function signOutTasksAdmin(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete({ name: TASKS_ADMIN_ACCESS_COOKIE, path: "/dm" });
+  cookieStore.set(TASKS_ADMIN_ACCESS_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/dm",
+    maxAge: 0
+  });
 }
 
 /**
@@ -152,8 +167,8 @@ function getBatubtAdminAccessKey(): string {
  */
 export async function isBatubtAuthenticated(): Promise<boolean> {
   const accessKey = getBatubtAdminAccessKey();
-  // No key configured -> gate is open.
-  if (!accessKey) return true;
+  // Fail closed: no key configured -> nobody gets in.
+  if (!accessKey) return false;
   const cookieStore = await cookies();
   const candidate = cookieStore.get(BATUBT_ADMIN_ACCESS_COOKIE)?.value ?? "";
   return candidate.trim() === accessKey;
@@ -165,7 +180,8 @@ export async function isBatubtAuthenticated(): Promise<boolean> {
  */
 export async function signInBatubt(candidate: string): Promise<boolean> {
   const accessKey = getBatubtAdminAccessKey();
-  if (!accessKey) return true;
+  // Fail closed: without a configured key no sign-in is possible.
+  if (!accessKey) return false;
   if (candidate.trim() !== accessKey) return false;
 
   const cookieStore = await cookies();
@@ -181,11 +197,18 @@ export async function signInBatubt(candidate: string): Promise<boolean> {
 }
 
 /**
- * Clears the BatuBT session cookie (sign out).
+ * Clears the BatuBT session cookie (sign out). Expires it with the exact
+ * attributes used at sign-in — see signOutBakcakanat for why.
  */
 export async function signOutBatubt(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete({ name: BATUBT_ADMIN_ACCESS_COOKIE, path: "/batubt" });
+  cookieStore.set(BATUBT_ADMIN_ACCESS_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/batubt",
+    maxAge: 0
+  });
 }
 
 /**
