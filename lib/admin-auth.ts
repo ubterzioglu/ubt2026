@@ -198,11 +198,14 @@ function getBakcakanatPassword(): string {
 
 /**
  * True when the current request carries a valid Akçakanat session cookie.
+ *
+ * Fails CLOSED: if BAKCAKANAT_PASSWORD is not configured (e.g. missing on the
+ * production host), nobody gets in — the board must never be publicly
+ * reachable just because an env var was forgotten.
  */
 export async function isBakcakanatAuthenticated(): Promise<boolean> {
   const password = getBakcakanatPassword();
-  // No password configured -> gate is open.
-  if (!password) return true;
+  if (!password) return false;
   const cookieStore = await cookies();
   const candidate = cookieStore.get(BAKCAKANAT_ACCESS_COOKIE)?.value ?? "";
   return candidate.trim() === password;
@@ -214,7 +217,8 @@ export async function isBakcakanatAuthenticated(): Promise<boolean> {
  */
 export async function signInBakcakanat(candidate: string): Promise<boolean> {
   const password = getBakcakanatPassword();
-  if (!password) return true;
+  // Fail closed: without a configured password no sign-in is possible.
+  if (!password) return false;
   if (candidate.trim() !== password) return false;
 
   const cookieStore = await cookies();

@@ -246,8 +246,8 @@
   "hotPaths": [
     {
       "path": "lib\\admin-auth.ts",
-      "accessCount": 4,
-      "lastAccessed": 1783065046580,
+      "accessCount": 6,
+      "lastAccessed": 1783065960365,
       "type": "file"
     },
     {
