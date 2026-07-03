@@ -251,6 +251,18 @@
       "type": "file"
     },
     {
+      "path": "lib\\akcakanat-domains.ts",
+      "accessCount": 8,
+      "lastAccessed": 1783088882894,
+      "type": "file"
+    },
+    {
+      "path": "app\\bakcakanat\\page.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1783088942849,
+      "type": "file"
+    },
+    {
       "path": "next.config.ts",
       "accessCount": 3,
       "lastAccessed": 1783064572819,
@@ -290,12 +302,6 @@
       "path": "lib\\appointments.ts",
       "accessCount": 2,
       "lastAccessed": 1783069013422,
-      "type": "file"
-    },
-    {
-      "path": "lib\\akcakanat-domains.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783070560733,
       "type": "file"
     },
     {
@@ -387,6 +393,12 @@
       "accessCount": 1,
       "lastAccessed": 1783070556037,
       "type": "directory"
+    },
+    {
+      "path": "supabase\\migrations\\20260703110000_add_priority_to_akcakanat_domains.sql",
+      "accessCount": 1,
+      "lastAccessed": 1783088812296,
+      "type": "file"
     }
   ],
   "userDirectives": []

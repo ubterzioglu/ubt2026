@@ -11,13 +11,14 @@ interface SupabaseAkcakanatDomainRow {
   hosting: string;
   email: string;
   comment: string;
+  priority: number;
   sort_order: number;
   created_at: string;
   updated_at: string;
 }
 
 const AKCAKANAT_DOMAIN_COLUMNS =
-  "id, site, domain_info, hosting, email, comment, sort_order, created_at, updated_at";
+  "id, site, domain_info, hosting, email, comment, priority, sort_order, created_at, updated_at";
 
 export interface AkcakanatDomainItem {
   id: string;
@@ -26,6 +27,8 @@ export interface AkcakanatDomainItem {
   hosting: string;
   email: string;
   comment: string;
+  /** Importance rank: 1 = most important, 10 = least important. */
+  priority: number;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -43,7 +46,15 @@ export interface AkcakanatDomainInput {
   hosting: string;
   email: string;
   comment: string;
+  /** Importance rank: 1 = most important, 10 = least important. */
+  priority: number;
   sortOrder: number;
+}
+
+/** Clamps an importance rank into the 1-10 range (5 when not a number). */
+export function clampAkcakanatPriority(value: number): number {
+  if (!Number.isFinite(value)) return 5;
+  return Math.min(10, Math.max(1, Math.trunc(value)));
 }
 
 export interface AkcakanatDomainMutationResult {
@@ -61,6 +72,7 @@ function toAkcakanatDomainItem(
     hosting: row.hosting ?? "",
     email: row.email ?? "",
     comment: row.comment ?? "",
+    priority: clampAkcakanatPriority(row.priority),
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     updatedAt: row.updated_at
@@ -83,8 +95,9 @@ function createServiceClient() {
 }
 
 /**
- * Returns every Akçakanat domain record ordered by manual sort_order, then
- * creation time. Admin-only (service-role) access behind the /bakcakanat gate.
+ * Returns every Akçakanat domain record ordered by importance (1 first), then
+ * manual sort_order, then creation time. Admin-only (service-role) access
+ * behind the /bakcakanat gate.
  */
 export async function getAllAkcakanatDomainsAdmin(): Promise<AkcakanatDomainsResult> {
   const supabase = createServiceClient();
@@ -93,6 +106,7 @@ export async function getAllAkcakanatDomainsAdmin(): Promise<AkcakanatDomainsRes
     const { data, error } = await supabase
       .from("akcakanat_domains")
       .select(AKCAKANAT_DOMAIN_COLUMNS)
+      .order("priority", { ascending: true })
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: true });
     if (error) throw error;
@@ -129,6 +143,7 @@ export async function createAkcakanatDomain(
       hosting: input.hosting.trim(),
       email: input.email.trim(),
       comment: input.comment.trim(),
+      priority: clampAkcakanatPriority(input.priority),
       sort_order: Number.isFinite(input.sortOrder) ? input.sortOrder : 0
     });
     if (error) throw error;
@@ -165,6 +180,9 @@ export async function updateAkcakanatDomain(
     if (input.hosting !== undefined) patch.hosting = input.hosting.trim();
     if (input.email !== undefined) patch.email = input.email.trim();
     if (input.comment !== undefined) patch.comment = input.comment.trim();
+    if (input.priority !== undefined) {
+      patch.priority = clampAkcakanatPriority(input.priority);
+    }
     if (input.sortOrder !== undefined) {
       patch.sort_order = Number.isFinite(input.sortOrder) ? input.sortOrder : 0;
     }

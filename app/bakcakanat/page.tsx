@@ -15,7 +15,8 @@ import {
   getAllAkcakanatDomainsAdmin,
   createAkcakanatDomain,
   updateAkcakanatDomain,
-  deleteAkcakanatDomain
+  deleteAkcakanatDomain,
+  clampAkcakanatPriority
 } from "@/lib/akcakanat-domains";
 import type { AkcakanatDomainItem } from "@/lib/akcakanat-domains";
 
@@ -47,10 +48,22 @@ const darkInput =
 const mobileLabel =
   "mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40 md:hidden";
 
-// One grid template shared by the header row and every data row so the
-// columns stay perfectly aligned: site | domain | hosting | email | yorum | actions.
+// One grid template shared by the header row and every data row so the columns
+// stay perfectly aligned: site | önem | domain | hosting | email | yorum | actions.
 const ROW_GRID =
-  "md:grid-cols-[minmax(190px,1.1fr)_1fr_1fr_1fr_1.3fr_auto]";
+  "md:grid-cols-[minmax(170px,1fr)_92px_1fr_1fr_1fr_1.3fr_auto]";
+
+// Importance rank options: 1 = most important, 10 = least important.
+const PRIORITY_OPTIONS = Array.from({ length: 10 }, (_, index) => {
+  const value = index + 1;
+  const label =
+    value === 1 ? "1 · en önemli" : value === 10 ? "10 · en önemsiz" : `${value}`;
+  return { value, label };
+});
+
+function parsePriority(value: string): number {
+  return clampAkcakanatPriority(Number.parseInt(value, 10));
+}
 
 export default async function BakcakanatPage({
   searchParams
@@ -90,6 +103,7 @@ export default async function BakcakanatPage({
       hosting: (formData.get("hosting") as string | null) ?? "",
       email: (formData.get("email") as string | null) ?? "",
       comment: (formData.get("comment") as string | null) ?? "",
+      priority: parsePriority((formData.get("priority") as string | null) ?? "5"),
       sortOrder: Number.parseInt(
         (formData.get("sortOrder") as string | null) ?? "0",
         10
@@ -119,7 +133,8 @@ export default async function BakcakanatPage({
       domainInfo: (formData.get("domainInfo") as string | null) ?? "",
       hosting: (formData.get("hosting") as string | null) ?? "",
       email: (formData.get("email") as string | null) ?? "",
-      comment: (formData.get("comment") as string | null) ?? ""
+      comment: (formData.get("comment") as string | null) ?? "",
+      priority: parsePriority((formData.get("priority") as string | null) ?? "5")
     });
 
     revalidatePath("/bakcakanat");
@@ -362,6 +377,22 @@ export default async function BakcakanatPage({
               </label>
               <label className="block">
                 <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Önem sırası
+                </span>
+                <select name="priority" defaultValue={5} className={darkInput}>
+                  {PRIORITY_OPTIONS.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                      className="bg-[#0b0f0e] text-white"
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
                   Sıra
                 </span>
                 <input
@@ -388,7 +419,7 @@ export default async function BakcakanatPage({
           <div
             className={`hidden gap-3 border-b border-white/10 px-5 py-3 md:grid ${ROW_GRID}`}
           >
-            {["Site", "Domain", "Hosting", "Email", "Yorum", ""].map(
+            {["Site", "Önem", "Domain", "Hosting", "Email", "Yorum", ""].map(
               (heading, index) => (
                 <span
                   key={`${heading}-${index}`}
@@ -460,6 +491,25 @@ function DomainRow({ item, updateAction, deleteAction }: DomainRowProps) {
         )}
       </div>
 
+      <div>
+        <span className={mobileLabel}>Önem</span>
+        <select
+          name="priority"
+          defaultValue={item.priority}
+          className={darkInput}
+          title="1 en önemli · 10 en önemsiz"
+        >
+          {PRIORITY_OPTIONS.map((option) => (
+            <option
+              key={option.value}
+              value={option.value}
+              className="bg-[#0b0f0e] text-white"
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
       <div>
         <span className={mobileLabel}>Domain</span>
         <input
