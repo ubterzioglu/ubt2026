@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1783062205725,
+  "lastScanned": 1783165047069,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -56,7 +56,7 @@
   },
   "conventions": {
     "namingStyle": "camelCase",
-    "importStyle": "ES modules",
+    "importStyle": null,
     "testPattern": null,
     "fileOrganization": null
   },
@@ -82,7 +82,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1783062205679,
+      "lastAccessed": 1783165047001,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -95,7 +95,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1783062205680,
+      "lastAccessed": 1783165047001,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -105,7 +105,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1783062205681,
+      "lastAccessed": 1783165047004,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -118,7 +118,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1783062205682,
+      "lastAccessed": 1783165047004,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -131,7 +131,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783062205701,
+      "lastAccessed": 1783165047005,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -142,14 +142,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1783062205702,
+      "lastAccessed": 1783165047005,
       "keyFiles": []
     },
     "experience": {
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783062205702,
+      "lastAccessed": 1783165047005,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -159,21 +159,21 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 16,
-      "lastAccessed": 1783062205702,
+      "fileCount": 17,
+      "lastAccessed": 1783165047006,
       "keyFiles": [
         "admin-auth.ts",
+        "akcakanat-domains.ts",
         "appointment-url.ts",
         "appointments.ts",
-        "blog-posts.ts",
-        "cv-review-url.ts"
+        "blog-posts.ts"
       ]
     },
     "ppimage": {
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1783062205703,
+      "lastAccessed": 1783165047006,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -186,7 +186,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1783062205703,
+      "lastAccessed": 1783165047006,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -197,7 +197,7 @@
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 2,
-      "lastAccessed": 1783062205703,
+      "lastAccessed": 1783165047006,
       "keyFiles": [
         "convert-cvopt-to-reviews.mjs",
         "migrate-cvopt-participants.mjs"
@@ -207,7 +207,7 @@
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783062205704,
+      "lastAccessed": 1783165047007,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -217,7 +217,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1783062205704,
+      "lastAccessed": 1783165047007,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -228,14 +228,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1783062205705,
+      "lastAccessed": 1783165047007,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
-      "fileCount": 20,
-      "lastAccessed": 1783062205708,
+      "fileCount": 22,
+      "lastAccessed": 1783165047009,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -243,163 +243,6 @@
       ]
     }
   },
-  "hotPaths": [
-    {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 14,
-      "lastAccessed": 1783069023037,
-      "type": "file"
-    },
-    {
-      "path": "lib\\akcakanat-domains.ts",
-      "accessCount": 8,
-      "lastAccessed": 1783088882894,
-      "type": "file"
-    },
-    {
-      "path": "app\\bakcakanat\\page.tsx",
-      "accessCount": 8,
-      "lastAccessed": 1783088942849,
-      "type": "file"
-    },
-    {
-      "path": "next.config.ts",
-      "accessCount": 3,
-      "lastAccessed": 1783064572819,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 3,
-      "lastAccessed": 1783068960099,
-      "type": "directory"
-    },
-    {
-      "path": "Dockerfile",
-      "accessCount": 2,
-      "lastAccessed": 1783064570317,
-      "type": "file"
-    },
-    {
-      "path": "app\\batubt\\page.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1783068750094,
-      "type": "file"
-    },
-    {
-      "path": "lib\\footer-clients.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783068761647,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260626130000_create_footer_clients.sql",
-      "accessCount": 2,
-      "lastAccessed": 1783068762634,
-      "type": "file"
-    },
-    {
-      "path": "lib\\appointments.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783069013422,
-      "type": "file"
-    },
-    {
-      "path": "app\\batubt\\_actions.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783063064034,
-      "type": "file"
-    },
-    {
-      "path": "app\\batubt\\_components\\batubt-login.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783063083626,
-      "type": "file"
-    },
-    {
-      "path": "app\\batubt\\_components\\theme.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783063094952,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\theme.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783063144418,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260703090000_create_akcakanat_domains.sql",
-      "accessCount": 1,
-      "lastAccessed": 1783063209183,
-      "type": "file"
-    },
-    {
-      "path": "app\\backcakanat\\_components\\theme.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783063268726,
-      "type": "file"
-    },
-    {
-      "path": "app\\backcakanat\\_actions.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783063271515,
-      "type": "file"
-    },
-    {
-      "path": "app\\backcakanat\\_components\\bakcakanat-login.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783063317656,
-      "type": "file"
-    },
-    {
-      "path": "app\\backcakanat\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783063392700,
-      "type": "file"
-    },
-    {
-      "path": "coolify.md",
-      "accessCount": 1,
-      "lastAccessed": 1783064336154,
-      "type": "file"
-    },
-    {
-      "path": "package.json",
-      "accessCount": 1,
-      "lastAccessed": 1783064360825,
-      "type": "file"
-    },
-    {
-      "path": "app\\batubt",
-      "accessCount": 1,
-      "lastAccessed": 1783068749605,
-      "type": "directory"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 1,
-      "lastAccessed": 1783068784537,
-      "type": "directory"
-    },
-    {
-      "path": "Domain_List.csv",
-      "accessCount": 1,
-      "lastAccessed": 1783068848623,
-      "type": "file"
-    },
-    {
-      "path": "app\\bakcakanat",
-      "accessCount": 1,
-      "lastAccessed": 1783070556037,
-      "type": "directory"
-    },
-    {
-      "path": "supabase\\migrations\\20260703110000_add_priority_to_akcakanat_domains.sql",
-      "accessCount": 1,
-      "lastAccessed": 1783088812296,
-      "type": "file"
-    }
-  ],
+  "hotPaths": [],
   "userDirectives": []
 }
