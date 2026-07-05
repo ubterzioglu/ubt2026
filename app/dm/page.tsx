@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -9,6 +8,9 @@ import { TaskTable } from "@/app/dm/_components/task-table";
 import { FindingsTab } from "@/app/dm/_components/findings-tab";
 import { SocialTab } from "@/app/dm/_components/social-tab";
 import { InfoTab } from "@/app/dm/_components/info-tab";
+import { DmNav } from "@/app/dm/_components/dm-nav";
+import type { DmTabKey } from "@/app/dm/_components/dm-nav";
+import { ScraperTab } from "@/app/dm/_components/scraper-tab";
 import {
   DM_AMBIENT_BACKGROUND,
   DM_BRAND_GRADIENT,
@@ -34,12 +36,27 @@ import {
   normalizeFindingSeverity
 } from "@/lib/test-findings";
 import { getAllSocialPostsAdmin, setPostShared } from "@/lib/social-posts";
+import {
+  getRadarCandidateCountsAdmin,
+  getRadarCandidatesAdmin,
+  getRadarRunsAdmin,
+  getRadarSourcesAdmin,
+  normalizeRadarReviewStatus,
+  runRadarScanAdmin,
+  setRadarCandidateStatusAdmin,
+  setRadarSourceEnabledAdmin
+} from "@/lib/radar-news";
+import type { RadarReviewStatus } from "@/lib/radar-news";
 import type {
   ProjectTaskPriority,
   ProjectTaskStatus,
   TestFindingSeverity,
   TestFindingStatus
 } from "@/types/site";
+
+// Radar taraması kaynaklar arası rate-limit beklemeleriyle dakikaya yaklaşır;
+// server action'ın Vercel'de erken kesilmemesi için segment süresini yükselt.
+export const maxDuration = 300;
 
 interface DmPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -69,6 +86,31 @@ const PRIORITY_OPTIONS: { value: ProjectTaskPriority; label: string }[] = [
 ];
 
 const OWNER_OPTIONS = ["Umut", "Baran", "Şahin", "Ortak", "Backlog"];
+
+// Per-section header copy for the content column.
+const SECTION_META: Record<DmTabKey, { title: string; description: string }> = {
+  tasks: {
+    title: "Görevler",
+    description: "Sahiplik, öncelik ve durum takibiyle DesireMap görev panosu."
+  },
+  findings: {
+    title: "Test bulguları",
+    description:
+      "Test sırasında yakalanan bulgular, ekran görüntüleri ve yorum akışı."
+  },
+  social: {
+    title: "İçerik",
+    description: "Sosyal içerik planı ve platform bazlı paylaşım durumu."
+  },
+  info: {
+    title: "Önemli bilgiler",
+    description: "Ekip için kritik erişim bilgileri ve referanslar."
+  },
+  scraper: {
+    title: "Scraper",
+    description: "Veri çekme hattı — kaynaklar, zamanlama ve çekim durumu."
+  }
+};
 
 const STATUS_BADGE: Record<ProjectTaskStatus, string> = {
   todo: "border border-white/[0.14] bg-gradient-to-b from-white/[0.10] to-white/[0.02] text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
@@ -157,14 +199,16 @@ export default async function DmPage({ searchParams }: DmPageProps) {
   }
 
   const tabParam = readParam(params.tab);
-  const activeTab: "tasks" | "findings" | "social" | "info" =
+  const activeTab: DmTabKey =
     tabParam === "findings"
       ? "findings"
       : tabParam === "social"
         ? "social"
         : tabParam === "info"
           ? "info"
-          : "tasks";
+          : tabParam === "scraper"
+            ? "scraper"
+            : "tasks";
   const createdParam = readParam(params.created);
   const updatedParam = readParam(params.updated);
   const errorParam = readParam(params.error);
@@ -194,6 +238,23 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   // Social content posts — fetched regardless so the tab badge stays accurate.
   const socialResult = await getAllSocialPostsAdmin();
+
+  // Radar scraper — sayaçlar her zaman (nav rozeti), detay sadece kendi sekmesinde.
+  const radarCounts = await getRadarCandidateCountsAdmin();
+  const radarStatusParam = readParam(params.rstatus);
+  const radarStatusFilter: RadarReviewStatus | "all" =
+    radarStatusParam === "all"
+      ? "all"
+      : radarStatusParam
+        ? normalizeRadarReviewStatus(radarStatusParam)
+        : "pending";
+  const radarSources = activeTab === "scraper" ? await getRadarSourcesAdmin() : [];
+  const radarRuns = activeTab === "scraper" ? await getRadarRunsAdmin(8) : [];
+  const radarCandidates =
+    activeTab === "scraper"
+      ? await getRadarCandidatesAdmin(radarStatusFilter, 60)
+      : [];
+  const scanOkParam = readParam(params.scanok);
 
   async function createAction(formData: FormData) {
     "use server";
@@ -415,6 +476,56 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     redirect("/dm?tab=social" as Parameters<typeof redirect>[0]);
   }
 
+  // --- Radar scraper actions ---
+
+  async function radarScanAction() {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const result = await runRadarScanAdmin("manual");
+    revalidatePath("/dm");
+    const target = result.ok
+      ? `/dm?tab=scraper&scanok=${result.summary?.insertedCount ?? 0}`
+      : `/dm?tab=scraper&error=${encodeURIComponent(result.errorMessage ?? "Tarama başarısız.")}`;
+    redirect(target as Parameters<typeof redirect>[0]);
+  }
+
+  async function radarCandidateStatusAction(formData: FormData) {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    const status = normalizeRadarReviewStatus(
+      (formData.get("status") as string | null) ?? "pending"
+    );
+    const backFilter = (formData.get("rstatus") as string | null) ?? "pending";
+    if (id) {
+      await setRadarCandidateStatusAdmin(id, status);
+    }
+    revalidatePath("/dm");
+    redirect(
+      `/dm?tab=scraper&rstatus=${encodeURIComponent(backFilter)}` as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function radarSourceToggleAction(formData: FormData) {
+    "use server";
+    if (!(await isTasksAdminAuthenticated())) {
+      redirect("/dm" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    const enabled = (formData.get("enabled") as string | null) === "1";
+    if (id) {
+      await setRadarSourceEnabledAdmin(id, enabled);
+    }
+    revalidatePath("/dm");
+    redirect("/dm?tab=scraper" as Parameters<typeof redirect>[0]);
+  }
+
   const allTasks = tasksResult.items;
   const owners = Array.from(new Set(allTasks.map((task) => task.owner)));
 
@@ -461,144 +572,45 @@ export default async function DmPage({ searchParams }: DmPageProps) {
         style={{ background: "rgba(168,85,247,0.16)" }}
       />
 
-      <div className="animate-reveal mx-auto flex max-w-6xl flex-col gap-6">
-        {/* Header — large hero */}
-        <section className={cardClass}>
-          <div className={`${cardInnerClass} relative overflow-hidden`}>
-            {/* Hero image */}
-            <div className="relative h-56 w-full sm:h-72 lg:h-[22rem]">
-              <Image
-                src="/dm/listehero.png"
-                alt="DesireMap ekibi"
-                fill
-                priority
-                sizes="(min-width: 1024px) 1100px, 100vw"
-                className="object-cover object-top"
-              />
-              {/* Neon brand wash to fuse the photo with the palette */}
-              <div
-                aria-hidden
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(115deg, rgba(255,45,149,0.20) 0%, rgba(168,85,247,0.06) 50%, rgba(34,211,238,0.18) 100%)"
-                }}
-              />
-              {/* Bottom scrim for legibility — kept low so faces stay clear */}
-              <div
-                aria-hidden
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(180deg, rgba(10,7,18,0) 58%, rgba(10,7,18,0.45) 80%, rgba(10,7,18,0.95) 100%)"
-                }}
-              />
-              {/* Top sheen */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
-              />
-            </div>
+      <div className="animate-reveal mx-auto w-full max-w-[88rem] lg:grid lg:grid-cols-[250px_minmax(0,1fr)] lg:items-start lg:gap-6">
+        {/* Left navigation — sidebar on desktop, top bar + strip on mobile */}
+        <DmNav
+          activeTab={activeTab}
+          items={[
+            { key: "tasks", label: "Görevler", count: allTasks.length },
+            {
+              key: "findings",
+              label: "Test bulguları",
+              count: allFindings.length
+            },
+            { key: "social", label: "İçerik", count: allSocialPosts.length },
+            { key: "info", label: "Önemli bilgiler", count: 6 },
+            { key: "scraper", label: "Scraper", count: radarCounts.pending }
+          ]}
+          cardClass={cardClass}
+          cardInnerClass={cardInnerClass}
+          signOutAction={tasksSignOutAction}
+        />
 
-            {/* Overlaid header content */}
-            <div className="absolute inset-x-0 bottom-0 px-5 py-4 sm:px-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <span
-                  className="relative flex h-9 w-9 items-center justify-center rounded-xl shadow-lg shadow-[#ff2d95]/30 ring-1 ring-white/15"
-                  style={{ backgroundImage: DM_BRAND_GRADIENT }}
-                >
-                  <span className="font-body text-sm font-extrabold tracking-tight text-white">
-                    D
-                  </span>
-                  <span className="absolute -inset-px rounded-xl ring-1 ring-inset ring-white/10" />
-                </span>
-                <div className="leading-tight">
-                  <p
-                    className="text-[9px] font-semibold uppercase tracking-[0.28em]"
-                    style={{ color: "#f0abfc" }}
-                  >
-                    Proje yönetimi
-                  </p>
-                  <h1 className="mt-0.5 font-body text-[clamp(1.1rem,2.6vw,1.5rem)] font-bold tracking-[-0.035em] text-white">
-                    Görev panosu
-                  </h1>
-                </div>
-              </div>
-              <div className="flex flex-wrap items-center gap-2.5">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
-                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  </span>
-                  Secure
-                </span>
-                <form action={tasksSignOutAction}>
-                  <button
-                    type="submit"
-                    className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white/80 transition hover:border-rose-400/40 hover:text-rose-300"
-                  >
-                    Çıkış yap
-                  </button>
-                </form>
-              </div>
+        {/* Content column */}
+        <div className="mt-5 flex min-w-0 flex-col gap-5 lg:mt-0">
+          {/* Active section header */}
+          <section className={cardClass}>
+            <div className={`${cardInnerClass} px-5 py-4 sm:px-6`}>
+              <p
+                className="text-[9px] font-semibold uppercase tracking-[0.28em]"
+                style={{ color: "#f0abfc" }}
+              >
+                DesireMap · iç panel
+              </p>
+              <h1 className="mt-1 font-body text-[clamp(1.15rem,2.6vw,1.5rem)] font-bold tracking-[-0.035em] text-white">
+                {SECTION_META[activeTab].title}
+              </h1>
+              <p className="mt-1 text-xs leading-5 text-white/50">
+                {SECTION_META[activeTab].description}
+              </p>
             </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Tab strip */}
-        <nav className={cardClass}>
-          <div className={`${cardInnerClass} flex gap-1.5 p-1.5`}>
-            {(
-              [
-                { key: "tasks", label: "Görevler", count: allTasks.length },
-                {
-                  key: "findings",
-                  label: "Test bulguları",
-                  count: allFindings.length
-                },
-                {
-                  key: "social",
-                  label: "İçerik",
-                  count: allSocialPosts.length
-                },
-                {
-                  key: "info",
-                  label: "Önemli bilgiler",
-                  count: 6
-                }
-              ] as const
-            ).map((tab) => {
-              const isActive = activeTab === tab.key;
-              return (
-                <a
-                  key={tab.key}
-                  href={`/dm?tab=${tab.key}`}
-                  className={`flex flex-1 items-center justify-center gap-2 rounded-[1.1rem] px-4 py-2.5 text-xs font-semibold tracking-tight transition ${
-                    isActive
-                      ? "text-white shadow-[0_10px_30px_-10px_rgba(255,45,149,0.7)] ring-1 ring-inset ring-white/15"
-                      : "text-white/55 hover:bg-white/[0.04] hover:text-white"
-                  }`}
-                  style={
-                    isActive ? { backgroundImage: DM_BRAND_GRADIENT } : undefined
-                  }
-                >
-                  {tab.label}
-                  <span
-                    className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums ${
-                      isActive
-                        ? "bg-white/20 text-white"
-                        : "bg-white/[0.06] text-white/50"
-                    }`}
-                  >
-                    {tab.count}
-                  </span>
-                </a>
-              );
-            })}
-          </div>
-        </nav>
+          </section>
 
         {createdParam === "1" && (
           <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-xs font-medium text-emerald-300">
@@ -608,6 +620,11 @@ export default async function DmPage({ searchParams }: DmPageProps) {
         {updatedParam === "1" && (
           <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-xs font-medium text-emerald-300">
             {activeTab === "findings" ? "Bulgu güncellendi." : "Görev güncellendi."}
+          </div>
+        )}
+        {scanOkParam !== "" && (
+          <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-xs font-medium text-emerald-300">
+            Tarama tamamlandı — {scanOkParam} yeni aday kuyruğa eklendi.
           </div>
         )}
         {errorParam ? (
@@ -626,7 +643,10 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             { label: "İlk 5", value: top5Count },
             { label: "Sorumlu", value: owners.length }
           ].map((stat) => (
-            <article key={stat.label} className={cardClass}>
+            <article
+              key={stat.label}
+              className={`${cardClass} transition duration-300 hover:-translate-y-0.5`}
+            >
               <div className={`${cardInnerClass} px-4 py-3`}>
                 <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#f0abfc]/90">
                   {stat.label}
@@ -885,9 +905,23 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             cardInnerClass={cardInnerClass}
             toggleShareAction={toggleShareAction}
           />
-        ) : (
+        ) : activeTab === "info" ? (
           <InfoTab cardClass={cardClass} cardInnerClass={cardInnerClass} />
+        ) : (
+          <ScraperTab
+            sources={radarSources}
+            runs={radarRuns}
+            candidates={radarCandidates}
+            counts={radarCounts}
+            statusFilter={radarStatusFilter}
+            cardClass={cardClass}
+            cardInnerClass={cardInnerClass}
+            scanAction={radarScanAction}
+            candidateStatusAction={radarCandidateStatusAction}
+            sourceToggleAction={radarSourceToggleAction}
+          />
         )}
+        </div>
       </div>
     </main>
   );
