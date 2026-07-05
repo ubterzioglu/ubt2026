@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1783165047069,
+  "lastScanned": 1783262655925,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -82,7 +82,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1783165047001,
+      "lastAccessed": 1783262655855,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -95,7 +95,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1783165047001,
+      "lastAccessed": 1783262655856,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -105,7 +105,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1783165047004,
+      "lastAccessed": 1783262655857,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -118,7 +118,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1783165047004,
+      "lastAccessed": 1783262655890,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -131,7 +131,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783165047005,
+      "lastAccessed": 1783262655891,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -142,14 +142,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1783165047005,
+      "lastAccessed": 1783262655891,
       "keyFiles": []
     },
     "experience": {
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783165047005,
+      "lastAccessed": 1783262655892,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -160,7 +160,7 @@
       "path": "lib",
       "purpose": "Library code",
       "fileCount": 17,
-      "lastAccessed": 1783165047006,
+      "lastAccessed": 1783262655892,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -173,7 +173,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1783165047006,
+      "lastAccessed": 1783262655893,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -186,7 +186,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1783165047006,
+      "lastAccessed": 1783262655893,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -197,7 +197,7 @@
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 2,
-      "lastAccessed": 1783165047006,
+      "lastAccessed": 1783262655894,
       "keyFiles": [
         "convert-cvopt-to-reviews.mjs",
         "migrate-cvopt-participants.mjs"
@@ -207,7 +207,7 @@
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783165047007,
+      "lastAccessed": 1783262655894,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -217,7 +217,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1783165047007,
+      "lastAccessed": 1783262655895,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -228,14 +228,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1783165047007,
+      "lastAccessed": 1783262655896,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
       "fileCount": 22,
-      "lastAccessed": 1783165047009,
+      "lastAccessed": 1783262655899,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -243,6 +243,25 @@
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "lib\\akcakanat-domains.ts",
+      "accessCount": 7,
+      "lastAccessed": 1783262880014,
+      "type": "file"
+    },
+    {
+      "path": "app\\bakcakanat\\page.tsx",
+      "accessCount": 6,
+      "lastAccessed": 1783262948959,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260705120000_add_ops_columns_to_akcakanat_domains.sql",
+      "accessCount": 1,
+      "lastAccessed": 1783262789511,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }
