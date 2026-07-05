@@ -143,6 +143,25 @@ export async function getAllAkcakanatDomainsAdmin(): Promise<AkcakanatDomainsRes
   }
 }
 
+export async function getAkcakanatDomainByIdAdmin(
+  id: string
+): Promise<AkcakanatDomainItem | null> {
+  const supabase = createServiceClient();
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase
+      .from("akcakanat_domains")
+      .select(AKCAKANAT_DOMAIN_COLUMNS)
+      .eq("id", id)
+      .maybeSingle();
+    if (error) throw error;
+    if (!data) return null;
+    return toAkcakanatDomainItem(data as SupabaseAkcakanatDomainRow);
+  } catch {
+    return null;
+  }
+}
+
 export async function createAkcakanatDomain(
   input: AkcakanatDomainInput
 ): Promise<AkcakanatDomainMutationResult> {
