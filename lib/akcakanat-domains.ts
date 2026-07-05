@@ -10,6 +10,10 @@ interface SupabaseAkcakanatDomainRow {
   domain_info: string;
   hosting: string;
   email: string;
+  has_email: boolean;
+  redirect_to: string;
+  payment_days: string;
+  payment_method: string;
   comment: string;
   priority: number;
   sort_order: number;
@@ -18,7 +22,7 @@ interface SupabaseAkcakanatDomainRow {
 }
 
 const AKCAKANAT_DOMAIN_COLUMNS =
-  "id, site, domain_info, hosting, email, comment, priority, sort_order, created_at, updated_at";
+  "id, site, domain_info, hosting, email, has_email, redirect_to, payment_days, payment_method, comment, priority, sort_order, created_at, updated_at";
 
 export interface AkcakanatDomainItem {
   id: string;
@@ -26,6 +30,14 @@ export interface AkcakanatDomainItem {
   domainInfo: string;
   hosting: string;
   email: string;
+  /** Whether the domain has a mailbox (var/yok). */
+  hasEmail: boolean;
+  /** Forwarding target; empty string means no redirect. */
+  redirectTo: string;
+  /** Renewal/payment due dates, free text. */
+  paymentDays: string;
+  /** How the domain is paid, e.g. "sanal kart". */
+  paymentMethod: string;
   comment: string;
   /** Importance rank: 1 = most important, 10 = least important. */
   priority: number;
@@ -45,6 +57,10 @@ export interface AkcakanatDomainInput {
   domainInfo: string;
   hosting: string;
   email: string;
+  hasEmail: boolean;
+  redirectTo: string;
+  paymentDays: string;
+  paymentMethod: string;
   comment: string;
   /** Importance rank: 1 = most important, 10 = least important. */
   priority: number;
@@ -71,6 +87,10 @@ function toAkcakanatDomainItem(
     domainInfo: row.domain_info ?? "",
     hosting: row.hosting ?? "",
     email: row.email ?? "",
+    hasEmail: Boolean(row.has_email),
+    redirectTo: row.redirect_to ?? "",
+    paymentDays: row.payment_days ?? "",
+    paymentMethod: row.payment_method ?? "",
     comment: row.comment ?? "",
     priority: clampAkcakanatPriority(row.priority),
     sortOrder: row.sort_order,
@@ -142,6 +162,10 @@ export async function createAkcakanatDomain(
       domain_info: input.domainInfo.trim(),
       hosting: input.hosting.trim(),
       email: input.email.trim(),
+      has_email: input.hasEmail,
+      redirect_to: input.redirectTo.trim(),
+      payment_days: input.paymentDays.trim(),
+      payment_method: input.paymentMethod.trim(),
       comment: input.comment.trim(),
       priority: clampAkcakanatPriority(input.priority),
       sort_order: Number.isFinite(input.sortOrder) ? input.sortOrder : 0
@@ -179,6 +203,16 @@ export async function updateAkcakanatDomain(
     }
     if (input.hosting !== undefined) patch.hosting = input.hosting.trim();
     if (input.email !== undefined) patch.email = input.email.trim();
+    if (input.hasEmail !== undefined) patch.has_email = input.hasEmail;
+    if (input.redirectTo !== undefined) {
+      patch.redirect_to = input.redirectTo.trim();
+    }
+    if (input.paymentDays !== undefined) {
+      patch.payment_days = input.paymentDays.trim();
+    }
+    if (input.paymentMethod !== undefined) {
+      patch.payment_method = input.paymentMethod.trim();
+    }
     if (input.comment !== undefined) patch.comment = input.comment.trim();
     if (input.priority !== undefined) {
       patch.priority = clampAkcakanatPriority(input.priority);

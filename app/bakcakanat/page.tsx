@@ -47,6 +47,9 @@ const darkInput =
   "w-full rounded-[0.7rem] border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#34D399]/55 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#34D399]/12";
 const mobileLabel =
   "mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40 md:hidden";
+// Always-visible label for the second detail line (it has no table header row).
+const subLabel =
+  "mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40";
 
 // One grid template shared by the header row and every data row so the columns
 // stay perfectly aligned: site | önem | domain | hosting | email | yorum | actions.
@@ -102,6 +105,10 @@ export default async function BakcakanatPage({
       domainInfo: (formData.get("domainInfo") as string | null) ?? "",
       hosting: (formData.get("hosting") as string | null) ?? "",
       email: (formData.get("email") as string | null) ?? "",
+      hasEmail: ((formData.get("hasEmail") as string | null) ?? "0") === "1",
+      redirectTo: (formData.get("redirectTo") as string | null) ?? "",
+      paymentDays: (formData.get("paymentDays") as string | null) ?? "",
+      paymentMethod: (formData.get("paymentMethod") as string | null) ?? "",
       comment: (formData.get("comment") as string | null) ?? "",
       priority: parsePriority((formData.get("priority") as string | null) ?? "5"),
       sortOrder: Number.parseInt(
@@ -133,6 +140,10 @@ export default async function BakcakanatPage({
       domainInfo: (formData.get("domainInfo") as string | null) ?? "",
       hosting: (formData.get("hosting") as string | null) ?? "",
       email: (formData.get("email") as string | null) ?? "",
+      hasEmail: ((formData.get("hasEmail") as string | null) ?? "0") === "1",
+      redirectTo: (formData.get("redirectTo") as string | null) ?? "",
+      paymentDays: (formData.get("paymentDays") as string | null) ?? "",
+      paymentMethod: (formData.get("paymentMethod") as string | null) ?? "",
       comment: (formData.get("comment") as string | null) ?? "",
       priority: parsePriority((formData.get("priority") as string | null) ?? "5")
     });
@@ -365,6 +376,55 @@ export default async function BakcakanatPage({
               </label>
               <label className="block">
                 <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Email var mı?
+                </span>
+                <select name="hasEmail" defaultValue="0" className={darkInput}>
+                  <option value="0" className="bg-[#0b0f0e] text-white">
+                    Yok
+                  </option>
+                  <option value="1" className="bg-[#0b0f0e] text-white">
+                    Var
+                  </option>
+                </select>
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Yönlendirme (nereye)
+                </span>
+                <input
+                  type="text"
+                  name="redirectTo"
+                  maxLength={300}
+                  placeholder="Yoksa boş bırak — ör. corteqs.net"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Ödeme günleri
+                </span>
+                <input
+                  type="text"
+                  name="paymentDays"
+                  maxLength={300}
+                  placeholder="ör. her yıl 20 Nisan"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Ödeme yöntemi
+                </span>
+                <input
+                  type="text"
+                  name="paymentMethod"
+                  maxLength={300}
+                  placeholder="ör. sanal kart (Revolut)"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
                   Yorum
                 </span>
                 <input
@@ -571,6 +631,61 @@ function DomainRow({ item, updateAction, deleteAction }: DomainRowProps) {
         >
           Sil
         </button>
+      </div>
+
+      {/* Second detail line: email var/yok · yönlendirme · ödeme bilgileri.
+          Same form, so "Kaydet" persists these together with the row above. */}
+      <div className="md:col-span-full">
+        <div className="grid gap-3 rounded-[0.8rem] border border-white/[0.06] bg-white/[0.015] px-3 py-2.5 sm:grid-cols-2 md:grid-cols-4">
+          <div>
+            <span className={subLabel}>Email var mı?</span>
+            <select
+              name="hasEmail"
+              defaultValue={item.hasEmail ? "1" : "0"}
+              className={darkInput}
+            >
+              <option value="0" className="bg-[#0b0f0e] text-white">
+                Yok
+              </option>
+              <option value="1" className="bg-[#0b0f0e] text-white">
+                Var
+              </option>
+            </select>
+          </div>
+          <div>
+            <span className={subLabel}>Yönlendirme (nereye)</span>
+            <input
+              type="text"
+              name="redirectTo"
+              maxLength={300}
+              defaultValue={item.redirectTo}
+              placeholder="yok"
+              className={darkInput}
+            />
+          </div>
+          <div>
+            <span className={subLabel}>Ödeme günleri</span>
+            <input
+              type="text"
+              name="paymentDays"
+              maxLength={300}
+              defaultValue={item.paymentDays}
+              placeholder="—"
+              className={darkInput}
+            />
+          </div>
+          <div>
+            <span className={subLabel}>Ödeme yöntemi</span>
+            <input
+              type="text"
+              name="paymentMethod"
+              maxLength={300}
+              defaultValue={item.paymentMethod}
+              placeholder="ör. sanal kart"
+              className={darkInput}
+            />
+          </div>
+        </div>
       </div>
     </form>
   );
