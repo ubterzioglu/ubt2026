@@ -14,3 +14,5 @@ dist
 firmascope/
 .blackboxcli/
 .secret
+# Corteqs kaynak ortam dosyasi - service role key/Meta token icerir, asla commitleme
+.env.local.rebase

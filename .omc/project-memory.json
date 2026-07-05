@@ -245,6 +245,12 @@
   },
   "hotPaths": [
     {
+      "path": "app\\dm\\page.tsx",
+      "accessCount": 17,
+      "lastAccessed": 1783283512520,
+      "type": "file"
+    },
+    {
       "path": "lib\\akcakanat-domains.ts",
       "accessCount": 8,
       "lastAccessed": 1783264082598,
@@ -257,9 +263,219 @@
       "type": "file"
     },
     {
+      "path": "lib\\test-findings.ts",
+      "accessCount": 3,
+      "lastAccessed": 1783281478729,
+      "type": "directory"
+    },
+    {
+      "path": "lib\\social-posts.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783281482437,
+      "type": "directory"
+    },
+    {
+      "path": "tailwind.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783281493177,
+      "type": "directory"
+    },
+    {
+      "path": "app\\dm\\_components\\theme.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783281641806,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_actions.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783282314166,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\scraper-tab.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1783283450194,
+      "type": "file"
+    },
+    {
+      "path": ".env.local",
+      "accessCount": 2,
+      "lastAccessed": 1783283559240,
+      "type": "file"
+    },
+    {
       "path": "supabase\\migrations\\20260705120000_add_ops_columns_to_akcakanat_domains.sql",
       "accessCount": 1,
       "lastAccessed": 1783262789511,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\dm-login.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783281445410,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\findings-tab.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783281445884,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\social-tab.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783281446406,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\info-tab.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783281446635,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\task-table.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783281454544,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\finding-table.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783281455635,
+      "type": "file"
+    },
+    {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783281456037,
+      "type": "file"
+    },
+    {
+      "path": "lib\\project-tasks.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783281456094,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1783281471600,
+      "type": "directory"
+    },
+    {
+      "path": "types\\site.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783281504177,
+      "type": "directory"
+    },
+    {
+      "path": "app\\dm\\_components\\dm-nav.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783282346793,
+      "type": "file"
+    },
+    {
+      "path": ".env.local.rebase",
+      "accessCount": 1,
+      "lastAccessed": 1783282651220,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 1,
+      "lastAccessed": 1783282859859,
+      "type": "directory"
+    },
+    {
+      "path": "supabase\\migrations\\20260705140000_add_radar_news_pipeline.sql",
+      "accessCount": 1,
+      "lastAccessed": 1783282983755,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\types.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283144152,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\source-security.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283149416,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\canonicalize-url.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283154044,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\hash.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283157463,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\relevance-score.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283188403,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\normalize-item.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283198195,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\dedupe.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283202914,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\scan-lock.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283208513,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\adapters\\gdelt.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283238003,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\adapters\\rss.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283251181,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\adapters\\atom.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283262671,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar\\scan.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283323203,
+      "type": "file"
+    },
+    {
+      "path": "lib\\radar-news.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783283363038,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\radar-scan-smoke.mts",
+      "accessCount": 1,
+      "lastAccessed": 1783283692351,
       "type": "file"
     }
   ],
