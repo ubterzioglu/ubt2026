@@ -246,14 +246,14 @@
   "hotPaths": [
     {
       "path": "lib\\akcakanat-domains.ts",
-      "accessCount": 7,
-      "lastAccessed": 1783262880014,
+      "accessCount": 8,
+      "lastAccessed": 1783264082598,
       "type": "file"
     },
     {
       "path": "app\\bakcakanat\\page.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1783262948959,
+      "accessCount": 8,
+      "lastAccessed": 1783264206996,
       "type": "file"
     },
     {
