@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1783262655925,
+  "lastScanned": 1783367437338,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -82,7 +82,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1783262655855,
+      "lastAccessed": 1783367437280,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -95,7 +95,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1783262655856,
+      "lastAccessed": 1783367437282,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -105,7 +105,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1783262655857,
+      "lastAccessed": 1783367437310,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -118,7 +118,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1783262655890,
+      "lastAccessed": 1783367437311,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -131,7 +131,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783262655891,
+      "lastAccessed": 1783367437311,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -142,14 +142,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1783262655891,
+      "lastAccessed": 1783367437312,
       "keyFiles": []
     },
     "experience": {
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783262655892,
+      "lastAccessed": 1783367437313,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -159,8 +159,8 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 17,
-      "lastAccessed": 1783262655892,
+      "fileCount": 18,
+      "lastAccessed": 1783367437313,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -173,7 +173,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1783262655893,
+      "lastAccessed": 1783367437314,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -186,7 +186,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1783262655893,
+      "lastAccessed": 1783367437314,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -196,18 +196,19 @@
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
-      "fileCount": 2,
-      "lastAccessed": 1783262655894,
+      "fileCount": 3,
+      "lastAccessed": 1783367437315,
       "keyFiles": [
         "convert-cvopt-to-reviews.mjs",
-        "migrate-cvopt-participants.mjs"
+        "migrate-cvopt-participants.mjs",
+        "radar-scan-smoke.mts"
       ]
     },
     "supabase": {
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783262655894,
+      "lastAccessed": 1783367437316,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -217,7 +218,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1783262655895,
+      "lastAccessed": 1783367437316,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -228,14 +229,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1783262655896,
+      "lastAccessed": 1783367437317,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
-      "fileCount": 22,
-      "lastAccessed": 1783262655899,
+      "fileCount": 24,
+      "lastAccessed": 1783367437321,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -245,238 +246,40 @@
   },
   "hotPaths": [
     {
-      "path": "app\\dm\\page.tsx",
-      "accessCount": 17,
-      "lastAccessed": 1783283512520,
-      "type": "file"
-    },
-    {
-      "path": "lib\\akcakanat-domains.ts",
-      "accessCount": 8,
-      "lastAccessed": 1783264082598,
-      "type": "file"
-    },
-    {
-      "path": "app\\bakcakanat\\page.tsx",
-      "accessCount": 8,
-      "lastAccessed": 1783264206996,
-      "type": "file"
-    },
-    {
-      "path": "lib\\test-findings.ts",
+      "path": "app\\page.tsx",
       "accessCount": 3,
-      "lastAccessed": 1783281478729,
+      "lastAccessed": 1783367649244,
       "type": "directory"
     },
     {
-      "path": "lib\\social-posts.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783281482437,
-      "type": "directory"
-    },
-    {
-      "path": "tailwind.config.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783281493177,
-      "type": "directory"
-    },
-    {
-      "path": "app\\dm\\_components\\theme.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783281641806,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_actions.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783282314166,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\scraper-tab.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1783283450194,
-      "type": "file"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 2,
-      "lastAccessed": 1783283559240,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260705120000_add_ops_columns_to_akcakanat_domains.sql",
+      "path": "lib\\footer-clients.ts",
       "accessCount": 1,
-      "lastAccessed": 1783262789511,
+      "lastAccessed": 1783367607171,
       "type": "file"
     },
     {
-      "path": "app\\dm\\_components\\dm-login.tsx",
+      "path": "docs\\superpowers\\specs\\2026-06-26-batubt-footer-clients-design.md",
       "accessCount": 1,
-      "lastAccessed": 1783281445410,
+      "lastAccessed": 1783367625580,
       "type": "file"
     },
     {
-      "path": "app\\dm\\_components\\findings-tab.tsx",
+      "path": "supabase\\migrations\\20260626130000_create_footer_clients.sql",
       "accessCount": 1,
-      "lastAccessed": 1783281445884,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\social-tab.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783281446406,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\info-tab.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783281446635,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\task-table.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783281454544,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\finding-table.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783281455635,
-      "type": "file"
-    },
-    {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783281456037,
-      "type": "file"
-    },
-    {
-      "path": "lib\\project-tasks.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783281456094,
+      "lastAccessed": 1783367625595,
       "type": "file"
     },
     {
       "path": "",
       "accessCount": 1,
-      "lastAccessed": 1783281471600,
+      "lastAccessed": 1783367636037,
       "type": "directory"
     },
     {
-      "path": "types\\site.ts",
+      "path": "cv.html",
       "accessCount": 1,
-      "lastAccessed": 1783281504177,
+      "lastAccessed": 1783367641664,
       "type": "directory"
-    },
-    {
-      "path": "app\\dm\\_components\\dm-nav.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783282346793,
-      "type": "file"
-    },
-    {
-      "path": ".env.local.rebase",
-      "accessCount": 1,
-      "lastAccessed": 1783282651220,
-      "type": "file"
-    },
-    {
-      "path": "package.json",
-      "accessCount": 1,
-      "lastAccessed": 1783282859859,
-      "type": "directory"
-    },
-    {
-      "path": "supabase\\migrations\\20260705140000_add_radar_news_pipeline.sql",
-      "accessCount": 1,
-      "lastAccessed": 1783282983755,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\types.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283144152,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\source-security.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283149416,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\canonicalize-url.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283154044,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\hash.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283157463,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\relevance-score.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283188403,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\normalize-item.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283198195,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\dedupe.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283202914,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\scan-lock.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283208513,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\adapters\\gdelt.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283238003,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\adapters\\rss.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283251181,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\adapters\\atom.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283262671,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar\\scan.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283323203,
-      "type": "file"
-    },
-    {
-      "path": "lib\\radar-news.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783283363038,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\radar-scan-smoke.mts",
-      "accessCount": 1,
-      "lastAccessed": 1783283692351,
-      "type": "file"
     }
   ],
   "userDirectives": []

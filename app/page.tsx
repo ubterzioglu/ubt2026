@@ -776,6 +776,15 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             >
               Seo Ajansı
             </a>
+            <span className="text-ink/30">·</span>
+            <a
+              href="https://ufuksoynakliyat.com.tr"
+              target="_blank"
+              rel="noopener noreferrer dofollow"
+              className="text-accent/70 hover:text-accent transition-colors"
+            >
+              Evden Eve Nakliyat
+            </a>
           </div>
           <div className="mt-1 text-xs text-ink/45">
             Spindora Tarafından Seosu Yapılmıştır.
