@@ -247,9 +247,63 @@
   "hotPaths": [
     {
       "path": "app\\page.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1783367649244,
+      "accessCount": 4,
+      "lastAccessed": 1783368722457,
       "type": "directory"
+    },
+    {
+      "path": "components\\hero-section.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1783368767260,
+      "type": "directory"
+    },
+    {
+      "path": "lib\\seo.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783368716751,
+      "type": "file"
+    },
+    {
+      "path": "lib\\structured-data.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783368716853,
+      "type": "file"
+    },
+    {
+      "path": "app\\layout.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1783368722543,
+      "type": "file"
+    },
+    {
+      "path": "next.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783368735801,
+      "type": "file"
+    },
+    {
+      "path": "app\\robots.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783368739797,
+      "type": "file"
+    },
+    {
+      "path": "app\\sitemap.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783368739854,
+      "type": "file"
+    },
+    {
+      "path": "content\\geo.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783368739881,
+      "type": "file"
+    },
+    {
+      "path": "middleware.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783368749753,
+      "type": "file"
     },
     {
       "path": "lib\\footer-clients.ts",
@@ -280,6 +334,132 @@
       "accessCount": 1,
       "lastAccessed": 1783367641664,
       "type": "directory"
+    },
+    {
+      "path": "app\\book-appointment\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368723268,
+      "type": "file"
+    },
+    {
+      "path": "app\\geo\\[location]\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368723648,
+      "type": "file"
+    },
+    {
+      "path": "app\\sandbox\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368723977,
+      "type": "file"
+    },
+    {
+      "path": "app\\elif\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368724071,
+      "type": "file"
+    },
+    {
+      "path": "app\\blog\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368729104,
+      "type": "file"
+    },
+    {
+      "path": "app\\blog\\[slug]\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368729865,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368730182,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\appointments\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368730603,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\slots\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368731138,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\cv-reviews\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368731600,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\news\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368732405,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\bookmarks\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368732582,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\blog\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368732859,
+      "type": "file"
+    },
+    {
+      "path": "app\\batubt\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368733442,
+      "type": "file"
+    },
+    {
+      "path": "app\\bakcakanat\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368733758,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368734120,
+      "type": "file"
+    },
+    {
+      "path": "app\\not-found.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368734301,
+      "type": "file"
+    },
+    {
+      "path": "app\\opengraph-image.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368734614,
+      "type": "file"
+    },
+    {
+      "path": "app\\icon.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368735101,
+      "type": "file"
+    },
+    {
+      "path": "app\\apple-icon.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368735347,
+      "type": "file"
+    },
+    {
+      "path": "components\\json-ld.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368750132,
+      "type": "file"
     }
   ],
   "userDirectives": []
