@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -57,6 +58,10 @@ import type {
 // Radar taraması kaynaklar arası rate-limit beklemeleriyle dakikaya yaklaşır;
 // server action'ın Vercel'de erken kesilmemesi için segment süresini yükselt.
 export const maxDuration = 300;
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false }
+};
 
 interface DmPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;

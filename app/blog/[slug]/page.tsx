@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm";
 
 import { JsonLd } from "@/components/json-ld";
 import { buildMetadata } from "@/lib/seo";
-import { buildBreadcrumbSchema } from "@/lib/structured-data";
+import { buildBlogPostingSchema, buildBreadcrumbSchema } from "@/lib/structured-data";
 import { getBlogPostBySlug } from "@/lib/blog-posts";
 
 interface Props {
@@ -52,7 +52,15 @@ export default async function BlogPostPage({ params }: Props) {
       { name: "Home", href: "/" },
       { name: "Blog", href: "/blog" },
       { name: post.title, href: `/blog/${post.slug}` }
-    ])
+    ]),
+    buildBlogPostingSchema({
+      title: post.title,
+      description: post.summary,
+      slug: post.slug,
+      publishedAt: post.publishedAt,
+      updatedAt: post.updatedAt,
+      coverImageUrl: post.coverImageUrl
+    })
   ];
 
   return (

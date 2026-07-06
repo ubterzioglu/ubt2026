@@ -104,6 +104,41 @@ export function buildProfilePageSchema() {
   };
 }
 
+interface BlogPostingInput {
+  title: string;
+  description: string;
+  slug: string;
+  publishedAt: string | null;
+  updatedAt: string;
+  coverImageUrl?: string | null;
+}
+
+export function buildBlogPostingSchema(input: BlogPostingInput) {
+  const url = `${BASE_URL}/blog/${input.slug}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${url}#article`,
+    headline: input.title,
+    description: input.description,
+    url,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url
+    },
+    datePublished: input.publishedAt ?? input.updatedAt,
+    dateModified: input.updatedAt,
+    ...(input.coverImageUrl ? { image: [input.coverImageUrl] } : {}),
+    author: {
+      "@id": `${BASE_URL}/#person`
+    },
+    publisher: {
+      "@id": `${BASE_URL}/#person`
+    }
+  };
+}
+
 interface BreadcrumbItem {
   name: string;
   href: string;

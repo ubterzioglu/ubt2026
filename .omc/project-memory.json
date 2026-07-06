@@ -246,10 +246,28 @@
   },
   "hotPaths": [
     {
+      "path": "app\\dm\\page.tsx",
+      "accessCount": 6,
+      "lastAccessed": 1783368874052,
+      "type": "file"
+    },
+    {
       "path": "app\\page.tsx",
-      "accessCount": 4,
-      "lastAccessed": 1783368722457,
+      "accessCount": 5,
+      "lastAccessed": 1783368803326,
       "type": "directory"
+    },
+    {
+      "path": "app\\blog\\[slug]\\page.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1783368919324,
+      "type": "file"
+    },
+    {
+      "path": "lib\\structured-data.ts",
+      "accessCount": 4,
+      "lastAccessed": 1783368899802,
+      "type": "file"
     },
     {
       "path": "components\\hero-section.tsx",
@@ -258,15 +276,21 @@
       "type": "directory"
     },
     {
-      "path": "lib\\seo.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783368716751,
+      "path": "app\\elif\\page.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1783368858347,
       "type": "file"
     },
     {
-      "path": "lib\\structured-data.ts",
+      "path": "app\\robots.ts",
+      "accessCount": 3,
+      "lastAccessed": 1783368886158,
+      "type": "file"
+    },
+    {
+      "path": "lib\\seo.ts",
       "accessCount": 2,
-      "lastAccessed": 1783368716853,
+      "lastAccessed": 1783368716751,
       "type": "file"
     },
     {
@@ -279,12 +303,6 @@
       "path": "next.config.ts",
       "accessCount": 2,
       "lastAccessed": 1783368735801,
-      "type": "file"
-    },
-    {
-      "path": "app\\robots.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783368739797,
       "type": "file"
     },
     {
@@ -306,21 +324,63 @@
       "type": "file"
     },
     {
-      "path": "lib\\footer-clients.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783367607171,
+      "path": "app\\blog\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1783368803475,
       "type": "file"
     },
     {
-      "path": "docs\\superpowers\\specs\\2026-06-26-batubt-footer-clients-design.md",
-      "accessCount": 1,
-      "lastAccessed": 1783367625580,
+      "path": "app\\book-appointment\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1783368803983,
+      "type": "file"
+    },
+    {
+      "path": "app\\geo\\[location]\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1783368804368,
+      "type": "file"
+    },
+    {
+      "path": "app\\opengraph-image.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1783368804745,
+      "type": "file"
+    },
+    {
+      "path": "app\\icon.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1783368805432,
+      "type": "file"
+    },
+    {
+      "path": "app\\apple-icon.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1783368805495,
       "type": "file"
     },
     {
       "path": "supabase\\migrations\\20260626130000_create_footer_clients.sql",
-      "accessCount": 1,
-      "lastAccessed": 1783367625595,
+      "accessCount": 2,
+      "lastAccessed": 1783368809153,
+      "type": "file"
+    },
+    {
+      "path": "docs\\superpowers\\specs\\2026-06-26-batubt-footer-clients-design.md",
+      "accessCount": 2,
+      "lastAccessed": 1783368809266,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1783368821936,
+      "type": "file"
+    },
+    {
+      "path": "lib\\footer-clients.ts",
+      "accessCount": 2,
+      "lastAccessed": 1783368918519,
       "type": "file"
     },
     {
@@ -336,45 +396,9 @@
       "type": "directory"
     },
     {
-      "path": "app\\book-appointment\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368723268,
-      "type": "file"
-    },
-    {
-      "path": "app\\geo\\[location]\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368723648,
-      "type": "file"
-    },
-    {
       "path": "app\\sandbox\\page.tsx",
       "accessCount": 1,
       "lastAccessed": 1783368723977,
-      "type": "file"
-    },
-    {
-      "path": "app\\elif\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368724071,
-      "type": "file"
-    },
-    {
-      "path": "app\\blog\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368729104,
-      "type": "file"
-    },
-    {
-      "path": "app\\blog\\[slug]\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368729865,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368730182,
       "type": "file"
     },
     {
@@ -426,39 +450,51 @@
       "type": "file"
     },
     {
-      "path": "app\\dm\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368734120,
-      "type": "file"
-    },
-    {
       "path": "app\\not-found.tsx",
       "accessCount": 1,
       "lastAccessed": 1783368734301,
       "type": "file"
     },
     {
-      "path": "app\\opengraph-image.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368734614,
-      "type": "file"
-    },
-    {
-      "path": "app\\icon.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368735101,
-      "type": "file"
-    },
-    {
-      "path": "app\\apple-icon.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783368735347,
-      "type": "file"
-    },
-    {
       "path": "components\\json-ld.tsx",
       "accessCount": 1,
       "lastAccessed": 1783368750132,
+      "type": "file"
+    },
+    {
+      "path": "app\\batubt\\_actions.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783368808398,
+      "type": "file"
+    },
+    {
+      "path": "app\\elif\\layout.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1783368880290,
+      "type": "file"
+    },
+    {
+      "path": "lib\\blog-posts.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783368891277,
+      "type": "file"
+    },
+    {
+      "path": "types\\site.ts",
+      "accessCount": 1,
+      "lastAccessed": 1783368925532,
+      "type": "directory"
+    },
+    {
+      "path": "scripts\\_tmp-check-footer-clients.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1783369522888,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\_tmp-apply-footer-clients.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1783370226327,
       "type": "file"
     }
   ],
