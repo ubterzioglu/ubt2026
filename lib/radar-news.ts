@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { runRadarScan, ScanLockError } from "@/lib/radar/scan";
+import { validateSourceUrl } from "@/lib/radar/source-security";
 import type {
   RadarReviewStatus,
   RadarScanStatus,
@@ -25,10 +26,26 @@ export interface RadarSourceItem {
   trustLevel: RadarTrustLevel;
   language: string;
   isEnabled: boolean;
+  termsChecked: boolean;
   endpointUrl: string;
   lastSuccessAt: string | null;
   lastErrorAt: string | null;
   lastErrorMessage: string;
+}
+
+/** Kaynak düzenleme formunun ihtiyaç duyduğu tüm alanlar. */
+export interface RadarSourceDetailItem extends RadarSourceItem {
+  adapterKey: string;
+  websiteUrl: string;
+  country: string;
+  categoryDefault: string;
+  queryText: string;
+  /** config->>'query' — query_text boşken gdelt adaptörünün kullandığı yedek. */
+  configQuery: string;
+  maxItemsPerScan: number;
+  timeoutMs: number;
+  termsCheckedAt: string | null;
+  termsNotes: string;
 }
 
 export interface RadarRunItem {
@@ -54,6 +71,7 @@ export interface RadarCandidateItem {
   sourceName: string;
   language: string;
   country: string;
+  city: string;
   category: string;
   publishedAt: string | null;
   relevanceScore: number;
@@ -61,7 +79,18 @@ export interface RadarCandidateItem {
   reviewStatus: RadarReviewStatus;
   reviewNote: string;
   reviewedAt: string | null;
+  duplicateOfCandidateId: string | null;
   createdAt: string;
+}
+
+export interface RadarKeywordItem {
+  id: string;
+  keyword: string;
+  language: string;
+  category: string;
+  weight: number;
+  isNegative: boolean;
+  isEnabled: boolean;
 }
 
 export type RadarCandidateCounts = Record<RadarReviewStatus, number>;
@@ -117,7 +146,7 @@ export async function getRadarSourcesAdmin(): Promise<RadarSourceItem[]> {
     const { data, error } = await supabase
       .from("radar_news_sources")
       .select(
-        "id, name, source_type, trust_level, language, is_enabled, endpoint_url, last_success_at, last_error_at, last_error_message"
+        "id, name, source_type, trust_level, language, is_enabled, terms_checked, endpoint_url, last_success_at, last_error_at, last_error_message"
       )
       .order("name", { ascending: true });
     if (error) throw error;
@@ -128,6 +157,7 @@ export async function getRadarSourcesAdmin(): Promise<RadarSourceItem[]> {
       trustLevel: row.trust_level as RadarTrustLevel,
       language: (row.language as string | null) ?? "",
       isEnabled: Boolean(row.is_enabled),
+      termsChecked: Boolean(row.terms_checked),
       endpointUrl: (row.endpoint_url as string | null) ?? "",
       lastSuccessAt: (row.last_success_at as string | null) ?? null,
       lastErrorAt: (row.last_error_at as string | null) ?? null,
@@ -179,7 +209,7 @@ export async function getRadarCandidatesAdmin(
     let query = supabase
       .from("radar_news_candidates")
       .select(
-        "id, title, summary, canonical_url, source_name, language, country, category, published_at, relevance_score, relevance_reasons, review_status, review_note, reviewed_at, created_at"
+        "id, title, summary, canonical_url, source_name, language, country, city, category, published_at, relevance_score, relevance_reasons, review_status, review_note, reviewed_at, duplicate_of_candidate_id, created_at"
       )
       .order("relevance_score", { ascending: false })
       .order("published_at", { ascending: false })
@@ -197,6 +227,7 @@ export async function getRadarCandidatesAdmin(
       sourceName: row.source_name as string,
       language: (row.language as string | null) ?? "",
       country: (row.country as string | null) ?? "",
+      city: (row.city as string | null) ?? "",
       category: (row.category as string | null) ?? "",
       publishedAt: (row.published_at as string | null) ?? null,
       relevanceScore: Number(row.relevance_score ?? 0),
@@ -204,6 +235,7 @@ export async function getRadarCandidatesAdmin(
       reviewStatus: normalizeRadarReviewStatus(String(row.review_status)),
       reviewNote: (row.review_note as string | null) ?? "",
       reviewedAt: (row.reviewed_at as string | null) ?? null,
+      duplicateOfCandidateId: (row.duplicate_of_candidate_id as string | null) ?? null,
       createdAt: row.created_at as string
     }));
   } catch {
@@ -295,6 +327,386 @@ export async function setRadarSourceEnabledAdmin(
     return {
       ok: false,
       errorMessage: error instanceof Error ? error.message : "Update failed."
+    };
+  }
+}
+
+// ─── Kaynak CRUD (/dmscraper Kaynaklar bölümü) ──────────────────────────────
+
+const VALID_ADAPTER_KEYS = ["rss", "atom", "gdelt_doc_v2"] as const;
+const VALID_SOURCE_TYPES: readonly RadarSourceType[] = ["rss", "atom", "gdelt", "json_api"];
+const VALID_TRUST_LEVELS: readonly RadarTrustLevel[] = [
+  "official",
+  "high",
+  "standard",
+  "discovery_only"
+];
+
+const clampNumber = (value: number, min: number, max: number, fallback: number): number => {
+  if (!Number.isFinite(value)) return fallback;
+  return Math.min(max, Math.max(min, Math.round(value)));
+};
+
+export interface RadarSourceInput {
+  name: string;
+  endpointUrl: string;
+  websiteUrl?: string;
+  sourceType: string;
+  adapterKey: string;
+  language?: string;
+  country?: string;
+  categoryDefault?: string;
+  trustLevel?: string;
+  queryText?: string;
+  maxItemsPerScan?: number;
+  timeoutMs?: number;
+  termsChecked: boolean;
+  termsNotes?: string;
+  isEnabled: boolean;
+}
+
+function validateSourceInput(input: RadarSourceInput): string | null {
+  if (input.name.trim().length < 2) return "Kaynak adı en az 2 karakter olmalı.";
+  const security = validateSourceUrl(input.endpointUrl.trim());
+  if (!security.ok) return `Endpoint reddedildi: ${security.reason}`;
+  if (!(VALID_ADAPTER_KEYS as readonly string[]).includes(input.adapterKey)) {
+    // json_api için adapter yok — motor çalıştıramayacağı kaynağı kabul etme.
+    return `Geçersiz adapter: ${input.adapterKey} (rss / atom / gdelt_doc_v2)`;
+  }
+  if (!(VALID_SOURCE_TYPES as readonly string[]).includes(input.sourceType)) {
+    return `Geçersiz kaynak tipi: ${input.sourceType}`;
+  }
+  return null;
+}
+
+export async function getRadarSourceAdmin(
+  id: string
+): Promise<RadarSourceDetailItem | null> {
+  const supabase = createServiceClient();
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase
+      .from("radar_news_sources")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (error) throw error;
+    if (!data) return null;
+    const config = (data.config as Record<string, unknown> | null) ?? {};
+    return {
+      id: data.id as string,
+      name: data.name as string,
+      sourceType: data.source_type as RadarSourceType,
+      trustLevel: data.trust_level as RadarTrustLevel,
+      language: (data.language as string | null) ?? "",
+      isEnabled: Boolean(data.is_enabled),
+      termsChecked: Boolean(data.terms_checked),
+      endpointUrl: (data.endpoint_url as string | null) ?? "",
+      lastSuccessAt: (data.last_success_at as string | null) ?? null,
+      lastErrorAt: (data.last_error_at as string | null) ?? null,
+      lastErrorMessage: (data.last_error_message as string | null) ?? "",
+      adapterKey: (data.adapter_key as string | null) ?? "",
+      websiteUrl: (data.website_url as string | null) ?? "",
+      country: (data.country as string | null) ?? "",
+      categoryDefault: (data.category_default as string | null) ?? "",
+      queryText: (data.query_text as string | null) ?? "",
+      configQuery: typeof config["query"] === "string" ? (config["query"] as string) : "",
+      maxItemsPerScan: Number(data.max_items_per_scan ?? 100),
+      timeoutMs: Number(data.timeout_ms ?? 12000),
+      termsCheckedAt: (data.terms_checked_at as string | null) ?? null,
+      termsNotes: (data.terms_notes as string | null) ?? ""
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function createRadarSourceAdmin(
+  input: RadarSourceInput
+): Promise<RadarMutationResult> {
+  const supabase = createServiceClient();
+  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  const validationError = validateSourceInput(input);
+  if (validationError) return { ok: false, errorMessage: validationError };
+  try {
+    const queryText = input.queryText?.trim() || null;
+    const { error } = await supabase.from("radar_news_sources").insert({
+      name: input.name.trim(),
+      endpoint_url: input.endpointUrl.trim(),
+      website_url: input.websiteUrl?.trim() || null,
+      source_type: input.sourceType,
+      adapter_key: input.adapterKey,
+      language: input.language?.trim() || null,
+      country: input.country?.trim() || null,
+      category_default: input.categoryDefault?.trim() || null,
+      trust_level: (VALID_TRUST_LEVELS as readonly string[]).includes(input.trustLevel ?? "")
+        ? input.trustLevel
+        : "standard",
+      query_text: queryText,
+      max_items_per_scan: clampNumber(Number(input.maxItemsPerScan), 1, 500, 100),
+      timeout_ms: clampNumber(Number(input.timeoutMs), 1000, 60000, 12000),
+      terms_checked: input.termsChecked,
+      terms_checked_at: input.termsChecked ? new Date().toISOString() : null,
+      terms_notes: input.termsNotes?.trim() || null,
+      // Terms doğrulanmadan kaynak asla aktif olamaz (server-side gate).
+      is_enabled: input.termsChecked ? input.isEnabled : false,
+      config: queryText ? { query: queryText } : {}
+    });
+    if (error) throw error;
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Kaynak oluşturulamadı."
+    };
+  }
+}
+
+export async function updateRadarSourceAdmin(
+  id: string,
+  input: RadarSourceInput
+): Promise<RadarMutationResult> {
+  const supabase = createServiceClient();
+  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  const validationError = validateSourceInput(input);
+  if (validationError) return { ok: false, errorMessage: validationError };
+  try {
+    // Config merge = read-modify-write: query dışındaki anahtarlar (timespan,
+    // allowedLanguages, target vb.) klonlanır — komple obje asla ezilmez.
+    const { data: existing, error: readError } = await supabase
+      .from("radar_news_sources")
+      .select("terms_checked, terms_checked_at, config")
+      .eq("id", id)
+      .maybeSingle();
+    if (readError) throw readError;
+    if (!existing) return { ok: false, errorMessage: "Kaynak bulunamadı." };
+
+    const previousTerms = Boolean(existing.terms_checked);
+    const config = {
+      ...((existing.config as Record<string, unknown> | null) ?? {})
+    };
+    const queryText = input.queryText?.trim() || null;
+    if (queryText) {
+      config["query"] = queryText;
+    } else {
+      delete config["query"];
+    }
+
+    const { error } = await supabase
+      .from("radar_news_sources")
+      .update({
+        name: input.name.trim(),
+        endpoint_url: input.endpointUrl.trim(),
+        website_url: input.websiteUrl?.trim() || null,
+        source_type: input.sourceType,
+        adapter_key: input.adapterKey,
+        language: input.language?.trim() || null,
+        country: input.country?.trim() || null,
+        category_default: input.categoryDefault?.trim() || null,
+        trust_level: (VALID_TRUST_LEVELS as readonly string[]).includes(input.trustLevel ?? "")
+          ? input.trustLevel
+          : "standard",
+        query_text: queryText,
+        max_items_per_scan: clampNumber(Number(input.maxItemsPerScan), 1, 500, 100),
+        timeout_ms: clampNumber(Number(input.timeoutMs), 1000, 60000, 12000),
+        terms_checked: input.termsChecked,
+        terms_checked_at: input.termsChecked
+          ? previousTerms
+            ? ((existing.terms_checked_at as string | null) ?? new Date().toISOString())
+            : new Date().toISOString()
+          : null,
+        terms_notes: input.termsNotes?.trim() || null,
+        is_enabled: input.termsChecked ? input.isEnabled : false,
+        config
+      })
+      .eq("id", id);
+    if (error) throw error;
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Kaynak güncellenemedi."
+    };
+  }
+}
+
+// ─── Kopya işaretleme ────────────────────────────────────────────────────────
+
+export async function markRadarCandidateDuplicateAdmin(
+  id: string,
+  duplicateOfId: string,
+  note?: string
+): Promise<RadarMutationResult> {
+  const supabase = createServiceClient();
+  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!duplicateOfId.trim()) {
+    return { ok: false, errorMessage: "Orijinal aday ID'si gerekli." };
+  }
+  if (id === duplicateOfId.trim()) {
+    return { ok: false, errorMessage: "Aday kendisinin kopyası olamaz." };
+  }
+  try {
+    const { data: target, error: targetError } = await supabase
+      .from("radar_news_candidates")
+      .select("id")
+      .eq("id", duplicateOfId.trim())
+      .maybeSingle();
+    if (targetError) throw targetError;
+    if (!target) {
+      return { ok: false, errorMessage: "Orijinal aday bulunamadı." };
+    }
+
+    const { error } = await supabase
+      .from("radar_news_candidates")
+      .update({
+        review_status: "duplicate",
+        duplicate_of_candidate_id: duplicateOfId.trim(),
+        reviewed_at: new Date().toISOString(),
+        review_note: note?.trim() || null
+      })
+      .eq("id", id);
+    if (error) throw error;
+
+    await supabase.from("radar_news_review_logs").insert({
+      candidate_id: id,
+      action: "mark_duplicate",
+      note: note?.trim() || null
+    });
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Kopya işaretlenemedi."
+    };
+  }
+}
+
+// ─── Keyword CRUD (/dmscraper Keywords bölümü) ──────────────────────────────
+
+export async function getRadarKeywordsAdmin(
+  includeDisabled = true
+): Promise<RadarKeywordItem[]> {
+  const supabase = createServiceClient();
+  if (!supabase) return [];
+  try {
+    let query = supabase
+      .from("radar_news_keywords")
+      .select("id, keyword, language, category, weight, is_negative, is_enabled")
+      .order("is_negative", { ascending: true })
+      .order("category", { ascending: true })
+      .order("weight", { ascending: false });
+    if (!includeDisabled) {
+      query = query.eq("is_enabled", true);
+    }
+    const { data, error } = await query;
+    if (error) throw error;
+    return (data ?? []).map((row) => ({
+      id: row.id as string,
+      keyword: row.keyword as string,
+      language: (row.language as string | null) ?? "",
+      category: (row.category as string | null) ?? "",
+      weight: Number(row.weight ?? 0),
+      isNegative: row.is_negative === true,
+      isEnabled: row.is_enabled === true
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export interface RadarKeywordInput {
+  keyword: string;
+  language: string;
+  category?: string;
+  weight?: number;
+  isNegative?: boolean;
+  isEnabled?: boolean;
+}
+
+export async function createRadarKeywordAdmin(
+  input: RadarKeywordInput
+): Promise<RadarMutationResult> {
+  const supabase = createServiceClient();
+  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  const keyword = input.keyword.trim();
+  const language = input.language.trim();
+  if (!keyword) return { ok: false, errorMessage: "Keyword zorunlu." };
+  if (!language) return { ok: false, errorMessage: "Dil zorunlu." };
+  try {
+    // Tabloda unique constraint yok — case-insensitive kopya kontrolü uygulama
+    // katmanında yapılır (corteqs'ten kopyalanan satırlarda duplicate olabilir).
+    const { data: existing, error: readError } = await supabase
+      .from("radar_news_keywords")
+      .select("id, keyword")
+      .eq("language", language)
+      .ilike("keyword", keyword);
+    if (readError) throw readError;
+    if ((existing ?? []).some((row) => String(row.keyword).toLowerCase() === keyword.toLowerCase())) {
+      return { ok: false, errorMessage: "Bu keyword bu dilde zaten kayıtlı." };
+    }
+
+    const { error } = await supabase.from("radar_news_keywords").insert({
+      keyword,
+      language,
+      category: input.category?.trim() || null,
+      weight: clampNumber(Number(input.weight), 0, 100, 20),
+      is_negative: input.isNegative === true,
+      is_enabled: input.isEnabled !== false
+    });
+    if (error) throw error;
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Keyword eklenemedi."
+    };
+  }
+}
+
+export async function updateRadarKeywordAdmin(
+  id: string,
+  input: RadarKeywordInput
+): Promise<RadarMutationResult> {
+  const supabase = createServiceClient();
+  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  const keyword = input.keyword.trim();
+  const language = input.language.trim();
+  if (!keyword) return { ok: false, errorMessage: "Keyword zorunlu." };
+  if (!language) return { ok: false, errorMessage: "Dil zorunlu." };
+  try {
+    const { error } = await supabase
+      .from("radar_news_keywords")
+      .update({
+        keyword,
+        language,
+        category: input.category?.trim() || null,
+        weight: clampNumber(Number(input.weight), 0, 100, 20),
+        is_negative: input.isNegative === true,
+        is_enabled: input.isEnabled !== false
+      })
+      .eq("id", id);
+    if (error) throw error;
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Keyword güncellenemedi."
+    };
+  }
+}
+
+/** Hard delete — keyword'e FK referansı yok; kalıcı silme typo temizliği için. */
+export async function deleteRadarKeywordAdmin(id: string): Promise<RadarMutationResult> {
+  const supabase = createServiceClient();
+  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  try {
+    const { error } = await supabase.from("radar_news_keywords").delete().eq("id", id);
+    if (error) throw error;
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Keyword silinemedi."
     };
   }
 }

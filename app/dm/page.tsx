@@ -11,7 +11,6 @@ import { SocialTab } from "@/app/dm/_components/social-tab";
 import { InfoTab } from "@/app/dm/_components/info-tab";
 import { DmNav } from "@/app/dm/_components/dm-nav";
 import type { DmTabKey } from "@/app/dm/_components/dm-nav";
-import { ScraperTab } from "@/app/dm/_components/scraper-tab";
 import {
   DM_AMBIENT_BACKGROUND,
   DM_BRAND_GRADIENT,
@@ -37,27 +36,12 @@ import {
   normalizeFindingSeverity
 } from "@/lib/test-findings";
 import { getAllSocialPostsAdmin, setPostShared } from "@/lib/social-posts";
-import {
-  getRadarCandidateCountsAdmin,
-  getRadarCandidatesAdmin,
-  getRadarRunsAdmin,
-  getRadarSourcesAdmin,
-  normalizeRadarReviewStatus,
-  runRadarScanAdmin,
-  setRadarCandidateStatusAdmin,
-  setRadarSourceEnabledAdmin
-} from "@/lib/radar-news";
-import type { RadarReviewStatus } from "@/lib/radar-news";
 import type {
   ProjectTaskPriority,
   ProjectTaskStatus,
   TestFindingSeverity,
   TestFindingStatus
 } from "@/types/site";
-
-// Radar taraması kaynaklar arası rate-limit beklemeleriyle dakikaya yaklaşır;
-// server action'ın Vercel'de erken kesilmemesi için segment süresini yükselt.
-export const maxDuration = 300;
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false }
@@ -110,10 +94,6 @@ const SECTION_META: Record<DmTabKey, { title: string; description: string }> = {
   info: {
     title: "Önemli bilgiler",
     description: "Ekip için kritik erişim bilgileri ve referanslar."
-  },
-  scraper: {
-    title: "Scraper",
-    description: "Veri çekme hattı — kaynaklar, zamanlama ve çekim durumu."
   }
 };
 
@@ -189,6 +169,13 @@ function parseSortOrder(value: string): number {
 
 export default async function DmPage({ searchParams }: DmPageProps) {
   const params = searchParams ? await searchParams : {};
+
+  // Scraper sekmesi bağımsız /dmscraper route'una taşındı — eski linkler
+  // auth check'ten ÖNCE yönlendirilir (gate'i /dmscraper kendisi uygular).
+  if (readParam(params.tab) === "scraper") {
+    redirect("/dmscraper" as Parameters<typeof redirect>[0]);
+  }
+
   const hasAccess = await isTasksAdminAuthenticated();
 
   if (!hasAccess) {
@@ -211,9 +198,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
         ? "social"
         : tabParam === "info"
           ? "info"
-          : tabParam === "scraper"
-            ? "scraper"
-            : "tasks";
+          : "tasks";
   const createdParam = readParam(params.created);
   const updatedParam = readParam(params.updated);
   const errorParam = readParam(params.error);
@@ -243,23 +228,6 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   // Social content posts — fetched regardless so the tab badge stays accurate.
   const socialResult = await getAllSocialPostsAdmin();
-
-  // Radar scraper — sayaçlar her zaman (nav rozeti), detay sadece kendi sekmesinde.
-  const radarCounts = await getRadarCandidateCountsAdmin();
-  const radarStatusParam = readParam(params.rstatus);
-  const radarStatusFilter: RadarReviewStatus | "all" =
-    radarStatusParam === "all"
-      ? "all"
-      : radarStatusParam
-        ? normalizeRadarReviewStatus(radarStatusParam)
-        : "pending";
-  const radarSources = activeTab === "scraper" ? await getRadarSourcesAdmin() : [];
-  const radarRuns = activeTab === "scraper" ? await getRadarRunsAdmin(8) : [];
-  const radarCandidates =
-    activeTab === "scraper"
-      ? await getRadarCandidatesAdmin(radarStatusFilter, 60)
-      : [];
-  const scanOkParam = readParam(params.scanok);
 
   async function createAction(formData: FormData) {
     "use server";
@@ -481,56 +449,6 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     redirect("/dm?tab=social" as Parameters<typeof redirect>[0]);
   }
 
-  // --- Radar scraper actions ---
-
-  async function radarScanAction() {
-    "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
-    const result = await runRadarScanAdmin("manual");
-    revalidatePath("/dm");
-    const target = result.ok
-      ? `/dm?tab=scraper&scanok=${result.summary?.insertedCount ?? 0}`
-      : `/dm?tab=scraper&error=${encodeURIComponent(result.errorMessage ?? "Tarama başarısız.")}`;
-    redirect(target as Parameters<typeof redirect>[0]);
-  }
-
-  async function radarCandidateStatusAction(formData: FormData) {
-    "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    const status = normalizeRadarReviewStatus(
-      (formData.get("status") as string | null) ?? "pending"
-    );
-    const backFilter = (formData.get("rstatus") as string | null) ?? "pending";
-    if (id) {
-      await setRadarCandidateStatusAdmin(id, status);
-    }
-    revalidatePath("/dm");
-    redirect(
-      `/dm?tab=scraper&rstatus=${encodeURIComponent(backFilter)}` as Parameters<
-        typeof redirect
-      >[0]
-    );
-  }
-
-  async function radarSourceToggleAction(formData: FormData) {
-    "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    const enabled = (formData.get("enabled") as string | null) === "1";
-    if (id) {
-      await setRadarSourceEnabledAdmin(id, enabled);
-    }
-    revalidatePath("/dm");
-    redirect("/dm?tab=scraper" as Parameters<typeof redirect>[0]);
-  }
-
   const allTasks = tasksResult.items;
   const owners = Array.from(new Set(allTasks.map((task) => task.owner)));
 
@@ -589,8 +507,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
               count: allFindings.length
             },
             { key: "social", label: "İçerik", count: allSocialPosts.length },
-            { key: "info", label: "Önemli bilgiler", count: 6 },
-            { key: "scraper", label: "Scraper", count: radarCounts.pending }
+            { key: "info", label: "Önemli bilgiler", count: 6 }
           ]}
           cardClass={cardClass}
           cardInnerClass={cardInnerClass}
@@ -625,11 +542,6 @@ export default async function DmPage({ searchParams }: DmPageProps) {
         {updatedParam === "1" && (
           <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-xs font-medium text-emerald-300">
             {activeTab === "findings" ? "Bulgu güncellendi." : "Görev güncellendi."}
-          </div>
-        )}
-        {scanOkParam !== "" && (
-          <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-xs font-medium text-emerald-300">
-            Tarama tamamlandı — {scanOkParam} yeni aday kuyruğa eklendi.
           </div>
         )}
         {errorParam ? (
@@ -910,21 +822,8 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             cardInnerClass={cardInnerClass}
             toggleShareAction={toggleShareAction}
           />
-        ) : activeTab === "info" ? (
-          <InfoTab cardClass={cardClass} cardInnerClass={cardInnerClass} />
         ) : (
-          <ScraperTab
-            sources={radarSources}
-            runs={radarRuns}
-            candidates={radarCandidates}
-            counts={radarCounts}
-            statusFilter={radarStatusFilter}
-            cardClass={cardClass}
-            cardInnerClass={cardInnerClass}
-            scanAction={radarScanAction}
-            candidateStatusAction={radarCandidateStatusAction}
-            sourceToggleAction={radarSourceToggleAction}
-          />
+          <InfoTab cardClass={cardClass} cardInnerClass={cardInnerClass} />
         )}
         </div>
       </div>

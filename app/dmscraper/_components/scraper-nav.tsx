@@ -1,22 +1,24 @@
+// /dmscraper navigasyonu — app/dm/_components/dm-nav.tsx'in uyarlanmış
+// kopyası (bölümler ?sec= ile). DmNav bilinçli olarak generalize edilmedi.
+
 import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
 
-export type DmTabKey = "tasks" | "findings" | "social" | "info";
+export type ScraperSectionKey = "kuyruk" | "kaynaklar" | "kosular" | "keywords";
 
-export interface DmNavItem {
-  key: DmTabKey;
+export interface ScraperNavItem {
+  key: ScraperSectionKey;
   label: string;
   count?: number;
 }
 
-interface DmNavProps {
-  activeTab: DmTabKey;
-  items: DmNavItem[];
+interface ScraperNavProps {
+  activeSection: ScraperSectionKey;
+  items: ScraperNavItem[];
   cardClass: string;
   cardInnerClass: string;
   signOutAction: () => Promise<void>;
 }
 
-/** Compact brand block shared by the sidebar and the mobile top bar. */
 function BrandBlock({ compact = false }: { compact?: boolean }) {
   return (
     <div className="flex items-center gap-3">
@@ -40,7 +42,7 @@ function BrandBlock({ compact = false }: { compact?: boolean }) {
           className="text-[9px] font-semibold uppercase tracking-[0.28em]"
           style={{ color: "#f0abfc" }}
         >
-          Proje yönetimi
+          Radar scraper
         </p>
         <p
           className={`mt-0.5 font-body font-bold tracking-[-0.03em] text-white ${
@@ -54,7 +56,6 @@ function BrandBlock({ compact = false }: { compact?: boolean }) {
   );
 }
 
-/** Live "Secure" badge (moved out of the old hero overlay). */
 function SecureBadge() {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
@@ -73,18 +74,13 @@ function countBadge(isActive: boolean): string {
   }`;
 }
 
-/**
- * `/dm` navigation. Desktop (lg+): sticky left sidebar with brand block,
- * vertical menu and sign-out. Mobile: compact top bar plus a horizontally
- * scrollable tab strip. Plain links (?tab=) — no client JS needed.
- */
-export function DmNav({
-  activeTab,
+export function ScraperNav({
+  activeSection,
   items,
   cardClass,
   cardInnerClass,
   signOutAction
-}: DmNavProps) {
+}: ScraperNavProps) {
   return (
     <aside className="flex flex-col gap-3 lg:sticky lg:top-8 lg:self-start">
       {/* Mobile top bar */}
@@ -107,25 +103,23 @@ export function DmNav({
         </div>
       </div>
 
-      {/* Mobile horizontal tab strip */}
+      {/* Mobile horizontal section strip */}
       <nav className={`lg:hidden ${cardClass}`}>
         <div
           className={`${cardInnerClass} flex gap-1.5 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
         >
           {items.map((item) => {
-            const isActive = activeTab === item.key;
+            const isActive = activeSection === item.key;
             return (
               <a
                 key={item.key}
-                href={`/dm?tab=${item.key}`}
+                href={`/dmscraper?sec=${item.key}`}
                 className={`flex shrink-0 items-center gap-2 rounded-[1.1rem] px-4 py-2.5 text-xs font-semibold tracking-tight transition ${
                   isActive
                     ? "text-white shadow-[0_10px_30px_-10px_rgba(255,45,149,0.7)] ring-1 ring-inset ring-white/15"
                     : "text-white/55 hover:bg-white/[0.04] hover:text-white"
                 }`}
-                style={
-                  isActive ? { backgroundImage: DM_BRAND_GRADIENT } : undefined
-                }
+                style={isActive ? { backgroundImage: DM_BRAND_GRADIENT } : undefined}
               >
                 {item.label}
                 {item.count !== undefined ? (
@@ -147,19 +141,17 @@ export function DmNav({
 
           <nav className="flex flex-col gap-1 py-3">
             {items.map((item) => {
-              const isActive = activeTab === item.key;
+              const isActive = activeSection === item.key;
               return (
                 <a
                   key={item.key}
-                  href={`/dm?tab=${item.key}`}
+                  href={`/dmscraper?sec=${item.key}`}
                   className={`relative flex items-center justify-between gap-2 rounded-[1rem] px-3.5 py-2.5 text-[13px] font-semibold tracking-tight transition ${
                     isActive
                       ? "text-white shadow-[0_10px_30px_-10px_rgba(255,45,149,0.7)] ring-1 ring-inset ring-white/15"
                       : "text-white/55 hover:bg-white/[0.04] hover:text-white"
                   }`}
-                  style={
-                    isActive ? { backgroundImage: DM_BRAND_GRADIENT } : undefined
-                  }
+                  style={isActive ? { backgroundImage: DM_BRAND_GRADIENT } : undefined}
                 >
                   {isActive ? (
                     <span
@@ -167,9 +159,7 @@ export function DmNav({
                       className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-white/85 shadow-[0_0_8px_rgba(255,255,255,0.7)]"
                     />
                   ) : null}
-                  <span className={isActive ? "pl-2" : undefined}>
-                    {item.label}
-                  </span>
+                  <span className={isActive ? "pl-2" : undefined}>{item.label}</span>
                   {item.count !== undefined ? (
                     <span className={countBadge(isActive)}>{item.count}</span>
                   ) : null}

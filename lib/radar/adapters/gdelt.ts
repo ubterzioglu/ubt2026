@@ -27,8 +27,18 @@ export const gdeltAdapter: RadarNewsAdapter = {
     if (!security.ok) throw new Error(`SSRF engeli: ${security.reason}`);
 
     const cfg = source.config as Record<string, string>;
+    // Sorgu kaynağı: kaynak satırındaki query_text > config.query. İkisi de
+    // boşsa hata — yanlış konfigüre edilmiş kaynak sessizce alakasız bir
+    // varsayılanı taramasın; hata last_error_message'a düşer, UI gösterir.
+    const queryText =
+      (source.query_text ?? "").trim() || (cfg["query"] ?? "").trim();
+    if (!queryText) {
+      throw new Error(
+        "GDELT kaynağında sorgu tanımlı değil (query_text veya config.query doldurulmalı)"
+      );
+    }
     const params = new URLSearchParams({
-      query: cfg["query"] ?? "Turkish diaspora",
+      query: queryText,
       mode: cfg["mode"] ?? "artlist",
       maxrecords: String(
         Math.min(Number(cfg["maxrecords"] ?? 100), source.max_items_per_scan)

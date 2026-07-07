@@ -1,6 +1,9 @@
 // Relevance scoring — ported from corteqsmvp. DB'den yüklenen keyword seti
-// verildiğinde hardcode listeler YOK SAYILIR; set boşsa fallback listeler
-// devreye girer (geri uyumluluk + güvenli varsayılan).
+// verildiğinde hardcode listeler (pozitif VE negatif) YOK SAYILIR; set tamamen
+// boşsa fallback listeler devreye girer (geri uyumluluk + güvenli varsayılan).
+// Desiremap retarget notu: hardcode NEGATIVE_KEYWORDS diaspora dönemine ait —
+// DB'de herhangi bir keyword varken uygulanmaz, aksi halde sektör haberlerini
+// ("erotik" vb.) boğar. CLICKBAIT_PATTERNS her zaman uygulanır.
 
 import type { RadarNewsSourceRow, RelevanceReason } from "@/lib/radar/types";
 
@@ -152,11 +155,12 @@ export function scoreRelevance(
     raw += 10;
   }
 
-  // Negatif: içerik kalitesiz. DB negatifleri + hardcode liste birlikte uygulanır.
-  const negativeNeedles = [
-    ...negativeKeywords.map((k) => k.keyword.toLowerCase()),
-    ...NEGATIVE_KEYWORDS
-  ];
+  // Negatif: DB'de herhangi bir keyword varsa yalnız DB negatifleri geçerlidir;
+  // hardcode liste sadece tam fallback modunda (keyword tablosu boş) uygulanır.
+  const negativeNeedles =
+    (dbKeywords ?? []).length > 0
+      ? negativeKeywords.map((k) => k.keyword.toLowerCase())
+      : NEGATIVE_KEYWORDS;
   for (const kw of negativeNeedles) {
     if (kw && combinedLower.includes(kw)) {
       reasons.push({ rule: "negative_keyword", value: kw, score: -40 });

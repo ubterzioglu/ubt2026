@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cat \\\"C:\\\\Users\\\\BARIS-~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--temp-private-ubt2026\\\\d7443420-caa5-4b8d-a6d1-1fed5ab55866\\\\tasks\\\\b02tuhg9n.output\\\"\",\"description\":\"Read GDELT 5-min retry out...",
+  "error": "Exit code 1\nHTTP 000, 0 bytes\r\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-723b-cwd: No such file or directory",
+  "timestamp": "2026-07-07T17:32:57.270Z",
+  "retry_count": 1
+}
