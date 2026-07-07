@@ -287,7 +287,8 @@ const DETR_DEFAULT_ALLOWED_EMAILS = [
   "sumeyyanacar08@gmail.com",
   "fatihmclskn@gmail.com",
   "corteqssocial@gmail.com",
-  "ubterzioglu@gmail.com"
+  "ubterzioglu@gmail.com",
+  "ozbakirsahincande@gmail.com"
 ];
 
 /**
