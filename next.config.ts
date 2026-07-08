@@ -8,7 +8,12 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true
   },
   experimental: {
-    optimizePackageImports: ["lucide-react"]
+    optimizePackageImports: ["lucide-react"],
+    serverActions: {
+      // Default is 1 MB, which silently caps the /dm screenshot (5 MB) and
+      // /detr attachment (10 MB) uploads; headroom added for form overhead.
+      bodySizeLimit: "12mb"
+    }
   }
 };
 

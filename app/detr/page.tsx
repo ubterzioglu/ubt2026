@@ -16,7 +16,9 @@ import {
   setDetrTodoStatus,
   deleteDetrTodo,
   addDetrComment,
-  deleteDetrComment
+  deleteDetrComment,
+  addDetrAttachment,
+  deleteDetrAttachment
 } from "@/lib/detr-todos";
 import type { DetrTodoItem } from "@/lib/detr-todos";
 
@@ -96,6 +98,7 @@ export default async function DetrPage({ searchParams }: DetrPageProps) {
   const updatedParam = readParam(params.updated);
   const deletedParam = readParam(params.deleted);
   const commentedParam = readParam(params.commented);
+  const attachedParam = readParam(params.attached);
   const errorParam = readParam(params.error);
   const editId = readParam(params.edit);
   const editing = editId ? await getDetrTodoByIdAdmin(editId) : null;
@@ -113,14 +116,59 @@ export default async function DetrPage({ searchParams }: DetrPageProps) {
       assignee: (formData.get("assignee") as string | null) ?? "",
       dueDate: (formData.get("dueDate") as string | null) ?? ""
     });
+    // Optional attachment uploaded right after the todo row exists.
+    let attachError: string | null = null;
+    const file = formData.get("file");
+    if (outcome.ok && outcome.id && file instanceof File && file.size > 0) {
+      const attached = await addDetrAttachment(outcome.id, file);
+      if (!attached.ok) {
+        attachError = attached.errorMessage ?? "Dosya yüklenemedi.";
+      }
+    }
     revalidatePath("/detr");
     redirect(
       (outcome.ok
-        ? "/detr?created=1"
+        ? attachError
+          ? `/detr?created=1&error=${encodeURIComponent(`Görev eklendi ama dosya yüklenemedi: ${attachError}`)}`
+          : "/detr?created=1"
         : `/detr?error=${encodeURIComponent(outcome.errorMessage ?? "Görev eklenemedi.")}`) as Parameters<
         typeof redirect
       >[0]
     );
+  }
+
+  async function attachAction(formData: FormData) {
+    "use server";
+    if (!(await isDetrAuthenticated())) {
+      redirect("/detr" as Parameters<typeof redirect>[0]);
+    }
+    const todoId = (formData.get("todoId") as string | null) ?? "";
+    const file = formData.get("file");
+    if (!todoId || !(file instanceof File) || file.size === 0) {
+      redirect("/detr" as Parameters<typeof redirect>[0]);
+    }
+    const outcome = await addDetrAttachment(todoId, file);
+    revalidatePath("/detr");
+    redirect(
+      (outcome.ok
+        ? "/detr?attached=1"
+        : `/detr?error=${encodeURIComponent(outcome.errorMessage ?? "Dosya yüklenemedi.")}`) as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function deleteAttachmentAction(formData: FormData) {
+    "use server";
+    if (!(await isDetrAuthenticated())) {
+      redirect("/detr" as Parameters<typeof redirect>[0]);
+    }
+    const attachmentId = (formData.get("attachmentId") as string | null) ?? "";
+    if (attachmentId) {
+      await deleteDetrAttachment(attachmentId);
+    }
+    revalidatePath("/detr");
+    redirect("/detr" as Parameters<typeof redirect>[0]);
   }
 
   async function updateAction(formData: FormData) {
@@ -311,6 +359,11 @@ export default async function DetrPage({ searchParams }: DetrPageProps) {
             Yorum eklendi.
           </div>
         )}
+        {attachedParam === "1" && (
+          <div className="rounded-[1.1rem] border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-[13px] font-medium text-emerald-200">
+            Dosya yüklendi.
+          </div>
+        )}
         {deletedParam === "1" && (
           <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
             Görev silindi.
@@ -439,6 +492,16 @@ export default async function DetrPage({ searchParams }: DetrPageProps) {
                   className={`${darkInput} [color-scheme:dark]`}
                 />
               </label>
+              {!editing && (
+                <label className="block sm:col-span-2 lg:col-span-3">
+                  <span className={formLabel}>Dosya (opsiyonel · en fazla 10 MB)</span>
+                  <input
+                    type="file"
+                    name="file"
+                    className={`${darkInput} file:mr-3 file:rounded-full file:border-0 file:bg-white/10 file:px-3 file:py-1 file:text-[11px] file:font-semibold file:text-white/80`}
+                  />
+                </label>
+              )}
             </div>
             <button
               type="submit"
@@ -467,6 +530,8 @@ export default async function DetrPage({ searchParams }: DetrPageProps) {
                 deleteAction={deleteAction}
                 commentAction={commentAction}
                 deleteCommentAction={deleteCommentAction}
+                attachAction={attachAction}
+                deleteAttachmentAction={deleteAttachmentAction}
               />
             ))
           )}
@@ -486,6 +551,14 @@ interface TodoRowProps {
   deleteAction: ServerFormAction;
   commentAction: ServerFormAction;
   deleteCommentAction: ServerFormAction;
+  attachAction: ServerFormAction;
+  deleteAttachmentAction: ServerFormAction;
+}
+
+/** Human-readable file size (KB below 1 MB, MB otherwise). */
+function formatFileSize(bytes: number): string {
+  if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
 /**
@@ -499,7 +572,9 @@ function TodoRow({
   toggleAction,
   deleteAction,
   commentAction,
-  deleteCommentAction
+  deleteCommentAction,
+  attachAction,
+  deleteAttachmentAction
 }: TodoRowProps) {
   const isDone = item.status === "done";
   const isOverdue = !isDone && item.dueDate !== null && item.dueDate < today;
@@ -593,6 +668,97 @@ function TodoRow({
           </form>
         </div>
       </div>
+
+      {/* Attachments */}
+      <details className="group/files border-t border-white/[0.06]">
+        <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2 text-[11px] font-semibold text-white/45 transition hover:text-white/70 [&::-webkit-details-marker]:hidden">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+          </svg>
+          Dosyalar ({item.attachments.length})
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-white/30 transition-transform duration-200 group-open/files:rotate-180"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </summary>
+        <div className="space-y-2 px-4 pb-3">
+          {item.attachments.map((file) => (
+            <div
+              key={file.id}
+              className="flex items-center gap-3 rounded-[0.7rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2"
+            >
+              {file.url ? (
+                <a
+                  href={file.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="min-w-0 flex-1 truncate text-[13px] font-semibold text-sky-300 transition hover:text-sky-200"
+                  title={file.fileName}
+                >
+                  {file.fileName}
+                </a>
+              ) : (
+                <span
+                  className="min-w-0 flex-1 truncate text-[13px] font-semibold text-white/40"
+                  title={`${file.fileName} (bağlantı üretilemedi)`}
+                >
+                  {file.fileName}
+                </span>
+              )}
+              <span className="shrink-0 text-[11px] text-white/35">
+                {formatFileSize(file.sizeBytes)} · {formatTimestamp(file.createdAt)}
+              </span>
+              <form action={deleteAttachmentAction} className="shrink-0">
+                <input type="hidden" name="attachmentId" value={file.id} />
+                <button
+                  type="submit"
+                  title="Dosyayı sil"
+                  className="text-[11px] font-semibold text-white/30 transition hover:text-rose-300"
+                >
+                  Sil
+                </button>
+              </form>
+            </div>
+          ))}
+          <form
+            action={attachAction}
+            className="flex flex-col gap-2 sm:flex-row sm:items-center"
+          >
+            <input type="hidden" name="todoId" value={item.id} />
+            <input
+              type="file"
+              name="file"
+              required
+              className={`${darkInput} file:mr-3 file:rounded-full file:border-0 file:bg-white/10 file:px-3 file:py-1 file:text-[11px] file:font-semibold file:text-white/80`}
+            />
+            <button
+              type="submit"
+              className="inline-flex min-h-[36px] shrink-0 items-center justify-center rounded-[0.7rem] px-4 py-1.5 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15"
+              style={{ backgroundImage: DETR_BRAND_GRADIENT }}
+            >
+              Yükle
+            </button>
+          </form>
+        </div>
+      </details>
 
       {/* Comment thread */}
       <details className="group/comments border-t border-white/[0.06]">

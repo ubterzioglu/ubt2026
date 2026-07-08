@@ -22,6 +22,16 @@ export interface DetrTodoComment {
   createdAt: string;
 }
 
+export interface DetrTodoAttachment {
+  id: string;
+  todoId: string;
+  fileName: string;
+  sizeBytes: number;
+  /** Signed download URL (null when signing failed). */
+  url: string | null;
+  createdAt: string;
+}
+
 export interface DetrTodoItem {
   id: string;
   title: string;
@@ -30,6 +40,7 @@ export interface DetrTodoItem {
   dueDate: string | null;
   status: DetrTodoStatus;
   comments: DetrTodoComment[];
+  attachments: DetrTodoAttachment[];
   createdAt: string;
   updatedAt: string;
 }
@@ -70,10 +81,24 @@ interface SupabaseCommentRow {
   created_at: string;
 }
 
+interface SupabaseAttachmentRow {
+  id: string;
+  todo_id: string;
+  storage_path: string;
+  file_name: string;
+  size_bytes: number;
+  created_at: string;
+}
+
 const TODO_COLUMNS = "id, title, assignee, due_date, status, created_at, updated_at";
 const COMMENT_COLUMNS = "id, todo_id, body, author, created_at";
+const ATTACHMENT_COLUMNS = "id, todo_id, storage_path, file_name, size_bytes, created_at";
 
 const DUE_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+const ATTACHMENT_BUCKET = "detr-files";
+const SIGNED_URL_TTL_SECONDS = 60 * 60 * 8; // 8 hours, matches the admin session
+const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024; // 10 MB
 
 function getServiceEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -97,7 +122,11 @@ function normalizeDueDate(value: string): string | null {
   return DUE_DATE_PATTERN.test(trimmed) ? trimmed : null;
 }
 
-function toTodoItem(row: SupabaseTodoRow, comments: DetrTodoComment[]): DetrTodoItem {
+function toTodoItem(
+  row: SupabaseTodoRow,
+  comments: DetrTodoComment[],
+  attachments: DetrTodoAttachment[]
+): DetrTodoItem {
   return {
     id: row.id,
     title: row.title,
@@ -105,6 +134,7 @@ function toTodoItem(row: SupabaseTodoRow, comments: DetrTodoComment[]): DetrTodo
     dueDate: row.due_date,
     status: normalizeDetrStatus(row.status),
     comments,
+    attachments,
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
@@ -121,8 +151,57 @@ function toComment(row: SupabaseCommentRow): DetrTodoComment {
 }
 
 /**
- * Returns every todo with its full comment thread. Open todos come first,
- * ordered by deadline (todos without a deadline last), then by creation time.
+ * Signs every attachment row's storage path in one batch and groups the
+ * results by todo id. Signing failures degrade to url: null per file.
+ */
+async function loadAttachmentsByTodo(
+  supabase: SupabaseClient
+): Promise<Map<string, DetrTodoAttachment[]>> {
+  const byTodo = new Map<string, DetrTodoAttachment[]>();
+  const { data, error } = await supabase
+    .from("detr_todo_attachments")
+    .select(ATTACHMENT_COLUMNS)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  const rows = (data ?? []) as SupabaseAttachmentRow[];
+  if (rows.length === 0) return byTodo;
+
+  const urlByPath = new Map<string, string>();
+  try {
+    const { data: signed } = await supabase.storage
+      .from(ATTACHMENT_BUCKET)
+      .createSignedUrls(
+        rows.map((row) => row.storage_path),
+        SIGNED_URL_TTL_SECONDS
+      );
+    for (const entry of signed ?? []) {
+      if (entry.path && entry.signedUrl) {
+        urlByPath.set(entry.path, entry.signedUrl);
+      }
+    }
+  } catch {
+    // Signing failed as a whole; every attachment falls back to url: null.
+  }
+
+  for (const row of rows) {
+    const list = byTodo.get(row.todo_id) ?? [];
+    list.push({
+      id: row.id,
+      todoId: row.todo_id,
+      fileName: row.file_name,
+      sizeBytes: row.size_bytes,
+      url: urlByPath.get(row.storage_path) ?? null,
+      createdAt: row.created_at
+    });
+    byTodo.set(row.todo_id, list);
+  }
+  return byTodo;
+}
+
+/**
+ * Returns every todo with its full comment thread and signed attachment
+ * links. Open todos come first, ordered by deadline (todos without a
+ * deadline last), then by creation time.
  */
 export async function getAllDetrTodosAdmin(): Promise<DetrTodosResult> {
   const supabase = createServiceClient();
@@ -136,6 +215,7 @@ export async function getAllDetrTodosAdmin(): Promise<DetrTodosResult> {
     const rows = (data ?? []) as SupabaseTodoRow[];
 
     const commentsByTodo = new Map<string, DetrTodoComment[]>();
+    let attachmentsByTodo = new Map<string, DetrTodoAttachment[]>();
     if (rows.length > 0) {
       const { data: commentRows, error: commentError } = await supabase
         .from("detr_todo_comments")
@@ -147,10 +227,17 @@ export async function getAllDetrTodosAdmin(): Promise<DetrTodosResult> {
         list.push(toComment(row));
         commentsByTodo.set(row.todo_id, list);
       }
+      attachmentsByTodo = await loadAttachmentsByTodo(supabase);
     }
 
     const items = rows
-      .map((row) => toTodoItem(row, commentsByTodo.get(row.id) ?? []))
+      .map((row) =>
+        toTodoItem(
+          row,
+          commentsByTodo.get(row.id) ?? [],
+          attachmentsByTodo.get(row.id) ?? []
+        )
+      )
       .sort((a, b) => {
         if (a.status !== b.status) return a.status === "open" ? -1 : 1;
         if (a.dueDate !== b.dueDate) {
@@ -182,13 +269,123 @@ export async function getDetrTodoByIdAdmin(id: string): Promise<DetrTodoItem | n
       .maybeSingle();
     if (error) throw error;
     if (!data) return null;
-    return toTodoItem(data as SupabaseTodoRow, []);
+    return toTodoItem(data as SupabaseTodoRow, [], []);
   } catch {
     return null;
   }
 }
 
-export async function createDetrTodo(input: DetrTodoInput): Promise<MutationResult> {
+/** Validate + upload one attachment. Returns the stored path or an error. */
+async function uploadAttachment(
+  supabase: SupabaseClient,
+  todoId: string,
+  file: File
+): Promise<{ ok: true; path: string } | { ok: false; errorMessage: string }> {
+  if (file.size > MAX_ATTACHMENT_BYTES) {
+    return { ok: false, errorMessage: "Dosya en fazla 10 MB olabilir." };
+  }
+  // Storage keys must be ASCII-safe; the original name is kept in the table.
+  const safeName =
+    file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-80) || "dosya";
+  // Date.now() keeps successive uploads for the same todo distinct.
+  const path = `todos/${todoId}/${Date.now()}-${safeName}`;
+  try {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const { error } = await supabase.storage
+      .from(ATTACHMENT_BUCKET)
+      .upload(path, bytes, {
+        contentType: file.type || "application/octet-stream",
+        upsert: true
+      });
+    if (error) throw error;
+    return { ok: true, path };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Yükleme başarısız."
+    };
+  }
+}
+
+async function removeAttachmentObjects(
+  supabase: SupabaseClient,
+  paths: string[]
+): Promise<void> {
+  if (paths.length === 0) return;
+  try {
+    await supabase.storage.from(ATTACHMENT_BUCKET).remove(paths);
+  } catch {
+    // Best-effort cleanup; a dangling object is harmless.
+  }
+}
+
+/** Uploads a file and links it to the todo. */
+export async function addDetrAttachment(
+  todoId: string,
+  file: File
+): Promise<MutationResult> {
+  if (!file || file.size === 0) {
+    return { ok: false, errorMessage: "Dosya seçilmedi." };
+  }
+  const supabase = createServiceClient();
+  if (!supabase) {
+    return { ok: false, errorMessage: "Service credentials missing." };
+  }
+  const uploaded = await uploadAttachment(supabase, todoId, file);
+  if (!uploaded.ok) return uploaded;
+  try {
+    const { error } = await supabase.from("detr_todo_attachments").insert({
+      todo_id: todoId,
+      storage_path: uploaded.path,
+      file_name: file.name || "dosya",
+      size_bytes: file.size
+    });
+    if (error) throw error;
+    return { ok: true };
+  } catch (error) {
+    // Row insert failed — don't leave the freshly uploaded object dangling.
+    await removeAttachmentObjects(supabase, [uploaded.path]);
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Attach failed."
+    };
+  }
+}
+
+export async function deleteDetrAttachment(
+  attachmentId: string
+): Promise<MutationResult> {
+  const supabase = createServiceClient();
+  if (!supabase) {
+    return { ok: false, errorMessage: "Service credentials missing." };
+  }
+  try {
+    // Read the path first so the Storage object can be removed after the row.
+    const { data: existing } = await supabase
+      .from("detr_todo_attachments")
+      .select("storage_path")
+      .eq("id", attachmentId)
+      .maybeSingle();
+    const { error } = await supabase
+      .from("detr_todo_attachments")
+      .delete()
+      .eq("id", attachmentId);
+    if (error) throw error;
+    const path =
+      (existing as { storage_path: string } | null)?.storage_path ?? null;
+    if (path) await removeAttachmentObjects(supabase, [path]);
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Delete failed."
+    };
+  }
+}
+
+export async function createDetrTodo(
+  input: DetrTodoInput
+): Promise<MutationResult & { id?: string }> {
   const title = input.title.trim();
   if (title.length < 2) {
     return { ok: false, errorMessage: "Görev başlığı en az 2 karakter olmalı." };
@@ -198,14 +395,18 @@ export async function createDetrTodo(input: DetrTodoInput): Promise<MutationResu
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
-    const { error } = await supabase.from("detr_todos").insert({
-      title,
-      assignee: input.assignee.trim() || "Ortak",
-      due_date: normalizeDueDate(input.dueDate),
-      status: "open"
-    });
+    const { data, error } = await supabase
+      .from("detr_todos")
+      .insert({
+        title,
+        assignee: input.assignee.trim() || "Ortak",
+        due_date: normalizeDueDate(input.dueDate),
+        status: "open"
+      })
+      .select("id")
+      .single();
     if (error) throw error;
-    return { ok: true };
+    return { ok: true, id: (data as { id: string }).id };
   } catch (error) {
     return {
       ok: false,
@@ -274,8 +475,20 @@ export async function deleteDetrTodo(id: string): Promise<MutationResult> {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
+    // Attachment rows cascade with the todo, but the Storage objects don't —
+    // read their paths first so they can be removed after the row delete.
+    const { data: attachmentRows } = await supabase
+      .from("detr_todo_attachments")
+      .select("storage_path")
+      .eq("todo_id", id);
     const { error } = await supabase.from("detr_todos").delete().eq("id", id);
     if (error) throw error;
+    await removeAttachmentObjects(
+      supabase,
+      ((attachmentRows ?? []) as { storage_path: string }[]).map(
+        (row) => row.storage_path
+      )
+    );
     return { ok: true };
   } catch (error) {
     return {
