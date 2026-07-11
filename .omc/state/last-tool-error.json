@@ -1,7 +1,0 @@
-{
-  "tool_name": "PowerShell",
-  "tool_input_preview": "{\"command\":\"git add lib/admin-auth.ts lib/detr-todos.ts app/detr supabase/migrations/20260707160000_create_detr_todos.sql && git commit -m @'\\nfeat(detr): add /detr todo board with email allowlist gat...",
-  "error": "Exit code 1\n[main afc725d] feat(detr): add /detr todo board with email allowlist gate\n 7 files changed, 1465 insertions(+)\n create mode 100644 app/detr/_actions.ts\n create mode 100644 app/detr/_components/detr-login.tsx\n create mode 100644 app/detr/_components/theme.ts\n create mode 100644 app/detr/page.tsx\n create mode 100644 lib/detr-todos.ts\n create mode 100644 supabase/migrations/20260707160000_create_detr_todos.sql\nremote: error: GH013: Repository rule violations found for refs/heads/main.  ...",
-  "timestamp": "2026-07-07T21:05:07.987Z",
-  "retry_count": 1
-}

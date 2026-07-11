@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1783456569972,
+  "lastScanned": 1783798335758,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -82,7 +82,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1783456569895,
+      "lastAccessed": 1783798335701,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -95,7 +95,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1783456569895,
+      "lastAccessed": 1783798335702,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -105,7 +105,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1783456569898,
+      "lastAccessed": 1783798335704,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -118,7 +118,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1783456569899,
+      "lastAccessed": 1783798335728,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -131,7 +131,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783456569900,
+      "lastAccessed": 1783798335729,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -142,14 +142,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1783456569900,
+      "lastAccessed": 1783798335730,
       "keyFiles": []
     },
     "experience": {
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783456569901,
+      "lastAccessed": 1783798335730,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -159,8 +159,8 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 19,
-      "lastAccessed": 1783456569901,
+      "fileCount": 20,
+      "lastAccessed": 1783798335730,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -173,7 +173,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1783456569901,
+      "lastAccessed": 1783798335731,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -186,7 +186,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1783456569902,
+      "lastAccessed": 1783798335732,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -197,7 +197,7 @@
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 3,
-      "lastAccessed": 1783456569902,
+      "lastAccessed": 1783798335732,
       "keyFiles": [
         "convert-cvopt-to-reviews.mjs",
         "migrate-cvopt-participants.mjs",
@@ -208,7 +208,7 @@
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783456569902,
+      "lastAccessed": 1783798335732,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -218,7 +218,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1783456569902,
+      "lastAccessed": 1783798335733,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -229,14 +229,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1783456569903,
+      "lastAccessed": 1783798335734,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
-      "fileCount": 26,
-      "lastAccessed": 1783456569905,
+      "fileCount": 28,
+      "lastAccessed": 1783798335738,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -244,109 +244,6 @@
       ]
     }
   },
-  "hotPaths": [
-    {
-      "path": "app\\detr\\page.tsx",
-      "accessCount": 10,
-      "lastAccessed": 1783497479911,
-      "type": "file"
-    },
-    {
-      "path": "lib\\detr-todos.ts",
-      "accessCount": 8,
-      "lastAccessed": 1783497388775,
-      "type": "file"
-    },
-    {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 7,
-      "lastAccessed": 1783459940895,
-      "type": "file"
-    },
-    {
-      "path": "app\\detr\\_actions.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783457120071,
-      "type": "file"
-    },
-    {
-      "path": "app\\detr\\_components\\detr-login.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1783457127119,
-      "type": "file"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 2,
-      "lastAccessed": 1783457234749,
-      "type": "file"
-    },
-    {
-      "path": "next.config.ts",
-      "accessCount": 2,
-      "lastAccessed": 1783497515711,
-      "type": "file"
-    },
-    {
-      "path": "app\\bakcakanat\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783456682372,
-      "type": "file"
-    },
-    {
-      "path": "lib\\test-findings.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783456682434,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260627100000_create_test_findings.sql",
-      "accessCount": 1,
-      "lastAccessed": 1783456682501,
-      "type": "file"
-    },
-    {
-      "path": "app\\bakcakanat\\_actions.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783456700372,
-      "type": "file"
-    },
-    {
-      "path": "app\\bakcakanat\\_components\\bakcakanat-login.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1783456701354,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 1,
-      "lastAccessed": 1783456705285,
-      "type": "directory"
-    },
-    {
-      "path": "app\\bakcakanat\\_components\\theme.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783456713165,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260707160000_create_detr_todos.sql",
-      "accessCount": 1,
-      "lastAccessed": 1783456771843,
-      "type": "file"
-    },
-    {
-      "path": "app\\detr\\_components\\theme.ts",
-      "accessCount": 1,
-      "lastAccessed": 1783456837712,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260708090000_create_detr_attachments.sql",
-      "accessCount": 1,
-      "lastAccessed": 1783497240653,
-      "type": "file"
-    }
-  ],
+  "hotPaths": [],
   "userDirectives": []
 }
