@@ -110,6 +110,43 @@ export default async function Dmscraper2Page({ searchParams }: Dmscraper2PagePro
         title="Service Finder"
         description="Mekan tarama hattına erişim korunuyor. Devam etmek için DM admin anahtarını gir."
         submitLabel="Panoyu aç"
+        guide={{
+          title: "Bu pano ne işe yarar? · Kullanım rehberi",
+          intro:
+            "Service Finder, kategori + şehir bazlı MEKAN taraması yapar: " +
+            "web'den aday mekanları arar, sayfalarından bilgi çıkarır ve " +
+            "sınıflandırır (Tavily · SerpAPI · Gemini). Kardeş pano " +
+            "/dmscraper ise mekan değil HABER tarar — ikisi farklı işler.",
+          sections: [
+            {
+              heading: "Tarama işleri",
+              text:
+                "Kategori + şehir seçip işi kuyruğa ekle ve çalıştır. İş " +
+                "birkaç dakika sürebilir; bitince aday mekanları tek tek " +
+                "inceleyip onaylar veya reddedersin."
+            },
+            {
+              heading: "Kategori şablonları",
+              text:
+                "Aranacak kategoriler ve Almanca sorgu kalıpları (FKK · " +
+                "Bordell · Studio · Privat). Şablonu düzenleyerek aramanın " +
+                "ne bulacağını şekillendirirsin."
+            },
+            {
+              heading: "Sağlayıcılar",
+              text:
+                "Tavily arama+ekstraksiyon için ZORUNLU; SerpAPI az sonuçta " +
+                "Google fallback'i; Gemini sınıflandırma yapar. Anahtar " +
+                "durumları burada görünür."
+            },
+            {
+              heading: "Maliyetler",
+              text:
+                "Sağlayıcı bazlı harcama dökümü — arama, ekstraksiyon ve " +
+                "sınıflandırma adımlarının maliyeti ayrı ayrı izlenir."
+            }
+          ]
+        }}
         subtitle="Service finder"
       />
     );

@@ -117,6 +117,45 @@ export default async function DmscraperPage({ searchParams }: DmscraperPageProps
         title="Radar haber scraper'ı"
         description="Radar tarama hattına erişim korunuyor. Devam etmek için DM admin anahtarını gir."
         submitLabel="Panoyu aç"
+        guide={{
+          title: "Bu pano ne işe yarar? · Kullanım rehberi",
+          intro:
+            "Radar, tanımlı haber kaynaklarını (RSS · Atom · GDELT) tarayıp " +
+            "DesireMap kategorileriyle alakalı haberleri keyword sözlüğüne göre " +
+            "skorlar ve aday kuyruğuna düşürür. Sen sadece kuyruğu inceleyip " +
+            "onay/ret kararı verirsin. Kardeş pano /dmscraper2 ise haber değil " +
+            "mekan arar — ikisi farklı işler.",
+          sections: [
+            {
+              heading: "Haber kuyruğu",
+              text:
+                "Tarama adayları skor ve gerekçe etiketleriyle listelenir. " +
+                "Onayla, reddet, kopya işaretle veya arşivle. Düşük skorlular " +
+                "kuyruğa değil doğrudan arşive gider."
+            },
+            {
+              heading: "Kaynaklar",
+              text:
+                "RSS / Atom / GDELT kaynak tanımları. Bir kaynağın kullanım " +
+                "şartları (terms) onaylanmadan kaynak aktifleştirilemez. " +
+                "Tarama buradaki aktif kaynaklar üzerinden koşar."
+            },
+            {
+              heading: "Koşular",
+              text:
+                "Geçmiş taramaların durumu, süresi ve öğe sayaçları. Manuel " +
+                "tarama başlatılabilir; kaynaklar arası bekleme nedeniyle bir " +
+                "koşu ~2 dakika sürebilir."
+            },
+            {
+              heading: "Keywords",
+              text:
+                "Almanca alaka skorlama sözlüğü (desiremap kategorileri). " +
+                "Pozitif kelimeler skor ekler, negatif kelime ilk eşleşmede " +
+                "−40 uygular. Eşik altı adaylar arşive yazılır."
+            }
+          ]
+        }}
         subtitle="Radar scraper"
       />
     );
