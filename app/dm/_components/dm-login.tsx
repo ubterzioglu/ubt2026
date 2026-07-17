@@ -6,18 +6,6 @@ import {
   DM_GRID_TEXTURE
 } from "@/app/dm/_components/theme";
 
-interface DmLoginGuideSection {
-  heading: string;
-  text: string;
-}
-
-/** Content for the optional collapsed how-to accordion above the login card. */
-export interface DmLoginGuide {
-  title: string;
-  intro: string;
-  sections: DmLoginGuideSection[];
-}
-
 interface DmLoginProps {
   /** Sign-in server action (handles its own redirect). */
   signIn: (formData: FormData) => void | Promise<void>;
@@ -28,8 +16,6 @@ interface DmLoginProps {
   brand?: string;
   subtitle?: string;
   footerCaption?: string;
-  /** When set, renders a collapsed usage-guide accordion above the card. */
-  guide?: DmLoginGuide;
 }
 
 /**
@@ -47,12 +33,11 @@ export function DmLogin({
   submitLabel,
   brand = "DesireMap",
   subtitle = "Görev panosu",
-  footerCaption = "desiremap.de · internal",
-  guide
+  footerCaption = "desiremap.de · internal"
 }: DmLoginProps) {
   return (
     <main
-      className="relative isolate flex min-h-screen flex-col items-center justify-center gap-4 overflow-hidden px-4 py-10 sm:px-6"
+      className="relative isolate flex min-h-screen items-center justify-center overflow-hidden px-4 py-10 sm:px-6"
       style={{ background: DM_AMBIENT_BACKGROUND }}
     >
       {/* Grid texture */}
@@ -77,64 +62,6 @@ export function DmLogin({
         className="animate-float pointer-events-none absolute left-1/2 top-1/2 -z-10 h-64 w-64 -translate-x-1/2 rounded-full blur-[150px]"
         style={{ background: "rgba(168,85,247,0.22)" }}
       />
-
-      {/* Optional collapsed usage guide, rendered above the login card */}
-      {guide ? (
-        <details className="group/guide animate-reveal w-full max-w-5xl overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#0a0712]/85 backdrop-blur-2xl">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 [&::-webkit-details-marker]:hidden">
-            <span className="flex items-center gap-2.5 text-sm font-semibold text-white">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-white/50"
-              >
-                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-              </svg>
-              {guide.title}
-            </span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="shrink-0 text-white/40 transition-transform duration-200 group-open/guide:rotate-180"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </summary>
-          <div className="border-t border-white/[0.06] px-6 pb-5 pt-4">
-            <p className="text-[13px] leading-6 text-white/60">{guide.intro}</p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {guide.sections.map((section) => (
-                <div
-                  key={section.heading}
-                  className="rounded-[0.9rem] border border-white/[0.08] bg-white/[0.03] px-4 py-3"
-                >
-                  <p
-                    className="text-[11px] font-semibold uppercase tracking-[0.16em]"
-                    style={{ color: "#f0abfc" }}
-                  >
-                    {section.heading}
-                  </p>
-                  <p className="mt-1 text-[12px] leading-5 text-white/60">
-                    {section.text}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </details>
-      ) : null}
 
       {/* Card shell with tri-color gradient border */}
       <div

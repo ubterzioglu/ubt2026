@@ -8,6 +8,8 @@ import {
   dmscraperSignOutAction
 } from "@/app/dmscraper/_actions";
 import { DmLogin } from "@/app/dm/_components/dm-login";
+import { BoardGuide } from "@/app/dm/_components/board-guide";
+import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 import {
   ScraperNav,
   type ScraperSectionKey
@@ -60,6 +62,47 @@ function readParam(value: string | string[] | undefined): string {
 
 const inputClass =
   "w-full rounded-[0.85rem] border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#ff2d95]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#ff2d95]/15";
+
+// Collapsed how-to card shown at the top of the board after sign-in.
+const SCRAPER_GUIDE: BoardGuideContent = {
+  title: "Bu pano ne işe yarar? · Kullanım rehberi",
+  intro:
+    "Radar, tanımlı haber kaynaklarını (RSS · Atom · GDELT) tarayıp " +
+    "DesireMap kategorileriyle alakalı haberleri keyword sözlüğüne göre " +
+    "skorlar ve aday kuyruğuna düşürür. Sen sadece kuyruğu inceleyip " +
+    "onay/ret kararı verirsin. Kardeş pano /dmscraper2 ise haber değil " +
+    "mekan arar — ikisi farklı işler.",
+  sections: [
+    {
+      heading: "Haber kuyruğu",
+      text:
+        "Tarama adayları skor ve gerekçe etiketleriyle listelenir. " +
+        "Onayla, reddet, kopya işaretle veya arşivle. Düşük skorlular " +
+        "kuyruğa değil doğrudan arşive gider."
+    },
+    {
+      heading: "Kaynaklar",
+      text:
+        "RSS / Atom / GDELT kaynak tanımları. Bir kaynağın kullanım " +
+        "şartları (terms) onaylanmadan kaynak aktifleştirilemez. " +
+        "Tarama buradaki aktif kaynaklar üzerinden koşar."
+    },
+    {
+      heading: "Koşular",
+      text:
+        "Geçmiş taramaların durumu, süresi ve öğe sayaçları. Manuel " +
+        "tarama başlatılabilir; kaynaklar arası bekleme nedeniyle bir " +
+        "koşu ~2 dakika sürebilir."
+    },
+    {
+      heading: "Keywords",
+      text:
+        "Almanca alaka skorlama sözlüğü (desiremap kategorileri). " +
+        "Pozitif kelimeler skor ekler, negatif kelime ilk eşleşmede " +
+        "−40 uygular. Eşik altı adaylar arşive yazılır."
+    }
+  ]
+};
 
 const SECTION_META: Record<ScraperSectionKey, { title: string; description: string }> = {
   kuyruk: {
@@ -117,45 +160,6 @@ export default async function DmscraperPage({ searchParams }: DmscraperPageProps
         title="Radar haber scraper'ı"
         description="Radar tarama hattına erişim korunuyor. Devam etmek için DM admin anahtarını gir."
         submitLabel="Panoyu aç"
-        guide={{
-          title: "Bu pano ne işe yarar? · Kullanım rehberi",
-          intro:
-            "Radar, tanımlı haber kaynaklarını (RSS · Atom · GDELT) tarayıp " +
-            "DesireMap kategorileriyle alakalı haberleri keyword sözlüğüne göre " +
-            "skorlar ve aday kuyruğuna düşürür. Sen sadece kuyruğu inceleyip " +
-            "onay/ret kararı verirsin. Kardeş pano /dmscraper2 ise haber değil " +
-            "mekan arar — ikisi farklı işler.",
-          sections: [
-            {
-              heading: "Haber kuyruğu",
-              text:
-                "Tarama adayları skor ve gerekçe etiketleriyle listelenir. " +
-                "Onayla, reddet, kopya işaretle veya arşivle. Düşük skorlular " +
-                "kuyruğa değil doğrudan arşive gider."
-            },
-            {
-              heading: "Kaynaklar",
-              text:
-                "RSS / Atom / GDELT kaynak tanımları. Bir kaynağın kullanım " +
-                "şartları (terms) onaylanmadan kaynak aktifleştirilemez. " +
-                "Tarama buradaki aktif kaynaklar üzerinden koşar."
-            },
-            {
-              heading: "Koşular",
-              text:
-                "Geçmiş taramaların durumu, süresi ve öğe sayaçları. Manuel " +
-                "tarama başlatılabilir; kaynaklar arası bekleme nedeniyle bir " +
-                "koşu ~2 dakika sürebilir."
-            },
-            {
-              heading: "Keywords",
-              text:
-                "Almanca alaka skorlama sözlüğü (desiremap kategorileri). " +
-                "Pozitif kelimeler skor ekler, negatif kelime ilk eşleşmede " +
-                "−40 uygular. Eşik altı adaylar arşive yazılır."
-            }
-          ]
-        }}
         subtitle="Radar scraper"
       />
     );
@@ -440,6 +444,12 @@ export default async function DmscraperPage({ searchParams }: DmscraperPageProps
         />
 
         <div className="mt-5 flex min-w-0 flex-col gap-5 lg:mt-0">
+          <BoardGuide
+            guide={SCRAPER_GUIDE}
+            cardClass={cardClass}
+            cardInnerClass={cardInnerClass}
+          />
+
           {/* Active section header */}
           <section className={cardClass}>
             <div className={`${cardInnerClass} px-5 py-4 sm:px-6`}>

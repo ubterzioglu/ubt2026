@@ -8,6 +8,8 @@ import {
   dmscraper2SignOutAction
 } from "@/app/dmscraper2/_actions";
 import { DmLogin } from "@/app/dm/_components/dm-login";
+import { BoardGuide } from "@/app/dm/_components/board-guide";
+import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 import {
   FinderNav,
   type FinderSectionKey
@@ -63,6 +65,45 @@ function readParam(value: string | string[] | undefined): string {
 const inputClass =
   "w-full rounded-[0.85rem] border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#ff2d95]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#ff2d95]/15";
 
+// Collapsed how-to card shown at the top of the board after sign-in.
+const FINDER_GUIDE: BoardGuideContent = {
+  title: "Bu pano ne işe yarar? · Kullanım rehberi",
+  intro:
+    "Service Finder, kategori + şehir bazlı MEKAN taraması yapar: " +
+    "web'den aday mekanları arar, sayfalarından bilgi çıkarır ve " +
+    "sınıflandırır (Tavily · SerpAPI · Gemini). Kardeş pano " +
+    "/dmscraper ise mekan değil HABER tarar — ikisi farklı işler.",
+  sections: [
+    {
+      heading: "Tarama işleri",
+      text:
+        "Kategori + şehir seçip işi kuyruğa ekle ve çalıştır. İş " +
+        "birkaç dakika sürebilir; bitince aday mekanları tek tek " +
+        "inceleyip onaylar veya reddedersin."
+    },
+    {
+      heading: "Kategori şablonları",
+      text:
+        "Aranacak kategoriler ve Almanca sorgu kalıpları (FKK · " +
+        "Bordell · Studio · Privat). Şablonu düzenleyerek aramanın " +
+        "ne bulacağını şekillendirirsin."
+    },
+    {
+      heading: "Sağlayıcılar",
+      text:
+        "Tavily arama+ekstraksiyon için ZORUNLU; SerpAPI az sonuçta " +
+        "Google fallback'i; Gemini sınıflandırma yapar. Anahtar " +
+        "durumları burada görünür."
+    },
+    {
+      heading: "Maliyetler",
+      text:
+        "Sağlayıcı bazlı harcama dökümü — arama, ekstraksiyon ve " +
+        "sınıflandırma adımlarının maliyeti ayrı ayrı izlenir."
+    }
+  ]
+};
+
 const SECTION_META: Record<FinderSectionKey, { title: string; description: string }> = {
   isler: {
     title: "Tarama işleri",
@@ -110,43 +151,6 @@ export default async function Dmscraper2Page({ searchParams }: Dmscraper2PagePro
         title="Service Finder"
         description="Mekan tarama hattına erişim korunuyor. Devam etmek için DM admin anahtarını gir."
         submitLabel="Panoyu aç"
-        guide={{
-          title: "Bu pano ne işe yarar? · Kullanım rehberi",
-          intro:
-            "Service Finder, kategori + şehir bazlı MEKAN taraması yapar: " +
-            "web'den aday mekanları arar, sayfalarından bilgi çıkarır ve " +
-            "sınıflandırır (Tavily · SerpAPI · Gemini). Kardeş pano " +
-            "/dmscraper ise mekan değil HABER tarar — ikisi farklı işler.",
-          sections: [
-            {
-              heading: "Tarama işleri",
-              text:
-                "Kategori + şehir seçip işi kuyruğa ekle ve çalıştır. İş " +
-                "birkaç dakika sürebilir; bitince aday mekanları tek tek " +
-                "inceleyip onaylar veya reddedersin."
-            },
-            {
-              heading: "Kategori şablonları",
-              text:
-                "Aranacak kategoriler ve Almanca sorgu kalıpları (FKK · " +
-                "Bordell · Studio · Privat). Şablonu düzenleyerek aramanın " +
-                "ne bulacağını şekillendirirsin."
-            },
-            {
-              heading: "Sağlayıcılar",
-              text:
-                "Tavily arama+ekstraksiyon için ZORUNLU; SerpAPI az sonuçta " +
-                "Google fallback'i; Gemini sınıflandırma yapar. Anahtar " +
-                "durumları burada görünür."
-            },
-            {
-              heading: "Maliyetler",
-              text:
-                "Sağlayıcı bazlı harcama dökümü — arama, ekstraksiyon ve " +
-                "sınıflandırma adımlarının maliyeti ayrı ayrı izlenir."
-            }
-          ]
-        }}
         subtitle="Service finder"
       />
     );
@@ -412,6 +416,12 @@ export default async function Dmscraper2Page({ searchParams }: Dmscraper2PagePro
         />
 
         <div className="mt-5 flex min-w-0 flex-col gap-5 lg:mt-0">
+          <BoardGuide
+            guide={FINDER_GUIDE}
+            cardClass={cardClass}
+            cardInnerClass={cardInnerClass}
+          />
+
           {/* Active section header */}
           <section className={cardClass}>
             <div className={`${cardInnerClass} px-5 py-4 sm:px-6`}>
