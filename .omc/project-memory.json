@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1784309353539,
+  "lastScanned": 1784407118134,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -82,7 +82,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1784309353457,
+      "lastAccessed": 1784407118036,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -95,7 +95,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1784309353460,
+      "lastAccessed": 1784407118037,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -105,7 +105,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1784309353495,
+      "lastAccessed": 1784407118094,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -118,7 +118,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1784309353497,
+      "lastAccessed": 1784407118096,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -131,7 +131,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784309353497,
+      "lastAccessed": 1784407118096,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -142,14 +142,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1784309353498,
+      "lastAccessed": 1784407118097,
       "keyFiles": []
     },
     "experience": {
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784309353498,
+      "lastAccessed": 1784407118098,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -159,8 +159,8 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 20,
-      "lastAccessed": 1784309353499,
+      "fileCount": 19,
+      "lastAccessed": 1784407118098,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -173,7 +173,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1784309353500,
+      "lastAccessed": 1784407118099,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -186,7 +186,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1784309353500,
+      "lastAccessed": 1784407118099,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -197,7 +197,7 @@
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 3,
-      "lastAccessed": 1784309353501,
+      "lastAccessed": 1784407118100,
       "keyFiles": [
         "convert-cvopt-to-reviews.mjs",
         "migrate-cvopt-participants.mjs",
@@ -208,7 +208,7 @@
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784309353502,
+      "lastAccessed": 1784407118100,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -218,7 +218,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1784309353502,
+      "lastAccessed": 1784407118100,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -229,14 +229,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1784309353503,
+      "lastAccessed": 1784407118101,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
       "fileCount": 28,
-      "lastAccessed": 1784309353508,
+      "lastAccessed": 1784407118106,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -246,177 +246,87 @@
   },
   "hotPaths": [
     {
-      "path": "app\\dm\\page.tsx",
-      "accessCount": 15,
-      "lastAccessed": 1784398996383,
-      "type": "directory"
-    },
-    {
-      "path": "app\\dmscraper\\page.tsx",
-      "accessCount": 10,
-      "lastAccessed": 1784398828496,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\dm-login.tsx",
-      "accessCount": 7,
-      "lastAccessed": 1784311320017,
-      "type": "file"
-    },
-    {
-      "path": "app\\dmscraper2\\page.tsx",
-      "accessCount": 7,
-      "lastAccessed": 1784311383779,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\run-job.ts",
-      "accessCount": 5,
-      "lastAccessed": 1784399063237,
-      "type": "directory"
-    },
-    {
       "path": "lib\\admin-auth.ts",
-      "accessCount": 4,
-      "lastAccessed": 1784399018032,
+      "accessCount": 2,
+      "lastAccessed": 1784407283937,
+      "type": "file"
+    },
+    {
+      "path": "app\\detr\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784407288354,
+      "type": "file"
+    },
+    {
+      "path": "app\\detr\\_actions.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784407288695,
+      "type": "file"
+    },
+    {
+      "path": "app\\detr\\_components\\theme.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784407289069,
+      "type": "file"
+    },
+    {
+      "path": "app\\detr\\_components\\detr-login.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784407289416,
+      "type": "file"
+    },
+    {
+      "path": "lib\\detr-todos.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784407296484,
       "type": "file"
     },
     {
       "path": "app\\dm\\_components\\dm-nav.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1784398971975,
+      "accessCount": 2,
+      "lastAccessed": 1784407296646,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784407374426,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\dev-finder-e2e-test.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784407597881,
+      "type": "file"
+    },
+    {
+      "path": ".env.local.example",
+      "accessCount": 1,
+      "lastAccessed": 1784407192697,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260708090000_create_detr_attachments.sql",
+      "accessCount": 1,
+      "lastAccessed": 1784407213739,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260707160000_create_detr_todos.sql",
+      "accessCount": 1,
+      "lastAccessed": 1784407213828,
       "type": "file"
     },
     {
       "path": "",
-      "accessCount": 2,
-      "lastAccessed": 1784393955380,
-      "type": "directory"
-    },
-    {
-      "path": "app\\dmscraper\\_components",
-      "accessCount": 2,
-      "lastAccessed": 1784397959579,
-      "type": "directory"
-    },
-    {
-      "path": "app\\globals.css",
-      "accessCount": 2,
-      "lastAccessed": 1784398046694,
+      "accessCount": 1,
+      "lastAccessed": 1784407294577,
       "type": "directory"
     },
     {
       "path": ".env.local",
-      "accessCount": 2,
-      "lastAccessed": 1784399019504,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\board-guide.tsx",
       "accessCount": 1,
-      "lastAccessed": 1784311294863,
-      "type": "file"
-    },
-    {
-      "path": "lib",
-      "accessCount": 1,
-      "lastAccessed": 1784394169919,
-      "type": "directory"
-    },
-    {
-      "path": "app\\dmscraper\\_components\\finder-nav.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397950458,
-      "type": "file"
-    },
-    {
-      "path": "app\\dmscraper\\_actions.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784397951029,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\task-table.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397951313,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\findings-tab.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397951825,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\social-tab.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397952798,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\info-tab.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397953134,
-      "type": "file"
-    },
-    {
-      "path": "app\\dmscraper\\_components\\jobs-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397966972,
-      "type": "file"
-    },
-    {
-      "path": "app\\dmscraper\\_components\\job-detail-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397967971,
-      "type": "file"
-    },
-    {
-      "path": "app\\dmscraper\\_components\\templates-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397968485,
-      "type": "file"
-    },
-    {
-      "path": "app\\dmscraper\\_components\\providers-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397969451,
-      "type": "file"
-    },
-    {
-      "path": "app\\dmscraper\\_components\\costs-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784397969778,
-      "type": "file"
-    },
-    {
-      "path": "lib\\service-finder.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784397983741,
-      "type": "directory"
-    },
-    {
-      "path": "app\\layout.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784398032520,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\scraper\\format.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784398896160,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_scraper-actions.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784398923581,
-      "type": "file"
-    },
-    {
-      "path": "app\\dm\\_components\\scraper\\scraper-tab.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784398963614,
+      "lastAccessed": 1784407311829,
       "type": "file"
     }
   ],

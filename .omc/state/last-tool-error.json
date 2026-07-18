@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cat \\\"C:\\\\Users\\\\baris-terzioglu\\\\.claude\\\\projects\\\\c--temp-private-ubt2026\\\\memory\\\\dm-board-architecture.md\\\" 2>/dev/null; echo \\\"---\\\"; cat \\\"C:\\\\Users\\\\baris-terzioglu\\\\.claude\\\\proje...",
+  "error": "Exit code 1\n---\nname: dm-board-architecture\ndescription: \"How the /dm DesireMap board is built (tabs, Supabase service-role, neon theme)\"\nmetadata: \n  node_type: memory\n  type: project\n  originSessionId: 7606df2c-1adf-4a5d-ba15-e20ff7892d54\n  modified: 2026-07-18T18:25:21.467Z\n---\n\n`/dm` is the standalone DesireMap internal board, behind its own admin gate\n(`DESIREMAPTODO_ADMIN_ACCESS_KEY`, cookie scoped to `/dm`, see `lib/admin-auth.ts`).\n\n**Layout (2026-07-05'ten beri):** yatay tab şeridi + he...",
+  "timestamp": "2026-07-18T20:41:18.057Z",
+  "retry_count": 1
+}
