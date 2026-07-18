@@ -381,3 +381,70 @@ export async function signOutBakcakanat(): Promise<void> {
     maxAge: 0
   });
 }
+
+/**
+ * The `/detrbridge` logo-selection board has its own single-password gate,
+ * scoped to /detrbridge so it can be shared independently of every other
+ * admin key. Password comes from the DETRBRIDGE env var (already present in
+ * .env.local; the name is intentionally NOT renamed to *_PASSWORD).
+ */
+export const DETRBRIDGE_ACCESS_COOKIE = "ubt_detrbridge_access";
+
+/**
+ * Reads the detrbridge board password (empty string if not configured).
+ * No fallback: the board is gated solely by DETRBRIDGE.
+ */
+function getDetrbridgePassword(): string {
+  return process.env.DETRBRIDGE?.trim() ?? "";
+}
+
+/**
+ * True when the current request carries a valid detrbridge session cookie.
+ *
+ * Fails CLOSED: if DETRBRIDGE is not configured, nobody gets in — the board
+ * must never be publicly reachable just because an env var was forgotten.
+ */
+export async function isDetrbridgeAuthenticated(): Promise<boolean> {
+  const password = getDetrbridgePassword();
+  if (!password) return false;
+  const cookieStore = await cookies();
+  const candidate = cookieStore.get(DETRBRIDGE_ACCESS_COOKIE)?.value ?? "";
+  return candidate.trim() === password;
+}
+
+/**
+ * Validates the supplied password and, when correct, persists it in an
+ * HttpOnly cookie scoped to /detrbridge. Returns whether sign-in succeeded.
+ */
+export async function signInDetrbridge(candidate: string): Promise<boolean> {
+  const password = getDetrbridgePassword();
+  // Fail closed: without a configured password no sign-in is possible.
+  if (!password) return false;
+  if (candidate.trim() !== password) return false;
+
+  const cookieStore = await cookies();
+  cookieStore.set(DETRBRIDGE_ACCESS_COOKIE, password, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/detrbridge",
+    maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
+  });
+
+  return true;
+}
+
+/**
+ * Clears the detrbridge session cookie (sign out). Expires it with the
+ * exact attributes used at sign-in — see signOutBakcakanat for why.
+ */
+export async function signOutDetrbridge(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(DETRBRIDGE_ACCESS_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/detrbridge",
+    maxAge: 0
+  });
+}
