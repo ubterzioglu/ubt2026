@@ -1,6 +1,6 @@
 import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
 
-export type DmTabKey = "tasks" | "findings" | "social" | "info";
+export type DmTabKey = "tasks" | "findings" | "social" | "info" | "scraper";
 
 export interface DmNavItem {
   key: DmTabKey;

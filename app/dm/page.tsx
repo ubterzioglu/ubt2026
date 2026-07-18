@@ -9,6 +9,7 @@ import { TaskTable } from "@/app/dm/_components/task-table";
 import { FindingsTab } from "@/app/dm/_components/findings-tab";
 import { SocialTab } from "@/app/dm/_components/social-tab";
 import { InfoTab } from "@/app/dm/_components/info-tab";
+import { ScraperTab } from "@/app/dm/_components/scraper/scraper-tab";
 import { DmNav } from "@/app/dm/_components/dm-nav";
 import type { DmTabKey } from "@/app/dm/_components/dm-nav";
 import {
@@ -46,6 +47,10 @@ import type {
 export const metadata: Metadata = {
   robots: { index: false, follow: false }
 };
+
+// Scraper sekmesindeki tarama (arama + ekstraksiyon + sınıflandırma) server
+// action içinde senkron koşar ve birkaç dakikayı bulabilir; segmenti yükselt.
+export const maxDuration = 300;
 
 interface DmPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -94,6 +99,11 @@ const SECTION_META: Record<DmTabKey, { title: string; description: string }> = {
   info: {
     title: "Önemli bilgiler",
     description: "Ekip için kritik erişim bilgileri ve referanslar."
+  },
+  scraper: {
+    title: "Service Finder",
+    description:
+      "Kategori + şehir bazlı mekan taraması — Tavily · SerpAPI · Gemini."
   }
 };
 
@@ -170,12 +180,6 @@ function parseSortOrder(value: string): number {
 export default async function DmPage({ searchParams }: DmPageProps) {
   const params = searchParams ? await searchParams : {};
 
-  // Scraper sekmesi bağımsız /dmscraper route'una taşındı — eski linkler
-  // auth check'ten ÖNCE yönlendirilir (gate'i /dmscraper kendisi uygular).
-  if (readParam(params.tab) === "scraper") {
-    redirect("/dmscraper" as Parameters<typeof redirect>[0]);
-  }
-
   const hasAccess = await isTasksAdminAuthenticated();
 
   if (!hasAccess) {
@@ -198,7 +202,9 @@ export default async function DmPage({ searchParams }: DmPageProps) {
         ? "social"
         : tabParam === "info"
           ? "info"
-          : "tasks";
+          : tabParam === "scraper"
+            ? "scraper"
+            : "tasks";
   const createdParam = readParam(params.created);
   const updatedParam = readParam(params.updated);
   const errorParam = readParam(params.error);
@@ -469,7 +475,9 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   return (
     <main
-      className="relative isolate min-h-screen overflow-hidden px-4 py-8 sm:px-6 lg:px-8"
+      // overflow-x-clip (hidden DEĞİL): overflow-hidden ancestor'ı sticky'yi
+      // kırar — sidebar'ın lg:sticky çalışması için clip şart.
+      className="relative isolate min-h-screen overflow-x-clip px-4 py-8 sm:px-6 lg:px-8"
       style={{ background: DM_AMBIENT_BACKGROUND }}
     >
       {/* Fine grid texture */}
@@ -507,7 +515,8 @@ export default async function DmPage({ searchParams }: DmPageProps) {
               count: allFindings.length
             },
             { key: "social", label: "İçerik", count: allSocialPosts.length },
-            { key: "info", label: "Önemli bilgiler", count: 6 }
+            { key: "info", label: "Önemli bilgiler", count: 6 },
+            { key: "scraper", label: "Scraper" }
           ]}
           cardClass={cardClass}
           cardInnerClass={cardInnerClass}
@@ -822,8 +831,15 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             cardInnerClass={cardInnerClass}
             toggleShareAction={toggleShareAction}
           />
-        ) : (
+        ) : activeTab === "info" ? (
           <InfoTab cardClass={cardClass} cardInnerClass={cardInnerClass} />
+        ) : (
+          <ScraperTab
+            params={params}
+            cardClass={cardClass}
+            cardInnerClass={cardInnerClass}
+            inputClass={inputClass}
+          />
         )}
         </div>
       </div>

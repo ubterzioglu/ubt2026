@@ -1,5 +1,5 @@
 // Service Finder iş yürütücüsü — corteqsmvp workers/service-finder/src/worker-loop.ts
-// gövdesinin senkron Node portu. Ayrı worker süreci yok: /dmscraper server
+// gövdesinin senkron Node portu. Ayrı worker süreci yok: /dm Scraper sekmesi
 // action'ı service-role client ile çağırır (page.tsx maxDuration = 300).
 // Worker'a özgü lease/heartbeat/claim RPC'leri kaldırıldı; çifte koşuya karşı
 // koşullu UPDATE (status='queued' → 'running') ile tek atımlık kilit kullanılır.

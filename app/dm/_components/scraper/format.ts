@@ -1,4 +1,4 @@
-// /dmscraper bölümlerinin paylaştığı küçük biçimleyiciler.
+// /dm Scraper sekmesi bölümlerinin paylaştığı küçük biçimleyiciler.
 
 export function formatDate(value: string | null): string {
   if (!value) return "—";

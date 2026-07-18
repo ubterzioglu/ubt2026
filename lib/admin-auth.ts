@@ -155,65 +155,6 @@ export async function signOutTasksAdmin(): Promise<void> {
 }
 
 /**
- * The `/dmscraper` service-finder board shares the task-board key
- * (DESIREMAPTODO_ADMIN_ACCESS_KEY) but keeps its own cookie scoped to
- * /dmscraper, so it stays isolated from `/dm`. Cost: the same password is
- * entered once per board — accepted trade-off, do not widen the path.
- * (The old radar news scraper that lived on this route was removed on
- * 2026-07-08; the service finder moved here from /dmscraper2.)
- */
-export const DMSCRAPER_ACCESS_COOKIE = "ubt_dmscraper_access";
-
-/**
- * True when the current request carries a valid `/dmscraper` session cookie.
- * Fails CLOSED: without a configured key nobody gets in.
- */
-export async function isDmscraperAuthenticated(): Promise<boolean> {
-  const accessKey = getTasksAdminAccessKey();
-  if (!accessKey) return false;
-  const cookieStore = await cookies();
-  const candidate = cookieStore.get(DMSCRAPER_ACCESS_COOKIE)?.value ?? "";
-  return candidate.trim() === accessKey;
-}
-
-/**
- * Validates the supplied key and, when correct, persists it in an HttpOnly
- * cookie scoped to /dmscraper. Returns whether the sign-in was accepted.
- */
-export async function signInDmscraper(candidate: string): Promise<boolean> {
-  const accessKey = getTasksAdminAccessKey();
-  // Fail closed: without a configured key no sign-in is possible.
-  if (!accessKey) return false;
-  if (candidate.trim() !== accessKey) return false;
-
-  const cookieStore = await cookies();
-  cookieStore.set(DMSCRAPER_ACCESS_COOKIE, accessKey, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/dmscraper",
-    maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
-  });
-
-  return true;
-}
-
-/**
- * Clears the `/dmscraper` session cookie (sign out). Expires it with the
- * exact attributes used at sign-in — see signOutBakcakanat for why.
- */
-export async function signOutDmscraper(): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.set(DMSCRAPER_ACCESS_COOKIE, "", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/dmscraper",
-    maxAge: 0
-  });
-}
-
-/**
  * The `/detr` todo board is gated by an e-mail allowlist plus a shared
  * password (ADMIN_QASS_DETR), each in its own cookie scoped to /detr so it
  * can be shared independently of every other admin key. RFC 6265

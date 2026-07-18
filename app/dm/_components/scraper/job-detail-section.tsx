@@ -6,11 +6,11 @@ import type {
   FinderJobDetail,
   FinderReviewStatus
 } from "@/lib/service-finder";
-import { formatDate, formatUsd } from "@/app/dmscraper/_components/format";
+import { formatDate, formatUsd } from "@/app/dm/_components/scraper/format";
 import {
   JOB_STATUS_BADGE,
   JOB_STATUS_LABEL
-} from "@/app/dmscraper/_components/jobs-section";
+} from "@/app/dm/_components/scraper/jobs-section";
 
 interface JobDetailSectionProps {
   detail: FinderJobDetail;
@@ -115,7 +115,7 @@ export function JobDetailSection({
             </div>
             <div className="flex shrink-0 items-center gap-1.5">
               <a
-                href="/dmscraper?sec=isler"
+                href="/dm?tab=scraper&sec=isler"
                 className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
               >
                 ← İş listesi
@@ -174,7 +174,7 @@ export function JobDetailSection({
                 return (
                   <a
                     key={option.value}
-                    href={`/dmscraper?sec=isler&job=${job.id}&cstatus=${option.value}`}
+                    href={`/dm?tab=scraper&sec=isler&job=${job.id}&cstatus=${option.value}`}
                     className={`${chipBase} ${
                       isActive ? "text-white ring-1 ring-inset ring-white/15" : chipIdle
                     }`}

@@ -1,7 +1,7 @@
 // Maliyet bölümü: sağlayıcı × olay tipi bazında toplamlar (son 30 gün + tümü).
 
 import type { FinderCostSummaryRow } from "@/lib/service-finder";
-import { formatUsd } from "@/app/dmscraper/_components/format";
+import { formatUsd } from "@/app/dm/_components/scraper/format";
 
 interface CostsSectionProps {
   last30Days: FinderCostSummaryRow[];
