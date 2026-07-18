@@ -246,9 +246,15 @@
   },
   "hotPaths": [
     {
+      "path": "app\\dm\\page.tsx",
+      "accessCount": 15,
+      "lastAccessed": 1784398996383,
+      "type": "directory"
+    },
+    {
       "path": "app\\dmscraper\\page.tsx",
-      "accessCount": 8,
-      "lastAccessed": 1784394183436,
+      "accessCount": 10,
+      "lastAccessed": 1784398828496,
       "type": "file"
     },
     {
@@ -264,16 +270,22 @@
       "type": "file"
     },
     {
+      "path": "lib\\finder\\run-job.ts",
+      "accessCount": 5,
+      "lastAccessed": 1784399063237,
+      "type": "directory"
+    },
+    {
       "path": "lib\\admin-auth.ts",
-      "accessCount": 3,
-      "lastAccessed": 1784394161355,
+      "accessCount": 4,
+      "lastAccessed": 1784399018032,
       "type": "file"
     },
     {
-      "path": "lib\\finder\\run-job.ts",
+      "path": "app\\dm\\_components\\dm-nav.tsx",
       "accessCount": 3,
-      "lastAccessed": 1784394178722,
-      "type": "directory"
+      "lastAccessed": 1784398971975,
+      "type": "file"
     },
     {
       "path": "",
@@ -282,16 +294,28 @@
       "type": "directory"
     },
     {
+      "path": "app\\dmscraper\\_components",
+      "accessCount": 2,
+      "lastAccessed": 1784397959579,
+      "type": "directory"
+    },
+    {
+      "path": "app\\globals.css",
+      "accessCount": 2,
+      "lastAccessed": 1784398046694,
+      "type": "directory"
+    },
+    {
+      "path": ".env.local",
+      "accessCount": 2,
+      "lastAccessed": 1784399019504,
+      "type": "file"
+    },
+    {
       "path": "app\\dm\\_components\\board-guide.tsx",
       "accessCount": 1,
       "lastAccessed": 1784311294863,
       "type": "file"
-    },
-    {
-      "path": "app\\dm\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784393977427,
-      "type": "directory"
     },
     {
       "path": "lib",
@@ -300,9 +324,99 @@
       "type": "directory"
     },
     {
-      "path": ".env.local",
+      "path": "app\\dmscraper\\_components\\finder-nav.tsx",
       "accessCount": 1,
-      "lastAccessed": 1784394186873,
+      "lastAccessed": 1784397950458,
+      "type": "file"
+    },
+    {
+      "path": "app\\dmscraper\\_actions.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784397951029,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\task-table.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784397951313,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\findings-tab.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784397951825,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\social-tab.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784397952798,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\info-tab.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784397953134,
+      "type": "file"
+    },
+    {
+      "path": "app\\dmscraper\\_components\\jobs-section.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784397966972,
+      "type": "file"
+    },
+    {
+      "path": "app\\dmscraper\\_components\\job-detail-section.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784397967971,
+      "type": "file"
+    },
+    {
+      "path": "app\\dmscraper\\_components\\templates-section.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784397968485,
+      "type": "file"
+    },
+    {
+      "path": "app\\dmscraper\\_components\\providers-section.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784397969451,
+      "type": "file"
+    },
+    {
+      "path": "app\\dmscraper\\_components\\costs-section.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784397969778,
+      "type": "file"
+    },
+    {
+      "path": "lib\\service-finder.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784397983741,
+      "type": "directory"
+    },
+    {
+      "path": "app\\layout.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784398032520,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\scraper\\format.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784398896160,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_scraper-actions.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784398923581,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\scraper\\scraper-tab.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784398963614,
       "type": "file"
     }
   ],
