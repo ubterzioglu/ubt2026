@@ -1,4 +1,4 @@
-// /dmscraper2 bölümlerinin paylaştığı küçük biçimleyiciler.
+// /dmscraper bölümlerinin paylaştığı küçük biçimleyiciler.
 
 export function formatDate(value: string | null): string {
   if (!value) return "—";

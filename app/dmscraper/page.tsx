@@ -11,39 +11,41 @@ import { DmLogin } from "@/app/dm/_components/dm-login";
 import { BoardGuide } from "@/app/dm/_components/board-guide";
 import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 import {
-  ScraperNav,
-  type ScraperSectionKey
-} from "@/app/dmscraper/_components/scraper-nav";
-import { QueueSection } from "@/app/dmscraper/_components/queue-section";
-import { SourcesSection } from "@/app/dmscraper/_components/sources-section";
-import { RunsSection } from "@/app/dmscraper/_components/runs-section";
-import { KeywordsSection } from "@/app/dmscraper/_components/keywords-section";
+  FinderNav,
+  type FinderSectionKey
+} from "@/app/dmscraper/_components/finder-nav";
+import { JobsSection } from "@/app/dmscraper/_components/jobs-section";
+import { JobDetailSection } from "@/app/dmscraper/_components/job-detail-section";
+import { TemplatesSection } from "@/app/dmscraper/_components/templates-section";
+import { ProvidersSection } from "@/app/dmscraper/_components/providers-section";
+import { CostsSection } from "@/app/dmscraper/_components/costs-section";
 import {
   DM_AMBIENT_BACKGROUND,
   DM_GRID_TEXTURE
 } from "@/app/dm/_components/theme";
 import {
-  createRadarKeywordAdmin,
-  createRadarSourceAdmin,
-  deleteRadarKeywordAdmin,
-  getRadarCandidateCountsAdmin,
-  getRadarCandidatesAdmin,
-  getRadarKeywordsAdmin,
-  getRadarRunsAdmin,
-  getRadarSourceAdmin,
-  getRadarSourcesAdmin,
-  markRadarCandidateDuplicateAdmin,
-  normalizeRadarReviewStatus,
-  runRadarScanAdmin,
-  setRadarCandidateStatusAdmin,
-  setRadarSourceEnabledAdmin,
-  updateRadarKeywordAdmin,
-  updateRadarSourceAdmin
-} from "@/lib/radar-news";
-import type { RadarReviewStatus, RadarSourceInput } from "@/lib/radar-news";
+  cancelFinderJobAdmin,
+  createFinderJobAdmin,
+  getFinderCostSummaryAdmin,
+  getFinderJobCountsAdmin,
+  getFinderJobDetailAdmin,
+  getFinderJobsAdmin,
+  getFinderProvidersAdmin,
+  getFinderTemplatesAdmin,
+  normalizeFinderJobStatus,
+  normalizeFinderReviewStatus,
+  releaseStuckFinderJobAdmin,
+  requeueFinderJobAdmin,
+  reviewFinderCandidateAdmin,
+  runFinderJobAdmin,
+  setFinderProviderEnabledAdmin,
+  setFinderTemplateActiveAdmin,
+  updateFinderTemplateAdmin
+} from "@/lib/service-finder";
+import type { FinderReviewStatus } from "@/lib/service-finder";
 
-// Radar taraması kaynaklar arası rate-limit beklemeleriyle ~2 dk sürebilir;
-// server action'ın Vercel/Coolify'da erken kesilmemesi için segmenti yükselt.
+// Tarama (arama + ekstraksiyon + sınıflandırma) server action içinde senkron
+// koşar ve birkaç dakikayı bulabilir; segment süresini yükselt.
 export const maxDuration = 300;
 
 export const metadata: Metadata = {
@@ -64,88 +66,77 @@ const inputClass =
   "w-full rounded-[0.85rem] border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#ff2d95]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#ff2d95]/15";
 
 // Collapsed how-to card shown at the top of the board after sign-in.
-const SCRAPER_GUIDE: BoardGuideContent = {
+const FINDER_GUIDE: BoardGuideContent = {
   title: "Bu pano ne işe yarar? · Kullanım rehberi",
   intro:
-    "Radar, tanımlı haber kaynaklarını (RSS · Atom · GDELT) tarayıp " +
-    "DesireMap kategorileriyle alakalı haberleri keyword sözlüğüne göre " +
-    "skorlar ve aday kuyruğuna düşürür. Sen sadece kuyruğu inceleyip " +
-    "onay/ret kararı verirsin. Kardeş pano /dmscraper2 ise haber değil " +
-    "mekan arar — ikisi farklı işler.",
+    "Service Finder, kategori + şehir bazlı mekan taraması yapar: " +
+    "web'den aday mekanları arar, sayfalarından bilgi çıkarır ve " +
+    "sınıflandırır (Tavily · SerpAPI · Gemini). Onayladığın adaylar " +
+    "DesireMap mekan veritabanını besler.",
   sections: [
     {
-      heading: "Haber kuyruğu",
+      heading: "Tarama işleri",
       text:
-        "Tarama adayları skor ve gerekçe etiketleriyle listelenir. " +
-        "Onayla, reddet, kopya işaretle veya arşivle. Düşük skorlular " +
-        "kuyruğa değil doğrudan arşive gider."
+        "Kategori + şehir seçip işi kuyruğa ekle ve çalıştır. İş " +
+        "birkaç dakika sürebilir; bitince aday mekanları tek tek " +
+        "inceleyip onaylar veya reddedersin."
     },
     {
-      heading: "Kaynaklar",
+      heading: "Kategori şablonları",
       text:
-        "RSS / Atom / GDELT kaynak tanımları. Bir kaynağın kullanım " +
-        "şartları (terms) onaylanmadan kaynak aktifleştirilemez. " +
-        "Tarama buradaki aktif kaynaklar üzerinden koşar."
+        "Aranacak kategoriler ve Almanca sorgu kalıpları (FKK · " +
+        "Bordell · Studio · Privat). Şablonu düzenleyerek aramanın " +
+        "ne bulacağını şekillendirirsin."
     },
     {
-      heading: "Koşular",
+      heading: "Sağlayıcılar",
       text:
-        "Geçmiş taramaların durumu, süresi ve öğe sayaçları. Manuel " +
-        "tarama başlatılabilir; kaynaklar arası bekleme nedeniyle bir " +
-        "koşu ~2 dakika sürebilir."
+        "Tavily arama+ekstraksiyon için ZORUNLU; SerpAPI az sonuçta " +
+        "Google fallback'i; Gemini sınıflandırma yapar. Anahtar " +
+        "durumları burada görünür."
     },
     {
-      heading: "Keywords",
+      heading: "Maliyetler",
       text:
-        "Almanca alaka skorlama sözlüğü (desiremap kategorileri). " +
-        "Pozitif kelimeler skor ekler, negatif kelime ilk eşleşmede " +
-        "−40 uygular. Eşik altı adaylar arşive yazılır."
+        "Sağlayıcı bazlı harcama dökümü — arama, ekstraksiyon ve " +
+        "sınıflandırma adımlarının maliyeti ayrı ayrı izlenir."
     }
   ]
 };
 
-const SECTION_META: Record<ScraperSectionKey, { title: string; description: string }> = {
-  kuyruk: {
-    title: "Haber kuyruğu",
+const SECTION_META: Record<FinderSectionKey, { title: string; description: string }> = {
+  isler: {
+    title: "Tarama işleri",
     description:
-      "Radar taraması adayları: skor, gerekçe etiketleri ve onay/ret/kopya/arşiv kararları."
+      "Kategori + şehir bazlı mekan taramaları: kuyruğa ekle, çalıştır, adayları incele."
   },
-  kaynaklar: {
-    title: "Kaynaklar",
+  sablonlar: {
+    title: "Kategori şablonları",
     description:
-      "RSS / Atom / GDELT kaynak tanımları. Terms doğrulanmadan kaynak aktif edilemez."
+      "Aranacak kategoriler ve Almanca sorgu kalıpları (FKK · Bordell · Studio · Privat)."
   },
-  kosular: {
-    title: "Koşular",
-    description: "Tarama koşu geçmişi — durum, süre ve öğe sayaçları."
+  saglayicilar: {
+    title: "Sağlayıcılar",
+    description: "Tavily / SerpAPI / Gemini yapılandırması ve anahtar durumu."
   },
-  keywords: {
-    title: "Keywords",
-    description:
-      "Alaka skorlama sözlüğü (Almanca, desiremap kategorileri). Negatifler ilk eşleşmede −40."
+  maliyet: {
+    title: "Maliyetler",
+    description: "Sağlayıcı bazlı harcama dökümü (arama · ekstraksiyon · sınıflandırma)."
   }
 };
 
-function readSourceInput(formData: FormData): RadarSourceInput {
-  return {
-    name: (formData.get("name") as string | null) ?? "",
-    endpointUrl: (formData.get("endpointUrl") as string | null) ?? "",
-    websiteUrl: (formData.get("websiteUrl") as string | null) ?? "",
-    sourceType: (formData.get("sourceType") as string | null) ?? "rss",
-    adapterKey: (formData.get("adapterKey") as string | null) ?? "rss",
-    language: (formData.get("language") as string | null) ?? "",
-    country: (formData.get("country") as string | null) ?? "",
-    categoryDefault: (formData.get("categoryDefault") as string | null) ?? "",
-    trustLevel: (formData.get("trustLevel") as string | null) ?? "standard",
-    queryText: (formData.get("queryText") as string | null) ?? "",
-    maxItemsPerScan: Number(formData.get("maxItemsPerScan") ?? ""),
-    timeoutMs: Number(formData.get("timeoutMs") ?? ""),
-    // Server-side terms gate: işaret yoksa is_enabled aşağıda zaten false'a
-    // düşer (data katmanı da ayrıca zorlar).
-    termsChecked: (formData.get("termsChecked") as string | null) === "1",
-    termsNotes: (formData.get("termsNotes") as string | null) ?? "",
-    isEnabled: (formData.get("isEnabled") as string | null) === "1"
-  };
+function parseLines(value: string): string[] {
+  return value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function parseCommaList(value: string): string[] {
+  return value
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
 }
 
 export default async function DmscraperPage({ searchParams }: DmscraperPageProps) {
@@ -157,254 +148,235 @@ export default async function DmscraperPage({ searchParams }: DmscraperPageProps
       <DmLogin
         signIn={dmscraperSignInAction}
         eyebrow="Admin erişimi"
-        title="Radar haber scraper'ı"
-        description="Radar tarama hattına erişim korunuyor. Devam etmek için DM admin anahtarını gir."
+        title="Service Finder"
+        description="Mekan tarama hattına erişim korunuyor. Devam etmek için DM admin anahtarını gir."
         submitLabel="Panoyu aç"
-        subtitle="Radar scraper"
+        subtitle="Service finder"
       />
     );
   }
 
   const secParam = readParam(params.sec);
-  const activeSection: ScraperSectionKey =
-    secParam === "kaynaklar"
-      ? "kaynaklar"
-      : secParam === "kosular"
-        ? "kosular"
-        : secParam === "keywords"
-          ? "keywords"
-          : "kuyruk";
+  const activeSection: FinderSectionKey =
+    secParam === "sablonlar"
+      ? "sablonlar"
+      : secParam === "saglayicilar"
+        ? "saglayicilar"
+        : secParam === "maliyet"
+          ? "maliyet"
+          : "isler";
 
-  const radarStatusParam = readParam(params.rstatus);
-  const statusFilter: RadarReviewStatus | "all" =
-    radarStatusParam === "all"
+  const jobId = readParam(params.job);
+  const jobStatusFilter = normalizeFinderJobStatus(readParam(params.jstatus) || "all");
+  const candidateParam = readParam(params.cstatus);
+  const candidateFilter: FinderReviewStatus | "all" =
+    candidateParam === "all"
       ? "all"
-      : radarStatusParam
-        ? normalizeRadarReviewStatus(radarStatusParam)
+      : candidateParam
+        ? normalizeFinderReviewStatus(candidateParam)
         : "pending";
   const editId = readParam(params.edit);
-  const scanOkParam = readParam(params.scanok);
-  const createdParam = readParam(params.created);
-  const updatedParam = readParam(params.updated);
-  const deletedParam = readParam(params.deleted);
+  const flashOk = readParam(params.ok);
   const errorParam = readParam(params.error);
 
-  // Sayaçlar her zaman (nav rozeti); bölüm verileri yalnızca kendi görünümünde.
-  const counts = await getRadarCandidateCountsAdmin();
-  const sources =
-    activeSection === "kuyruk" || activeSection === "kaynaklar"
-      ? await getRadarSourcesAdmin()
+  // Nav rozeti için sayaçlar her zaman; bölüm verileri yalnızca kendi görünümünde.
+  const jobCounts = await getFinderJobCountsAdmin();
+  const templates =
+    activeSection === "isler" || activeSection === "sablonlar"
+      ? await getFinderTemplatesAdmin()
       : [];
-  const candidates =
-    activeSection === "kuyruk" ? await getRadarCandidatesAdmin(statusFilter, 60) : [];
-  const runs =
-    activeSection === "kuyruk"
-      ? await getRadarRunsAdmin(1)
-      : activeSection === "kosular"
-        ? await getRadarRunsAdmin(50)
-        : [];
-  const editingSource =
-    activeSection === "kaynaklar" && editId ? await getRadarSourceAdmin(editId) : null;
-  const keywords = activeSection === "keywords" ? await getRadarKeywordsAdmin(true) : [];
-  const editingKeyword =
-    activeSection === "keywords" && editId
-      ? (keywords.find((keyword) => keyword.id === editId) ?? null)
+  const jobs =
+    activeSection === "isler" && !jobId
+      ? await getFinderJobsAdmin(jobStatusFilter, 40)
+      : [];
+  const jobDetail =
+    activeSection === "isler" && jobId
+      ? await getFinderJobDetailAdmin(jobId, candidateFilter)
       : null;
+  const providers =
+    activeSection === "saglayicilar" ? await getFinderProvidersAdmin() : [];
+  const costsAllTime =
+    activeSection === "maliyet" ? await getFinderCostSummaryAdmin() : [];
+  const costs30d =
+    activeSection === "maliyet"
+      ? await getFinderCostSummaryAdmin(
+          new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+        )
+      : [];
 
   // --- Server actions (her biri auth'u yeniden doğrular) ---
 
-  async function scanAction() {
+  async function jobCreateAction(formData: FormData) {
     "use server";
     if (!(await isDmscraperAuthenticated())) {
       redirect("/dmscraper" as Parameters<typeof redirect>[0]);
     }
-    const result = await runRadarScanAdmin("manual");
+    const city = ((formData.get("city") as string | null) ?? "").trim();
+    const location = ((formData.get("location") as string | null) ?? "").trim();
+    const result = await createFinderJobAdmin({
+      title: (formData.get("title") as string | null) ?? "",
+      templateId: ((formData.get("template") as string | null) ?? "") || undefined,
+      locationLabel: location || city,
+      city,
+      freeformTopic: ((formData.get("topic") as string | null) ?? "") || undefined,
+      softCapUsd: Number(formData.get("softCap") ?? ""),
+      hardCapUsd: Number(formData.get("hardCap") ?? ""),
+      maxQueries: Number(formData.get("maxQueries") ?? ""),
+      seedUrls: parseLines((formData.get("seedUrls") as string | null) ?? "")
+    });
     revalidatePath("/dmscraper");
     const target = result.ok
-      ? `/dmscraper?sec=kuyruk&scanok=${result.summary?.insertedCount ?? 0}`
-      : `/dmscraper?sec=kuyruk&error=${encodeURIComponent(result.errorMessage ?? "Tarama başarısız.")}`;
+      ? `/dmscraper?sec=isler&ok=created&job=${result.id}`
+      : `/dmscraper?sec=isler&error=${encodeURIComponent(result.errorMessage ?? "İş oluşturulamadı.")}`;
     redirect(target as Parameters<typeof redirect>[0]);
   }
 
-  async function candidateStatusAction(formData: FormData) {
+  async function jobRunAction(formData: FormData) {
     "use server";
     if (!(await isDmscraperAuthenticated())) {
       redirect("/dmscraper" as Parameters<typeof redirect>[0]);
     }
     const id = (formData.get("id") as string | null) ?? "";
-    const status = normalizeRadarReviewStatus(
-      (formData.get("status") as string | null) ?? "pending"
-    );
-    const note = (formData.get("note") as string | null) ?? "";
-    const duplicateOf = (formData.get("duplicateOf") as string | null) ?? "";
-    const backFilter = (formData.get("rstatus") as string | null) ?? "pending";
+    if (!id) {
+      redirect("/dmscraper?sec=isler" as Parameters<typeof redirect>[0]);
+    }
+    const result = await runFinderJobAdmin(id);
+    revalidatePath("/dmscraper");
+    const target = result.ok
+      ? `/dmscraper?sec=isler&job=${id}&ok=ran${result.candidates != null ? `&n=${result.candidates}` : ""}`
+      : `/dmscraper?sec=isler&job=${id}&error=${encodeURIComponent(result.errorMessage ?? "Tarama başarısız.")}`;
+    redirect(target as Parameters<typeof redirect>[0]);
+  }
 
-    let errorMessage = "";
+  async function jobCancelAction(formData: FormData) {
+    "use server";
+    if (!(await isDmscraperAuthenticated())) {
+      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
     if (id) {
-      const result =
-        status === "duplicate"
-          ? await markRadarCandidateDuplicateAdmin(id, duplicateOf, note)
-          : await setRadarCandidateStatusAdmin(id, status, note);
-      if (!result.ok) {
-        errorMessage = result.errorMessage ?? "İşlem başarısız.";
-      }
+      await cancelFinderJobAdmin(id);
     }
     revalidatePath("/dmscraper");
-    const base = `/dmscraper?sec=kuyruk&rstatus=${encodeURIComponent(backFilter)}`;
+    redirect("/dmscraper?sec=isler" as Parameters<typeof redirect>[0]);
+  }
+
+  async function jobRequeueAction(formData: FormData) {
+    "use server";
+    if (!(await isDmscraperAuthenticated())) {
+      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (id) {
+      await requeueFinderJobAdmin(id);
+    }
+    revalidatePath("/dmscraper");
     redirect(
-      (errorMessage
-        ? `${base}&error=${encodeURIComponent(errorMessage)}`
-        : base) as Parameters<typeof redirect>[0]
+      `/dmscraper?sec=isler${id ? `&job=${id}` : ""}` as Parameters<typeof redirect>[0]
     );
   }
 
-  async function sourceToggleAction(formData: FormData) {
+  async function jobReleaseAction(formData: FormData) {
+    "use server";
+    if (!(await isDmscraperAuthenticated())) {
+      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (id) {
+      await releaseStuckFinderJobAdmin(id);
+    }
+    revalidatePath("/dmscraper");
+    redirect(
+      `/dmscraper?sec=isler${id ? `&job=${id}` : ""}` as Parameters<typeof redirect>[0]
+    );
+  }
+
+  async function candidateReviewAction(formData: FormData) {
+    "use server";
+    if (!(await isDmscraperAuthenticated())) {
+      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    const jobRef = (formData.get("job") as string | null) ?? "";
+    const status = normalizeFinderReviewStatus(
+      (formData.get("status") as string | null) ?? "pending"
+    );
+    const note = (formData.get("note") as string | null) ?? "";
+    const backFilter = (formData.get("cstatus") as string | null) ?? "pending";
+    if (id) {
+      await reviewFinderCandidateAdmin(id, status, note);
+    }
+    revalidatePath("/dmscraper");
+    redirect(
+      `/dmscraper?sec=isler&job=${jobRef}&cstatus=${encodeURIComponent(backFilter)}` as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function templateToggleAction(formData: FormData) {
+    "use server";
+    if (!(await isDmscraperAuthenticated())) {
+      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    const active = (formData.get("active") as string | null) === "1";
+    if (id) {
+      await setFinderTemplateActiveAdmin(id, active);
+    }
+    revalidatePath("/dmscraper");
+    redirect("/dmscraper?sec=sablonlar" as Parameters<typeof redirect>[0]);
+  }
+
+  async function templateUpdateAction(formData: FormData) {
+    "use server";
+    if (!(await isDmscraperAuthenticated())) {
+      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (!id) {
+      redirect("/dmscraper?sec=sablonlar" as Parameters<typeof redirect>[0]);
+    }
+    const result = await updateFinderTemplateAdmin(id, {
+      label: (formData.get("label") as string | null) ?? undefined,
+      queryTemplates: parseLines((formData.get("queryTemplates") as string | null) ?? ""),
+      mustExcludeTerms: parseCommaList(
+        (formData.get("mustExcludeTerms") as string | null) ?? ""
+      )
+    });
+    revalidatePath("/dmscraper");
+    const target = result.ok
+      ? "/dmscraper?sec=sablonlar&ok=updated"
+      : `/dmscraper?sec=sablonlar&error=${encodeURIComponent(result.errorMessage ?? "Şablon güncellenemedi.")}`;
+    redirect(target as Parameters<typeof redirect>[0]);
+  }
+
+  async function providerToggleAction(formData: FormData) {
     "use server";
     if (!(await isDmscraperAuthenticated())) {
       redirect("/dmscraper" as Parameters<typeof redirect>[0]);
     }
     const id = (formData.get("id") as string | null) ?? "";
     const enabled = (formData.get("enabled") as string | null) === "1";
-    let errorMessage = "";
     if (id) {
-      if (enabled) {
-        // Terms gate: doğrulanmamış kaynak UI toggle'ıyla da açılamaz.
-        const source = await getRadarSourceAdmin(id);
-        if (!source) {
-          errorMessage = "Kaynak bulunamadı.";
-        } else if (!source.termsChecked) {
-          errorMessage = "Terms doğrulanmadan kaynak aktif edilemez — önce düzenleyip işaretle.";
-        }
-      }
-      if (!errorMessage) {
-        const result = await setRadarSourceEnabledAdmin(id, enabled);
-        if (!result.ok) errorMessage = result.errorMessage ?? "Güncelleme başarısız.";
-      }
+      await setFinderProviderEnabledAdmin(id, enabled);
     }
     revalidatePath("/dmscraper");
-    const base = "/dmscraper?sec=kaynaklar";
-    redirect(
-      (errorMessage
-        ? `${base}&error=${encodeURIComponent(errorMessage)}`
-        : base) as Parameters<typeof redirect>[0]
-    );
-  }
-
-  async function sourceCreateAction(formData: FormData) {
-    "use server";
-    if (!(await isDmscraperAuthenticated())) {
-      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
-    }
-    const result = await createRadarSourceAdmin(readSourceInput(formData));
-    revalidatePath("/dmscraper");
-    const target = result.ok
-      ? "/dmscraper?sec=kaynaklar&created=1"
-      : `/dmscraper?sec=kaynaklar&error=${encodeURIComponent(result.errorMessage ?? "Kaynak oluşturulamadı.")}`;
-    redirect(target as Parameters<typeof redirect>[0]);
-  }
-
-  async function sourceUpdateAction(formData: FormData) {
-    "use server";
-    if (!(await isDmscraperAuthenticated())) {
-      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    if (!id) {
-      redirect("/dmscraper?sec=kaynaklar" as Parameters<typeof redirect>[0]);
-    }
-    const result = await updateRadarSourceAdmin(id, readSourceInput(formData));
-    revalidatePath("/dmscraper");
-    const target = result.ok
-      ? "/dmscraper?sec=kaynaklar&updated=1"
-      : `/dmscraper?sec=kaynaklar&edit=${id}&error=${encodeURIComponent(result.errorMessage ?? "Kaynak güncellenemedi.")}`;
-    redirect(target as Parameters<typeof redirect>[0]);
-  }
-
-  async function keywordCreateAction(formData: FormData) {
-    "use server";
-    if (!(await isDmscraperAuthenticated())) {
-      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
-    }
-    const result = await createRadarKeywordAdmin({
-      keyword: (formData.get("keyword") as string | null) ?? "",
-      language: (formData.get("language") as string | null) ?? "",
-      category: (formData.get("category") as string | null) ?? "",
-      weight: Number(formData.get("weight") ?? ""),
-      isNegative: (formData.get("isNegative") as string | null) === "1",
-      isEnabled: (formData.get("isEnabled") as string | null) === "1"
-    });
-    revalidatePath("/dmscraper");
-    const target = result.ok
-      ? "/dmscraper?sec=keywords&created=1"
-      : `/dmscraper?sec=keywords&error=${encodeURIComponent(result.errorMessage ?? "Keyword eklenemedi.")}`;
-    redirect(target as Parameters<typeof redirect>[0]);
-  }
-
-  async function keywordUpdateAction(formData: FormData) {
-    "use server";
-    if (!(await isDmscraperAuthenticated())) {
-      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    if (!id) {
-      redirect("/dmscraper?sec=keywords" as Parameters<typeof redirect>[0]);
-    }
-    const result = await updateRadarKeywordAdmin(id, {
-      keyword: (formData.get("keyword") as string | null) ?? "",
-      language: (formData.get("language") as string | null) ?? "",
-      category: (formData.get("category") as string | null) ?? "",
-      weight: Number(formData.get("weight") ?? ""),
-      isNegative: (formData.get("isNegative") as string | null) === "1",
-      isEnabled: (formData.get("isEnabled") as string | null) === "1"
-    });
-    revalidatePath("/dmscraper");
-    const target = result.ok
-      ? "/dmscraper?sec=keywords&updated=1"
-      : `/dmscraper?sec=keywords&edit=${id}&error=${encodeURIComponent(result.errorMessage ?? "Keyword güncellenemedi.")}`;
-    redirect(target as Parameters<typeof redirect>[0]);
-  }
-
-  async function keywordDeleteAction(formData: FormData) {
-    "use server";
-    if (!(await isDmscraperAuthenticated())) {
-      redirect("/dmscraper" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    let errorMessage = "";
-    if (id) {
-      const result = await deleteRadarKeywordAdmin(id);
-      if (!result.ok) errorMessage = result.errorMessage ?? "Silme başarısız.";
-    }
-    revalidatePath("/dmscraper");
-    const base = "/dmscraper?sec=keywords";
-    redirect(
-      (errorMessage
-        ? `${base}&error=${encodeURIComponent(errorMessage)}`
-        : `${base}&deleted=1`) as Parameters<typeof redirect>[0]
-    );
+    redirect("/dmscraper?sec=saglayicilar" as Parameters<typeof redirect>[0]);
   }
 
   const cardClass =
     "rounded-[1.6rem] bg-gradient-to-b from-white/12 via-white/[0.04] to-transparent p-[1.3px] shadow-[0_30px_90px_-30px_rgba(0,0,0,0.85)]";
   const cardInnerClass = "rounded-[1.55rem] bg-[#0a0712]/85 backdrop-blur-2xl";
 
-  const enabledSources = sources.filter((source) => source.isEnabled);
-  const lastRun = runs[0] ?? null;
-
   const flashMessage =
-    scanOkParam !== ""
-      ? `Tarama tamamlandı — ${scanOkParam} yeni aday kuyruğa eklendi.`
-      : createdParam === "1"
-        ? activeSection === "keywords"
-          ? "Keyword eklendi."
-          : "Kaynak eklendi."
-        : updatedParam === "1"
-          ? activeSection === "keywords"
-            ? "Keyword güncellendi."
-            : "Kaynak güncellendi."
-          : deletedParam === "1"
-            ? "Keyword silindi."
-            : "";
+    flashOk === "created"
+      ? "İş kuyruğa eklendi. Detaydan taramayı başlatabilirsin."
+      : flashOk === "ran"
+        ? `Tarama tamamlandı${readParam(params.n) ? ` — ${readParam(params.n)} aday incelemeye hazır.` : "."}`
+        : flashOk === "updated"
+          ? "Şablon güncellendi."
+          : "";
 
   return (
     <main
@@ -430,13 +402,13 @@ export default async function DmscraperPage({ searchParams }: DmscraperPageProps
       />
 
       <div className="animate-reveal mx-auto w-full max-w-[88rem] lg:grid lg:grid-cols-[250px_minmax(0,1fr)] lg:items-start lg:gap-6">
-        <ScraperNav
+        <FinderNav
           activeSection={activeSection}
           items={[
-            { key: "kuyruk", label: "Kuyruk", count: counts.pending },
-            { key: "kaynaklar", label: "Kaynaklar" },
-            { key: "kosular", label: "Koşular" },
-            { key: "keywords", label: "Keywords" }
+            { key: "isler", label: "İşler", count: jobCounts.review },
+            { key: "sablonlar", label: "Şablonlar" },
+            { key: "saglayicilar", label: "Sağlayıcılar" },
+            { key: "maliyet", label: "Maliyet" }
           ]}
           cardClass={cardClass}
           cardInnerClass={cardInnerClass}
@@ -445,7 +417,7 @@ export default async function DmscraperPage({ searchParams }: DmscraperPageProps
 
         <div className="mt-5 flex min-w-0 flex-col gap-5 lg:mt-0">
           <BoardGuide
-            guide={SCRAPER_GUIDE}
+            guide={FINDER_GUIDE}
             cardClass={cardClass}
             cardInnerClass={cardInnerClass}
           />
@@ -457,7 +429,7 @@ export default async function DmscraperPage({ searchParams }: DmscraperPageProps
                 className="text-[9px] font-semibold uppercase tracking-[0.28em]"
                 style={{ color: "#f0abfc" }}
               >
-                DesireMap · radar scraper
+                DesireMap · service finder
               </p>
               <h1 className="mt-1 font-body text-[clamp(1.15rem,2.6vw,1.5rem)] font-bold tracking-[-0.035em] text-white">
                 {SECTION_META[activeSection].title}
@@ -479,43 +451,63 @@ export default async function DmscraperPage({ searchParams }: DmscraperPageProps
             </div>
           ) : null}
 
-          {activeSection === "kuyruk" ? (
-            <QueueSection
-              candidates={candidates}
-              counts={counts}
-              lastRun={lastRun}
-              enabledSourceCount={enabledSources.length}
-              totalSourceCount={sources.length}
-              statusFilter={statusFilter}
+          {activeSection === "isler" && jobDetail ? (
+            <JobDetailSection
+              detail={jobDetail}
+              candidateFilter={candidateFilter}
               cardClass={cardClass}
               cardInnerClass={cardInnerClass}
               inputClass={inputClass}
-              scanAction={scanAction}
-              candidateStatusAction={candidateStatusAction}
+              runAction={jobRunAction}
+              requeueAction={jobRequeueAction}
+              releaseAction={jobReleaseAction}
+              candidateReviewAction={candidateReviewAction}
             />
-          ) : activeSection === "kaynaklar" ? (
-            <SourcesSection
-              sources={sources}
-              editing={editingSource}
+          ) : activeSection === "isler" ? (
+            <>
+              {jobId && !jobDetail ? (
+                <div className="rounded-[1.1rem] border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-xs font-medium text-rose-200">
+                  İş bulunamadı.
+                </div>
+              ) : null}
+              <JobsSection
+                jobs={jobs}
+                counts={jobCounts}
+                templates={templates}
+                statusFilter={jobStatusFilter}
+                cardClass={cardClass}
+                cardInnerClass={cardInnerClass}
+                inputClass={inputClass}
+                createAction={jobCreateAction}
+                runAction={jobRunAction}
+                cancelAction={jobCancelAction}
+                requeueAction={jobRequeueAction}
+                releaseAction={jobReleaseAction}
+              />
+            </>
+          ) : activeSection === "sablonlar" ? (
+            <TemplatesSection
+              templates={templates}
+              editId={editId}
               cardClass={cardClass}
               cardInnerClass={cardInnerClass}
               inputClass={inputClass}
-              createAction={sourceCreateAction}
-              updateAction={sourceUpdateAction}
-              toggleAction={sourceToggleAction}
+              toggleAction={templateToggleAction}
+              updateAction={templateUpdateAction}
             />
-          ) : activeSection === "kosular" ? (
-            <RunsSection runs={runs} cardClass={cardClass} cardInnerClass={cardInnerClass} />
+          ) : activeSection === "saglayicilar" ? (
+            <ProvidersSection
+              providers={providers}
+              cardClass={cardClass}
+              cardInnerClass={cardInnerClass}
+              toggleAction={providerToggleAction}
+            />
           ) : (
-            <KeywordsSection
-              keywords={keywords}
-              editing={editingKeyword}
+            <CostsSection
+              last30Days={costs30d}
+              allTime={costsAllTime}
               cardClass={cardClass}
               cardInnerClass={cardInnerClass}
-              inputClass={inputClass}
-              createAction={keywordCreateAction}
-              updateAction={keywordUpdateAction}
-              deleteAction={keywordDeleteAction}
             />
           )}
         </div>

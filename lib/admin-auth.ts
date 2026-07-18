@@ -155,12 +155,12 @@ export async function signOutTasksAdmin(): Promise<void> {
 }
 
 /**
- * The `/dmscraper` radar-scraper board shares the task-board key
+ * The `/dmscraper` service-finder board shares the task-board key
  * (DESIREMAPTODO_ADMIN_ACCESS_KEY) but keeps its own cookie scoped to
- * /dmscraper. RFC 6265 path-matching keeps it isolated from both `/dm` and
- * `/dmscraper2` (a `/dmscraper` cookie does NOT match `/dmscraper2` because
- * the character after the prefix is not "/"). Cost: the same password is
+ * /dmscraper, so it stays isolated from `/dm`. Cost: the same password is
  * entered once per board — accepted trade-off, do not widen the path.
+ * (The old radar news scraper that lived on this route was removed on
+ * 2026-07-08; the service finder moved here from /dmscraper2.)
  */
 export const DMSCRAPER_ACCESS_COOKIE = "ubt_dmscraper_access";
 
@@ -209,63 +209,6 @@ export async function signOutDmscraper(): Promise<void> {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/dmscraper",
-    maxAge: 0
-  });
-}
-
-/**
- * The `/dmscraper2` service-finder board shares the task-board key
- * (DESIREMAPTODO_ADMIN_ACCESS_KEY) but keeps its own cookie scoped to its own
- * path, so signing out of one board never drops the other's session.
- * RFC 6265 path-matching keeps `/dm` and `/dmscraper2` cookies fully isolated.
- */
-export const DMSCRAPER2_ACCESS_COOKIE = "ubt_dmscraper2_access";
-
-/**
- * True when the current request carries a valid `/dmscraper2` session cookie.
- * Fails CLOSED: without a configured key nobody gets in.
- */
-export async function isDmscraper2Authenticated(): Promise<boolean> {
-  const accessKey = getTasksAdminAccessKey();
-  if (!accessKey) return false;
-  const cookieStore = await cookies();
-  const candidate = cookieStore.get(DMSCRAPER2_ACCESS_COOKIE)?.value ?? "";
-  return candidate.trim() === accessKey;
-}
-
-/**
- * Validates the supplied key and, when correct, persists it in an HttpOnly
- * cookie scoped to /dmscraper2. Returns whether the sign-in was accepted.
- */
-export async function signInDmscraper2(candidate: string): Promise<boolean> {
-  const accessKey = getTasksAdminAccessKey();
-  // Fail closed: without a configured key no sign-in is possible.
-  if (!accessKey) return false;
-  if (candidate.trim() !== accessKey) return false;
-
-  const cookieStore = await cookies();
-  cookieStore.set(DMSCRAPER2_ACCESS_COOKIE, accessKey, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/dmscraper2",
-    maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
-  });
-
-  return true;
-}
-
-/**
- * Clears the `/dmscraper2` session cookie (sign out). Expires it with the
- * exact attributes used at sign-in — see signOutBakcakanat for why.
- */
-export async function signOutDmscraper2(): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.set(DMSCRAPER2_ACCESS_COOKIE, "", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/dmscraper2",
     maxAge: 0
   });
 }

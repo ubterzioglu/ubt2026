@@ -77,8 +77,8 @@ export function TemplatesSection({
                       <a
                         href={
                           isEditing
-                            ? "/dmscraper2?sec=sablonlar"
-                            : `/dmscraper2?sec=sablonlar&edit=${template.id}`
+                            ? "/dmscraper?sec=sablonlar"
+                            : `/dmscraper?sec=sablonlar&edit=${template.id}`
                         }
                         className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:border-[#67e8f9]/40 hover:text-[#67e8f9]`}
                       >

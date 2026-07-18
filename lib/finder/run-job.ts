@@ -1,5 +1,5 @@
 // Service Finder iş yürütücüsü — corteqsmvp workers/service-finder/src/worker-loop.ts
-// gövdesinin senkron Node portu. Ayrı worker süreci yok: /dmscraper2 server
+// gövdesinin senkron Node portu. Ayrı worker süreci yok: /dmscraper server
 // action'ı service-role client ile çağırır (page.tsx maxDuration = 300).
 // Worker'a özgü lease/heartbeat/claim RPC'leri kaldırıldı; çifte koşuya karşı
 // koşullu UPDATE (status='queued' → 'running') ile tek atımlık kilit kullanılır.
@@ -35,7 +35,8 @@ import type {
 const SOFT_DEGRADE_MODEL = "gemini-2.5-flash-lite";
 const MIN_CONFIDENCE_TO_KEEP = 30;
 const EXTRACT_BATCH_SIZE = 5;
-const LOCKED_BY = "dmscraper2-server-action";
+// Informational lock tag (only ever written, never compared).
+const LOCKED_BY = "dmscraper-server-action";
 
 export class JobNotClaimableError extends Error {
   constructor() {

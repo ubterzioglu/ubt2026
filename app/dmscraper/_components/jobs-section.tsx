@@ -8,7 +8,7 @@ import type {
   FinderJobStatus,
   FinderTemplateItem
 } from "@/lib/service-finder";
-import { formatDate, formatUsd } from "@/app/dmscraper2/_components/format";
+import { formatDate, formatUsd } from "@/app/dmscraper/_components/format";
 
 interface JobsSectionProps {
   jobs: FinderJobListItem[];
@@ -303,7 +303,7 @@ export function JobsSection({
                 return (
                   <a
                     key={option.value}
-                    href={`/dmscraper2?sec=isler&jstatus=${option.value}`}
+                    href={`/dmscraper?sec=isler&jstatus=${option.value}`}
                     className={`${chipBase} ${
                       isActive ? "text-white ring-1 ring-inset ring-white/15" : chipIdle
                     }`}
@@ -338,7 +338,7 @@ export function JobsSection({
                     </span>
                     <div className="min-w-0 flex-1">
                       <a
-                        href={`/dmscraper2?sec=isler&job=${job.id}`}
+                        href={`/dmscraper?sec=isler&job=${job.id}`}
                         className="font-body text-[13px] font-semibold leading-snug text-white transition hover:text-[#67e8f9]"
                       >
                         {job.title}
@@ -364,7 +364,7 @@ export function JobsSection({
                     </div>
                     <div className="flex shrink-0 items-center gap-1.5">
                       <a
-                        href={`/dmscraper2?sec=isler&job=${job.id}`}
+                        href={`/dmscraper?sec=isler&job=${job.id}`}
                         className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:border-[#67e8f9]/40 hover:text-[#67e8f9]`}
                       >
                         Detay

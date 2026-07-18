@@ -1,4 +1,4 @@
-// /dmscraper2 navigasyonu — app/dm/_components/dm-nav.tsx'in uyarlanmış
+// /dmscraper navigasyonu — app/dm/_components/dm-nav.tsx'in uyarlanmış
 // kopyası (bölümler ?sec= ile). DmNav bilinçli olarak generalize edilmedi.
 
 import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
@@ -113,7 +113,7 @@ export function FinderNav({
             return (
               <a
                 key={item.key}
-                href={`/dmscraper2?sec=${item.key}`}
+                href={`/dmscraper?sec=${item.key}`}
                 className={`flex shrink-0 items-center gap-2 rounded-[1.1rem] px-4 py-2.5 text-xs font-semibold tracking-tight transition ${
                   isActive
                     ? "text-white shadow-[0_10px_30px_-10px_rgba(255,45,149,0.7)] ring-1 ring-inset ring-white/15"
@@ -145,7 +145,7 @@ export function FinderNav({
               return (
                 <a
                   key={item.key}
-                  href={`/dmscraper2?sec=${item.key}`}
+                  href={`/dmscraper?sec=${item.key}`}
                   className={`relative flex items-center justify-between gap-2 rounded-[1rem] px-3.5 py-2.5 text-[13px] font-semibold tracking-tight transition ${
                     isActive
                       ? "text-white shadow-[0_10px_30px_-10px_rgba(255,45,149,0.7)] ring-1 ring-inset ring-white/15"
