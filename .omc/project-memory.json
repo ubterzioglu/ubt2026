@@ -246,6 +246,24 @@
   },
   "hotPaths": [
     {
+      "path": ".env.local",
+      "accessCount": 4,
+      "lastAccessed": 1784408696196,
+      "type": "file"
+    },
+    {
+      "path": "docs\\superpowers\\specs\\2026-07-18-detrbridge-logo-panel-design.md",
+      "accessCount": 4,
+      "lastAccessed": 1784408732359,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 3,
+      "lastAccessed": 1784408628314,
+      "type": "directory"
+    },
+    {
       "path": "lib\\admin-auth.ts",
       "accessCount": 2,
       "lastAccessed": 1784407283937,
@@ -300,33 +318,21 @@
       "type": "file"
     },
     {
-      "path": ".env.local.example",
-      "accessCount": 1,
-      "lastAccessed": 1784407192697,
-      "type": "file"
-    },
-    {
       "path": "supabase\\migrations\\20260708090000_create_detr_attachments.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784407213739,
+      "accessCount": 2,
+      "lastAccessed": 1784408803660,
       "type": "file"
     },
     {
       "path": "supabase\\migrations\\20260707160000_create_detr_todos.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784407213828,
+      "accessCount": 2,
+      "lastAccessed": 1784408803928,
       "type": "file"
     },
     {
-      "path": "",
+      "path": ".env.local.example",
       "accessCount": 1,
-      "lastAccessed": 1784407294577,
-      "type": "directory"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 1,
-      "lastAccessed": 1784407311829,
+      "lastAccessed": 1784407192697,
       "type": "file"
     }
   ],
