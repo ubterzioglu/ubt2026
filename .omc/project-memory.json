@@ -246,15 +246,15 @@
   },
   "hotPaths": [
     {
-      "path": "app\\dm\\_components\\dm-login.tsx",
-      "accessCount": 7,
-      "lastAccessed": 1784311320017,
+      "path": "app\\dmscraper\\page.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1784394183436,
       "type": "file"
     },
     {
-      "path": "app\\dmscraper\\page.tsx",
+      "path": "app\\dm\\_components\\dm-login.tsx",
       "accessCount": 7,
-      "lastAccessed": 1784311353840,
+      "lastAccessed": 1784311320017,
       "type": "file"
     },
     {
@@ -264,9 +264,45 @@
       "type": "file"
     },
     {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 3,
+      "lastAccessed": 1784394161355,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\run-job.ts",
+      "accessCount": 3,
+      "lastAccessed": 1784394178722,
+      "type": "directory"
+    },
+    {
+      "path": "",
+      "accessCount": 2,
+      "lastAccessed": 1784393955380,
+      "type": "directory"
+    },
+    {
       "path": "app\\dm\\_components\\board-guide.tsx",
       "accessCount": 1,
       "lastAccessed": 1784311294863,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784393977427,
+      "type": "directory"
+    },
+    {
+      "path": "lib",
+      "accessCount": 1,
+      "lastAccessed": 1784394169919,
+      "type": "directory"
+    },
+    {
+      "path": ".env.local",
+      "accessCount": 1,
+      "lastAccessed": 1784394186873,
       "type": "file"
     }
   ],
