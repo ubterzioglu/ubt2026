@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1783798335758,
+  "lastScanned": 1784309353539,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -82,7 +82,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1783798335701,
+      "lastAccessed": 1784309353457,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -95,7 +95,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1783798335702,
+      "lastAccessed": 1784309353460,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -105,7 +105,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1783798335704,
+      "lastAccessed": 1784309353495,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -118,7 +118,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1783798335728,
+      "lastAccessed": 1784309353497,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -131,7 +131,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783798335729,
+      "lastAccessed": 1784309353497,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -142,14 +142,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1783798335730,
+      "lastAccessed": 1784309353498,
       "keyFiles": []
     },
     "experience": {
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783798335730,
+      "lastAccessed": 1784309353498,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -160,7 +160,7 @@
       "path": "lib",
       "purpose": "Library code",
       "fileCount": 20,
-      "lastAccessed": 1783798335730,
+      "lastAccessed": 1784309353499,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -173,7 +173,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1783798335731,
+      "lastAccessed": 1784309353500,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -186,7 +186,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1783798335732,
+      "lastAccessed": 1784309353500,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -197,7 +197,7 @@
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 3,
-      "lastAccessed": 1783798335732,
+      "lastAccessed": 1784309353501,
       "keyFiles": [
         "convert-cvopt-to-reviews.mjs",
         "migrate-cvopt-participants.mjs",
@@ -208,7 +208,7 @@
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1783798335732,
+      "lastAccessed": 1784309353502,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -218,7 +218,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1783798335733,
+      "lastAccessed": 1784309353502,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -229,14 +229,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1783798335734,
+      "lastAccessed": 1784309353503,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
       "fileCount": 28,
-      "lastAccessed": 1783798335738,
+      "lastAccessed": 1784309353508,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -244,6 +244,31 @@
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "app\\dm\\_components\\dm-login.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1784311320017,
+      "type": "file"
+    },
+    {
+      "path": "app\\dmscraper\\page.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1784311353840,
+      "type": "file"
+    },
+    {
+      "path": "app\\dmscraper2\\page.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1784311383779,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\board-guide.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784311294863,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }
