@@ -14,12 +14,12 @@ Tek kullanıcı erişimi (Umut). E-posta allowlist yok — sadece ortak şifre.
 `/detr`, `/bakcakanat`, `/batubt` ile aynı cookie-tabanlı gate deseni
 (`lib/admin-auth.ts`), tek şifre varyantı (Bakçakanat/BatuBT gibi):
 
-- Env: `DETRBRIDGE_PASSWORD` (lokalde `.env.local`'e, prod'da uzak sunucuya
-  kullanıcı tarafından eklenecek — bu repo sadece placeholder/okuma tarafını
-  içerir, gerçek değeri girmez).
+- Env: `DETRBRIDGE` (kullanıcı `.env.local`'e zaten girdi; prod'da uzak
+  sunucuya ayrıca eklenecek — bu repo sadece okuma tarafını içerir, gerçek
+  değeri girmez).
 - Cookie: `ubt_detrbridge_access`, `path=/detrbridge`, `httpOnly`, `sameSite=lax`,
   `secure` prod'da, `maxAge` 8 saat (mevcut panolarla aynı).
-- **Fail closed:** `DETRBRIDGE_PASSWORD` tanımlı değilse gate hep kapalı kalır
+- **Fail closed:** `DETRBRIDGE` tanımlı değilse gate hep kapalı kalır
   ([[admin-gate-conventions]] kuralı — bakçakanat olayını tekrar etmemek için).
 - **Sign-out öznitelik parite:** `cookies().delete()` kullanılmaz; cookie
   giriştekiyle birebir aynı özniteliklerle `maxAge: 0` olarak expire edilir.
@@ -42,7 +42,7 @@ Tek kullanıcı erişimi (Umut). E-posta allowlist yok — sadece ortak şifre.
 ## Logo Seçimi paneli
 
 **Ekleme formu** (üstte, `/detr`'deki "yeni görev ekle" accordion deseni gibi):
-- Dosya seçici (`type=file`, zorunlu, görsel MIME'lar, 10 MB sınırı — `/detr`
+- Dosya seçici (`type=file`, zorunlu, kısıtlama yok — 10 MB sınırı — `/detr`
   attachment sınırıyla aynı).
 - İsim (`text`, zorunlu, min 2 karakter).
 - Puan: 1-5 arası tam sayı seçimi (radio/yıldız butonları), zorunlu.
