@@ -1,6 +1,6 @@
 import { DETRBRIDGE_BRAND_GRADIENT } from "@/app/detrbridge/_components/theme";
 
-export type BridgeTabKey = "logos";
+export type BridgeTabKey = "logos" | "visits";
 
 export interface BridgeNavItem {
   key: BridgeTabKey;
@@ -77,8 +77,8 @@ function countBadge(isActive: boolean): string {
  * `/detrbridge` navigation. Desktop (lg+): sticky left sidebar with brand
  * block, vertical menu and sign-out. Mobile: compact top bar plus a
  * horizontally scrollable tab strip. Plain links (?tab=) — no client JS
- * needed. Currently a single item ("Logo Seçimi"); adding a panel later
- * means extending BridgeTabKey and this items list, nothing structural.
+ * needed. Items: "Logo Seçimi" and "Giriş Logları"; adding another panel
+ * later means extending BridgeTabKey and this items list, nothing structural.
  */
 export function BridgeNav({
   activeTab,

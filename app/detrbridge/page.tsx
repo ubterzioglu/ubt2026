@@ -13,6 +13,8 @@ import {
   type BridgeTabKey
 } from "@/app/detrbridge/_components/bridge-nav";
 import { LogosTab } from "@/app/detrbridge/_components/logos-tab";
+import { VisitsTab } from "@/app/detrbridge/_components/visits-tab";
+import { WelcomeCard } from "@/app/detrbridge/_components/welcome-card";
 import {
   DETRBRIDGE_AMBIENT_BACKGROUND,
   DETRBRIDGE_GRID_TEXTURE
@@ -24,6 +26,7 @@ import {
   selectLogo,
   deleteLogo
 } from "@/lib/detrbridge-logos";
+import { recordDetrbridgeVisit, getDetrbridgeVisits } from "@/lib/detrbridge-visits";
 
 export const metadata = {
   title: "detrbridge · Logo Seçimi",
@@ -40,7 +43,10 @@ function readParam(value: string | string[] | undefined): string {
   return "";
 }
 
-const NAV_ITEMS: BridgeNavItem[] = [{ key: "logos", label: "Logo Seçimi" }];
+const NAV_ITEMS: BridgeNavItem[] = [
+  { key: "logos", label: "Logo Seçimi" },
+  { key: "visits", label: "Giriş Logları" }
+];
 
 const cardClass =
   "overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl";
@@ -54,10 +60,13 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     return <DetrbridgeLogin signIn={detrbridgeSignInAction} />;
   }
 
-  const activeTab: BridgeTabKey = "logos"; // only tab today
+  const requestedTab = readParam(params.tab);
+  const activeTab: BridgeTabKey = requestedTab === "visits" ? "visits" : "logos";
 
   const errorParam = readParam(params.error);
-  const result = await getAllLogosAdmin();
+  const firstVisit = await recordDetrbridgeVisit();
+  const result = activeTab === "logos" ? await getAllLogosAdmin() : null;
+  const visits = activeTab === "visits" ? await getDetrbridgeVisits() : [];
 
   async function createAction(formData: FormData) {
     "use server";
@@ -146,30 +155,42 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
         />
 
         <div className="space-y-4">
+          <WelcomeCard
+            isFirstVisit={firstVisit.isFirstVisit}
+            hoursAfterShare={firstVisit.hoursAfterShare}
+          />
+
           {errorParam && (
             <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
               Hata: {errorParam}
             </div>
           )}
-          {result.source === "env-missing" && (
-            <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
-              Supabase bağlantısı yapılandırılmamış (SUPABASE_SERVICE_ROLE_KEY
-              eksik). Logolar yüklenemiyor.
-            </div>
-          )}
-          {result.source === "error" && (
-            <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
-              Logolar yüklenirken hata oluştu: {result.errorMessage}
-            </div>
-          )}
 
-          <LogosTab
-            logos={result.items}
-            createAction={createAction}
-            rateAction={rateAction}
-            selectAction={selectAction}
-            deleteAction={deleteAction}
-          />
+          {activeTab === "logos" && result ? (
+            <>
+              {result.source === "env-missing" && (
+                <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
+                  Supabase bağlantısı yapılandırılmamış
+                  (SUPABASE_SERVICE_ROLE_KEY eksik). Logolar yüklenemiyor.
+                </div>
+              )}
+              {result.source === "error" && (
+                <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
+                  Logolar yüklenirken hata oluştu: {result.errorMessage}
+                </div>
+              )}
+
+              <LogosTab
+                logos={result.items}
+                createAction={createAction}
+                rateAction={rateAction}
+                selectAction={selectAction}
+                deleteAction={deleteAction}
+              />
+            </>
+          ) : null}
+
+          {activeTab === "visits" ? <VisitsTab visits={visits} /> : null}
         </div>
       </div>
     </main>
