@@ -38,10 +38,14 @@ export function DetrbridgeLogin({ signIn }: DetrbridgeLoginProps) {
       />
 
       <div
-        className="animate-reveal w-full max-w-md rounded-[2rem] p-[1.5px] shadow-[0_50px_140px_-30px_rgba(0,0,0,0.9)]"
+        className="animate-reveal grid w-full max-w-4xl grid-cols-1 overflow-hidden rounded-[2rem] p-[1.5px] shadow-[0_50px_140px_-30px_rgba(0,0,0,0.9)] lg:grid-cols-2"
         style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
       >
-        <div className="overflow-hidden rounded-[1.92rem] bg-[#07080d]/90 px-7 py-9 backdrop-blur-2xl sm:px-10 sm:py-11">
+        <div className="relative isolate hidden overflow-hidden lg:block">
+          <BridgeMotionPanel />
+        </div>
+
+        <div className="overflow-hidden rounded-[1.92rem] bg-[#07080d]/90 px-7 py-9 backdrop-blur-2xl sm:px-10 sm:py-11 lg:rounded-l-none">
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span
@@ -178,5 +182,78 @@ export function DetrbridgeLogin({ signIn }: DetrbridgeLoginProps) {
         </div>
       </div>
     </main>
+  );
+}
+
+/**
+ * Left-panel "video" — a self-contained, looping CSS/SVG light-sweep scene
+ * in the board's navy · gold palette. No external media: nothing to license,
+ * nothing that can 404 in production.
+ */
+function BridgeMotionPanel() {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-[#050609]">
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(120% 90% at 20% 15%, rgba(30,58,138,0.55), transparent 60%)," +
+            "radial-gradient(100% 80% at 85% 90%, rgba(245,183,0,0.35), transparent 55%)," +
+            "linear-gradient(160deg, #050609 0%, #0a0d16 55%, #05060a 100%)"
+        }}
+      />
+      <div
+        aria-hidden
+        className="animate-sweep pointer-events-none absolute -inset-1/2 opacity-70"
+        style={{
+          background:
+            "conic-gradient(from 0deg, transparent 0deg, rgba(59,95,196,0.35) 60deg, transparent 140deg, rgba(245,183,0,0.28) 220deg, transparent 300deg, transparent 360deg)"
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.35]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)," +
+            "linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+          maskImage: "radial-gradient(80% 80% at 50% 50%, black, transparent 85%)",
+          WebkitMaskImage:
+            "radial-gradient(80% 80% at 50% 50%, black, transparent 85%)"
+        }}
+      />
+
+      <div
+        aria-hidden
+        className="animate-float absolute left-10 top-16 h-40 w-40 rounded-full blur-[70px]"
+        style={{ background: "rgba(30,58,138,0.5)" }}
+      />
+      <div
+        aria-hidden
+        className="animate-drift absolute bottom-10 right-8 h-48 w-48 rounded-full blur-[80px]"
+        style={{ background: "rgba(245,183,0,0.32)" }}
+      />
+
+      <div className="relative flex h-full flex-col items-center justify-center gap-6 px-10 text-center">
+        <span
+          className="flex h-20 w-20 items-center justify-center rounded-[1.4rem] ring-1 ring-white/20"
+          style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
+        >
+          <span className="font-body text-3xl font-extrabold tracking-tight text-black">
+            B
+          </span>
+        </span>
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-white/40">
+            detrbridge
+          </p>
+          <p className="mt-2 max-w-[16rem] text-sm leading-6 text-white/60">
+            Logo adaylarını yükle, puanla, en iyisini seç.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

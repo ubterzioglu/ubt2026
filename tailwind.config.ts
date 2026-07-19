@@ -45,12 +45,17 @@ const config: Config = {
         reveal: {
           "0%": { opacity: "0", transform: "translateY(14px)" },
           "100%": { opacity: "1", transform: "translateY(0)" }
+        },
+        sweep: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" }
         }
       },
       animation: {
         float: "float 9s ease-in-out infinite",
         drift: "drift 14s ease-in-out infinite",
-        reveal: "reveal 700ms ease-out both"
+        reveal: "reveal 700ms ease-out both",
+        sweep: "sweep 22s linear infinite"
       }
     }
   },
