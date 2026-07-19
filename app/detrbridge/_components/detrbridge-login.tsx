@@ -4,6 +4,7 @@ import {
   DETRBRIDGE_GRID_TEXTURE,
   DETRBRIDGE_GOLD
 } from "@/app/detrbridge/_components/theme";
+import { PasswordField } from "@/app/detrbridge/_components/password-field";
 
 interface DetrbridgeLoginProps {
   /** Sign-in server action (handles its own redirect). */
@@ -42,7 +43,22 @@ export function DetrbridgeLogin({ signIn }: DetrbridgeLoginProps) {
         style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
       >
         <div className="relative isolate hidden overflow-hidden lg:block">
-          <BridgeMotionPanel />
+          <video
+            className="h-full w-full object-cover"
+            src="/detrbridge/login-bg.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(5,6,9,0.15) 0%, rgba(5,6,9,0.55) 100%)"
+            }}
+          />
         </div>
 
         <div className="overflow-hidden rounded-[1.92rem] bg-[#07080d]/90 px-7 py-9 backdrop-blur-2xl sm:px-10 sm:py-11 lg:rounded-l-none">
@@ -106,33 +122,7 @@ export function DetrbridgeLogin({ signIn }: DetrbridgeLoginProps) {
               <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-white/50">
                 Şifre
               </span>
-              <div className="group relative">
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/30 transition group-focus-within:text-[#F5B700]"
-                >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="3" y="11" width="18" height="11" rx="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
-                </span>
-                <input
-                  type="password"
-                  name="access"
-                  autoComplete="current-password"
-                  placeholder="••••••••••••"
-                  className="w-full rounded-[1.05rem] border border-white/10 bg-white/[0.04] py-3.5 pl-11 pr-4 text-sm text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#F5B700]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#F5B700]/15"
-                />
-              </div>
+              <PasswordField />
             </label>
             <button
               type="submit"
@@ -182,78 +172,5 @@ export function DetrbridgeLogin({ signIn }: DetrbridgeLoginProps) {
         </div>
       </div>
     </main>
-  );
-}
-
-/**
- * Left-panel "video" — a self-contained, looping CSS/SVG light-sweep scene
- * in the board's navy · gold palette. No external media: nothing to license,
- * nothing that can 404 in production.
- */
-function BridgeMotionPanel() {
-  return (
-    <div className="absolute inset-0 overflow-hidden bg-[#050609]">
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(120% 90% at 20% 15%, rgba(30,58,138,0.55), transparent 60%)," +
-            "radial-gradient(100% 80% at 85% 90%, rgba(245,183,0,0.35), transparent 55%)," +
-            "linear-gradient(160deg, #050609 0%, #0a0d16 55%, #05060a 100%)"
-        }}
-      />
-      <div
-        aria-hidden
-        className="animate-sweep pointer-events-none absolute -inset-1/2 opacity-70"
-        style={{
-          background:
-            "conic-gradient(from 0deg, transparent 0deg, rgba(59,95,196,0.35) 60deg, transparent 140deg, rgba(245,183,0,0.28) 220deg, transparent 300deg, transparent 360deg)"
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.35]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)," +
-            "linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-          maskImage: "radial-gradient(80% 80% at 50% 50%, black, transparent 85%)",
-          WebkitMaskImage:
-            "radial-gradient(80% 80% at 50% 50%, black, transparent 85%)"
-        }}
-      />
-
-      <div
-        aria-hidden
-        className="animate-float absolute left-10 top-16 h-40 w-40 rounded-full blur-[70px]"
-        style={{ background: "rgba(30,58,138,0.5)" }}
-      />
-      <div
-        aria-hidden
-        className="animate-drift absolute bottom-10 right-8 h-48 w-48 rounded-full blur-[80px]"
-        style={{ background: "rgba(245,183,0,0.32)" }}
-      />
-
-      <div className="relative flex h-full flex-col items-center justify-center gap-6 px-10 text-center">
-        <span
-          className="flex h-20 w-20 items-center justify-center rounded-[1.4rem] ring-1 ring-white/20"
-          style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
-        >
-          <span className="font-body text-3xl font-extrabold tracking-tight text-black">
-            B
-          </span>
-        </span>
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-white/40">
-            detrbridge
-          </p>
-          <p className="mt-2 max-w-[16rem] text-sm leading-6 text-white/60">
-            Logo adaylarını yükle, puanla, en iyisini seç.
-          </p>
-        </div>
-      </div>
-    </div>
   );
 }
