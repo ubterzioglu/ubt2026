@@ -1,14 +1,19 @@
 import "server-only";
 
-import { randomUUID } from "node:crypto";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /** UBT'nin /detrbridge linkini paylaştığı an (TR saatiyle 19 Temmuz 2026, 07:00). */
 export const DETRBRIDGE_SHARE_MOMENT = new Date("2026-07-19T07:00:00+03:00");
 
-export const DETRBRIDGE_VISITOR_COOKIE = "ubt_detrbridge_visitor";
-const VISITOR_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365 * 5; // 5 years
+/**
+ * Set by middleware.ts, NOT here: Server Components can't call
+ * cookies().set() during a render (Next.js throws in production), so the
+ * visitor cookie is minted in middleware and its result is threaded through
+ * these two request headers instead.
+ */
+const FIRST_VISIT_HEADER = "x-detrbridge-first-visit";
+const VISITOR_TOKEN_HEADER = "x-detrbridge-visitor-token";
 
 export interface DetrbridgeVisit {
   id: string;
@@ -50,33 +55,25 @@ function hoursSinceShare(now: Date): number {
 }
 
 /**
- * Reads the visitor cookie; if absent, this is the visitor's first-ever
- * visit — a token is minted, the cookie is set, and the visit is logged.
- * Returns the elapsed hours since the share moment either way, so the
- * welcome card can always show "X saat sonra geldin" on first visit.
+ * Reads the first-visit signal middleware.ts already computed (via request
+ * headers, since the cookie itself was minted there). On a first visit,
+ * logs the row to Supabase. Returns the elapsed hours since the share
+ * moment either way, so the welcome card can always show "X saat sonra
+ * geldin" on first visit.
  */
 export async function recordDetrbridgeVisit(): Promise<FirstVisit> {
-  const cookieStore = await cookies();
-  const existing = cookieStore.get(DETRBRIDGE_VISITOR_COOKIE)?.value;
+  const headerStore = await headers();
+  const isFirstVisit = headerStore.get(FIRST_VISIT_HEADER) === "1";
   const now = new Date();
   const hoursAfterShare = hoursSinceShare(now);
 
-  if (existing) {
+  if (!isFirstVisit) {
     return { isFirstVisit: false, hoursAfterShare };
   }
 
-  const token = randomUUID();
-  cookieStore.set(DETRBRIDGE_VISITOR_COOKIE, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/detrbridge",
-    maxAge: VISITOR_COOKIE_MAX_AGE_SECONDS
-  });
-
+  const token = headerStore.get(VISITOR_TOKEN_HEADER);
   const supabase = createServiceClient();
-  if (supabase) {
-    const headerStore = await headers();
+  if (supabase && token) {
     const userAgent = headerStore.get("user-agent");
     try {
       await supabase.from("detrbridge_visits").insert({
