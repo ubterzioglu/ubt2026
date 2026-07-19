@@ -1,4 +1,6 @@
 import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
+import { BoardGuide } from "@/app/dm/_components/board-guide";
+import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 import { FindingTable } from "@/app/dm/_components/finding-table";
 import type {
   FindingComment,
@@ -37,6 +39,68 @@ interface FindingsTabProps {
 const labelClass =
   "mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50";
 
+// Collapsed how-to card shown at the top of the Findings tab.
+const FINDINGS_GUIDE: BoardGuideContent = {
+  title: "Bu sekme ne işe yarar? · Kullanım rehberi",
+  intro:
+    "Test bulguları, uygulamayı test ederken karşılaşılan sorunları " +
+    "kayıt altına almak için kullanılır. Her bulgu ekran görüntüsü, " +
+    "durum, önem derecesi ve yorum akışı taşıyabilir.",
+  sections: [
+    {
+      heading: "1 · Bulgu ekleme",
+      text: "Yeni bir sorunu kaydetmek için:",
+      steps: [
+        "Üstteki 'Yeni bulgu ekle' akordeonuna tıkla — form açılır.",
+        "Başlığı gir (sorunu kısaca özetle).",
+        "Alanı belirt (hangi sayfa/özellik) ve sorumluyu seç.",
+        "Durum ve önem derecesini seç (varsayılan: Açık / Normal).",
+        "İstersen ekran görüntüsü dosyası yükle.",
+        "Kaydet — bulgu listenin başına eklenir."
+      ]
+    },
+    {
+      heading: "2 · Durum akışı",
+      text: "Bir bulgunun yaşam döngüsü:",
+      steps: [
+        "Açık — yeni kaydedildi, henüz bakılmadı.",
+        "İnceleniyor — biri üzerinde çalışıyor.",
+        "Çözüldü — sorun giderildi.",
+        "Geçersiz — sorun değil / tekrar üretilemedi (wontfix)."
+      ]
+    },
+    {
+      heading: "3 · Önem dereceleri",
+      text: "Önem, bulgunun ne kadar acil olduğunu gösterir:",
+      steps: [
+        "Düşük — kozmetik, aceleye gerek yok.",
+        "Normal — standart öncelikli sorun.",
+        "Yüksek — kullanıcı deneyimini belirgin şekilde bozuyor.",
+        "Kritik — uygulamayı kullanılamaz kılıyor, en dikkat çeken rozetle işaretlenir."
+      ]
+    },
+    {
+      heading: "4 · Detay görünümü ve yorumlar",
+      text: "Bir bulguyla ilgili tartışmak veya detayına bakmak için:",
+      steps: [
+        "Listede bir bulgu kartına tıkla — detay görünümü açılır.",
+        "Varsa ekran görüntüsünü büyüterek incele.",
+        "Alttaki yorum kutusuna yazıp gönder; ekip yorumları burada birikir.",
+        "Kendi yazdığın bir yorumu çöp kutusu ikonuyla silebilirsin."
+      ]
+    },
+    {
+      heading: "5 · Hızlı işlemler",
+      text: "Formu açmadan yapabileceklerin:",
+      steps: [
+        "Bulgu kartındaki 'Çözüldü' kısayolu, durumu tek tıkla Çözüldü'ye çeker.",
+        "Kalem ikonu düzenleme formunu o bulgunun bilgileriyle açar.",
+        "Çöp kutusu ikonu bulguyu kalıcı olarak siler."
+      ]
+    }
+  ]
+};
+
 export function FindingsTab({
   findings,
   owners,
@@ -64,6 +128,11 @@ export function FindingsTab({
 
   return (
     <>
+      <BoardGuide
+        guide={FINDINGS_GUIDE}
+        cardClass={cardClass}
+        cardInnerClass={cardInnerClass}
+      />
       {/* Stats */}
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[

@@ -246,10 +246,88 @@
   },
   "hotPaths": [
     {
-      "path": ".env.local",
-      "accessCount": 4,
-      "lastAccessed": 1784408696196,
+      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
+      "accessCount": 13,
+      "lastAccessed": 1784453603412,
       "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 12,
+      "lastAccessed": 1784452294525,
+      "type": "directory"
+    },
+    {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 11,
+      "lastAccessed": 1784452267780,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\social-tab.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1784450013498,
+      "type": "file"
+    },
+    {
+      "path": ".env.local",
+      "accessCount": 8,
+      "lastAccessed": 1784451808767,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\page.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1784455881759,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\page.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1784449976098,
+      "type": "file"
+    },
+    {
+      "path": "lib\\service-finder.ts",
+      "accessCount": 7,
+      "lastAccessed": 1784451631306,
+      "type": "directory"
+    },
+    {
+      "path": "app\\dm\\_components\\findings-tab.tsx",
+      "accessCount": 6,
+      "lastAccessed": 1784449997466,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\bridge-nav.tsx",
+      "accessCount": 6,
+      "lastAccessed": 1784452380572,
+      "type": "file"
+    },
+    {
+      "path": "middleware.ts",
+      "accessCount": 6,
+      "lastAccessed": 1784456107159,
+      "type": "directory"
+    },
+    {
+      "path": "scripts\\dev-finder-e2e-test.ts",
+      "accessCount": 5,
+      "lastAccessed": 1784451516082,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\run-job.ts",
+      "accessCount": 5,
+      "lastAccessed": 1784451653861,
+      "type": "directory"
+    },
+    {
+      "path": "next.config.ts",
+      "accessCount": 5,
+      "lastAccessed": 1784451728042,
+      "type": "directory"
     },
     {
       "path": "docs\\superpowers\\specs\\2026-07-18-detrbridge-logo-panel-design.md",
@@ -258,15 +336,57 @@
       "type": "file"
     },
     {
-      "path": "",
+      "path": "app\\dm\\_components\\board-guide.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1784449948523,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\info-tab.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1784450027033,
+      "type": "file"
+    },
+    {
+      "path": ".env.local.example",
+      "accessCount": 4,
+      "lastAccessed": 1784451816429,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\dm-nav.tsx",
       "accessCount": 3,
-      "lastAccessed": 1784408628314,
+      "lastAccessed": 1784417062267,
+      "type": "file"
+    },
+    {
+      "path": "tailwind.config.ts",
+      "accessCount": 3,
+      "lastAccessed": 1784452017367,
       "type": "directory"
     },
     {
-      "path": "lib\\admin-auth.ts",
+      "path": "app\\detrbridge\\_actions.ts",
       "accessCount": 3,
-      "lastAccessed": 1784409388535,
+      "lastAccessed": 1784452314097,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260707160000_create_detr_todos.sql",
+      "accessCount": 3,
+      "lastAccessed": 1784488047640,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260708090000_create_detr_attachments.sql",
+      "accessCount": 3,
+      "lastAccessed": 1784488048413,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260719090000_create_detrbridge_logos.sql",
+      "accessCount": 3,
+      "lastAccessed": 1784488048550,
       "type": "file"
     },
     {
@@ -300,39 +420,45 @@
       "type": "file"
     },
     {
-      "path": "app\\dm\\_components\\dm-nav.tsx",
+      "path": "app\\dm\\_components\\scraper\\scraper-tab.tsx",
       "accessCount": 2,
-      "lastAccessed": 1784407296646,
+      "lastAccessed": 1784450053559,
       "type": "file"
     },
     {
-      "path": "app\\dm\\page.tsx",
+      "path": "lib\\finder",
       "accessCount": 2,
-      "lastAccessed": 1784407374426,
+      "lastAccessed": 1784451649810,
+      "type": "directory"
+    },
+    {
+      "path": "app\\globals.css",
+      "accessCount": 2,
+      "lastAccessed": 1784451998587,
+      "type": "directory"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\theme.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784452175673,
       "type": "file"
     },
     {
-      "path": "scripts\\dev-finder-e2e-test.ts",
+      "path": "lib\\detrbridge-logos.ts",
       "accessCount": 2,
-      "lastAccessed": 1784407597881,
+      "lastAccessed": 1784452268318,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260708090000_create_detr_attachments.sql",
+      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
       "accessCount": 2,
-      "lastAccessed": 1784408803660,
+      "lastAccessed": 1784452309762,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260707160000_create_detr_todos.sql",
+      "path": "supabase\\migrations\\20260719120000_create_detrbridge_visits.sql",
       "accessCount": 2,
-      "lastAccessed": 1784408803928,
-      "type": "file"
-    },
-    {
-      "path": ".env.local.example",
-      "accessCount": 1,
-      "lastAccessed": 1784407192697,
+      "lastAccessed": 1784453042906,
       "type": "file"
     },
     {
@@ -342,52 +468,82 @@
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260719090000_create_detrbridge_logos.sql",
+      "path": "app\\dm",
       "accessCount": 1,
-      "lastAccessed": 1784409331848,
+      "lastAccessed": 1784417070837,
+      "type": "directory"
+    },
+    {
+      "path": "app\\dm\\_components\\task-table.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784417077564,
       "type": "file"
     },
     {
-      "path": "lib\\detrbridge-logos.ts",
+      "path": "app",
       "accessCount": 1,
-      "lastAccessed": 1784409447367,
+      "lastAccessed": 1784450060204,
+      "type": "directory"
+    },
+    {
+      "path": "scripts",
+      "accessCount": 1,
+      "lastAccessed": 1784450067588,
+      "type": "directory"
+    },
+    {
+      "path": "components",
+      "accessCount": 1,
+      "lastAccessed": 1784450067647,
+      "type": "directory"
+    },
+    {
+      "path": "supabase",
+      "accessCount": 1,
+      "lastAccessed": 1784450067824,
+      "type": "directory"
+    },
+    {
+      "path": "lib\\finder\\providers\\tavily.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784450109155,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_components\\theme.ts",
+      "path": "lib\\finder\\providers\\serpapi.ts",
       "accessCount": 1,
-      "lastAccessed": 1784409491695,
+      "lastAccessed": 1784450109510,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_actions.ts",
+      "path": "lib\\finder\\providers\\gemini.ts",
       "accessCount": 1,
-      "lastAccessed": 1784409515675,
+      "lastAccessed": 1784450109894,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
+      "path": "app\\api\\zelifs\\route.ts",
       "accessCount": 1,
-      "lastAccessed": 1784409560289,
+      "lastAccessed": 1784450127894,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_components\\bridge-nav.tsx",
+      "path": "AGENTS.md",
       "accessCount": 1,
-      "lastAccessed": 1784409599500,
+      "lastAccessed": 1784450147023,
+      "type": "directory"
+    },
+    {
+      "path": "lib\\blog-posts.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784451642087,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
+      "path": "app\\dm\\_components\\scraper\\format.ts",
       "accessCount": 1,
-      "lastAccessed": 1784409644849,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784409685939,
-      "type": "file"
+      "lastAccessed": 1784452299847,
+      "type": "directory"
     }
   ],
   "userDirectives": []

@@ -1,4 +1,35 @@
 import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
+import { BoardGuide } from "@/app/dm/_components/board-guide";
+import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
+
+// Collapsed how-to card shown at the top of the Info tab.
+const INFO_GUIDE: BoardGuideContent = {
+  title: "Bu sekme ne işe yarar? · Kullanım rehberi",
+  intro:
+    "Önemli bilgiler, ekibin sık başvurduğu referansları tek yerde " +
+    "tutar: resmi sosyal medya profilleri ve açık genel işler listesi. " +
+    "Bu sekmede form yok — salt okunur bir referans sayfasıdır.",
+  sections: [
+    {
+      heading: "1 · Sosyal profiller",
+      text: "DesireMap'in resmi hesaplarına hızlı erişim için:",
+      steps: [
+        "Kart üzerindeki Instagram, Facebook, X, TikTok, Reddit veya LinkedIn satırına tıkla.",
+        "Bağlantı ilgili profili yeni sekmede açar.",
+        "Kullanıcı adı/handle her satırın altında görünür — paylaşım yaparken referans alabilirsin."
+      ]
+    },
+    {
+      heading: "2 · Açık işler",
+      text: "Diğer sekmelere sığmayan genel yapılacaklar burada listelenir:",
+      steps: [
+        "Liste salt okunurdur, buradan ekleme/silme yapılmaz.",
+        "Örnek: yeni bir platformda (ör. Pornhub) profil açılması gibi tek seferlik işler.",
+        "Böyle bir işi Görevler sekmesine taşımak istersen, oradan yeni görev olarak ekleyebilirsin."
+      ]
+    }
+  ]
+};
 
 interface InfoTabProps {
   cardClass: string;
@@ -88,6 +119,11 @@ const PROFILES: ProfileLink[] = [
 export function InfoTab({ cardClass, cardInnerClass }: InfoTabProps) {
   return (
     <>
+      <BoardGuide
+        guide={INFO_GUIDE}
+        cardClass={cardClass}
+        cardInnerClass={cardInnerClass}
+      />
       {/* Social profiles card */}
       <section className={cardClass}>
         <div className={`${cardInnerClass} p-4 sm:p-5`}>

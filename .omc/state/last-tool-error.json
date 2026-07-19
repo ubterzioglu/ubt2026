@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"powershell -Command \\\"Get-CimInstance Win32_Process | Where-Object { \\\\$_.CommandLine -like '*next dev*' } | Select-Object ProcessId, CommandLine\\\" 2>&1 | head -20\",\"description\":\"Find the...",
-  "error": "Exit code 1\n\r\nProcessId CommandLine                                                                                                  \r\n--------- -----------                                                                                                  \r\n    96984 C:\\Windows\\system32\\cmd.exe /d /s /c next dev                                                                \r\n    55432 \"C:\\Program Files\\Git\\bin\\bash.exe\" -c \"source /c/Users/baris-terzioglu/.claude/shell-snapshots/snapshot-b...\r\n  ...",
-  "timestamp": "2026-07-18T21:25:14.200Z",
-  "retry_count": 29
+  "tool_input_preview": "{\"command\":\"cd \\\"c:\\\\temp_private\\\\ubt2026\\\" && SDD_SCRIPTS=\\\"C:\\\\Users\\\\baris-terzioglu\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\6.1.1\\\\skills\\\\subagent-driven-development\\\\scr...",
+  "error": "Exit code 1\nwrote /cygdrive/c/temp_private/ubt2026/.superpowers/sdd/review-1e9162c..77f27f0.diff: 1 commit(s), 3914 bytes\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-584e-cwd: No such file or directory",
+  "timestamp": "2026-07-19T19:14:11.655Z",
+  "retry_count": 2
 }

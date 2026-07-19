@@ -12,6 +12,8 @@ import { InfoTab } from "@/app/dm/_components/info-tab";
 import { ScraperTab } from "@/app/dm/_components/scraper/scraper-tab";
 import { DmNav } from "@/app/dm/_components/dm-nav";
 import type { DmTabKey } from "@/app/dm/_components/dm-nav";
+import { BoardGuide } from "@/app/dm/_components/board-guide";
+import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 import {
   DM_AMBIENT_BACKGROUND,
   DM_BRAND_GRADIENT,
@@ -80,6 +82,69 @@ const PRIORITY_OPTIONS: { value: ProjectTaskPriority; label: string }[] = [
 ];
 
 const OWNER_OPTIONS = ["Umut", "Baran", "Şahin", "Ortak", "Backlog"];
+
+// Collapsed how-to card shown at the top of the Tasks tab.
+const TASKS_GUIDE: BoardGuideContent = {
+  title: "Bu sekme ne işe yarar? · Kullanım rehberi",
+  intro:
+    "Görevler, DesireMap ekibinin ortak yapılacaklar panosu. Her görevin " +
+    "bir sahibi, önceliği ve durumu var; \"Yeni görev ekle\" ile eklenir, " +
+    "listeden durumu tek tıkla değiştirilir.",
+  sections: [
+    {
+      heading: "1 · Görev ekleme",
+      text: "Yeni bir görevi panoya kaydetmek için:",
+      steps: [
+        "Sayfanın üstündeki 'Yeni görev ekle' akordeonuna tıkla — form açılır.",
+        "Görev başlığını gir (zorunlu, 2–400 karakter).",
+        "Sorumluyu seç veya yaz: Umut, Baran, Şahin, Ortak ya da Backlog.",
+        "İstersen kategori (ör. 'Veri / mekan datası') ve hedef tarih (ör. 'Temmuz ortası') gir.",
+        "Durum ve önceliği seç (varsayılan: Yapılacak / Normal).",
+        "Gerekirse Not alanına detay veya bağımlılık yaz.",
+        "'Görev ekle' butonuna bas — görev listenin başına eklenir."
+      ]
+    },
+    {
+      heading: "2 · Durumu güncelleme",
+      text:
+        "Formu açmadan tek görevin durumunu değiştirmek için liste " +
+        "satırındaki durum rozetine tıkla; yeni durum hemen kaydedilir.",
+      steps: [
+        "Akış: Yapılacak → Devam ediyor → Bitti (ya da Bloke).",
+        "Durum rozeti listede sağ tarafta, görev başlığının yanında görünür.",
+        "Rozete tıklamak açılır menü gösterir; istediğin durumu seç."
+      ]
+    },
+    {
+      heading: "3 · Öncelik anlamları",
+      text: "Öncelik, görevin ne kadar acil olduğunu gösterir:",
+      steps: [
+        "Düşük — bekleyebilir, arka plan işi.",
+        "Normal — standart iş akışı, varsayılan öncelik.",
+        "Yüksek — yakın zamanda ele alınmalı.",
+        "İlk 5 — şu anki en kritik 5 işten biri, üst sıralarda tutulur."
+      ]
+    },
+    {
+      heading: "4 · Düzenleme ve silme",
+      text: "Var olan bir görevi değiştirmek veya kaldırmak için:",
+      steps: [
+        "Liste satırındaki kalem (düzenle) ikonuna tıkla — form o görevin bilgileriyle açılır.",
+        "Alanları güncelleyip 'Değişiklikleri kaydet' ile onayla, ya da 'İptal' ile vazgeç.",
+        "Çöp kutusu ikonu görevi kalıcı olarak siler — bu işlem geri alınamaz."
+      ]
+    },
+    {
+      heading: "5 · Arama ve filtreleme",
+      text: "Büyüyen listede hızlıca gezinmek için:",
+      steps: [
+        "Liste üstündeki arama kutusuna görev başlığından bir kelime yaz.",
+        "Sorumlu filtresiyle sadece belirli bir kişinin görevlerini gör.",
+        "Durum filtresiyle örneğin sadece 'Bloke' olan görevleri listele."
+      ]
+    }
+  ]
+};
 
 // Per-section header copy for the content column.
 const SECTION_META: Record<DmTabKey, { title: string; description: string }> = {
@@ -561,6 +626,11 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
         {activeTab === "tasks" ? (
         <>
+        <BoardGuide
+          guide={TASKS_GUIDE}
+          cardClass={cardClass}
+          cardInnerClass={cardInnerClass}
+        />
         {/* Stats */}
         <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[

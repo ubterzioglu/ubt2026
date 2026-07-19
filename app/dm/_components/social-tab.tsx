@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import type { SocialPlatform, SocialPostItem } from "@/types/site";
 import { SOCIAL_PLATFORMS } from "@/types/site";
 import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
+import { BoardGuide } from "@/app/dm/_components/board-guide";
+import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 
 interface SocialTabProps {
   posts: SocialPostItem[];
@@ -15,6 +17,44 @@ interface SocialTabProps {
 }
 
 const ALL = "__all__";
+
+// Collapsed how-to card shown at the top of the Social/İçerik tab.
+const SOCIAL_GUIDE: BoardGuideContent = {
+  title: "Bu sekme ne işe yarar? · Kullanım rehberi",
+  intro:
+    "İçerik, sosyal medya için hazırlanmış post fikirlerini ve her " +
+    "platformda paylaşılıp paylaşılmadığını takip eder.",
+  sections: [
+    {
+      heading: "1 · Paylaşım durumunu işaretleme",
+      text: "Bir postun hangi platformlarda paylaşıldığını güncellemek için:",
+      steps: [
+        "Post kartındaki platform rozetlerini bul (Instagram, Facebook, X, TikTok, Reddit, LinkedIn).",
+        "Paylaştığın platformun rozetine tıkla — 'paylaşıldı' olarak işaretlenir.",
+        "Tekrar tıklarsan 'paylaşılmadı' durumuna geri döner.",
+        "Her post altı platform için ayrı ayrı takip edilir."
+      ]
+    },
+    {
+      heading: "2 · Metni kopyalama",
+      text: "Hazır metni ilgili araca aktarmak için:",
+      steps: [
+        "Instagram açıklaması yanındaki 'Kopyala' butonuna bas.",
+        "Canva prompt'u yanındaki 'Kopyala' butonuna bas.",
+        "Kopyalanan metni doğrudan Instagram uygulamasına veya Canva'ya yapıştır."
+      ]
+    },
+    {
+      heading: "3 · Arama ve filtreleme",
+      text: "Çok sayıda post arasında hızlı gezinmek için:",
+      steps: [
+        "Üstteki arama kutusuna başlık, kategori veya metin içinden bir kelime yaz.",
+        "Kategori filtresiyle sadece belirli bir içerik türünü gör.",
+        "Paylaşım durumu filtresiyle 'paylaşılmış' veya 'paylaşılmamış' postları ayır."
+      ]
+    }
+  ]
+};
 
 const PLATFORM_LABEL: Record<SocialPlatform, string> = {
   instagram: "Instagram",
@@ -299,6 +339,11 @@ export function SocialTab({
 
   return (
     <>
+      <BoardGuide
+        guide={SOCIAL_GUIDE}
+        cardClass={cardClass}
+        cardInnerClass={cardInnerClass}
+      />
       {/* Stats */}
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[

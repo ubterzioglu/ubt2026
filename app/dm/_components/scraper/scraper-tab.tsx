@@ -37,34 +37,59 @@ const FINDER_GUIDE: BoardGuideContent = {
     "Service Finder, kategori + şehir bazlı mekan taraması yapar: " +
     "web'den aday mekanları arar, sayfalarından bilgi çıkarır ve " +
     "sınıflandırır (Tavily · SerpAPI · Gemini). Onayladığın adaylar " +
-    "DesireMap mekan veritabanını besler.",
+    "DesireMap mekan veritabanını besler. Dört alt bölümden oluşur — " +
+    "üstteki şerit ile geçiş yaparsın.",
   sections: [
     {
-      heading: "İşler",
-      text:
-        "Kategori + şehir seçip işi kuyruğa ekle ve çalıştır. İş " +
-        "birkaç dakika sürebilir; bitince aday mekanları tek tek " +
-        "inceleyip onaylar veya reddedersin."
+      heading: "1 · İşler — yeni tarama başlatma",
+      text: "Bir kategori + şehir için yeni tarama kuyruğa eklemek için:",
+      steps: [
+        "'İşler' bölümünde iş oluşturma formunu aç.",
+        "Kategori (FKK / Bordell / Studio / Privat gibi bir şablon) ve şehir seç.",
+        "İşi kuyruğa ekle — liste başında 'kuyrukta' durumuyla görünür.",
+        "İş detayına girip 'Çalıştır'a bas — tarama başlar, tamamlanması birkaç dakika sürebilir.",
+        "Bittiğinde bulunan aday mekanlar detay sayfasında listelenir."
+      ]
     },
     {
-      heading: "Şablonlar",
-      text:
-        "Aranacak kategoriler ve Almanca sorgu kalıpları (FKK · " +
-        "Bordell · Studio · Privat). Şablonu düzenleyerek aramanın " +
-        "ne bulacağını şekillendirirsin."
+      heading: "2 · İşler — adayları inceleme",
+      text: "Bir tarama bitince adayları onaylamak/reddetmek için:",
+      steps: [
+        "İş detay sayfasında aday listesini aç (varsayılan filtre: 'Beklemede').",
+        "Her adayın çıkarılan bilgilerini (isim, adres, iletişim vb.) incele.",
+        "Doğru/kullanılabilir adayı 'Onayla' ile DesireMap veritabanına aktar.",
+        "Alakasız veya hatalı adayı 'Reddet' ile ele.",
+        "Durum filtresiyle daha önce onaylanan/reddedilenleri de görebilirsin."
+      ]
     },
     {
-      heading: "Sağlayıcılar",
-      text:
-        "Tavily arama+ekstraksiyon için ZORUNLU; SerpAPI az sonuçta " +
-        "Google fallback'i; Gemini sınıflandırma yapar. Anahtar " +
-        "durumları burada görünür."
+      heading: "3 · Şablonlar",
+      text: "Aramanın neyi bulacağını şekillendiren kategori + sorgu kalıpları:",
+      steps: [
+        "'Şablonlar' bölümünde mevcut şablon listesini gör (FKK · Bordell · Studio · Privat).",
+        "Bir şablonu düzenlemek için kalem ikonuna tıkla.",
+        "Almanca sorgu kalıplarını güncelle — bu kalıplar arama motoruna gönderilir.",
+        "Bir şablonu aç/kapat anahtarıyla etkinleştir veya devre dışı bırak."
+      ]
     },
     {
-      heading: "Maliyet",
-      text:
-        "Sağlayıcı bazlı harcama dökümü — arama, ekstraksiyon ve " +
-        "sınıflandırma adımlarının maliyeti ayrı ayrı izlenir."
+      heading: "4 · Sağlayıcılar",
+      text: "Taramayı çalıştıran üç dış servis burada yönetilir:",
+      steps: [
+        "Tavily — arama ve sayfa içeriği ekstraksiyonu yapar; ZORUNLUDUR, anahtarı olmadan tarama çalışmaz.",
+        "SerpAPI — Tavily az sonuç döndürünce devreye giren opsiyonel Google fallback'i.",
+        "Gemini — bulunan adayları kategori/uygunluk açısından opsiyonel olarak sınıflandırır.",
+        "Her sağlayıcının anahtar durumu (bağlı/eksik) ve açık/kapalı anahtarı bu bölümde görünür."
+      ]
+    },
+    {
+      heading: "5 · Maliyet",
+      text: "Tarama harcamalarını izlemek için:",
+      steps: [
+        "'Maliyet' bölümünü aç.",
+        "Son 30 gün ve tüm zamanlar sekmeleri arasında geçiş yap.",
+        "Sağlayıcı bazlı dökümde arama, ekstraksiyon ve sınıflandırma maliyetlerini ayrı ayrı gör."
+      ]
     }
   ]
 };
