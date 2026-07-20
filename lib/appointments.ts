@@ -2,6 +2,8 @@ import "server-only";
 
 import { createClient } from "@supabase/supabase-js";
 
+import { secureCompare } from "@/lib/secure-compare";
+
 import type {
   Appointment,
   AppointmentBookingInput,
@@ -255,7 +257,7 @@ export function hasAdminAccess(candidate: string | null | undefined): boolean {
     return false;
   }
 
-  return candidate?.trim() === accessKey;
+  return secureCompare(candidate?.trim() ?? "", accessKey);
 }
 
 export async function getAvailableAppointmentSlots(): Promise<AppointmentSlotsResult> {

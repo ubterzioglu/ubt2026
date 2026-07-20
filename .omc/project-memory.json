@@ -274,8 +274,8 @@
     },
     {
       "path": "lib\\admin-auth.ts",
-      "accessCount": 5,
-      "lastAccessed": 1784541325217,
+      "accessCount": 7,
+      "lastAccessed": 1784541775006,
       "type": "file"
     },
     {
@@ -303,6 +303,12 @@
       "type": "file"
     },
     {
+      "path": "app\\detrbridge\\_actions.ts",
+      "accessCount": 4,
+      "lastAccessed": 1784541712837,
+      "type": "file"
+    },
+    {
       "path": ".superpowers\\sdd\\task-7-report.md",
       "accessCount": 3,
       "lastAccessed": 1784532135667,
@@ -321,10 +327,10 @@
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_actions.ts",
+      "path": "",
       "accessCount": 3,
-      "lastAccessed": 1784540860925,
-      "type": "file"
+      "lastAccessed": 1784541731111,
+      "type": "directory"
     },
     {
       "path": ".superpowers\\sdd\\task-7-brief.md",
@@ -367,12 +373,6 @@
       "accessCount": 2,
       "lastAccessed": 1784540840275,
       "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 2,
-      "lastAccessed": 1784541054528,
-      "type": "directory"
     },
     {
       "path": ".env.local",

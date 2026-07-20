@@ -3,6 +3,8 @@ import "server-only";
 import { cookies } from "next/headers";
 
 import { getAdminAccessKey, hasAdminAccess } from "@/lib/appointments";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { deriveSessionToken, secureCompare, verifySessionToken } from "@/lib/secure-compare";
 
 /**
  * Cookie-based admin session.
