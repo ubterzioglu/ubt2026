@@ -255,9 +255,15 @@
       "type": "file"
     },
     {
+      "path": "app\\skillubt\\page.tsx",
+      "accessCount": 21,
+      "lastAccessed": 1784541580977,
+      "type": "file"
+    },
+    {
       "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 19,
-      "lastAccessed": 1784539308396,
+      "accessCount": 20,
+      "lastAccessed": 1784540873008,
       "type": "file"
     },
     {
@@ -267,9 +273,9 @@
       "type": "directory"
     },
     {
-      "path": "app\\skillubt\\page.tsx",
-      "accessCount": 7,
-      "lastAccessed": 1784540730035,
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 5,
+      "lastAccessed": 1784541325217,
       "type": "file"
     },
     {
@@ -291,6 +297,12 @@
       "type": "file"
     },
     {
+      "path": "public\\skillubt\\requirements-interview-package\\README.html",
+      "accessCount": 4,
+      "lastAccessed": 1784540781404,
+      "type": "file"
+    },
+    {
       "path": ".superpowers\\sdd\\task-7-report.md",
       "accessCount": 3,
       "lastAccessed": 1784532135667,
@@ -303,15 +315,15 @@
       "type": "file"
     },
     {
-      "path": "lib\\admin-auth.ts",
+      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
       "accessCount": 3,
-      "lastAccessed": 1784539324362,
+      "lastAccessed": 1784540848157,
       "type": "file"
     },
     {
-      "path": "public\\skillubt\\requirements-interview-package\\README.html",
+      "path": "app\\detrbridge\\_actions.ts",
       "accessCount": 3,
-      "lastAccessed": 1784540754155,
+      "lastAccessed": 1784540860925,
       "type": "file"
     },
     {
@@ -333,18 +345,6 @@
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_actions.ts",
-      "accessCount": 2,
-      "lastAccessed": 1784538305154,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784538332821,
-      "type": "file"
-    },
-    {
       "path": "lib\\detrbridge-domains.ts",
       "accessCount": 2,
       "lastAccessed": 1784539323508,
@@ -363,9 +363,21 @@
       "type": "file"
     },
     {
+      "path": "middleware.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784540840275,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 2,
+      "lastAccessed": 1784541054528,
+      "type": "directory"
+    },
+    {
       "path": ".env.local",
-      "accessCount": 1,
-      "lastAccessed": 1784531184471,
+      "accessCount": 2,
+      "lastAccessed": 1784541330696,
       "type": "file"
     },
     {
@@ -522,6 +534,18 @@
       "path": "components\\site-header.tsx",
       "accessCount": 1,
       "lastAccessed": 1784540730923,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\_components\\admin-gate.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784540846501,
+      "type": "file"
+    },
+    {
+      "path": "app\\bakcakanat\\_components\\bakcakanat-login.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784540846830,
       "type": "file"
     }
   ],
