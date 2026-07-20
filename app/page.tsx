@@ -759,6 +759,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               Blog
             </Link>
             <span className="text-ink/30">·</span>
+            <Link
+              href="/skillubt"
+              className="text-accent/70 hover:text-accent transition-colors"
+            >
+              Skills
+            </Link>
+            <span className="text-ink/30">·</span>
             <a
               href="https://chatio.com.tr/"
               target="_blank"

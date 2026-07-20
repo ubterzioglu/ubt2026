@@ -1,0 +1,783 @@
+<title>Requirements Interview — Skill Guide</title>
+<style>
+  @font-face {
+    font-family: 'Spec Mono';
+    src: local('JetBrains Mono'), local('Consolas'), local('Menlo');
+  }
+
+  :root {
+    --paper: #f5f3ed;
+    --paper-raised: #fbfaf6;
+    --ink: #1d1e1c;
+    --ink-soft: #45463f;
+    --muted: #767468;
+    --rule: #d9d4c6;
+    --rule-strong: #b7b09c;
+    --accent: #2247e0;
+    --accent-ink: #14267a;
+    --accent-soft: #e6ebfb;
+    --tag-bg: #ece8dc;
+    --shadow: rgba(29, 30, 28, 0.08);
+    --radius: 3px;
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #17181a;
+    --paper-raised: #1e2022;
+    --ink: #ece9e1;
+    --ink-soft: #c6c3b8;
+    --muted: #8b8a80;
+    --rule: #35362f;
+    --rule-strong: #4a4b41;
+    --accent: #7d93ff;
+    --accent-ink: #dbe1ff;
+    --accent-soft: #232a45;
+    --tag-bg: #232420;
+    --shadow: rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #17181a;
+      --paper-raised: #1e2022;
+      --ink: #ece9e1;
+      --ink-soft: #c6c3b8;
+      --muted: #8b8a80;
+      --rule: #35362f;
+      --rule-strong: #4a4b41;
+      --accent: #7d93ff;
+      --accent-ink: #dbe1ff;
+      --accent-soft: #232a45;
+      --tag-bg: #232420;
+      --shadow: rgba(0, 0, 0, 0.35);
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  body {
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .label-face {
+    font-family: 'Spec Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  }
+
+  .sheet {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 28px 96px;
+  }
+
+  /* ---------- Header / dossier stamp ---------- */
+
+  header {
+    padding: 56px 0 36px;
+    border-bottom: 1px solid var(--rule-strong);
+    position: relative;
+  }
+
+  .doc-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'Spec Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .doc-meta .stamp {
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 3px 8px;
+    border-radius: var(--radius);
+    background: var(--accent-soft);
+  }
+
+  h1 {
+    font-family: Georgia, 'Iowan Old Style', serif;
+    font-weight: 600;
+    font-size: clamp(2rem, 5vw, 2.7rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+
+  .dek {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  .dek code {
+    font-family: 'Spec Mono', monospace;
+    font-size: 0.88em;
+    background: var(--tag-bg);
+    padding: 0.1em 0.4em;
+    border-radius: var(--radius);
+  }
+
+  /* ---------- Section scaffolding ---------- */
+
+  section {
+    padding: 40px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  section:last-of-type {
+    border-bottom: none;
+  }
+
+  .field-label {
+    font-family: 'Spec Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .field-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 14px;
+    letter-spacing: -0.005em;
+  }
+
+  p { margin: 0 0 14px; color: var(--ink-soft); max-width: 62ch; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  .principle {
+    font-size: 1.08rem;
+    color: var(--ink);
+    border-left: 2px solid var(--accent);
+    padding: 2px 0 2px 20px;
+    margin: 18px 0 0;
+    max-width: 58ch;
+  }
+
+  /* ---------- Steps (genuine sequence -> numbered) ---------- */
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: 'Spec Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: var(--radius);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .steps p { margin: 0; color: var(--ink-soft); }
+  .steps strong { color: var(--ink); }
+
+  /* ---------- Category grid (not sequential -> tag grid) ---------- */
+
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .category {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+
+  .category .cat-name {
+    font-family: 'Spec Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .category .cat-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  /* ---------- Quick reference table ---------- */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.94rem;
+    margin-top: 4px;
+  }
+
+  caption {
+    text-align: left;
+    font-family: 'Spec Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 11px 14px 11px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  th {
+    font-family: 'Spec Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  td:first-child, th:first-child { color: var(--ink); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+
+  .count {
+    font-family: 'Spec Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent-ink);
+  }
+
+  /* ---------- Spec doc mock ---------- */
+
+  .spec-mock {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 1px 2px var(--shadow);
+  }
+
+  .spec-mock .titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'Spec Mono', monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .spec-mock .titlebar .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--rule-strong);
+  }
+
+  .spec-mock pre {
+    margin: 0;
+    padding: 18px 20px 22px;
+    font-family: 'Spec Mono', ui-monospace, monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: var(--ink-soft);
+  }
+
+  .spec-mock .h1 { color: var(--ink); font-weight: 700; }
+  .spec-mock .h2 { color: var(--accent-ink); font-weight: 600; }
+  .spec-mock .muted { color: var(--muted); font-style: italic; }
+
+  /* ---------- Mistakes ---------- */
+
+  .mistakes {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .mistake {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
+  }
+
+  .mistake .mark {
+    color: var(--accent);
+    font-family: 'Spec Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .mistake p { margin: 0; }
+
+  /* ---------- Install ---------- */
+
+  .install-path {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-family: 'Spec Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .install-path .arrow { color: var(--muted); }
+  .install-path b { color: var(--ink); font-weight: 600; }
+
+  footer {
+    padding-top: 40px;
+    font-family: 'Spec Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ---------- Language toggle ---------- */
+
+  .lang-toggle {
+    position: absolute;
+    top: 56px;
+    right: 28px;
+    display: flex;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-family: 'Spec Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  .lang-toggle button {
+    all: unset;
+    cursor: pointer;
+    padding: 6px 12px;
+    color: var(--muted);
+    background: var(--paper-raised);
+  }
+
+  .lang-toggle button + button {
+    border-left: 1px solid var(--rule-strong);
+  }
+
+  .lang-toggle button[aria-pressed="true"] {
+    color: var(--paper);
+    background: var(--accent);
+  }
+
+  /* JS toggles the native [hidden] attribute per language node —
+     avoids fighting display:flex/grid/table-row per element type. */
+  [data-lang][hidden] { display: none; }
+
+  @media (max-width: 560px) {
+    .lang-toggle { position: static; margin-bottom: 18px; align-self: flex-start; }
+  }
+
+  @media (max-width: 560px) {
+    .sheet { padding: 0 18px 72px; }
+    header { padding: 40px 0 28px; }
+    .doc-meta { flex-direction: column; gap: 10px; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    section, header { animation: rise 0.5s ease both; }
+    section:nth-of-type(2) { animation-delay: 0.03s; }
+    section:nth-of-type(3) { animation-delay: 0.06s; }
+    section:nth-of-type(4) { animation-delay: 0.09s; }
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="sheet">
+
+  <header>
+    <div class="lang-toggle" role="group" aria-label="Language / Dil">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="tr" aria-pressed="false">TR</button>
+    </div>
+
+    <div data-lang="en">
+      <div class="doc-meta">
+        <span>Claude Code · Skill Dossier</span>
+        <span class="stamp">Ready to install</span>
+      </div>
+      <h1>Requirements Interview</h1>
+      <p class="dek">
+        Turns a one-line pitch into a written spec before any code exists — by interviewing you
+        with a batch of questions scaled to the project, then compiling the answers into
+        <code>SPEC.md</code>.
+      </p>
+    </div>
+    <div data-lang="tr" hidden>
+      <div class="doc-meta">
+        <span>Claude Code · Skill Dosyası</span>
+        <span class="stamp">Kuruluma hazır</span>
+      </div>
+      <h1>Requirements Interview</h1>
+      <p class="dek">
+        Tek cümlelik bir fikri, kod yazılmadan önce yazılı bir spesifikasyona dönüştürür —
+        projenin büyüklüğüne göre ölçeklenen bir soru grubuyla seni interview eder,
+        sonra cevapları <code>SPEC.md</code> dosyasında toplar.
+      </p>
+    </div>
+  </header>
+
+  <section>
+    <div data-lang="en">
+      <div class="field-label">Why this exists</div>
+      <p>
+        A one-line pitch hides a hundred unstated decisions. Left unstated, the agent fills them
+        in with defaults — and the defaults are usually wrong in some detail you cared about.
+      </p>
+      <p class="principle">
+        The value isn't the question count. It's writing decisions down
+        <em>before</em> code exists, so building doesn't quietly re-decide them one file at a time.
+      </p>
+    </div>
+    <div data-lang="tr" hidden>
+      <div class="field-label">Neden var</div>
+      <p>
+        Tek cümlelik bir fikir, yüzlerce söylenmemiş kararı içinde gizler. Söylenmezse, ajan bunları
+        varsayılan değerlerle doldurur — ve bu varsayılanlar genellikle senin önemsediğin bir
+        ayrıntıda yanlış çıkar.
+      </p>
+      <p class="principle">
+        Değer, soru sayısında değil. Kararları kod yazılmadan
+        <em>önce</em> yazıya dökmekte — böylece inşa süreci bunları dosya dosya sessizce
+        yeniden karara bağlamaz.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div data-lang="en">
+      <div class="field-label">When it fires</div>
+      <h2>Triggers on a pitch, steps aside for a spec</h2>
+      <div class="categories">
+        <div class="category">
+          <span class="cat-name">Fires</span>
+          <span class="cat-desc">"I want to build X, let's start building" — greenfield, requirements only in your head.</span>
+        </div>
+        <div class="category">
+          <span class="cat-name">Fires</span>
+          <span class="cat-desc">The idea is vague enough that three different builds would all technically satisfy it.</span>
+        </div>
+        <div class="category">
+          <span class="cat-name">Steps aside</span>
+          <span class="cat-desc">You already supplied a detailed spec, PRD, or design doc.</span>
+        </div>
+        <div class="category">
+          <span class="cat-name">Steps aside</span>
+          <span class="cat-desc">Small, well-bounded change to existing code — a bug fix, one endpoint.</span>
+        </div>
+      </div>
+    </div>
+    <div data-lang="tr" hidden>
+      <div class="field-label">Ne zaman devreye girer</div>
+      <h2>Bir fikirle tetiklenir, hazır bir spesifikasyon varsa devreye girmez</h2>
+      <div class="categories">
+        <div class="category">
+          <span class="cat-name">Devreye girer</span>
+          <span class="cat-desc">"X'i yapmak istiyorum, hadi başlayalım" — sıfırdan başlanan, gereksinimleri sadece kafanda olan işler.</span>
+        </div>
+        <div class="category">
+          <span class="cat-name">Devreye girer</span>
+          <span class="cat-desc">Fikir, üç farklı uygulamanın da teknik olarak karşılayabileceği kadar belirsizse.</span>
+        </div>
+        <div class="category">
+          <span class="cat-name">Devreye girmez</span>
+          <span class="cat-desc">Zaten detaylı bir spesifikasyon, PRD veya tasarım dokümanı verdiysen.</span>
+        </div>
+        <div class="category">
+          <span class="cat-name">Devreye girmez</span>
+          <span class="cat-desc">Mevcut koda küçük, sınırları belli bir değişiklik — bir hata düzeltmesi, tek bir endpoint.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div data-lang="en">
+      <div class="field-label">The interview, in six steps</div>
+      <ol class="steps">
+        <li><p><strong>Scope the batch.</strong> Question count is estimated from project size, not fixed at any round number.</p></li>
+        <li><p><strong>Ask in one batch, grouped by category</strong> — not one question at a time.</p></li>
+        <li><p><strong>Let answers stay loose.</strong> "You decide" and skipped items are fine — they become visible assumptions, not silent ones.</p></li>
+        <li><p><strong>Compile a spec document</strong> from everything gathered.</p></li>
+        <li><p><strong>Confirm the spec</strong> with a short "here's what I heard" pass before touching code.</p></li>
+        <li><p><strong>Carry the spec forward</strong> as the primary reference for the whole build, not just the first message.</p></li>
+      </ol>
+    </div>
+    <div data-lang="tr" hidden>
+      <div class="field-label">Altı adımda interview</div>
+      <ol class="steps">
+        <li><p><strong>Soru grubunun kapsamını belirle.</strong> Soru sayısı, sabit bir yuvarlak sayı değil, proje büyüklüğüne göre tahmin edilir.</p></li>
+        <li><p><strong>Tek seferde, kategorilere göre grupla sor</strong> — tek tek değil.</p></li>
+        <li><p><strong>Cevapların gevşek kalmasına izin ver.</strong> "Sen karar ver" ve atlanan sorular sorun değil — bunlar gizli değil, görünür varsayımlar haline gelir.</p></li>
+        <li><p><strong>Toplanan her şeyden bir spesifikasyon dokümanı derle.</strong></p></li>
+        <li><p><strong>Koda dokunmadan önce spesifikasyonu onaylat</strong> — kısa bir "ben şunu anladım" turu ile.</p></li>
+        <li><p><strong>Spesifikasyonu ileri taşı</strong> — sadece ilk mesaj için değil, tüm inşa sürecinin ana referansı olarak.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div data-lang="en">
+      <div class="field-label">Question categories</div>
+      <div class="categories">
+        <div class="category"><span class="cat-name">Goals &amp; purpose</span><span class="cat-desc">Problem being solved, why now, what success looks like.</span></div>
+        <div class="category"><span class="cat-name">Users</span><span class="cat-desc">Who they are, how many, skill level, how they access it.</span></div>
+        <div class="category"><span class="cat-name">Core features</span><span class="cat-desc">Must-haves, explicitly separated from nice-to-haves.</span></div>
+        <div class="category"><span class="cat-name">Design / UX</span><span class="cat-desc">Style references, tone, accessibility, mobile vs. desktop.</span></div>
+        <div class="category"><span class="cat-name">Technical constraints</span><span class="cat-desc">Existing stack, hosting target, budget, timeline.</span></div>
+        <div class="category"><span class="cat-name">Data &amp; integrations</span><span class="cat-desc">What's stored, third-party services, auth needs.</span></div>
+        <div class="category"><span class="cat-name">Edge cases</span><span class="cat-desc">Failure modes, empty states, abuse or misuse.</span></div>
+        <div class="category"><span class="cat-name">Non-goals</span><span class="cat-desc">What this explicitly will not do — as important as what it will.</span></div>
+      </div>
+    </div>
+    <div data-lang="tr" hidden>
+      <div class="field-label">Soru kategorileri</div>
+      <div class="categories">
+        <div class="category"><span class="cat-name">Amaç &amp; hedef</span><span class="cat-desc">Çözülen problem, neden şimdi, başarı neye benzer.</span></div>
+        <div class="category"><span class="cat-name">Kullanıcılar</span><span class="cat-desc">Kim oldukları, kaç kişi, teknik seviye, nasıl erişecekleri.</span></div>
+        <div class="category"><span class="cat-name">Çekirdek özellikler</span><span class="cat-desc">Olmazsa olmazlar, isteğe bağlı olanlardan açıkça ayrılmış.</span></div>
+        <div class="category"><span class="cat-name">Tasarım / UX</span><span class="cat-desc">Stil referansları, ton, erişilebilirlik, mobil vs. masaüstü.</span></div>
+        <div class="category"><span class="cat-name">Teknik kısıtlar</span><span class="cat-desc">Mevcut yığın, hosting hedefi, bütçe, zaman çizelgesi.</span></div>
+        <div class="category"><span class="cat-name">Veri &amp; entegrasyonlar</span><span class="cat-desc">Neyin saklandığı, üçüncü taraf servisler, auth ihtiyaçları.</span></div>
+        <div class="category"><span class="cat-name">Uç durumlar</span><span class="cat-desc">Hata senaryoları, boş durumlar, kötüye kullanım.</span></div>
+        <div class="category"><span class="cat-name">Kapsam dışı</span><span class="cat-desc">Bunun kesinlikle yapmayacağı şeyler — yapacakları kadar önemli.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div data-lang="en">
+      <div class="field-label">Scaling the batch</div>
+      <table>
+        <caption>Question count by project size</caption>
+        <thead>
+          <tr><th>Project size</th><th>Questions</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Script / CLI tool</td><td class="count">8–12</td><td>Data cleanup script, small automation</td></tr>
+          <tr><td>Single-page app</td><td class="count">12–20</td><td>Portfolio site, waitlist page</td></tr>
+          <tr><td>Multi-page app</td><td class="count">20–35</td><td>Recipe sharing app, todo app</td></tr>
+          <tr><td>Multi-role platform</td><td class="count">35–50+</td><td>Two-sided marketplace, SaaS with billing</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div data-lang="tr" hidden>
+      <div class="field-label">Soru sayısını ölçeklemek</div>
+      <table>
+        <caption>Proje büyüklüğüne göre soru sayısı</caption>
+        <thead>
+          <tr><th>Proje büyüklüğü</th><th>Soru sayısı</th><th>Örnek</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Script / CLI aracı</td><td class="count">8–12</td><td>Veri temizleme scripti, küçük otomasyon</td></tr>
+          <tr><td>Tek sayfalık uygulama</td><td class="count">12–20</td><td>Portfolyo sitesi, bekleme listesi sayfası</td></tr>
+          <tr><td>Çok sayfalı uygulama</td><td class="count">20–35</td><td>Tarif paylaşım uygulaması, yapılacaklar listesi</td></tr>
+          <tr><td>Çok rollü platform</td><td class="count">35–50+</td><td>İki taraflı pazaryeri, faturalandırmalı SaaS</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div data-lang="en">
+      <div class="field-label">The output</div>
+      <h2>A spec file, not a chat transcript</h2>
+      <p>Written to a real file so it survives context compaction and stays the reference for the whole build — not just the opening message.</p>
+      <div class="spec-mock">
+        <div class="titlebar"><span class="dot"></span> SPEC.md</div>
+        <pre><span class="h1"># Recipe Sharing App — Spec</span>
+
+<span class="h2">## Goal</span>
+Let home cooks share recipes and rate each other's dishes.
+
+<span class="h2">## Users</span>
+Home cooks, casual, mobile-first, no account required to browse.
+
+<span class="h2">## Features (v1 / must-have)</span>
+- Post a recipe with photo, ingredients, steps
+- Rate 1–5 stars, one rating per user per recipe
+
+<span class="h2">## Explicitly out of scope</span>
+- Meal planning, grocery lists, monetization
+
+<span class="h2">## Open assumptions</span>
+<span class="muted">- Moderation: none specified — flagged for review before launch</span></pre>
+      </div>
+    </div>
+    <div data-lang="tr" hidden>
+      <div class="field-label">Çıktı</div>
+      <h2>Bir sohbet dökümü değil, bir spesifikasyon dosyası</h2>
+      <p>Gerçek bir dosyaya yazılır, böylece context sıkışması sonrası da hayatta kalır ve sadece açılış mesajı için değil, tüm inşa süreci boyunca referans olarak kalır.</p>
+      <div class="spec-mock">
+        <div class="titlebar"><span class="dot"></span> SPEC.md</div>
+        <pre><span class="h1"># Tarif Paylaşım Uygulaması — Spesifikasyon</span>
+
+<span class="h2">## Amaç</span>
+Ev aşçılarının tarif paylaşıp birbirinin yemeklerini puanlamasını sağlamak.
+
+<span class="h2">## Kullanıcılar</span>
+Ev aşçıları, gündelik kullanım, mobil öncelikli, göz atmak için hesap gerekmiyor.
+
+<span class="h2">## Özellikler (v1 / olmazsa olmaz)</span>
+- Fotoğraf, malzeme ve adımlarla tarif paylaşma
+- 1–5 yıldız puanlama, kullanıcı başına tarif başına bir puan
+
+<span class="h2">## Kesinlikle kapsam dışı</span>
+- Yemek planlama, market listesi, gelir modeli
+
+<span class="h2">## Açık varsayımlar</span>
+<span class="muted">- Moderasyon: belirtilmedi — lansmandan önce gözden geçirilmek üzere işaretlendi</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div data-lang="en">
+      <div class="field-label">Common mistakes it prevents</div>
+      <div class="mistakes">
+        <div class="mistake"><span class="mark">＋</span><p><strong>Four shallow questions and done.</strong> Stack, features, deploy target, database is a developer checklist — it skips goals, users, design, edge cases, and non-goals.</p></div>
+        <div class="mistake"><span class="mark">＋</span><p><strong>An easy skip-hatch offered upfront.</strong> Skipping should be the user's call, not the path of least resistance the agent nudges toward.</p></div>
+        <div class="mistake"><span class="mark">＋</span><p><strong>One question at a time.</strong> Burns turns, loses attention. Batch by category instead.</p></div>
+        <div class="mistake"><span class="mark">＋</span><p><strong>Answers left in chat only.</strong> If it's not written to a file, it doesn't survive to the implementation phase.</p></div>
+      </div>
+    </div>
+    <div data-lang="tr" hidden>
+      <div class="field-label">Önlediği yaygın hatalar</div>
+      <div class="mistakes">
+        <div class="mistake"><span class="mark">＋</span><p><strong>Dört yüzeysel soru sorup bitirmek.</strong> Yığın, özellikler, deploy hedefi, veritabanı bir geliştirici kontrol listesidir — amaç, kullanıcılar, tasarım, uç durumlar ve kapsam dışılığı tamamen atlar.</p></div>
+        <div class="mistake"><span class="mark">＋</span><p><strong>Baştan kolay bir "soruları atla" kapısı sunmak.</strong> Atlamak kullanıcının tercihi olmalı, ajanın yönlendirdiği en kolay yol değil.</p></div>
+        <div class="mistake"><span class="mark">＋</span><p><strong>Soruları tek tek sormak.</strong> Turları tüketir, dikkati dağıtır. Bunun yerine kategoriye göre grupla.</p></div>
+        <div class="mistake"><span class="mark">＋</span><p><strong>Cevapları sadece sohbette bırakmak.</strong> Bir dosyaya yazılmazsa implementasyon aşamasına kadar hayatta kalmaz.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div data-lang="en">
+      <div class="field-label">Install</div>
+      <p>Drop the skill folder into your skills directory:</p>
+      <div class="install-path">
+        <span>skills/requirements-interview/</span>
+        <span class="arrow">→</span>
+        <b>~/.claude/skills/requirements-interview/</b>
+      </div>
+      <p style="margin-top:14px;">Global once installed — fires automatically in any project when a pitch, not a spec, lands in the chat.</p>
+    </div>
+    <div data-lang="tr" hidden>
+      <div class="field-label">Kurulum</div>
+      <p>Skill klasörünü skills dizinine bırak:</p>
+      <div class="install-path">
+        <span>skills/requirements-interview/</span>
+        <span class="arrow">→</span>
+        <b>~/.claude/skills/requirements-interview/</b>
+      </div>
+      <p style="margin-top:14px;">Bir kez kurulduğunda global olur — herhangi bir projede sohbete bir spesifikasyon değil de bir fikir geldiğinde otomatik devreye girer.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div data-lang="en" style="display:flex; justify-content:space-between; width:100%;">
+      <span>requirements-interview</span>
+      <span>skill v1</span>
+    </div>
+    <div data-lang="tr" hidden style="display:flex; justify-content:space-between; width:100%;">
+      <span>requirements-interview</span>
+      <span>skill v1</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var buttons = document.querySelectorAll('[data-lang-btn]');
+
+    function setLang(lang) {
+      document.querySelectorAll('[data-lang]').forEach(function (el) {
+        el.hidden = el.getAttribute('data-lang') !== lang;
+      });
+      buttons.forEach(function (btn) {
+        btn.setAttribute('aria-pressed', String(btn.getAttribute('data-lang-btn') === lang));
+      });
+      root.setAttribute('lang', lang);
+    }
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setLang(btn.getAttribute('data-lang-btn'));
+      });
+    });
+  })();
+</script>

@@ -221,17 +221,10 @@ function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps)
           </p>
         </div>
 
-        <div className="rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
-            Dosya
-          </p>
-          <p className="truncate text-[12px] text-white/70" title={logo.fileName}>
-            {logo.fileName}
-          </p>
-          <p className="text-[11px] text-white/40">{formatFileSize(logo.sizeBytes)}</p>
-        </div>
-
-        <div className="flex items-center justify-between rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+        <div
+          className="flex items-center justify-between rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2"
+          title={`${logo.fileName} · ${formatFileSize(logo.sizeBytes)}`}
+        >
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
             Puan
           </p>

@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd \\\"c:\\\\temp_private\\\\ubt2026\\\" && git fetch origin main 2>&1 && git log origin/main..main --oneline 2>&1 && echo \\\"---\\\" && git status --short --branch | head -3\",\"description\":\"Check fo...",
-  "error": "Exit code 1\nFrom https://github.com/ubterzioglu/ubt2026\n * branch            main       -> FETCH_HEAD\n---\n## main...origin/main\n M .omc/project-memory.json\n M .omc/state/idle-notif-cooldown.json\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-e469-cwd: No such file or directory",
-  "timestamp": "2026-07-20T09:12:20.214Z",
-  "retry_count": 1
-}
