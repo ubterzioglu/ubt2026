@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd \\\"c:\\\\temp_private\\\\ubt2026\\\" && DB_PASS=$(grep -m1 '^DB_PASS=' .env.local | cut -d= -f2-) && export SUPABASE_ACCESS_TOKEN=$(grep -m1 '^SUPABASE_ACCESS_TOKEN=' .env.local | cut -d= -f2-...",
+  "error": "Exit code 1\nWARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.\nConnecting to remote database...\nRemote database is up to date.\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-280a-cwd: No such file or directory",
+  "timestamp": "2026-07-20T09:31:23.152Z",
+  "retry_count": 2
+}

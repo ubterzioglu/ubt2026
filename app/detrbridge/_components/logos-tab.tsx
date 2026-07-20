@@ -77,8 +77,8 @@ export function LogosTab({
             Yeni logo ekle
           </h2>
 
-          <details className="group/guide mt-3 overflow-hidden rounded-[1rem] border border-white/[0.06] bg-white/[0.02]">
-            <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-semibold text-white/50 transition hover:text-white/75 [&::-webkit-details-marker]:hidden">
+          <details className="group/guide mt-3 overflow-hidden rounded-[1rem] border border-rose-400/40 bg-rose-400/[0.08] shadow-[0_0_0_1px_rgba(251,113,133,0.15)]">
+            <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-rose-300 transition hover:text-rose-200 [&::-webkit-details-marker]:hidden">
               <svg
                 width="14"
                 height="14"
@@ -103,12 +103,12 @@ export function LogosTab({
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="ml-auto text-white/30 transition-transform duration-200 group-open/guide:rotate-180"
+                className="ml-auto text-rose-300/70 transition-transform duration-200 group-open/guide:rotate-180"
               >
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </summary>
-            <ol className="space-y-2 border-t border-white/[0.06] px-4 py-3 text-[13px] leading-5 text-white/60">
+            <ol className="space-y-2 border-t border-rose-400/20 px-4 py-3 text-[13px] leading-5 text-white/70">
               <li>
                 <span className="font-semibold text-white/85">① Logo yükle</span> — dosyayı
                 seç; yükleyen olarak giriş yaptığın isim otomatik kaydedilir.

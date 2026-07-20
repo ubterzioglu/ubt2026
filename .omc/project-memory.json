@@ -250,8 +250,8 @@
   "hotPaths": [
     {
       "path": "app\\detrbridge\\_components\\logos-tab.tsx",
-      "accessCount": 20,
-      "lastAccessed": 1784539324136,
+      "accessCount": 23,
+      "lastAccessed": 1784540144374,
       "type": "file"
     },
     {
@@ -265,6 +265,12 @@
       "accessCount": 8,
       "lastAccessed": 1784539156299,
       "type": "directory"
+    },
+    {
+      "path": "app\\skillubt\\page.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1784540124388,
+      "type": "file"
     },
     {
       "path": "supabase\\migrations\\20260719150000_migrate_detr_todos_to_detrbridge.sql",
@@ -336,6 +342,12 @@
       "path": "app\\page.tsx",
       "accessCount": 2,
       "lastAccessed": 1784539624208,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\domains-tab.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784540152846,
       "type": "file"
     },
     {
@@ -459,12 +471,6 @@
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_components\\domains-tab.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784539141006,
-      "type": "file"
-    },
-    {
       "path": "app\\layout.tsx",
       "accessCount": 1,
       "lastAccessed": 1784539316639,
@@ -495,9 +501,9 @@
       "type": "file"
     },
     {
-      "path": "app\\skillubt\\page.tsx",
+      "path": "public\\skillubt\\requirements-interview-package\\README.html",
       "accessCount": 1,
-      "lastAccessed": 1784539617672,
+      "lastAccessed": 1784540093260,
       "type": "file"
     }
   ],
