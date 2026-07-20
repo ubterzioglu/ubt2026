@@ -120,6 +120,19 @@ export function DetrbridgeLogin({ signIn }: DetrbridgeLoginProps) {
           <form action={signIn} className="mt-8 space-y-5">
             <label className="block">
               <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-white/50">
+                İsim
+              </span>
+              <input
+                type="text"
+                name="name"
+                required
+                autoComplete="off"
+                placeholder="Adını yaz"
+                className="w-full rounded-[1.05rem] border border-white/10 bg-white/[0.04] py-3.5 px-4 text-sm text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#F5B700]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#F5B700]/15"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-white/50">
                 Şifre
               </span>
               <PasswordField />

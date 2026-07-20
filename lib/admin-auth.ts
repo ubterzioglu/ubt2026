@@ -276,12 +276,25 @@ export async function signOutBakcakanat(): Promise<void> {
 }
 
 /**
- * The `/detrbridge` logo-selection board has its own single-password gate,
- * scoped to /detrbridge so it can be shared independently of every other
- * admin key. Password comes from the DETRBRIDGE env var (already present in
- * .env.local; the name is intentionally NOT renamed to *_PASSWORD).
+ * The `/detrbridge` logo-selection board is gated by a name allowlist plus
+ * a shared password (DETRBRIDGE), mirroring the /detr todo board's
+ * email-allowlist pattern but with plain first names instead of emails.
+ * The cookie stores `name|password`; both halves are re-validated on every
+ * request, so a password change or allowlist removal revokes every
+ * session. Fails CLOSED: without a configured password nobody gets in.
  */
 export const DETRBRIDGE_ACCESS_COOKIE = "ubt_detrbridge_access";
+
+/** Allowlisted names for the detrbridge board (lowercase, no diacritics-sensitivity issues). */
+const DETRBRIDGE_ALLOWED_NAMES = [
+  "sefa",
+  "sümeyye",
+  "fatih",
+  "ubt",
+  "şahin",
+  "murat",
+  "aslıhan"
+];
 
 /**
  * Reads the detrbridge board password (empty string if not configured).
@@ -291,6 +304,29 @@ function getDetrbridgePassword(): string {
   return process.env.DETRBRIDGE?.trim() ?? "";
 }
 
+/** Normalized (lowercase) name allowlist for the detrbridge board. */
+function getDetrbridgeAllowedNames(): string[] {
+  return DETRBRIDGE_ALLOWED_NAMES.map((name) => name.trim().toLowerCase());
+}
+
+/**
+ * Returns the signed-in detrbridge name, or null when the session is
+ * invalid. Fails CLOSED: without a configured password nobody gets in.
+ */
+export async function getDetrbridgeSessionName(): Promise<string | null> {
+  const password = getDetrbridgePassword();
+  if (!password) return null;
+  const cookieStore = await cookies();
+  const value = cookieStore.get(DETRBRIDGE_ACCESS_COOKIE)?.value ?? "";
+  const separator = value.lastIndexOf("|");
+  if (separator < 0) return null;
+  const name = value.slice(0, separator).trim().toLowerCase();
+  const candidate = value.slice(separator + 1);
+  if (candidate !== password) return null;
+  if (!getDetrbridgeAllowedNames().includes(name)) return null;
+  return name;
+}
+
 /**
  * True when the current request carries a valid detrbridge session cookie.
  *
@@ -298,25 +334,28 @@ function getDetrbridgePassword(): string {
  * must never be publicly reachable just because an env var was forgotten.
  */
 export async function isDetrbridgeAuthenticated(): Promise<boolean> {
-  const password = getDetrbridgePassword();
-  if (!password) return false;
-  const cookieStore = await cookies();
-  const candidate = cookieStore.get(DETRBRIDGE_ACCESS_COOKIE)?.value ?? "";
-  return candidate.trim() === password;
+  return (await getDetrbridgeSessionName()) !== null;
 }
 
 /**
- * Validates the supplied password and, when correct, persists it in an
- * HttpOnly cookie scoped to /detrbridge. Returns whether sign-in succeeded.
+ * Validates the supplied name (against the allowlist) and password and,
+ * when both are correct, persists them in an HttpOnly cookie scoped to
+ * /detrbridge. Returns whether sign-in succeeded.
  */
-export async function signInDetrbridge(candidate: string): Promise<boolean> {
+export async function signInDetrbridge(
+  name: string,
+  candidate: string
+): Promise<boolean> {
   const password = getDetrbridgePassword();
   // Fail closed: without a configured password no sign-in is possible.
   if (!password) return false;
+  const normalizedName = name.trim().toLowerCase();
+  if (!normalizedName) return false;
+  if (!getDetrbridgeAllowedNames().includes(normalizedName)) return false;
   if (candidate.trim() !== password) return false;
 
   const cookieStore = await cookies();
-  cookieStore.set(DETRBRIDGE_ACCESS_COOKIE, password, {
+  cookieStore.set(DETRBRIDGE_ACCESS_COOKIE, `${normalizedName}|${password}`, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

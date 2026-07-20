@@ -110,13 +110,13 @@ export function LogosTab({
             </summary>
             <ol className="space-y-2 border-t border-white/[0.06] px-4 py-3 text-[13px] leading-5 text-white/60">
               <li>
-                <span className="font-semibold text-white/85">① Logo yükle</span> — ismini
-                yaz, dosyayı seç.
+                <span className="font-semibold text-white/85">① Logo yükle</span> — dosyayı
+                seç; yükleyen olarak giriş yaptığın isim otomatik kaydedilir.
               </li>
               <li>
                 <span className="font-semibold text-white/85">② Oy ver</span> — 1-10 arası
-                puan verilir, kişi başı bir logoya tek oy hakkı vardır (aynı isimle tekrar
-                oylarsan önceki oyun yerine geçer).
+                puan verilir, kişi başı bir logoya tek oy hakkı vardır (tekrar oylarsan
+                önceki oyunun yerine geçer).
               </li>
               <li>
                 <span className="font-semibold text-white/85">③ Sıralama</span> — liste
@@ -131,33 +131,17 @@ export function LogosTab({
           </details>
 
           <form action={createAction} className="mt-4 space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="block">
-                <span className={formLabel}>
-                  Yükleyen <span style={{ color: DETRBRIDGE_GOLD }}>*</span>
-                </span>
-                <input
-                  type="text"
-                  name="uploaderName"
-                  required
-                  minLength={2}
-                  maxLength={100}
-                  placeholder="Adını yaz"
-                  className={darkInput}
-                />
-              </label>
-              <label className="block">
-                <span className={formLabel}>
-                  Dosya <span style={{ color: DETRBRIDGE_GOLD }}>*</span> (en fazla 10 MB)
-                </span>
-                <input
-                  type="file"
-                  name="file"
-                  required
-                  className={`${darkInput} file:mr-3 file:rounded-full file:border-0 file:bg-white/10 file:px-3 file:py-1 file:text-[11px] file:font-semibold file:text-white/80`}
-                />
-              </label>
-            </div>
+            <label className="block">
+              <span className={formLabel}>
+                Dosya <span style={{ color: DETRBRIDGE_GOLD }}>*</span> (en fazla 10 MB)
+              </span>
+              <input
+                type="file"
+                name="file"
+                required
+                className={`${darkInput} file:mr-3 file:rounded-full file:border-0 file:bg-white/10 file:px-3 file:py-1 file:text-[11px] file:font-semibold file:text-white/80`}
+              />
+            </label>
             <button
               type="submit"
               className="inline-flex min-h-[44px] items-center justify-center rounded-[0.9rem] px-6 py-2.5 text-[13px] font-bold tracking-tight text-black shadow-[0_12px_40px_-8px_rgba(30,58,138,0.5)] ring-1 ring-inset ring-white/15 transition hover:shadow-[0_16px_50px_-8px_rgba(245,183,0,0.6)]"
@@ -282,15 +266,6 @@ function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps)
           className="mt-1 flex flex-col gap-2 border-t border-white/[0.06] pt-3"
         >
           <input type="hidden" name="logoId" value={logo.id} />
-          <input
-            type="text"
-            name="voterName"
-            required
-            minLength={2}
-            maxLength={100}
-            placeholder="Adını yaz"
-            className={darkInput}
-          />
           <div className="flex items-center justify-between gap-2">
             <NumberPicker name="rating" defaultValue={5} min={1} max={10} />
           </div>

@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { isDetrbridgeAuthenticated } from "@/lib/admin-auth";
+import { isDetrbridgeAuthenticated, getDetrbridgeSessionName } from "@/lib/admin-auth";
 import { DetrbridgeLogin } from "@/app/detrbridge/_components/detrbridge-login";
 import {
   detrbridgeSignInAction,
@@ -79,6 +79,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
   const errorParam = readParam(params.error);
   const editTodoId = readParam(params.edit) || null;
+  const sessionName = await getDetrbridgeSessionName();
   const firstVisit = await recordDetrbridgeVisit();
   const result = activeTab === "logos" ? await getAllLogosAdmin() : null;
   const visits = activeTab === "visits" ? await getDetrbridgeVisits() : [];
@@ -86,10 +87,10 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
   async function createAction(formData: FormData) {
     "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
+    const uploaderName = await getDetrbridgeSessionName();
+    if (!uploaderName) {
       redirect("/detrbridge" as Parameters<typeof redirect>[0]);
     }
-    const uploaderName = (formData.get("uploaderName") as string | null) ?? "";
     const file = formData.get("file");
     if (!(file instanceof File)) {
       redirect(
@@ -111,11 +112,11 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
   async function voteAction(formData: FormData) {
     "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
+    const voterName = await getDetrbridgeSessionName();
+    if (!voterName) {
       redirect("/detrbridge" as Parameters<typeof redirect>[0]);
     }
     const logoId = (formData.get("logoId") as string | null) ?? "";
-    const voterName = (formData.get("voterName") as string | null) ?? "";
     const rating = Number((formData.get("rating") as string | null) ?? "0");
     const outcome = logoId
       ? await castVote(logoId, voterName, rating)
