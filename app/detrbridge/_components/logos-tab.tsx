@@ -6,7 +6,7 @@ type ServerFormAction = (formData: FormData) => void | Promise<void>;
 interface LogosTabProps {
   logos: DetrbridgeLogo[];
   createAction: ServerFormAction;
-  rateAction: ServerFormAction;
+  voteAction: ServerFormAction;
   selectAction: ServerFormAction;
   deleteAction: ServerFormAction;
 }
@@ -22,29 +22,45 @@ function formatFileSize(bytes: number): string {
   return `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
-/** Read-only star rating badge, e.g. ★★★☆☆. */
-function StarBadge({ rating }: { rating: number }) {
-  const stars = "★★★★★".slice(0, rating) + "☆☆☆☆☆".slice(0, 5 - rating);
+/** Read-only average-rating badge, e.g. ★★★★☆ 4.2 (5 oy). */
+function RatingBadge({
+  averageRating,
+  voteCount
+}: {
+  averageRating: number | null;
+  voteCount: number;
+}) {
+  if (averageRating === null) {
+    return (
+      <span className="inline-flex shrink-0 items-center rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[11px] font-semibold text-white/40">
+        Henüz oy yok
+      </span>
+    );
+  }
+  const rounded = Math.round(averageRating);
+  const stars = "★★★★★".slice(0, rounded) + "☆☆☆☆☆".slice(0, 5 - rounded);
   return (
     <span
-      className="inline-flex shrink-0 items-center rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[11px] font-semibold tracking-[0.08em]"
+      className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[11px] font-semibold tracking-[0.08em]"
       style={{ color: DETRBRIDGE_GOLD }}
-      title={`${rating}/5`}
+      title={`${averageRating.toFixed(1)}/5 · ${voteCount} oy`}
     >
-      {stars}
+      {stars} {averageRating.toFixed(1)} ({voteCount})
     </span>
   );
 }
 
 /**
- * Logo Seçimi panel: an upload form (file + name + 1-5 star rating) plus a
- * list of candidates sorted by rating, each with an inline rating editor,
- * a manual "Seç" toggle (mutually exclusive across the list), and delete.
+ * Logo Seçimi panel: an upload form (file + uploader's name) plus a list of
+ * candidates sorted by average vote rating, each with a vote sub-form
+ * (voter name + 1-5 stars — one vote per name per logo, re-voting updates
+ * the existing vote), a manual "Seç" toggle (mutually exclusive across the
+ * list), and delete.
  */
 export function LogosTab({
   logos,
   createAction,
-  rateAction,
+  voteAction,
   selectAction,
   deleteAction
 }: LogosTabProps) {
@@ -62,34 +78,22 @@ export function LogosTab({
             Yeni logo ekle
           </h2>
           <form action={createAction} className="mt-4 space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <label className="block sm:col-span-2 lg:col-span-1">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block">
                 <span className={formLabel}>
-                  İsim <span style={{ color: DETRBRIDGE_GOLD }}>*</span>
+                  Yükleyen <span style={{ color: DETRBRIDGE_GOLD }}>*</span>
                 </span>
                 <input
                   type="text"
-                  name="name"
+                  name="uploaderName"
                   required
                   minLength={2}
                   maxLength={100}
-                  placeholder="Logo adı"
+                  placeholder="Adını yaz"
                   className={darkInput}
                 />
               </label>
               <label className="block">
-                <span className={formLabel}>
-                  Puan <span style={{ color: DETRBRIDGE_GOLD }}>*</span>
-                </span>
-                <select name="rating" required defaultValue="3" className={darkInput}>
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <option key={value} value={value}>
-                      {"★".repeat(value)} ({value})
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="block sm:col-span-2 lg:col-span-1">
                 <span className={formLabel}>
                   Dosya <span style={{ color: DETRBRIDGE_GOLD }}>*</span> (en fazla 10 MB)
                 </span>
@@ -122,7 +126,7 @@ export function LogosTab({
             <LogoRow
               key={logo.id}
               logo={logo}
-              rateAction={rateAction}
+              voteAction={voteAction}
               selectAction={selectAction}
               deleteAction={deleteAction}
             />
@@ -135,12 +139,12 @@ export function LogosTab({
 
 interface LogoRowProps {
   logo: DetrbridgeLogo;
-  rateAction: ServerFormAction;
+  voteAction: ServerFormAction;
   selectAction: ServerFormAction;
   deleteAction: ServerFormAction;
 }
 
-function LogoRow({ logo, rateAction, selectAction, deleteAction }: LogoRowProps) {
+function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps) {
   return (
     <article
       className={`overflow-hidden rounded-[1.1rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
@@ -153,7 +157,7 @@ function LogoRow({ logo, rateAction, selectAction, deleteAction }: LogoRowProps)
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={logo.url}
-              alt={logo.name}
+              alt={logo.uploaderName}
               className="h-full w-full object-contain"
             />
           ) : (
@@ -162,36 +166,18 @@ function LogoRow({ logo, rateAction, selectAction, deleteAction }: LogoRowProps)
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="truncate font-body text-[14px] font-semibold text-white" title={logo.name}>
-            {logo.name}
+          <p
+            className="truncate font-body text-[14px] font-semibold text-white"
+            title={`Yükleyen: ${logo.uploaderName}`}
+          >
+            Yükleyen: {logo.uploaderName}
           </p>
           <p className="mt-0.5 text-[11px] text-white/40">
             {logo.fileName} · {formatFileSize(logo.sizeBytes)}
           </p>
         </div>
 
-        <StarBadge rating={logo.rating} />
-
-        <form action={rateAction} className="flex shrink-0 items-center gap-1.5">
-          <input type="hidden" name="id" value={logo.id} />
-          <select
-            name="rating"
-            defaultValue={String(logo.rating)}
-            className="rounded-[0.6rem] border border-white/10 bg-white/[0.04] px-2 py-1 text-[12px] text-white outline-none focus:border-[#F5B700]/55"
-          >
-            {[1, 2, 3, 4, 5].map((value) => (
-              <option key={value} value={value}>
-                {value}
-              </option>
-            ))}
-          </select>
-          <button
-            type="submit"
-            className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-[#F5B700]/40 hover:text-[#F5B700]"
-          >
-            Puanı güncelle
-          </button>
-        </form>
+        <RatingBadge averageRating={logo.averageRating} voteCount={logo.voteCount} />
 
         {logo.isSelected ? (
           <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-400/15 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
@@ -219,6 +205,41 @@ function LogoRow({ logo, rateAction, selectAction, deleteAction }: LogoRowProps)
           </button>
         </form>
       </div>
+
+      <form
+        action={voteAction}
+        className="flex flex-wrap items-center gap-2 border-t border-white/[0.06] px-4 py-2.5 sm:flex-nowrap"
+      >
+        <input type="hidden" name="logoId" value={logo.id} />
+        <input
+          type="text"
+          name="voterName"
+          required
+          minLength={2}
+          maxLength={100}
+          placeholder="Adını yaz"
+          className={`${darkInput} sm:max-w-[160px]`}
+        />
+        <select
+          name="rating"
+          required
+          defaultValue="3"
+          className="rounded-[0.6rem] border border-white/10 bg-white/[0.04] px-2 py-1.5 text-[12px] text-white outline-none focus:border-[#F5B700]/55"
+        >
+          {[1, 2, 3, 4, 5].map((value) => (
+            <option key={value} value={value}>
+              {"★".repeat(value)} ({value})
+            </option>
+          ))}
+        </select>
+        <button
+          type="submit"
+          className="inline-flex min-h-[36px] shrink-0 items-center justify-center rounded-[0.7rem] px-4 py-1.5 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15"
+          style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
+        >
+          Oyla
+        </button>
+      </form>
     </article>
   );
 }

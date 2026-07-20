@@ -22,7 +22,7 @@ import {
 import {
   getAllLogosAdmin,
   createLogo,
-  updateLogoRating,
+  castVote,
   selectLogo,
   deleteLogo
 } from "@/lib/detrbridge-logos";
@@ -89,8 +89,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     if (!(await isDetrbridgeAuthenticated())) {
       redirect("/detrbridge" as Parameters<typeof redirect>[0]);
     }
-    const name = (formData.get("name") as string | null) ?? "";
-    const rating = Number((formData.get("rating") as string | null) ?? "0");
+    const uploaderName = (formData.get("uploaderName") as string | null) ?? "";
     const file = formData.get("file");
     if (!(file instanceof File)) {
       redirect(
@@ -99,7 +98,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
         >[0]
       );
     }
-    const outcome = await createLogo({ name, rating }, file as File);
+    const outcome = await createLogo({ uploaderName }, file as File);
     revalidatePath("/detrbridge");
     redirect(
       (outcome.ok
@@ -110,18 +109,25 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     );
   }
 
-  async function rateAction(formData: FormData) {
+  async function voteAction(formData: FormData) {
     "use server";
     if (!(await isDetrbridgeAuthenticated())) {
       redirect("/detrbridge" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const logoId = (formData.get("logoId") as string | null) ?? "";
+    const voterName = (formData.get("voterName") as string | null) ?? "";
     const rating = Number((formData.get("rating") as string | null) ?? "0");
-    if (id) {
-      await updateLogoRating(id, rating);
-    }
+    const outcome = logoId
+      ? await castVote(logoId, voterName, rating)
+      : { ok: false, errorMessage: "Logo bulunamadı." };
     revalidatePath("/detrbridge");
-    redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    redirect(
+      (outcome.ok
+        ? "/detrbridge"
+        : `/detrbridge?error=${encodeURIComponent(outcome.errorMessage ?? "Oy kaydedilemedi.")}`) as Parameters<
+        typeof redirect
+      >[0]
+    );
   }
 
   async function selectAction(formData: FormData) {
@@ -350,7 +356,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
               <LogosTab
                 logos={result.items}
                 createAction={createAction}
-                rateAction={rateAction}
+                voteAction={voteAction}
                 selectAction={selectAction}
                 deleteAction={deleteAction}
               />
