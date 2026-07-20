@@ -9,6 +9,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   AuthOrConfigError,
   BudgetExceededError,
+  ProviderRateLimitError,
   errorCode,
   errorMessage
 } from "@/lib/finder/errors";
@@ -20,7 +21,7 @@ import {
   createTavilyExtractProvider,
   createTavilySearchProvider
 } from "@/lib/finder/providers/tavily";
-import type { SearchProvider } from "@/lib/finder/providers/types";
+import type { ClassifyUsage, SearchProvider } from "@/lib/finder/providers/types";
 import { buildQueries } from "@/lib/finder/queries";
 import { isRobotsAllowed } from "@/lib/finder/robots";
 import { parseCandidateResult } from "@/lib/finder/validate";
@@ -588,6 +589,31 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
 
 // ─── Aşama 3: Sınıflandırma ──────────────────────────────────────────────────
 
+const CLASSIFY_REQUEST_DELAY_MS = 4_000;
+const CLASSIFY_RATE_LIMIT_RETRIES = 3;
+const CLASSIFY_RATE_LIMIT_BACKOFF_MS = 15_000;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function classifyWithRetry(
+  classifier: ReturnType<typeof createGeminiClassifier>,
+  input: Parameters<ReturnType<typeof createGeminiClassifier>["classify"]>[0]
+): Promise<{ parsed: unknown; usage: ClassifyUsage }> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await classifier.classify(input);
+    } catch (error: unknown) {
+      const isLastAttempt = attempt >= CLASSIFY_RATE_LIMIT_RETRIES;
+      if (!(error instanceof ProviderRateLimitError) || isLastAttempt) {
+        throw error;
+      }
+      await sleep(CLASSIFY_RATE_LIMIT_BACKOFF_MS * (attempt + 1));
+    }
+  }
+}
+
 async function runClassifyStage(runtime: JobRuntime): Promise<void> {
   const { job } = runtime;
   const classifierConfig =
@@ -606,10 +632,14 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
     if (candidateCount >= job.max_candidates) break;
     await updateProgress(runtime, { stage: "classify", classified, of: sources.length });
 
+    if (classified > 0) {
+      await sleep(CLASSIFY_REQUEST_DELAY_MS);
+    }
+
     const model = runtime.softCapHit ? SOFT_DEGRADE_MODEL : baseModel;
     let classification;
     try {
-      classification = await classifier.classify({
+      classification = await classifyWithRetry(classifier, {
         systemPrompt: CLASSIFIER_SYSTEM_PROMPT,
         userPrompt: buildClassifierUserPrompt(job, source),
         model
