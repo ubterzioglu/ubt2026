@@ -13,13 +13,31 @@ export const metadata: Metadata = buildMetadata({
   ogType: "website"
 });
 
-const README_PATH = path.join(
-  process.cwd(),
-  "public",
-  "skillubt",
-  "requirements-interview-package",
-  "README.html"
-);
+interface SkillDefinition {
+  slug: string;
+  name: string;
+  tagline: string;
+  downloadHref: string;
+  downloadHint: string;
+  readmePath: string;
+}
+
+const SKILLS: SkillDefinition[] = [
+  {
+    slug: "requirements-interview",
+    name: "Requirements Interview",
+    tagline: "Claude Code Skill · Free download",
+    downloadHref: "/skillubt/requirements-interview-skill.zip",
+    downloadHint: "skills/requirements-interview/ → ~/.claude/skills/requirements-interview/",
+    readmePath: path.join(
+      process.cwd(),
+      "public",
+      "skillubt",
+      "requirements-interview-package",
+      "README.html"
+    )
+  }
+];
 
 /**
  * The README's own inline <script> (the EN/TR toggle) never runs here: React
@@ -84,56 +102,79 @@ function stripDarkModeQuery(html: string): string {
   return html.slice(0, start) + html.slice(end);
 }
 
-const README_PANEL_ID = "skill-readme-panel";
+function panelIdFor(slug: string): string {
+  return `skill-readme-panel-${slug}`;
+}
+
+async function loadSkillHtml(skill: SkillDefinition): Promise<string> {
+  const rawHtml = await readFile(skill.readmePath, "utf8");
+  return defaultToTurkish(
+    scopeRootVariables(stripDarkModeQuery(rawHtml), `#${panelIdFor(skill.slug)}`)
+  );
+}
+
+interface SkillCardProps {
+  skill: SkillDefinition;
+  html: string;
+}
+
+function SkillCard({ skill, html }: SkillCardProps) {
+  const panelId = panelIdFor(skill.slug);
+
+  return (
+    <div className="flex flex-col gap-6">
+      <a
+        href={skill.downloadHref}
+        download
+        className="group relative flex cursor-pointer flex-col items-center gap-3 rounded-[2rem] border-2 border-accent/40 bg-accentSoft/40 px-6 py-10 text-center shadow-panel backdrop-blur-sm transition hover:-translate-y-1 hover:border-accent hover:bg-accentSoft/70 hover:shadow-glow sm:px-10 sm:py-12"
+      >
+        <span className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white shadow-lg transition group-hover:scale-110">
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[2.5]" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3v12" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M5 21h14" />
+          </svg>
+        </span>
+        <span className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+          {skill.tagline}
+        </span>
+        <span className="font-body text-[clamp(1.6rem,5vw,2.2rem)] font-semibold tracking-[-0.02em] text-ink">
+          {skill.name}
+        </span>
+        <span className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-bold text-white shadow-lg shadow-accent/30 transition group-hover:-translate-y-0.5 group-hover:shadow-xl group-hover:shadow-accent/40">
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 fill-none stroke-current stroke-[2]" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3v12" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M5 21h14" />
+          </svg>
+          Download .zip
+        </span>
+        <span className="text-xs text-ink/50">{skill.downloadHint}</span>
+      </a>
+
+      <div
+        id={panelId}
+        data-theme="light"
+        className="section-panel relative overflow-hidden px-6 py-2 sm:px-10"
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+      <SkillReadmeLangToggle containerId={panelId} />
+    </div>
+  );
+}
 
 export default async function SkillUbtPage() {
-  const rawHtml = await readFile(README_PATH, "utf8");
-  const html = defaultToTurkish(
-    scopeRootVariables(stripDarkModeQuery(rawHtml), `#${README_PANEL_ID}`)
+  const skillHtml = await Promise.all(
+    SKILLS.map(async (skill) => [skill, await loadSkillHtml(skill)] as const)
   );
 
   return (
     <>
       <main className="page-shell min-h-screen px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-5xl flex-col gap-6">
-          <a
-            href="/skillubt/requirements-interview-skill.zip"
-            download
-            className="group relative flex cursor-pointer flex-col items-center gap-3 rounded-[2rem] border-2 border-accent/40 bg-accentSoft/40 px-6 py-10 text-center shadow-panel backdrop-blur-sm transition hover:-translate-y-1 hover:border-accent hover:bg-accentSoft/70 hover:shadow-glow sm:px-10 sm:py-12"
-          >
-            <span className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white shadow-lg transition group-hover:scale-110">
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[2.5]" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3v12" />
-                <path d="m7 10 5 5 5-5" />
-                <path d="M5 21h14" />
-              </svg>
-            </span>
-            <span className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-              Claude Code Skill · Free download
-            </span>
-            <span className="font-body text-[clamp(1.6rem,5vw,2.2rem)] font-semibold tracking-[-0.02em] text-ink">
-              Requirements Interview
-            </span>
-            <span className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-bold text-white shadow-lg shadow-accent/30 transition group-hover:-translate-y-0.5 group-hover:shadow-xl group-hover:shadow-accent/40">
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 fill-none stroke-current stroke-[2]" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3v12" />
-                <path d="m7 10 5 5 5-5" />
-                <path d="M5 21h14" />
-              </svg>
-              Download .zip
-            </span>
-            <span className="text-xs text-ink/50">
-              skills/requirements-interview/ → ~/.claude/skills/requirements-interview/
-            </span>
-          </a>
-
-          <div
-            id={README_PANEL_ID}
-            data-theme="light"
-            className="section-panel relative overflow-hidden px-6 py-2 sm:px-10"
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-          <SkillReadmeLangToggle containerId={README_PANEL_ID} />
+        <div className="mx-auto flex max-w-5xl flex-col gap-12">
+          {skillHtml.map(([skill, html]) => (
+            <SkillCard key={skill.slug} skill={skill} html={html} />
+          ))}
         </div>
       </main>
     </>
