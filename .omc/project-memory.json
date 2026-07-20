@@ -285,6 +285,12 @@
       "type": "file"
     },
     {
+      "path": "app\\detrbridge\\_components\\domains-tab.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1784540173495,
+      "type": "file"
+    },
+    {
       "path": ".superpowers\\sdd\\task-7-report.md",
       "accessCount": 3,
       "lastAccessed": 1784532135667,
@@ -342,12 +348,6 @@
       "path": "app\\page.tsx",
       "accessCount": 2,
       "lastAccessed": 1784539624208,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\domains-tab.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784540152846,
       "type": "file"
     },
     {
@@ -504,6 +504,12 @@
       "path": "public\\skillubt\\requirements-interview-package\\README.html",
       "accessCount": 1,
       "lastAccessed": 1784540093260,
+      "type": "file"
+    },
+    {
+      "path": "app\\globals.css",
+      "accessCount": 1,
+      "lastAccessed": 1784540240504,
       "type": "file"
     }
   ],
