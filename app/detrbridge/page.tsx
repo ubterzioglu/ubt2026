@@ -27,6 +27,14 @@ import {
   deleteLogo
 } from "@/lib/detrbridge-logos";
 import { recordDetrbridgeVisit, getDetrbridgeVisits } from "@/lib/detrbridge-visits";
+import { DomainsTab } from "@/app/detrbridge/_components/domains-tab";
+import {
+  getAllDomainsAdmin,
+  createDomain,
+  castDomainVote,
+  selectDomain,
+  deleteDomain
+} from "@/lib/detrbridge-domains";
 import { TodosTab } from "@/app/detrbridge/_components/todos-tab";
 import {
   getAllTodosAdmin,
@@ -57,6 +65,7 @@ function readParam(value: string | string[] | undefined): string {
 
 const NAV_ITEMS: BridgeNavItem[] = [
   { key: "logos", label: "Logo Seçimi" },
+  { key: "domains", label: "Domain Önerileri" },
   { key: "todos", label: "Görevler" },
   { key: "visits", label: "Giriş Logları" }
 ];
@@ -75,7 +84,13 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
   const requestedTab = readParam(params.tab);
   const activeTab: BridgeTabKey =
-    requestedTab === "visits" ? "visits" : requestedTab === "todos" ? "todos" : "logos";
+    requestedTab === "visits"
+      ? "visits"
+      : requestedTab === "todos"
+        ? "todos"
+        : requestedTab === "domains"
+          ? "domains"
+          : "logos";
 
   const errorParam = readParam(params.error);
   const editTodoId = readParam(params.edit) || null;
@@ -84,6 +99,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
   const result = activeTab === "logos" ? await getAllLogosAdmin() : null;
   const visits = activeTab === "visits" ? await getDetrbridgeVisits() : [];
   const todosResult = activeTab === "todos" ? await getAllTodosAdmin() : null;
+  const domainsResult = activeTab === "domains" ? await getAllDomainsAdmin() : null;
 
   async function createAction(formData: FormData) {
     "use server";
@@ -155,6 +171,71 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     }
     revalidatePath("/detrbridge");
     redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+  }
+
+  async function createDomainAction(formData: FormData) {
+    "use server";
+    const uploaderName = await getDetrbridgeSessionName();
+    if (!uploaderName) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const domainName = (formData.get("domainName") as string | null) ?? "";
+    const outcome = await createDomain(uploaderName, domainName);
+    revalidatePath("/detrbridge");
+    redirect(
+      (outcome.ok
+        ? "/detrbridge?tab=domains"
+        : `/detrbridge?tab=domains&error=${encodeURIComponent(outcome.errorMessage ?? "Domain eklenemedi.")}`) as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function voteDomainAction(formData: FormData) {
+    "use server";
+    const voterName = await getDetrbridgeSessionName();
+    if (!voterName) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const domainId = (formData.get("domainId") as string | null) ?? "";
+    const rating = Number((formData.get("rating") as string | null) ?? "0");
+    const outcome = domainId
+      ? await castDomainVote(domainId, voterName, rating)
+      : { ok: false, errorMessage: "Domain bulunamadı." };
+    revalidatePath("/detrbridge");
+    redirect(
+      (outcome.ok
+        ? "/detrbridge?tab=domains"
+        : `/detrbridge?tab=domains&error=${encodeURIComponent(outcome.errorMessage ?? "Oy kaydedilemedi.")}`) as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function selectDomainAction(formData: FormData) {
+    "use server";
+    if (!(await isDetrbridgeAuthenticated())) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (id) {
+      await selectDomain(id);
+    }
+    revalidatePath("/detrbridge");
+    redirect("/detrbridge?tab=domains" as Parameters<typeof redirect>[0]);
+  }
+
+  async function deleteDomainAction(formData: FormData) {
+    "use server";
+    if (!(await isDetrbridgeAuthenticated())) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (id) {
+      await deleteDomain(id);
+    }
+    revalidatePath("/detrbridge");
+    redirect("/detrbridge?tab=domains" as Parameters<typeof redirect>[0]);
   }
 
   async function createTodoAction(formData: FormData) {
@@ -360,6 +441,30 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
                 voteAction={voteAction}
                 selectAction={selectAction}
                 deleteAction={deleteAction}
+              />
+            </>
+          ) : null}
+
+          {activeTab === "domains" && domainsResult ? (
+            <>
+              {domainsResult.source === "env-missing" && (
+                <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
+                  Supabase bağlantısı yapılandırılmamış
+                  (SUPABASE_SERVICE_ROLE_KEY eksik). Domainler yüklenemiyor.
+                </div>
+              )}
+              {domainsResult.source === "error" && (
+                <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
+                  Domainler yüklenirken hata oluştu: {domainsResult.errorMessage}
+                </div>
+              )}
+
+              <DomainsTab
+                domains={domainsResult.items}
+                createAction={createDomainAction}
+                voteAction={voteDomainAction}
+                selectAction={selectDomainAction}
+                deleteAction={deleteDomainAction}
               />
             </>
           ) : null}
