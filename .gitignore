@@ -18,3 +18,4 @@ firmascope/
 .env.local.rebase
 .env.local.bak
 check.api
+desiremap-candidates*.json
