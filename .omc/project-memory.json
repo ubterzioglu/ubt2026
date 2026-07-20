@@ -250,8 +250,8 @@
   "hotPaths": [
     {
       "path": "app\\skillubt\\page.tsx",
-      "accessCount": 26,
-      "lastAccessed": 1784542122363,
+      "accessCount": 35,
+      "lastAccessed": 1784543333758,
       "type": "file"
     },
     {
@@ -274,8 +274,14 @@
     },
     {
       "path": "skillubt\\requirements-interview-package\\README.html",
-      "accessCount": 12,
-      "lastAccessed": 1784542110415,
+      "accessCount": 13,
+      "lastAccessed": 1784542180387,
+      "type": "file"
+    },
+    {
+      "path": "public\\skillubt\\requirements-interview-package\\README.html",
+      "accessCount": 9,
+      "lastAccessed": 1784543373293,
       "type": "file"
     },
     {
@@ -300,12 +306,6 @@
       "path": "app\\detrbridge\\_components\\domains-tab.tsx",
       "accessCount": 4,
       "lastAccessed": 1784540173495,
-      "type": "file"
-    },
-    {
-      "path": "public\\skillubt\\requirements-interview-package\\README.html",
-      "accessCount": 4,
-      "lastAccessed": 1784540781404,
       "type": "file"
     },
     {
@@ -342,6 +342,12 @@
       "path": "app\\globals.css",
       "accessCount": 3,
       "lastAccessed": 1784541939064,
+      "type": "file"
+    },
+    {
+      "path": "lib\\seo.ts",
+      "accessCount": 3,
+      "lastAccessed": 1784542275416,
       "type": "file"
     },
     {
@@ -516,12 +522,6 @@
       "path": "skillubt\\requirements-interview-package\\skills\\requirements-interview\\SKILL.md",
       "accessCount": 1,
       "lastAccessed": 1784539557436,
-      "type": "file"
-    },
-    {
-      "path": "lib\\seo.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784539570057,
       "type": "file"
     },
     {

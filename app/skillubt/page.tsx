@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 
 import { buildMetadata } from "@/lib/seo";
 import { SiteHeader } from "@/components/site-header";
+import { SkillReadmeLangToggle } from "./_components/skill-readme-lang-toggle";
 
 export const metadata: Metadata = buildMetadata({
   title: "Requirements Interview — Skill Guide",
@@ -40,8 +41,7 @@ function defaultToTurkish(html: string): string {
     .replace(
       'data-lang-btn="tr" aria-pressed="false"',
       'data-lang-btn="tr" aria-pressed="true"'
-    )
-    .replace('lang="en"', 'lang="tr"');
+    );
 }
 
 /**
@@ -74,7 +74,7 @@ function stripDarkModeQuery(html: string): string {
 
 export default async function SkillUbtPage() {
   const rawHtml = await readFile(README_PATH, "utf8");
-  const html = stripDarkModeQuery(rawHtml);
+  const html = defaultToTurkish(stripDarkModeQuery(rawHtml));
 
   return (
     <>
@@ -113,10 +113,12 @@ export default async function SkillUbtPage() {
           </a>
 
           <div
+            id="skill-readme-panel"
             data-theme="light"
             className="section-panel relative overflow-hidden px-6 py-2 sm:px-10"
             dangerouslySetInnerHTML={{ __html: html }}
           />
+          <SkillReadmeLangToggle containerId="skill-readme-panel" />
         </div>
       </main>
     </>
