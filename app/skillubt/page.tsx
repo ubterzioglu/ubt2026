@@ -3,7 +3,6 @@ import path from "node:path";
 import type { Metadata } from "next";
 
 import { buildMetadata } from "@/lib/seo";
-import { SiteHeader } from "@/components/site-header";
 import { SkillReadmeLangToggle } from "./_components/skill-readme-lang-toggle";
 
 export const metadata: Metadata = buildMetadata({
@@ -78,7 +77,6 @@ export default async function SkillUbtPage() {
 
   return (
     <>
-      <SiteHeader />
       <main className="page-shell min-h-screen px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-5xl flex-col gap-6">
           <a
