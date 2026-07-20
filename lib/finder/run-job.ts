@@ -32,7 +32,7 @@ import type {
   FinderTemplateRow
 } from "@/lib/finder/types";
 
-const SOFT_DEGRADE_MODEL = "gemini-2.5-flash-lite";
+const SOFT_DEGRADE_MODEL = "gemini-2.5-flash";
 const MIN_CONFIDENCE_TO_KEEP = 30;
 const EXTRACT_BATCH_SIZE = 5;
 // Informational lock tag (only ever written, never compared).

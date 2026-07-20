@@ -9,6 +9,7 @@ import type { FinderJobRow, FinderJobSourceRow } from "@/lib/finder/types";
 export const CLASSIFIER_SYSTEM_PROMPT = `You are a high-precision directory normalizer for legal adult-entertainment venues and service providers in Germany (FKK/sauna clubs, brothels/Laufhaus/Eroscenter, erotic studios, independent providers advertising commercially).
 Return JSON only. Do not include markdown, prose, or explanations.
 Only classify pages that are a venue's or provider's own profile, official website, or a commercial listing/advertisement published by the business itself. News articles, forum threads, blog posts, review aggregators without owner data, and job ads are NOT a match.
+confidence_score must be an integer from 0 to 100 (not a 0-1 fraction). 100 = certain match, 0 = certain non-match.
 If the page is not a real venue/provider profile or listing, return:
 {
   "is_match": false,
@@ -93,7 +94,7 @@ export const CLASSIFIER_RESPONSE_SCHEMA = {
   properties: {
     is_match: { type: "boolean" },
     match_reason: { type: "string" },
-    confidence_score: { type: "number" },
+    confidence_score: { type: "number", minimum: 0, maximum: 100 },
     canonical_name: { type: "string", nullable: true },
     organization_name: { type: "string", nullable: true },
     profession_label: { type: "string", nullable: true },

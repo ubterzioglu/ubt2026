@@ -322,7 +322,7 @@ VALUES
   ),
   (
     'gemini', 'classify', 'Gemini Classifier', true, 10,
-    'gemini-2.5-flash-lite', 'https://generativelanguage.googleapis.com',
+    'gemini-2.5-flash', 'https://generativelanguage.googleapis.com',
     '{"temperature": 0.1, "fallback_model": "gemini-2.5-flash"}'::jsonb,
     50.0000, 'GEMINI_API_KEY'
   )
