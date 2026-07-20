@@ -76,6 +76,60 @@ export function LogosTab({
             </span>
             Yeni logo ekle
           </h2>
+
+          <details className="group/guide mt-3 overflow-hidden rounded-[1rem] border border-white/[0.06] bg-white/[0.02]">
+            <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-semibold text-white/50 transition hover:text-white/75 [&::-webkit-details-marker]:hidden">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              Sistem nasıl çalışıyor?
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="ml-auto text-white/30 transition-transform duration-200 group-open/guide:rotate-180"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </summary>
+            <ol className="space-y-2 border-t border-white/[0.06] px-4 py-3 text-[13px] leading-5 text-white/60">
+              <li>
+                <span className="font-semibold text-white/85">① Logo yükle</span> — ismini
+                yaz, dosyayı seç.
+              </li>
+              <li>
+                <span className="font-semibold text-white/85">② Oy ver</span> — 1-10 arası
+                puan verilir, kişi başı bir logoya tek oy hakkı vardır (aynı isimle tekrar
+                oylarsan önceki oyun yerine geçer).
+              </li>
+              <li>
+                <span className="font-semibold text-white/85">③ Sıralama</span> — liste
+                ortalama puana göre en yüksekten düşüğe sıralanır.
+              </li>
+              <li>
+                <span className="font-semibold text-white/85">④ Seçim</span> — beğenilen
+                logo &quot;Seç&quot; ile işaretlenir; her seferinde sadece bir logo seçili
+                kalır.
+              </li>
+            </ol>
+          </details>
+
           <form action={createAction} className="mt-4 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
@@ -115,21 +169,23 @@ export function LogosTab({
         </div>
       </section>
 
-      <section className="space-y-2">
+      <section>
         {logos.length === 0 ? (
           <p className="rounded-[1.3rem] border border-dashed border-white/15 px-5 py-8 text-center text-[13px] text-white/50">
             Henüz logo eklenmedi. Yukarıdan ilk adayı ekle.
           </p>
         ) : (
-          logos.map((logo) => (
-            <LogoRow
-              key={logo.id}
-              logo={logo}
-              voteAction={voteAction}
-              selectAction={selectAction}
-              deleteAction={deleteAction}
-            />
-          ))
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {logos.map((logo) => (
+              <LogoRow
+                key={logo.id}
+                logo={logo}
+                voteAction={voteAction}
+                selectAction={selectAction}
+                deleteAction={deleteAction}
+              />
+            ))}
+          </div>
         )}
       </section>
     </div>
@@ -146,88 +202,107 @@ interface LogoRowProps {
 function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps) {
   return (
     <article
-      className={`overflow-hidden rounded-[1.1rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
+      className={`flex flex-col overflow-hidden rounded-[1.2rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
         logo.isSelected ? "border-emerald-400/40" : "border-white/10"
       }`}
     >
-      <div className="flex flex-wrap items-center gap-4 px-4 py-3 sm:flex-nowrap">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[0.7rem] border border-white/10 bg-white/[0.04]">
-          {logo.url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={logo.url}
-              alt={logo.uploaderName}
-              className="h-full w-full object-contain"
-            />
-          ) : (
-            <span className="text-[10px] text-white/30">yok</span>
-          )}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p
-            className="truncate font-body text-[14px] font-semibold text-white"
-            title={`Yükleyen: ${logo.uploaderName}`}
-          >
-            Yükleyen: {logo.uploaderName}
-          </p>
-          <p className="mt-0.5 text-[11px] text-white/40">
-            {logo.fileName} · {formatFileSize(logo.sizeBytes)}
-          </p>
-        </div>
-
-        <RatingBadge averageRating={logo.averageRating} voteCount={logo.voteCount} />
-
+      <div className="relative flex aspect-square items-center justify-center overflow-hidden border-b border-white/[0.06] bg-white/[0.04] p-4">
+        {logo.url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={logo.url}
+            alt={logo.uploaderName}
+            className="h-full w-full object-contain"
+          />
+        ) : (
+          <span className="text-[12px] text-white/30">Görsel yok</span>
+        )}
         {logo.isSelected ? (
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-400/15 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
+          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-400/15 px-2.5 py-1 text-[11px] font-semibold text-emerald-300 backdrop-blur">
             ✓ Seçildi
           </span>
-        ) : (
-          <form action={selectAction} className="shrink-0">
+        ) : null}
+      </div>
+
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <div className="rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
+            Yükleyen
+          </p>
+          <p
+            className="truncate font-body text-[14px] font-semibold text-white"
+            title={logo.uploaderName}
+          >
+            {logo.uploaderName}
+          </p>
+        </div>
+
+        <div className="rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
+            Dosya
+          </p>
+          <p className="truncate text-[12px] text-white/70" title={logo.fileName}>
+            {logo.fileName}
+          </p>
+          <p className="text-[11px] text-white/40">{formatFileSize(logo.sizeBytes)}</p>
+        </div>
+
+        <div className="flex items-center justify-between rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
+            Puan
+          </p>
+          <RatingBadge averageRating={logo.averageRating} voteCount={logo.voteCount} />
+        </div>
+
+        <div className="mt-1 flex items-center gap-2">
+          {logo.isSelected ? null : (
+            <form action={selectAction} className="flex-1">
+              <input type="hidden" name="id" value={logo.id} />
+              <button
+                type="submit"
+                className="inline-flex min-h-[36px] w-full items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[12px] font-semibold text-white/80 transition hover:border-emerald-400/40 hover:text-emerald-300"
+              >
+                Seç
+              </button>
+            </form>
+          )}
+          <form action={deleteAction} className={logo.isSelected ? "flex-1" : undefined}>
             <input type="hidden" name="id" value={logo.id} />
             <button
               type="submit"
-              className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-emerald-400/40 hover:text-emerald-300"
+              className="inline-flex min-h-[36px] w-full items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[12px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
             >
-              Seç
+              Sil
             </button>
           </form>
-        )}
+        </div>
 
-        <form action={deleteAction} className="shrink-0">
-          <input type="hidden" name="id" value={logo.id} />
+        <form
+          action={voteAction}
+          className="mt-1 flex flex-col gap-2 border-t border-white/[0.06] pt-3"
+        >
+          <input type="hidden" name="logoId" value={logo.id} />
+          <input
+            type="text"
+            name="voterName"
+            required
+            minLength={2}
+            maxLength={100}
+            placeholder="Adını yaz"
+            className={darkInput}
+          />
+          <div className="flex items-center justify-between gap-2">
+            <NumberPicker name="rating" defaultValue={5} min={1} max={10} />
+          </div>
           <button
             type="submit"
-            className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
+            className="inline-flex min-h-[36px] items-center justify-center rounded-[0.7rem] px-4 py-1.5 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15"
+            style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
           >
-            Sil
+            Oyla
           </button>
         </form>
       </div>
-
-      <form
-        action={voteAction}
-        className="flex flex-wrap items-center gap-2 border-t border-white/[0.06] px-4 py-2.5"
-      >
-        <input type="hidden" name="logoId" value={logo.id} />
-        <input
-          type="text"
-          name="voterName"
-          required
-          minLength={2}
-          maxLength={100}
-          placeholder="Adını yaz"
-          className={`${darkInput} sm:max-w-[160px]`}
-        />
-        <NumberPicker name="rating" defaultValue={5} min={1} max={10} />
-        <button
-          type="submit"
-          className="inline-flex min-h-[36px] shrink-0 items-center justify-center rounded-[0.7rem] px-4 py-1.5 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15"
-          style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
-        >
-          Oyla
-        </button>
-      </form>
     </article>
   );
 }
