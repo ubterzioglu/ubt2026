@@ -1,11 +1,18 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { verifySessionToken } from "@/lib/secure-compare";
 import { getZelifsState, saveZelifsState } from "@/lib/zelifs";
 
+const SESSION_LABEL = "elif";
+
 async function isAuthed(): Promise<boolean> {
+  const password = process.env.ZELIFS_PASSWORD?.trim();
+  // Fail closed: without a configured password no session can be valid.
+  if (!password) return false;
   const cookieStore = await cookies();
-  return cookieStore.get("elif_auth")?.value === "1";
+  const token = cookieStore.get("elif_auth")?.value ?? "";
+  return verifySessionToken(token, password, SESSION_LABEL);
 }
 
 export async function GET() {

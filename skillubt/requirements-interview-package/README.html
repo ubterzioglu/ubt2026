@@ -398,33 +398,32 @@
   /* ---------- Language toggle ---------- */
 
   .lang-toggle {
-    position: absolute;
-    top: 56px;
-    right: 28px;
     display: flex;
-    border: 1px solid var(--rule-strong);
-    border-radius: var(--radius);
-    overflow: hidden;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 18px;
     font-family: 'Spec Mono', monospace;
-    font-size: 11px;
+    font-size: 14px;
     letter-spacing: 0.05em;
   }
 
   .lang-toggle button {
     all: unset;
     cursor: pointer;
-    padding: 6px 12px;
+    padding: 10px 20px;
+    min-width: 56px;
+    text-align: center;
     color: var(--muted);
     background: var(--paper-raised);
-  }
-
-  .lang-toggle button + button {
-    border-left: 1px solid var(--rule-strong);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    font-weight: 600;
   }
 
   .lang-toggle button[aria-pressed="true"] {
     color: var(--paper);
     background: var(--accent);
+    border-color: var(--accent);
   }
 
   /* JS toggles the native [hidden] attribute per language node —
@@ -432,7 +431,7 @@
   [data-lang][hidden] { display: none; }
 
   @media (max-width: 560px) {
-    .lang-toggle { position: static; margin-bottom: 18px; align-self: flex-start; }
+    .lang-toggle { justify-content: flex-start; }
   }
 
   @media (max-width: 560px) {
@@ -458,7 +457,7 @@
 
   <header>
     <div class="lang-toggle" role="group" aria-label="Language / Dil">
-      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="en" aria-pressed="false">EN</button>
       <button type="button" data-lang-btn="tr" aria-pressed="false">TR</button>
     </div>
 
@@ -779,5 +778,7 @@ Ev aşçıları, gündelik kullanım, mobil öncelikli, göz atmak için hesap g
         setLang(btn.getAttribute('data-lang-btn'));
       });
     });
+
+    setLang('tr');
   })();
 </script>

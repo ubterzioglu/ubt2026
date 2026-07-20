@@ -249,15 +249,15 @@
   },
   "hotPaths": [
     {
-      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
-      "accessCount": 23,
-      "lastAccessed": 1784540144374,
+      "path": "app\\skillubt\\page.tsx",
+      "accessCount": 26,
+      "lastAccessed": 1784542122363,
       "type": "file"
     },
     {
-      "path": "app\\skillubt\\page.tsx",
-      "accessCount": 21,
-      "lastAccessed": 1784541580977,
+      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
+      "accessCount": 23,
+      "lastAccessed": 1784540144374,
       "type": "file"
     },
     {
@@ -267,16 +267,22 @@
       "type": "file"
     },
     {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 18,
+      "lastAccessed": 1784541869493,
+      "type": "file"
+    },
+    {
+      "path": "skillubt\\requirements-interview-package\\README.html",
+      "accessCount": 12,
+      "lastAccessed": 1784542110415,
+      "type": "file"
+    },
+    {
       "path": "lib\\detrbridge-logos.ts",
       "accessCount": 8,
       "lastAccessed": 1784539156299,
       "type": "directory"
-    },
-    {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 7,
-      "lastAccessed": 1784541775006,
-      "type": "file"
     },
     {
       "path": "supabase\\migrations\\20260719150000_migrate_detr_todos_to_detrbridge.sql",
@@ -309,6 +315,12 @@
       "type": "file"
     },
     {
+      "path": "",
+      "accessCount": 4,
+      "lastAccessed": 1784541965161,
+      "type": "directory"
+    },
+    {
       "path": ".superpowers\\sdd\\task-7-report.md",
       "accessCount": 3,
       "lastAccessed": 1784532135667,
@@ -327,10 +339,10 @@
       "type": "file"
     },
     {
-      "path": "",
+      "path": "app\\globals.css",
       "accessCount": 3,
-      "lastAccessed": 1784541731111,
-      "type": "directory"
+      "lastAccessed": 1784541939064,
+      "type": "file"
     },
     {
       "path": ".superpowers\\sdd\\task-7-brief.md",
@@ -363,12 +375,6 @@
       "type": "file"
     },
     {
-      "path": "app\\globals.css",
-      "accessCount": 2,
-      "lastAccessed": 1784540731658,
-      "type": "file"
-    },
-    {
       "path": "middleware.ts",
       "accessCount": 2,
       "lastAccessed": 1784540840275,
@@ -378,6 +384,12 @@
       "path": ".env.local",
       "accessCount": 2,
       "lastAccessed": 1784541330696,
+      "type": "file"
+    },
+    {
+      "path": "app\\layout.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784541956561,
       "type": "file"
     },
     {
@@ -495,12 +507,6 @@
       "type": "file"
     },
     {
-      "path": "app\\layout.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784539316639,
-      "type": "file"
-    },
-    {
       "path": "app\\blog\\page.tsx",
       "accessCount": 1,
       "lastAccessed": 1784539322877,
@@ -510,12 +516,6 @@
       "path": "skillubt\\requirements-interview-package\\skills\\requirements-interview\\SKILL.md",
       "accessCount": 1,
       "lastAccessed": 1784539557436,
-      "type": "file"
-    },
-    {
-      "path": "skillubt\\requirements-interview-package\\README.html",
-      "accessCount": 1,
-      "lastAccessed": 1784539558067,
       "type": "file"
     },
     {

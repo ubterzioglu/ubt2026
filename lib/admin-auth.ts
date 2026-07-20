@@ -76,7 +76,11 @@ export async function signInAdmin(candidate: string): Promise<boolean> {
     return false;
   }
 
-  if (candidate.trim() !== accessKey) {
+  if (!checkRateLimit(`admin:${await getClientIp()}`)) {
+    return false;
+  }
+
+  if (!secureCompare(candidate.trim(), accessKey)) {
     return false;
   }
 
@@ -116,7 +120,7 @@ export async function isTasksAdminAuthenticated(): Promise<boolean> {
   if (!accessKey) return false;
   const cookieStore = await cookies();
   const candidate = cookieStore.get(TASKS_ADMIN_ACCESS_COOKIE)?.value ?? "";
-  return candidate.trim() === accessKey;
+  return secureCompare(candidate.trim(), accessKey);
 }
 
 /**
@@ -127,7 +131,8 @@ export async function signInTasksAdmin(candidate: string): Promise<boolean> {
   const accessKey = getTasksAdminAccessKey();
   // Fail closed: without a configured key no sign-in is possible.
   if (!accessKey) return false;
-  if (candidate.trim() !== accessKey) return false;
+  if (!checkRateLimit(`dm:${await getClientIp()}`)) return false;
+  if (!secureCompare(candidate.trim(), accessKey)) return false;
 
   const cookieStore = await cookies();
   cookieStore.set(TASKS_ADMIN_ACCESS_COOKIE, accessKey, {
@@ -173,7 +178,7 @@ export async function isBatubtAuthenticated(): Promise<boolean> {
   if (!accessKey) return false;
   const cookieStore = await cookies();
   const candidate = cookieStore.get(BATUBT_ADMIN_ACCESS_COOKIE)?.value ?? "";
-  return candidate.trim() === accessKey;
+  return secureCompare(candidate.trim(), accessKey);
 }
 
 /**
@@ -184,7 +189,8 @@ export async function signInBatubt(candidate: string): Promise<boolean> {
   const accessKey = getBatubtAdminAccessKey();
   // Fail closed: without a configured key no sign-in is possible.
   if (!accessKey) return false;
-  if (candidate.trim() !== accessKey) return false;
+  if (!checkRateLimit(`batubt:${await getClientIp()}`)) return false;
+  if (!secureCompare(candidate.trim(), accessKey)) return false;
 
   const cookieStore = await cookies();
   cookieStore.set(BATUBT_ADMIN_ACCESS_COOKIE, accessKey, {
@@ -233,7 +239,7 @@ export async function isBakcakanatAuthenticated(): Promise<boolean> {
   if (!password) return false;
   const cookieStore = await cookies();
   const candidate = cookieStore.get(BAKCAKANAT_ACCESS_COOKIE)?.value ?? "";
-  return candidate.trim() === password;
+  return secureCompare(candidate.trim(), password);
 }
 
 /**
@@ -244,7 +250,8 @@ export async function signInBakcakanat(candidate: string): Promise<boolean> {
   const password = getBakcakanatPassword();
   // Fail closed: without a configured password no sign-in is possible.
   if (!password) return false;
-  if (candidate.trim() !== password) return false;
+  if (!checkRateLimit(`bakcakanat:${await getClientIp()}`)) return false;
+  if (!secureCompare(candidate.trim(), password)) return false;
 
   const cookieStore = await cookies();
   cookieStore.set(BAKCAKANAT_ACCESS_COOKIE, password, {
@@ -281,9 +288,13 @@ export async function signOutBakcakanat(): Promise<void> {
  * The `/detrbridge` logo-selection board is gated by a name allowlist plus
  * a shared password (DETRBRIDGE), mirroring the /detr todo board's
  * email-allowlist pattern but with plain first names instead of emails.
- * The cookie stores `name|password`; both halves are re-validated on every
- * request, so a password change or allowlist removal revokes every
- * session. Fails CLOSED: without a configured password nobody gets in.
+ * The cookie stores `name|token`, where token is an HMAC of the name keyed
+ * by the current password (see deriveSessionToken) rather than the raw
+ * password itself — a leaked cookie no longer hands out the reusable
+ * literal board password, and a password change still revokes every
+ * existing session because verification re-derives the token from the
+ * *current* DETRBRIDGE value. Fails CLOSED: without a configured password
+ * nobody gets in.
  */
 export const DETRBRIDGE_ACCESS_COOKIE = "ubt_detrbridge_access";
 
@@ -323,9 +334,9 @@ export async function getDetrbridgeSessionName(): Promise<string | null> {
   const separator = value.lastIndexOf("|");
   if (separator < 0) return null;
   const name = value.slice(0, separator).trim().toLowerCase();
-  const candidate = value.slice(separator + 1);
-  if (candidate !== password) return null;
+  const token = value.slice(separator + 1);
   if (!getDetrbridgeAllowedNames().includes(name)) return null;
+  if (!verifySessionToken(token, password, name)) return null;
   return name;
 }
 
@@ -354,10 +365,12 @@ export async function signInDetrbridge(
   const normalizedName = name.trim().toLowerCase();
   if (!normalizedName) return false;
   if (!getDetrbridgeAllowedNames().includes(normalizedName)) return false;
-  if (candidate.trim() !== password) return false;
+  if (!checkRateLimit(`detrbridge:${await getClientIp()}`)) return false;
+  if (!secureCompare(candidate.trim(), password)) return false;
 
+  const token = deriveSessionToken(password, normalizedName);
   const cookieStore = await cookies();
-  cookieStore.set(DETRBRIDGE_ACCESS_COOKIE, `${normalizedName}|${password}`, {
+  cookieStore.set(DETRBRIDGE_ACCESS_COOKIE, `${normalizedName}|${token}`, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

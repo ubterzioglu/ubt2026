@@ -22,6 +22,29 @@ const README_PATH = path.join(
 );
 
 /**
+ * The README's own inline <script> (the EN/TR toggle) never runs here: React
+ * inserts `dangerouslySetInnerHTML` markup via the DOM, and browsers do not
+ * execute <script> tags added that way. LangToggle (a client component)
+ * re-attaches the click behavior after hydration. Until then — and for the
+ * very first paint — the server must pick a default language itself, so it
+ * flips the README's default from EN to TR by swapping which language's
+ * `data-lang` blocks start `hidden` and which toggle button starts pressed.
+ */
+function defaultToTurkish(html: string): string {
+  return html
+    .replace(/data-lang="en"([^>]*)>/g, (match, rest: string) => {
+      if (/\bhidden\b/.test(rest)) return match;
+      return `data-lang="en"${rest} hidden>`;
+    })
+    .replace(/data-lang="tr" hidden/g, 'data-lang="tr"')
+    .replace(
+      'data-lang-btn="tr" aria-pressed="false"',
+      'data-lang-btn="tr" aria-pressed="true"'
+    )
+    .replace('lang="en"', 'lang="tr"');
+}
+
+/**
  * The README is a standalone file meant to be opened directly in a browser,
  * so it auto-switches to a dark palette on `prefers-color-scheme: dark`.
  * Embedded inside this site (which has no dark mode at all), that rule would
@@ -61,8 +84,15 @@ export default async function SkillUbtPage() {
           <a
             href="/skillubt/requirements-interview-skill.zip"
             download
-            className="section-panel group flex flex-col items-center gap-3 px-6 py-10 text-center transition hover:-translate-y-1 hover:shadow-glow sm:px-10 sm:py-12"
+            className="group relative flex cursor-pointer flex-col items-center gap-3 rounded-[2rem] border-2 border-accent/40 bg-accent-soft/40 px-6 py-10 text-center shadow-panel backdrop-blur-sm transition hover:-translate-y-1 hover:border-accent hover:bg-accent-soft/70 hover:shadow-glow sm:px-10 sm:py-12"
           >
+            <span className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white shadow-lg transition group-hover:scale-110">
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[2.5]" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3v12" />
+                <path d="m7 10 5 5 5-5" />
+                <path d="M5 21h14" />
+              </svg>
+            </span>
             <span className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
               Claude Code Skill · Free download
             </span>
