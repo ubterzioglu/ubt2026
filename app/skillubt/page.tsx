@@ -44,6 +44,19 @@ function defaultToTurkish(html: string): string {
 }
 
 /**
+ * The README's inline <style> sets its palette on `:root` — fine as a
+ * standalone file, but here that leaks into the whole page: it overwrites
+ * this site's own `--accent` (and other) CSS variables globally, breaking
+ * every `bg-accent`/`text-accent` etc. Tailwind class outside the panel too
+ * (Tailwind's `rgb(var(--accent) / …)` gets a hex string instead of an
+ * `R G B` triple and silently produces an invalid, invisible color).
+ * Scope those rules to the panel's own id instead of the document root.
+ */
+function scopeRootVariables(html: string, scopeSelector: string): string {
+  return html.replace(/:root(?![\w-])/g, scopeSelector);
+}
+
+/**
  * The README is a standalone file meant to be opened directly in a browser,
  * so it auto-switches to a dark palette on `prefers-color-scheme: dark`.
  * Embedded inside this site (which has no dark mode at all), that rule would
@@ -71,9 +84,13 @@ function stripDarkModeQuery(html: string): string {
   return html.slice(0, start) + html.slice(end);
 }
 
+const README_PANEL_ID = "skill-readme-panel";
+
 export default async function SkillUbtPage() {
   const rawHtml = await readFile(README_PATH, "utf8");
-  const html = defaultToTurkish(stripDarkModeQuery(rawHtml));
+  const html = defaultToTurkish(
+    scopeRootVariables(stripDarkModeQuery(rawHtml), `#${README_PANEL_ID}`)
+  );
 
   return (
     <>
@@ -82,7 +99,7 @@ export default async function SkillUbtPage() {
           <a
             href="/skillubt/requirements-interview-skill.zip"
             download
-            className="group relative flex cursor-pointer flex-col items-center gap-3 rounded-[2rem] border-2 border-accent/40 bg-accent-soft/40 px-6 py-10 text-center shadow-panel backdrop-blur-sm transition hover:-translate-y-1 hover:border-accent hover:bg-accent-soft/70 hover:shadow-glow sm:px-10 sm:py-12"
+            className="group relative flex cursor-pointer flex-col items-center gap-3 rounded-[2rem] border-2 border-accent/40 bg-accentSoft/40 px-6 py-10 text-center shadow-panel backdrop-blur-sm transition hover:-translate-y-1 hover:border-accent hover:bg-accentSoft/70 hover:shadow-glow sm:px-10 sm:py-12"
           >
             <span className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white shadow-lg transition group-hover:scale-110">
               <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[2.5]" strokeLinecap="round" strokeLinejoin="round">
@@ -111,12 +128,12 @@ export default async function SkillUbtPage() {
           </a>
 
           <div
-            id="skill-readme-panel"
+            id={README_PANEL_ID}
             data-theme="light"
             className="section-panel relative overflow-hidden px-6 py-2 sm:px-10"
             dangerouslySetInnerHTML={{ __html: html }}
           />
-          <SkillReadmeLangToggle containerId="skill-readme-panel" />
+          <SkillReadmeLangToggle containerId={README_PANEL_ID} />
         </div>
       </main>
     </>
