@@ -1,7 +1,0 @@
-{
-  "tool_name": "Read",
-  "tool_input_preview": "{\"file_path\":\"c:\\\\temp_private\\\\ubt2026\\\\app\\\\skillubt\"}",
-  "error": "EISDIR: illegal operation on a directory, read 'c:\\temp_private\\ubt2026\\app\\skillubt'",
-  "timestamp": "2026-07-20T11:34:00.695Z",
-  "retry_count": 1
-}
