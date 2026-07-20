@@ -1,7 +1,7 @@
 -- Schema copy of detr_todos/detr_todo_comments/detr_todo_attachments under
 -- the detrbridge_ prefix, plus a row copy of all surviving data. The old
 -- detr_* tables and detr-files bucket are dropped in a LATER migration
--- (20260719160000) only after the copy is verified — see that file's
+-- (20260719190000) only after the copy is verified — see that file's
 -- header comment for the verification this depends on.
 create table if not exists public.detrbridge_todos (
   id uuid primary key default gen_random_uuid(),

@@ -30,7 +30,6 @@ import { recordDetrbridgeVisit, getDetrbridgeVisits } from "@/lib/detrbridge-vis
 import { TodosTab } from "@/app/detrbridge/_components/todos-tab";
 import {
   getAllTodosAdmin,
-  getTodoByIdAdmin,
   createTodo,
   updateTodo,
   setTodoStatus,
