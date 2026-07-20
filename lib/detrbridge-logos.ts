@@ -254,8 +254,8 @@ export async function castVote(
   if (name.length < 2) {
     return { ok: false, errorMessage: "İsim en az 2 karakter olmalı." };
   }
-  if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
-    return { ok: false, errorMessage: "Puan 1 ile 5 arasında olmalı." };
+  if (!Number.isInteger(rating) || rating < 1 || rating > 10) {
+    return { ok: false, errorMessage: "Puan 1 ile 10 arasında olmalı." };
   }
   const supabase = createServiceClient();
   if (!supabase) {

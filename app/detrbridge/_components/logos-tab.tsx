@@ -1,5 +1,6 @@
 import type { DetrbridgeLogo } from "@/lib/detrbridge-logos";
 import { DETRBRIDGE_BRAND_GRADIENT, DETRBRIDGE_GOLD } from "@/app/detrbridge/_components/theme";
+import { NumberPicker } from "@/app/detrbridge/_components/number-picker";
 
 type ServerFormAction = (formData: FormData) => void | Promise<void>;
 
@@ -22,7 +23,7 @@ function formatFileSize(bytes: number): string {
   return `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
-/** Read-only average-rating badge, e.g. ★★★★☆ 4.2 (5 oy). */
+/** Read-only average-rating badge, e.g. 7.2/10 (5 oy). */
 function RatingBadge({
   averageRating,
   voteCount
@@ -37,15 +38,13 @@ function RatingBadge({
       </span>
     );
   }
-  const rounded = Math.round(averageRating);
-  const stars = "★★★★★".slice(0, rounded) + "☆☆☆☆☆".slice(0, 5 - rounded);
   return (
     <span
       className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[11px] font-semibold tracking-[0.08em]"
       style={{ color: DETRBRIDGE_GOLD }}
-      title={`${averageRating.toFixed(1)}/5 · ${voteCount} oy`}
+      title={`${averageRating.toFixed(1)}/10 · ${voteCount} oy`}
     >
-      {stars} {averageRating.toFixed(1)} ({voteCount})
+      {averageRating.toFixed(1)}/10 ({voteCount})
     </span>
   );
 }
@@ -208,7 +207,7 @@ function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps)
 
       <form
         action={voteAction}
-        className="flex flex-wrap items-center gap-2 border-t border-white/[0.06] px-4 py-2.5 sm:flex-nowrap"
+        className="flex flex-wrap items-center gap-2 border-t border-white/[0.06] px-4 py-2.5"
       >
         <input type="hidden" name="logoId" value={logo.id} />
         <input
@@ -220,18 +219,7 @@ function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps)
           placeholder="Adını yaz"
           className={`${darkInput} sm:max-w-[160px]`}
         />
-        <select
-          name="rating"
-          required
-          defaultValue="3"
-          className="rounded-[0.6rem] border border-white/10 bg-white/[0.04] px-2 py-1.5 text-[12px] text-white outline-none focus:border-[#F5B700]/55"
-        >
-          {[1, 2, 3, 4, 5].map((value) => (
-            <option key={value} value={value}>
-              {"★".repeat(value)} ({value})
-            </option>
-          ))}
-        </select>
+        <NumberPicker name="rating" defaultValue={5} min={1} max={10} />
         <button
           type="submit"
           className="inline-flex min-h-[36px] shrink-0 items-center justify-center rounded-[0.7rem] px-4 py-1.5 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15"
