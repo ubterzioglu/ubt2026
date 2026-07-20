@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"git status --short .omc/ 2>&1 | head -20\",\"description\":\"Check .omc directory changes\"}",
+  "error": "Exit code 1\n M .omc/project-memory.json\n M .omc/sessions/dcabd6e4-7d50-4148-8fd3-4ad94fa03116.json\n?? .omc/sessions/75d31f61-218d-419c-b831-0c8715fb961d.json\n?? .omc/state/idle-notif-cooldown.json\n?? .omc/state/last-tool-error.json\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-96c9-cwd: No such file or directory",
+  "timestamp": "2026-07-20T15:47:56.453Z",
+  "retry_count": 7
+}

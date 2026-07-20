@@ -292,9 +292,15 @@
     },
     {
       "path": "",
-      "accessCount": 5,
-      "lastAccessed": 1784549124922,
+      "accessCount": 8,
+      "lastAccessed": 1784561413015,
       "type": "directory"
+    },
+    {
+      "path": ".env.local",
+      "accessCount": 7,
+      "lastAccessed": 1784562418020,
+      "type": "file"
     },
     {
       "path": "app\\globals.css",
@@ -384,12 +390,6 @@
       "path": "middleware.ts",
       "accessCount": 2,
       "lastAccessed": 1784540840275,
-      "type": "file"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 2,
-      "lastAccessed": 1784541330696,
       "type": "file"
     },
     {

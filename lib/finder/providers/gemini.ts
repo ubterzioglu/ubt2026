@@ -13,7 +13,7 @@ import type { ClassifierProvider, ClassifyUsage } from "@/lib/finder/providers/t
 
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 const REQUEST_TIMEOUT_MS = 60_000;
-const DEFAULT_MODEL = "gemini-2.5-flash-lite";
+const DEFAULT_MODEL = "gemini-2.5-flash";
 
 interface GeminiResponse {
   candidates?: Array<{
