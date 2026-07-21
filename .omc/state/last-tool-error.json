@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"node -e \\\"\\nconst { createClient } = require('@supabase/supabase-js');\\nconst fs = require('fs');\\nconst raw = fs.readFileSync('.env.local', 'utf8');\\nfunction envValue(name) {\\n  const m ...",
-  "error": "Exit code 1\nreview       $0.0356 {\"candidates\":2} E2E test — FKK Köln (sıkı bütçe) \nreview       $0.0935 {\"candidates\":3} FKK / Sauna Club — Berlin \nreview       $0.1191 {\"candidates\":9} Bordell / Laufhaus — Berlin \nreview       $0.1051 {\"candidates\":12} Erotik Studio — Berlin \nreview       $0.0865 {\"candidates\":1} Privat — Berlin \nreview       $0.1022 {\"candidates\":5} FKK / Sauna Club — Hamburg \nreview       $0.1083 {\"candidates\":8} Bordell / Laufhaus — Hamburg \nreview       $0.1587 {\"candidate...",
-  "timestamp": "2026-07-20T18:01:45.751Z",
-  "retry_count": 1
+  "tool_input_preview": "{\"command\":\"npx tsc --noEmit -p . 2>&1 | head -100\",\"timeout\":120000,\"description\":\"Run TypeScript type check\"}",
+  "error": "Exit code 1\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-d484-cwd: No such file or directory",
+  "timestamp": "2026-07-21T11:01:42.198Z",
+  "retry_count": 4
 }

@@ -118,6 +118,17 @@ export async function getAllDomainsAdmin(): Promise<DetrbridgeDomainsResult> {
   }
 }
 
+/** Lightweight total count for nav badges — no rows. */
+export async function getDomainCount(): Promise<number> {
+  const supabase = createServiceClient();
+  if (!supabase) return 0;
+  const { count, error } = await supabase
+    .from("detrbridge_domains")
+    .select("id", { count: "exact", head: true });
+  if (error) return 0;
+  return count ?? 0;
+}
+
 export async function createDomain(
   uploaderName: string,
   domainName: string

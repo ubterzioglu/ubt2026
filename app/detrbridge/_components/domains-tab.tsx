@@ -1,11 +1,15 @@
 import type { DetrbridgeDomain } from "@/lib/detrbridge-domains";
 import { DETRBRIDGE_BRAND_GRADIENT, DETRBRIDGE_GOLD } from "@/app/detrbridge/_components/theme";
 import { NumberPicker } from "@/app/detrbridge/_components/number-picker";
+import { FilterBar } from "@/app/detrbridge/_components/filter-bar";
 
 type ServerFormAction = (formData: FormData) => void | Promise<void>;
 
 interface DomainsTabProps {
   domains: DetrbridgeDomain[];
+  totalCount: number;
+  query: string;
+  minRating: string;
   createAction: ServerFormAction;
   voteAction: ServerFormAction;
   selectAction: ServerFormAction;
@@ -50,6 +54,9 @@ function RatingBadge({
  */
 export function DomainsTab({
   domains,
+  totalCount,
+  query,
+  minRating,
   createAction,
   voteAction,
   selectAction,
@@ -148,10 +155,22 @@ export function DomainsTab({
         </div>
       </section>
 
+      <FilterBar
+        tab="domains"
+        totalCount={totalCount}
+        visibleCount={domains.length}
+        query={query}
+        minRating={minRating}
+        queryPlaceholder="Domain veya öneren adına göre ara..."
+        countLabel="domain"
+      />
+
       <section>
         {domains.length === 0 ? (
           <p className="rounded-[1.3rem] border border-dashed border-white/15 px-5 py-8 text-center text-[13px] text-white/50">
-            Henüz domain önerilmedi. Yukarıdan ilk öneriyi ekle.
+            {totalCount === 0
+              ? "Henüz domain önerilmedi. Yukarıdan ilk öneriyi ekle."
+              : "Filtreyle eşleşen domain bulunamadı."}
           </p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

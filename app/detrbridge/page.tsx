@@ -21,6 +21,7 @@ import {
 } from "@/app/detrbridge/_components/theme";
 import {
   getAllLogosAdmin,
+  getLogoCount,
   createLogo,
   castVote,
   selectLogo,
@@ -30,6 +31,7 @@ import { recordDetrbridgeVisit, getDetrbridgeVisits } from "@/lib/detrbridge-vis
 import { DomainsTab } from "@/app/detrbridge/_components/domains-tab";
 import {
   getAllDomainsAdmin,
+  getDomainCount,
   createDomain,
   castDomainVote,
   selectDomain,
@@ -63,12 +65,16 @@ function readParam(value: string | string[] | undefined): string {
   return "";
 }
 
-const NAV_ITEMS: BridgeNavItem[] = [
-  { key: "logos", label: "Logo Seçimi" },
-  { key: "domains", label: "Domain Önerileri" },
-  { key: "todos", label: "Görevler" },
-  { key: "visits", label: "Giriş Logları" }
-];
+function matchesRating(averageRating: number | null, minRating: number | null): boolean {
+  if (minRating === null) return true;
+  return averageRating !== null && averageRating >= minRating;
+}
+
+function matchesText(names: string[], query: string): boolean {
+  if (!query) return true;
+  const needle = query.toLowerCase();
+  return names.some((name) => name.toLowerCase().includes(needle));
+}
 
 const cardClass =
   "overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl";
@@ -94,12 +100,35 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
   const errorParam = readParam(params.error);
   const editTodoId = readParam(params.edit) || null;
+  const query = readParam(params.q).trim();
+  const minRatingParam = readParam(params.minRating);
+  const minRating = minRatingParam ? Number(minRatingParam) : null;
   const sessionName = await getDetrbridgeSessionName();
   const firstVisit = await recordDetrbridgeVisit();
   const result = activeTab === "logos" ? await getAllLogosAdmin() : null;
   const visits = activeTab === "visits" ? await getDetrbridgeVisits() : [];
   const todosResult = activeTab === "todos" ? await getAllTodosAdmin() : null;
   const domainsResult = activeTab === "domains" ? await getAllDomainsAdmin() : null;
+  const [logoCount, domainCount] = await Promise.all([getLogoCount(), getDomainCount()]);
+
+  const filteredLogos =
+    result?.items.filter(
+      (logo) =>
+        matchesText([logo.uploaderName], query) && matchesRating(logo.averageRating, minRating)
+    ) ?? [];
+  const filteredDomains =
+    domainsResult?.items.filter(
+      (domain) =>
+        matchesText([domain.domainName, domain.uploaderName], query) &&
+        matchesRating(domain.averageRating, minRating)
+    ) ?? [];
+
+  const NAV_ITEMS: BridgeNavItem[] = [
+    { key: "logos", label: "Logo Seçimi", count: logoCount },
+    { key: "domains", label: "Domain Önerileri", count: domainCount },
+    { key: "todos", label: "Görevler" },
+    { key: "visits", label: "Giriş Logları" }
+  ];
 
   async function createAction(formData: FormData) {
     "use server";
@@ -436,7 +465,10 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
               )}
 
               <LogosTab
-                logos={result.items}
+                logos={filteredLogos}
+                totalCount={result.items.length}
+                query={query}
+                minRating={minRatingParam}
                 createAction={createAction}
                 voteAction={voteAction}
                 selectAction={selectAction}
@@ -460,7 +492,10 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
               )}
 
               <DomainsTab
-                domains={domainsResult.items}
+                domains={filteredDomains}
+                totalCount={domainsResult.items.length}
+                query={query}
+                minRating={minRatingParam}
                 createAction={createDomainAction}
                 voteAction={voteDomainAction}
                 selectAction={selectDomainAction}

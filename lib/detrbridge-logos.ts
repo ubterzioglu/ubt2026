@@ -203,6 +203,17 @@ export async function getAllLogosAdmin(): Promise<DetrbridgeLogosResult> {
   }
 }
 
+/** Lightweight total count for nav badges — no rows, no signed URLs. */
+export async function getLogoCount(): Promise<number> {
+  const supabase = createServiceClient();
+  if (!supabase) return 0;
+  const { count, error } = await supabase
+    .from("detrbridge_logos")
+    .select("id", { count: "exact", head: true });
+  if (error) return 0;
+  return count ?? 0;
+}
+
 export async function createLogo(
   input: { uploaderName: string },
   file: File

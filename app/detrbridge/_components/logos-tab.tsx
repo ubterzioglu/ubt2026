@@ -1,11 +1,15 @@
 import type { DetrbridgeLogo } from "@/lib/detrbridge-logos";
 import { DETRBRIDGE_BRAND_GRADIENT, DETRBRIDGE_GOLD } from "@/app/detrbridge/_components/theme";
 import { NumberPicker } from "@/app/detrbridge/_components/number-picker";
+import { FilterBar } from "@/app/detrbridge/_components/filter-bar";
 
 type ServerFormAction = (formData: FormData) => void | Promise<void>;
 
 interface LogosTabProps {
   logos: DetrbridgeLogo[];
+  totalCount: number;
+  query: string;
+  minRating: string;
   createAction: ServerFormAction;
   voteAction: ServerFormAction;
   selectAction: ServerFormAction;
@@ -58,6 +62,9 @@ function RatingBadge({
  */
 export function LogosTab({
   logos,
+  totalCount,
+  query,
+  minRating,
   createAction,
   voteAction,
   selectAction,
@@ -153,10 +160,22 @@ export function LogosTab({
         </div>
       </section>
 
+      <FilterBar
+        tab="logos"
+        totalCount={totalCount}
+        visibleCount={logos.length}
+        query={query}
+        minRating={minRating}
+        queryPlaceholder="Yükleyene göre ara..."
+        countLabel="logo"
+      />
+
       <section>
         {logos.length === 0 ? (
           <p className="rounded-[1.3rem] border border-dashed border-white/15 px-5 py-8 text-center text-[13px] text-white/50">
-            Henüz logo eklenmedi. Yukarıdan ilk adayı ekle.
+            {totalCount === 0
+              ? "Henüz logo eklenmedi. Yukarıdan ilk adayı ekle."
+              : "Filtreyle eşleşen logo bulunamadı."}
           </p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

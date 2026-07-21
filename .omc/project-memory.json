@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1784530787568,
+  "lastScanned": 1784630786302,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -83,7 +83,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1784530787500,
+      "lastAccessed": 1784630786254,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -96,7 +96,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1784530787502,
+      "lastAccessed": 1784630786255,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -106,7 +106,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1784530787542,
+      "lastAccessed": 1784630786276,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -119,7 +119,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1784530787543,
+      "lastAccessed": 1784630786277,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -132,7 +132,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784530787544,
+      "lastAccessed": 1784630786277,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -143,14 +143,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1784530787544,
+      "lastAccessed": 1784630786278,
       "keyFiles": []
     },
     "experience": {
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784530787545,
+      "lastAccessed": 1784630786278,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -160,8 +160,8 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 21,
-      "lastAccessed": 1784530787545,
+      "fileCount": 24,
+      "lastAccessed": 1784630786278,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -174,7 +174,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1784530787546,
+      "lastAccessed": 1784630786279,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -187,7 +187,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1784530787546,
+      "lastAccessed": 1784630786279,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -197,21 +197,28 @@
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
-      "fileCount": 5,
-      "lastAccessed": 1784530787547,
+      "fileCount": 11,
+      "lastAccessed": 1784630786280,
       "keyFiles": [
+        "bulk-upload-logos.ts",
         "convert-cvopt-to-reviews.mjs",
-        "dev-finder-e2e-test.ts",
-        "migrate-cvopt-participants.mjs",
-        "migrate-detr-files.ts",
-        "radar-scan-smoke.mts"
+        "delete-detr-files-bucket.ts",
+        "dev-finder-bulk-continue.ts",
+        "dev-finder-bulk-extra10-remaining.ts"
       ]
+    },
+    "skillubt": {
+      "path": "skillubt",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1784630786280,
+      "keyFiles": []
     },
     "supabase": {
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784530787547,
+      "lastAccessed": 1784630786280,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -221,7 +228,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1784530787548,
+      "lastAccessed": 1784630786281,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -232,14 +239,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1784530787548,
+      "lastAccessed": 1784630786281,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
-      "fileCount": 32,
-      "lastAccessed": 1784530787552,
+      "fileCount": 37,
+      "lastAccessed": 1784630786284,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -249,303 +256,111 @@
   },
   "hotPaths": [
     {
-      "path": "app\\skillubt\\page.tsx",
-      "accessCount": 53,
-      "lastAccessed": 1784547298224,
+      "path": "app\\detrbridge\\page.tsx",
+      "accessCount": 10,
+      "lastAccessed": 1784631688844,
       "type": "file"
     },
     {
-      "path": "public\\skillubt\\requirements-interview-package\\README.html",
-      "accessCount": 34,
-      "lastAccessed": 1784549198955,
+      "path": "lib\\service-finder.ts",
+      "accessCount": 9,
+      "lastAccessed": 1784631196740,
+      "type": "directory"
+    },
+    {
+      "path": "app\\dm\\_components\\dm-nav.tsx",
+      "accessCount": 6,
+      "lastAccessed": 1784631238674,
       "type": "file"
     },
     {
       "path": "app\\detrbridge\\_components\\logos-tab.tsx",
-      "accessCount": 23,
-      "lastAccessed": 1784540144374,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 20,
-      "lastAccessed": 1784540873008,
-      "type": "file"
-    },
-    {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 18,
-      "lastAccessed": 1784541869493,
-      "type": "file"
-    },
-    {
-      "path": "skillubt\\requirements-interview-package\\README.html",
-      "accessCount": 13,
-      "lastAccessed": 1784542180387,
-      "type": "file"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 9,
-      "lastAccessed": 1784566140423,
-      "type": "file"
-    },
-    {
-      "path": "lib\\detrbridge-logos.ts",
-      "accessCount": 8,
-      "lastAccessed": 1784539156299,
-      "type": "directory"
-    },
-    {
-      "path": "",
-      "accessCount": 8,
-      "lastAccessed": 1784561413015,
-      "type": "directory"
-    },
-    {
-      "path": "app\\globals.css",
       "accessCount": 5,
-      "lastAccessed": 1784549128862,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260719150000_migrate_detr_todos_to_detrbridge.sql",
-      "accessCount": 4,
-      "lastAccessed": 1784532660931,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\bridge-nav.tsx",
-      "accessCount": 4,
-      "lastAccessed": 1784539560099,
+      "lastAccessed": 1784631348402,
       "type": "file"
     },
     {
       "path": "app\\detrbridge\\_components\\domains-tab.tsx",
       "accessCount": 4,
-      "lastAccessed": 1784540173495,
+      "lastAccessed": 1784631370737,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_actions.ts",
-      "accessCount": 4,
-      "lastAccessed": 1784541712837,
-      "type": "file"
-    },
-    {
-      "path": ".superpowers\\sdd\\task-7-report.md",
+      "path": "app\\dm\\page.tsx",
       "accessCount": 3,
-      "lastAccessed": 1784532135667,
+      "lastAccessed": 1784631274821,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260719190000_drop_detr_legacy.sql",
-      "accessCount": 3,
-      "lastAccessed": 1784532415908,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1784540848157,
-      "type": "file"
-    },
-    {
-      "path": "lib\\seo.ts",
-      "accessCount": 3,
-      "lastAccessed": 1784542275416,
-      "type": "file"
-    },
-    {
-      "path": "app\\page.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1784546655157,
-      "type": "file"
-    },
-    {
-      "path": ".superpowers\\sdd\\task-7-brief.md",
+      "path": "lib\\detrbridge-logos.ts",
       "accessCount": 2,
-      "lastAccessed": 1784532135246,
-      "type": "file"
-    },
-    {
-      "path": ".superpowers\\sdd\\task-7-review.md",
-      "accessCount": 2,
-      "lastAccessed": 1784532290801,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\delete-detr-files-bucket.ts",
-      "accessCount": 2,
-      "lastAccessed": 1784532417283,
+      "lastAccessed": 1784631644195,
       "type": "file"
     },
     {
       "path": "lib\\detrbridge-domains.ts",
       "accessCount": 2,
-      "lastAccessed": 1784539323508,
+      "lastAccessed": 1784631648444,
       "type": "file"
     },
     {
-      "path": "middleware.ts",
-      "accessCount": 2,
-      "lastAccessed": 1784540840275,
-      "type": "file"
-    },
-    {
-      "path": "app\\layout.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784541956561,
-      "type": "file"
-    },
-    {
-      "path": "components\\site-header.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784543986727,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\_components\\admin-gate.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784563359971,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260719160000_drop_detr_legacy.sql",
+      "path": "app\\dm",
       "accessCount": 1,
-      "lastAccessed": 1784531598065,
+      "lastAccessed": 1784630809588,
+      "type": "directory"
+    },
+    {
+      "path": "app\\dm\\_components\\scraper\\job-detail-section.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784631118195,
       "type": "file"
     },
     {
-      "path": ".superpowers\\sdd\\review-5b79c47..359ec28.diff",
+      "path": "app\\dm\\_components\\theme.ts",
       "accessCount": 1,
-      "lastAccessed": 1784532136836,
+      "lastAccessed": 1784631128514,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260719180000_create_detrbridge_logo_votes.sql",
+      "path": "app\\dm\\_components\\dm-login.tsx",
       "accessCount": 1,
-      "lastAccessed": 1784532149871,
+      "lastAccessed": 1784631202275,
       "type": "file"
     },
     {
-      "path": "docs\\superpowers\\plans\\2026-07-19-detrbridge-todos-migration.md",
+      "path": "app\\detrbridge\\_components\\bridge-nav.tsx",
       "accessCount": 1,
-      "lastAccessed": 1784532406957,
-      "type": "file"
-    },
-    {
-      "path": "lib\\detrbridge-todos.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784532407115,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\todos-tab.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784532414349,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\migrate-detr-files.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784532416320,
+      "lastAccessed": 1784631299607,
       "type": "file"
     },
     {
       "path": "app\\detrbridge\\_components\\theme.ts",
       "accessCount": 1,
-      "lastAccessed": 1784532443979,
+      "lastAccessed": 1784631310401,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\rapor\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784631310444,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\filter-bar.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784631342556,
+      "type": "file"
+    },
+    {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784631411656,
       "type": "directory"
     },
     {
-      "path": "app\\detrbridge",
+      "path": "scripts\\dev-verify-rapor-query.ts",
       "accessCount": 1,
-      "lastAccessed": 1784532456557,
-      "type": "directory"
-    },
-    {
-      "path": "supabase\\migrations\\20260719090000_create_detrbridge_logos.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784532459723,
-      "type": "directory"
-    },
-    {
-      "path": "supabase\\migrations\\20260707160000_create_detr_todos.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784532468444,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260708090000_create_detr_attachments.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784532468550,
-      "type": "file"
-    },
-    {
-      "path": ".superpowers\\sdd\\final-review.md",
-      "accessCount": 1,
-      "lastAccessed": 1784532646489,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260720080000_add_detrbridge_logos_uploader_name.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784533465209,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260720090000_drop_detrbridge_logos_name.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784534143095,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260720100000_widen_logo_vote_rating_to_10.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784535001224,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\number-picker.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784535135983,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\bulk-upload-logos.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784535228132,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260720120000_create_detrbridge_domains.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784539011515,
-      "type": "file"
-    },
-    {
-      "path": "app\\blog\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784539322877,
-      "type": "file"
-    },
-    {
-      "path": "skillubt\\requirements-interview-package\\skills\\requirements-interview\\SKILL.md",
-      "accessCount": 1,
-      "lastAccessed": 1784539557436,
-      "type": "file"
-    },
-    {
-      "path": "app\\skillubt\\route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784540333657,
-      "type": "file"
-    },
-    {
-      "path": "app\\bakcakanat\\_components\\bakcakanat-login.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784540846830,
+      "lastAccessed": 1784631442593,
       "type": "file"
     }
   ],
