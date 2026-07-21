@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"git status --porcelain app/detrbridge lib/detrbridge-logos.ts lib/detrbridge-domains.ts\",\"description\":\"Check status of detrbridge-related paths specifically\"}",
-  "error": "Exit code 1\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-5ca9-cwd: No such file or directory",
-  "timestamp": "2026-07-21T11:44:51.546Z",
-  "retry_count": 5
+  "tool_input_preview": "{\"command\":\"cat \\\"C:\\\\temp_private\\\\ubt2026\\\\.gitignore\\\" | tail -20\",\"description\":\"Check end of .gitignore for existing docs-related entries\"}",
+  "error": "Exit code 1\nnode_modules\n.env\n.env.local\n.env.*.local\n.env.local.md\nnpm-debug.log*\nyarn-debug.log*\nyarn-error.log*\npnpm-debug.log*\ncoverage\ndist\n*.tsbuildinfo\nfirmascope/\n.blackboxcli/\n.secret\n# Corteqs kaynak ortam dosyasi - service role key/Meta token icerir, asla commitleme\n.env.local.rebase\n.env.local.bak\ncheck.api\ndesiremap-candidates*.json\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-4e36-cwd: No such file or directory",
+  "timestamp": "2026-07-21T12:22:49.522Z",
+  "retry_count": 2
 }
