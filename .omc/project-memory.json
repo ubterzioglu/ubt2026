@@ -263,8 +263,8 @@
     },
     {
       "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 10,
-      "lastAccessed": 1784631688844,
+      "accessCount": 11,
+      "lastAccessed": 1784644124716,
       "type": "file"
     },
     {
@@ -293,8 +293,8 @@
     },
     {
       "path": "app\\dm\\page.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1784631274821,
+      "accessCount": 4,
+      "lastAccessed": 1784644124294,
       "type": "file"
     },
     {
@@ -313,6 +313,18 @@
       "path": "docs\\desiremap-scraper-restructure-2026-07-21.md",
       "accessCount": 3,
       "lastAccessed": 1784634293679,
+      "type": "file"
+    },
+    {
+      "path": "app\\page.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1784644259966,
+      "type": "file"
+    },
+    {
+      "path": "content\\featured.ts",
+      "accessCount": 3,
+      "lastAccessed": 1784644275612,
       "type": "file"
     },
     {
@@ -361,6 +373,42 @@
       "path": "supabase\\migrations\\20260721100000_restructure_finder_candidates.sql",
       "accessCount": 2,
       "lastAccessed": 1784633683914,
+      "type": "file"
+    },
+    {
+      "path": "app\\skillubt\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784644225400,
+      "type": "file"
+    },
+    {
+      "path": "app\\sandbox\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784644226351,
+      "type": "file"
+    },
+    {
+      "path": "app\\elif\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784644226938,
+      "type": "file"
+    },
+    {
+      "path": "app\\book-appointment\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784644227043,
+      "type": "file"
+    },
+    {
+      "path": "app\\batubt\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784644234606,
+      "type": "file"
+    },
+    {
+      "path": "app\\bakcakanat\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784644235340,
       "type": "file"
     },
     {
@@ -434,6 +482,30 @@
       "accessCount": 1,
       "lastAccessed": 1784633822073,
       "type": "file"
+    },
+    {
+      "path": "app\\blog\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784644126230,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784644126902,
+      "type": "file"
+    },
+    {
+      "path": "app\\geo\\[location]\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784644141057,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1784644253687,
+      "type": "directory"
     }
   ],
   "userDirectives": []
