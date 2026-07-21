@@ -3,7 +3,11 @@
 // schema-mode kullanılsa bile sonuç persist edilmeden önce burada doğrulanır.
 // prompts.ts içindeki CLASSIFIER_RESPONSE_SCHEMA ile ayna sözleşme.
 
-import type { CandidateResult, FinderContact } from "@/lib/finder/types";
+import type {
+  CandidateResult,
+  FinderContact,
+  FinderSelfStatement
+} from "@/lib/finder/types";
 
 const CONTACT_TYPES: readonly FinderContact["type"][] = [
   "phone",
@@ -50,6 +54,23 @@ function parseContacts(value: unknown): FinderContact[] | null {
   return contacts;
 }
 
+/** Öz-tanım alıntılarını doğrular; source_url yoksa null bırakılır (run-job doldurur). */
+function parseSelfStatements(value: unknown, maxItems: number): FinderSelfStatement[] | null {
+  if (!Array.isArray(value)) return [];
+  const statements: FinderSelfStatement[] = [];
+  for (const entry of value.slice(0, maxItems)) {
+    if (typeof entry !== "object" || entry === null) return null;
+    const record = entry as Record<string, unknown>;
+    const quote = record.quote;
+    if (typeof quote !== "string" || quote.trim().length === 0) return null;
+    statements.push({
+      quote: quote.trim(),
+      source_url: asNullableString(record.source_url)
+    });
+  }
+  return statements;
+}
+
 export interface ValidationOutcome {
   result: CandidateResult | null;
   errorMessage?: string;
@@ -76,6 +97,10 @@ export function parseCandidateResult(raw: unknown): ValidationOutcome {
   if (contacts === null) {
     return { result: null, errorMessage: "contacts geçersiz yapıda" };
   }
+  const selfStatements = parseSelfStatements(record.self_statements, 5);
+  if (selfStatements === null) {
+    return { result: null, errorMessage: "self_statements geçersiz yapıda" };
+  }
 
   return {
     result: {
@@ -87,15 +112,18 @@ export function parseCandidateResult(raw: unknown): ValidationOutcome {
       profession_label: asNullableString(record.profession_label),
       role_key: asNullableString(record.role_key),
       item_type: asNullableString(record.item_type),
-      category_slug: asNullableString(record.category_slug),
       city: asNullableString(record.city),
+      city_raw: asNullableString(record.city_raw),
       country_code: asNullableString(record.country_code),
-      address_line: asNullableString(record.address_line),
+      street: asNullableString(record.street),
+      house_number: asNullableString(record.house_number),
+      postal_code: asNullableString(record.postal_code),
       languages: asStringArray(record.languages, 10),
-      services: asStringArray(record.services, 10),
+      services: asStringArray(record.services, 15),
       contacts,
       website_url: asNullableString(record.website_url),
       appointment_url: asNullableString(record.appointment_url),
+      self_statements: selfStatements,
       evidence_quotes: asStringArray(record.evidence_quotes, 6)
     }
   };

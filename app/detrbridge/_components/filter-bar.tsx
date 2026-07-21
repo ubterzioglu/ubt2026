@@ -62,6 +62,7 @@ export function FilterBar({
             name="minRating"
             defaultValue={minRating}
             className={`${inputClass} sm:w-44`}
+            style={{ colorScheme: "dark" }}
           >
             <option value="">Tüm puanlar</option>
             <option value="9">9+ puan</option>

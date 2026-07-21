@@ -101,7 +101,23 @@ export interface FinderContact {
   is_primary?: boolean | null;
 }
 
-/** Sınıflandırıcı çıktısı — Gemini responseSchema ile ayna sözleşme. */
+export interface FinderSelfStatement {
+  quote: string;
+  source_url?: string | null;
+}
+
+export interface FinderServiceEntry {
+  label: string;
+  source_url?: string | null;
+}
+
+/**
+ * Sınıflandırıcı çıktısı — Gemini responseSchema ile ayna sözleşme.
+ * category_slug YOK: LLM kategori tayin etmiyor, job template'inden geliyor
+ * (bkz. lib/finder/run-job.ts upsertCandidate). self_description (=
+ * profession_label) işletmenin kendi ham tanımı — sınıflandırma tüketici
+ * tarafında yapılır.
+ */
 export interface CandidateResult {
   is_match: boolean;
   match_reason: string;
@@ -111,15 +127,18 @@ export interface CandidateResult {
   profession_label: string | null;
   role_key: string | null;
   item_type: string | null;
-  category_slug: string | null;
   city: string | null;
+  city_raw: string | null;
   country_code: string | null;
-  address_line: string | null;
+  street: string | null;
+  house_number: string | null;
+  postal_code: string | null;
   languages: string[];
   services: string[];
   contacts: FinderContact[];
   website_url: string | null;
   appointment_url: string | null;
+  self_statements: FinderSelfStatement[];
   evidence_quotes: string[];
 }
 

@@ -54,8 +54,10 @@ function asciiSlug(value: string): string {
 }
 
 /**
- * Aday tekilleştirme anahtarı: telefon > web alan adı > isim+şehir.
+ * Aday tekilleştirme anahtarı: telefon > web alan adı > posta kodu+isim > isim+şehir.
  * service_finder_candidates.unique(job_id, duplicate_key) ile birlikte çalışır.
+ * postal_code önceliği, aynı şehirde farklı adreste iki işletmenin isim+şehir
+ * eşleşmesiyle yanlışlıkla tekilleştirilmesini önler (adres artık ayrıştırılmış).
  */
 export function makeDuplicateKey(result: CandidateResult): string {
   const phone = result.contacts.find((contact) => contact.type === "phone")?.value;
@@ -71,6 +73,9 @@ export function makeDuplicateKey(result: CandidateResult): string {
     if (domain !== "unknown") return `domain:${domain}`;
   }
   const name = asciiSlug(result.canonical_name ?? "");
+  if (result.postal_code) {
+    return `addr:${result.postal_code.trim()}|name:${name}`;
+  }
   const city = asciiSlug(result.city ?? "");
   return `name:${name}|city:${city}`;
 }

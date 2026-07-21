@@ -240,6 +240,29 @@ async function countCandidates(runtime: JobRuntime): Promise<number> {
   return count ?? 0;
 }
 
+// LLM prompt'u resmi Almanca yazımı zorluyor; bu, kaçan yaygın İngilizce/kısaltılmış
+// hallere karşı son güvenlik ağı (ör. sık şehir isimleri için).
+const CITY_ALIASES: Record<string, string> = {
+  cologne: "Köln",
+  munich: "München",
+  nuremberg: "Nürnberg",
+  frankfurt: "Frankfurt am Main",
+  hanover: "Hannover"
+};
+
+function normalizeCityName(city: string | null): string | null {
+  if (!city) return city;
+  const trimmed = city.trim();
+  const alias = CITY_ALIASES[trimmed.toLowerCase()];
+  return alias ?? trimmed;
+}
+
+/** street/house_number'dan görüntüleme amaçlı tek satır adres türetir (ham alanlar ayrı kalır). */
+function deriveAddressLine(street: string | null, houseNumber: string | null): string | null {
+  const parts = [street, houseNumber].filter((part): part is string => Boolean(part?.trim()));
+  return parts.length > 0 ? parts.join(" ") : null;
+}
+
 async function upsertCandidate(
   runtime: JobRuntime,
   sourceId: string,
@@ -248,30 +271,43 @@ async function upsertCandidate(
   sourceUrl: string
 ): Promise<string | null> {
   const job = runtime.job;
+  const normalizedCity = normalizeCityName(parsed.city ?? job.city);
+  const normalizedParsed: CandidateResult = { ...parsed, city: normalizedCity };
   const row = {
     job_id: job.id,
     primary_source_id: sourceId,
     canonical_name: parsed.canonical_name ?? "İsimsiz kayıt",
     profession_label: parsed.profession_label,
+    self_description: parsed.profession_label,
     organization_name: parsed.organization_name,
     role_key: parsed.role_key ?? job.role_key,
     item_type: parsed.item_type ?? job.item_type,
-    category_slug: parsed.category_slug ?? job.category_slug,
+    // category_slug artık LLM'den gelmiyor — job template'inin kategorisi tek doğru kaynak.
+    category_slug: job.category_slug,
     country_code: parsed.country_code ?? job.country_code,
     region: job.region,
-    city: parsed.city ?? job.city,
-    address_line: parsed.address_line,
+    city: normalizedCity,
+    street: parsed.street,
+    house_number: parsed.house_number,
+    postal_code: parsed.postal_code,
+    address_line: deriveAddressLine(parsed.street, parsed.house_number),
     languages: parsed.languages,
     services: parsed.services,
+    services_raw: parsed.services.map((label) => ({ label, source_url: sourceUrl })),
     contacts: parsed.contacts,
     website_url: parsed.website_url,
     appointment_url: parsed.appointment_url,
     source_urls: [sourceUrl],
     evidence: parsed.evidence_quotes.map((quote) => ({ quote, source_url: sourceUrl })),
-    normalized_payload: parsed,
-    duplicate_key: makeDuplicateKey(parsed),
+    self_statements: parsed.self_statements.map((statement) => ({
+      quote: statement.quote,
+      source_url: statement.source_url ?? sourceUrl
+    })),
+    normalized_payload: normalizedParsed,
+    duplicate_key: makeDuplicateKey(normalizedParsed),
     confidence_score: parsed.confidence_score,
     classifier_model: classifierModel,
+    scraped_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   };
   const { data, error } = await runtime.db

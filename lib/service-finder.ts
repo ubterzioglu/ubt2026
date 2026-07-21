@@ -8,13 +8,17 @@ import type {
   FinderContact,
   FinderJobStatus,
   FinderReviewStatus,
+  FinderSelfStatement,
+  FinderServiceEntry,
   FinderTemplateRow
 } from "@/lib/finder/types";
 
 export type {
   FinderJobStatus,
   FinderReviewStatus,
-  FinderContact
+  FinderContact,
+  FinderSelfStatement,
+  FinderServiceEntry
 } from "@/lib/finder/types";
 
 // ─── UI item tipleri ─────────────────────────────────────────────────────────
@@ -49,13 +53,18 @@ export interface FinderCandidateItem {
   categorySlug: string;
   city: string;
   addressLine: string;
+  street: string;
+  houseNumber: string;
+  postalCode: string;
   languages: string[];
   services: string[];
+  servicesRaw: FinderServiceEntry[];
   contacts: FinderContact[];
   websiteUrl: string;
   appointmentUrl: string;
   sourceUrls: string[];
   evidence: Array<{ quote: string; source_url?: string }>;
+  selfStatements: FinderSelfStatement[];
   confidenceScore: number;
   classifierModel: string;
   reviewStatus: FinderReviewStatus;
@@ -232,6 +241,8 @@ function toCandidateItem(
 ): FinderCandidateItem {
   const contactsRaw = Array.isArray(row.contacts) ? row.contacts : [];
   const evidenceRaw = Array.isArray(row.evidence) ? row.evidence : [];
+  const servicesRawRaw = Array.isArray(row.services_raw) ? row.services_raw : [];
+  const selfStatementsRaw = Array.isArray(row.self_statements) ? row.self_statements : [];
   return {
     id: row.id as string,
     jobId: row.job_id as string,
@@ -242,13 +253,18 @@ function toCandidateItem(
     categorySlug: (row.category_slug as string | null) ?? "",
     city: (row.city as string | null) ?? "",
     addressLine: (row.address_line as string | null) ?? "",
+    street: (row.street as string | null) ?? "",
+    houseNumber: (row.house_number as string | null) ?? "",
+    postalCode: (row.postal_code as string | null) ?? "",
     languages: asStringArray(row.languages),
     services: asStringArray(row.services),
+    servicesRaw: servicesRawRaw as FinderServiceEntry[],
     contacts: contactsRaw as FinderContact[],
     websiteUrl: (row.website_url as string | null) ?? "",
     appointmentUrl: (row.appointment_url as string | null) ?? "",
     sourceUrls: asStringArray(row.source_urls),
     evidence: evidenceRaw as Array<{ quote: string; source_url?: string }>,
+    selfStatements: selfStatementsRaw as FinderSelfStatement[],
     confidenceScore: Number(row.confidence_score ?? 0),
     classifierModel: (row.classifier_model as string | null) ?? "",
     reviewStatus: normalizeFinderReviewStatus(String(row.review_status ?? "pending")),

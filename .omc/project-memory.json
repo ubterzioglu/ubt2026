@@ -256,16 +256,16 @@
   },
   "hotPaths": [
     {
+      "path": "lib\\service-finder.ts",
+      "accessCount": 13,
+      "lastAccessed": 1784633474597,
+      "type": "directory"
+    },
+    {
       "path": "app\\detrbridge\\page.tsx",
       "accessCount": 10,
       "lastAccessed": 1784631688844,
       "type": "file"
-    },
-    {
-      "path": "lib\\service-finder.ts",
-      "accessCount": 9,
-      "lastAccessed": 1784631196740,
-      "type": "directory"
     },
     {
       "path": "app\\dm\\_components\\dm-nav.tsx",
@@ -286,10 +286,28 @@
       "type": "file"
     },
     {
+      "path": "lib\\finder\\validate.ts",
+      "accessCount": 4,
+      "lastAccessed": 1784633349268,
+      "type": "file"
+    },
+    {
       "path": "app\\dm\\page.tsx",
       "accessCount": 3,
       "lastAccessed": 1784631274821,
       "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\filter-bar.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1784632933361,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\run-job.ts",
+      "accessCount": 3,
+      "lastAccessed": 1784633422755,
+      "type": "directory"
     },
     {
       "path": "lib\\detrbridge-logos.ts",
@@ -304,16 +322,46 @@
       "type": "file"
     },
     {
+      "path": "lib\\finder\\types.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784633265536,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\prompts.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784633310204,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\dedupe.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784633376439,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\rapor\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784633505356,
+      "type": "file"
+    },
+    {
+      "path": "app\\dm\\_components\\scraper\\job-detail-section.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784633521859,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260721100000_restructure_finder_candidates.sql",
+      "accessCount": 2,
+      "lastAccessed": 1784633683914,
+      "type": "file"
+    },
+    {
       "path": "app\\dm",
       "accessCount": 1,
       "lastAccessed": 1784630809588,
       "type": "directory"
-    },
-    {
-      "path": "app\\dm\\_components\\scraper\\job-detail-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784631118195,
-      "type": "file"
     },
     {
       "path": "app\\dm\\_components\\theme.ts",
@@ -340,18 +388,6 @@
       "type": "file"
     },
     {
-      "path": "app\\dm\\rapor\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784631310444,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\filter-bar.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784631342556,
-      "type": "file"
-    },
-    {
       "path": "lib\\admin-auth.ts",
       "accessCount": 1,
       "lastAccessed": 1784631411656,
@@ -361,6 +397,36 @@
       "path": "scripts\\dev-verify-rapor-query.ts",
       "accessCount": 1,
       "lastAccessed": 1784631442593,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260707130000_create_service_finder_module.sql",
+      "accessCount": 1,
+      "lastAccessed": 1784632918791,
+      "type": "directory"
+    },
+    {
+      "path": "lib\\finder\\queries.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784632936805,
+      "type": "file"
+    },
+    {
+      "path": "app",
+      "accessCount": 1,
+      "lastAccessed": 1784632946597,
+      "type": "directory"
+    },
+    {
+      "path": "scripts\\dev-verify-new-schema.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784633763570,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\dev-verify-db-write.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784633822073,
       "type": "file"
     }
   ],

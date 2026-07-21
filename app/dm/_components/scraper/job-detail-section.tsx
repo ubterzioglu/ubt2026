@@ -232,20 +232,42 @@ export function JobDetailSection({
                       <p className="mt-0.5 text-[11px] text-white/40">
                         {[
                           candidate.categorySlug,
-                          candidate.city,
-                          candidate.addressLine,
-                          candidate.languages.join("/"),
-                          candidate.services.slice(0, 5).join(", ")
+                          [candidate.street, candidate.houseNumber].filter(Boolean).join(" ") ||
+                            candidate.addressLine,
+                          [candidate.postalCode, candidate.city].filter(Boolean).join(" "),
+                          candidate.languages.join("/")
                         ]
                           .filter(Boolean)
                           .join(" · ")}
                       </p>
+                      {candidate.services.length > 0 ? (
+                        <p className="mt-0.5 text-[11px] text-white/45">
+                          {candidate.services.slice(0, 8).join(", ")}
+                        </p>
+                      ) : null}
                       {candidate.contacts.length > 0 ? (
                         <p className="mt-0.5 text-[11px] text-white/50">
                           {candidate.contacts
                             .map((contact) => `${contact.type}: ${contact.value}`)
                             .join(" · ")}
                         </p>
+                      ) : null}
+                      {candidate.selfStatements.length > 0 ? (
+                        <details className="mt-1">
+                          <summary className="cursor-pointer text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-200/60 hover:text-amber-200/90">
+                            Öz-tanım ({candidate.selfStatements.length})
+                          </summary>
+                          <ul className="mt-1 space-y-1">
+                            {candidate.selfStatements.map((entry, index) => (
+                              <li
+                                key={index}
+                                className="rounded-[0.6rem] border border-amber-400/[0.12] bg-amber-400/[0.04] px-2.5 py-1.5 text-[11px] italic leading-4 text-amber-100/70"
+                              >
+                                “{entry.quote}”
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
                       ) : null}
                       {candidate.evidence.length > 0 ? (
                         <details className="mt-1">
