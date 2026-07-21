@@ -42,6 +42,7 @@ export interface FinderJobListItem {
 export interface FinderCandidateItem {
   id: string;
   jobId: string;
+  jobTitle: string;
   canonicalName: string;
   professionLabel: string;
   organizationName: string;
@@ -225,12 +226,16 @@ function asStringArray(value: unknown): string[] {
   return value.filter((entry): entry is string => typeof entry === "string");
 }
 
-function toCandidateItem(row: Record<string, unknown>): FinderCandidateItem {
+function toCandidateItem(
+  row: Record<string, unknown>,
+  jobTitle = ""
+): FinderCandidateItem {
   const contactsRaw = Array.isArray(row.contacts) ? row.contacts : [];
   const evidenceRaw = Array.isArray(row.evidence) ? row.evidence : [];
   return {
     id: row.id as string,
     jobId: row.job_id as string,
+    jobTitle,
     canonicalName: (row.canonical_name as string | null) ?? "",
     professionLabel: (row.profession_label as string | null) ?? "",
     organizationName: (row.organization_name as string | null) ?? "",
@@ -275,6 +280,45 @@ export async function getFinderJobsAdmin(
     const { data, error } = await query;
     if (error) throw error;
     return (data ?? []).map((row) => toJobListItem(row as Record<string, unknown>));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Tüm işlerden, iş sınırı olmadan tüm adayları tek liste halinde döner —
+ * `/dm/rapor` sayfasının tam-genişlik satır listesi için.
+ */
+export async function getAllFinderCandidatesAdmin(): Promise<FinderCandidateItem[]> {
+  const supabase = createServiceClient();
+  if (!supabase) return [];
+  try {
+    const { data: candidateRows, error: candidateError } = await supabase
+      .from("service_finder_candidates")
+      .select("*")
+      .order("city", { ascending: true })
+      .order("confidence_score", { ascending: false })
+      .limit(5000);
+    if (candidateError) throw candidateError;
+
+    const jobIds = Array.from(
+      new Set((candidateRows ?? []).map((row) => row.job_id as string))
+    );
+    const { data: jobRows, error: jobError } = await supabase
+      .from("service_finder_jobs")
+      .select("id, title")
+      .in("id", jobIds.length > 0 ? jobIds : ["00000000-0000-0000-0000-000000000000"]);
+    if (jobError) throw jobError;
+    const titleById = new Map(
+      (jobRows ?? []).map((row) => [row.id as string, (row.title as string | null) ?? ""])
+    );
+
+    return (candidateRows ?? []).map((row) =>
+      toCandidateItem(
+        row as Record<string, unknown>,
+        titleById.get(row.job_id as string) ?? ""
+      )
+    );
   } catch {
     return [];
   }

@@ -1,11 +1,13 @@
 import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
 
-export type DmTabKey = "tasks" | "findings" | "social" | "info" | "scraper";
+export type DmTabKey = "tasks" | "findings" | "social" | "info" | "scraper" | "rapor";
 
 export interface DmNavItem {
   key: DmTabKey;
   label: string;
   count?: number;
+  /** Bağımsız bir route'a gider (ör. /dm/rapor) — verilmezse /dm?tab=key kullanılır. */
+  href?: string;
 }
 
 interface DmNavProps {
@@ -117,7 +119,7 @@ export function DmNav({
             return (
               <a
                 key={item.key}
-                href={`/dm?tab=${item.key}`}
+                href={item.href ?? `/dm?tab=${item.key}`}
                 className={`flex shrink-0 items-center gap-2 rounded-[1.1rem] px-4 py-2.5 text-xs font-semibold tracking-tight transition ${
                   isActive
                     ? "text-white shadow-[0_10px_30px_-10px_rgba(255,45,149,0.7)] ring-1 ring-inset ring-white/15"
@@ -151,7 +153,7 @@ export function DmNav({
               return (
                 <a
                   key={item.key}
-                  href={`/dm?tab=${item.key}`}
+                  href={item.href ?? `/dm?tab=${item.key}`}
                   className={`relative flex items-center justify-between gap-2 rounded-[1rem] px-3.5 py-2.5 text-[13px] font-semibold tracking-tight transition ${
                     isActive
                       ? "text-white shadow-[0_10px_30px_-10px_rgba(255,45,149,0.7)] ring-1 ring-inset ring-white/15"

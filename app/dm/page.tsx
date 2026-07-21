@@ -169,6 +169,10 @@ const SECTION_META: Record<DmTabKey, { title: string; description: string }> = {
     title: "Service Finder",
     description:
       "Kategori + şehir bazlı mekan taraması — Tavily · SerpAPI · Gemini."
+  },
+  rapor: {
+    title: "Rapor",
+    description: "Taranan tüm mekanların tam listesi — bağımsız sayfa."
   }
 };
 
@@ -581,7 +585,8 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             },
             { key: "social", label: "İçerik", count: allSocialPosts.length },
             { key: "info", label: "Önemli bilgiler", count: 6 },
-            { key: "scraper", label: "Scraper" }
+            { key: "scraper", label: "Scraper" },
+            { key: "rapor", label: "Rapor", href: "/dm/rapor" }
           ]}
           cardClass={cardClass}
           cardInnerClass={cardInnerClass}
