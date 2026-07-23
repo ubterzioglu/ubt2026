@@ -572,8 +572,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
         style={{ background: "rgba(168,85,247,0.16)" }}
       />
 
-      <div className="animate-reveal mx-auto w-full max-w-[88rem] lg:grid lg:grid-cols-[250px_minmax(0,1fr)] lg:items-start lg:gap-6">
-        {/* Left navigation — sidebar on desktop, top bar + strip on mobile */}
+      <div className="animate-reveal mx-auto flex w-full max-w-[88rem] flex-col gap-5">
         <DmNav
           activeTab={activeTab}
           items={[
@@ -593,8 +592,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
           signOutAction={tasksSignOutAction}
         />
 
-        {/* Content column */}
-        <div className="mt-5 flex min-w-0 flex-col gap-5 lg:mt-0">
+        <div className="flex min-w-0 flex-col gap-5">
           {/* Active section header */}
           <section className={cardClass}>
             <div className={`${cardInnerClass} px-5 py-4 sm:px-6`}>

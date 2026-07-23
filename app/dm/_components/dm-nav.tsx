@@ -203,7 +203,7 @@ export function DmNav({
   cardClass,
   cardInnerClass,
   signOutAction,
-  desktopLayout = "sidebar"
+  desktopLayout = "topbar"
 }: DmNavProps) {
   return (
     <div
