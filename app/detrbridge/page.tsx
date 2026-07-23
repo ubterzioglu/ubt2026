@@ -438,7 +438,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
         style={DETRBRIDGE_GRID_TEXTURE}
       />
 
-      <div className="mx-auto grid w-full max-w-6xl gap-5 lg:grid-cols-[260px_1fr]">
+      <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5">
         <BridgeNav
           activeTab={activeTab}
           items={NAV_ITEMS}

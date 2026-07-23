@@ -74,11 +74,10 @@ function countBadge(isActive: boolean): string {
 }
 
 /**
- * `/detrbridge` navigation. Desktop (lg+): sticky left sidebar with brand
- * block, vertical menu and sign-out. Mobile: compact top bar plus a
- * horizontally scrollable tab strip. Plain links (?tab=) — no client JS
- * needed. Items: "Logo Seçimi" and "Giriş Logları"; adding another panel
- * later means extending BridgeTabKey and this items list, nothing structural.
+ * `/detrbridge` navigation. A single sticky top bar on every breakpoint:
+ * brand block, a horizontally scrollable tab strip, then secure badge +
+ * sign-out. Plain links (?tab=) — no client JS needed. Adding another panel
+ * later means extending BridgeTabKey and the items list, nothing structural.
  */
 export function BridgeNav({
   activeTab,
@@ -88,30 +87,13 @@ export function BridgeNav({
   signOutAction
 }: BridgeNavProps) {
   return (
-    <aside className="flex flex-col gap-3 lg:sticky lg:top-8 lg:self-start">
-      <div className={`lg:hidden ${cardClass}`}>
-        <div
-          className={`${cardInnerClass} flex items-center justify-between gap-3 px-4 py-3`}
-        >
-          <BrandBlock compact />
-          <div className="flex items-center gap-2">
-            <SecureBadge />
-            <form action={signOutAction}>
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:text-rose-300"
-              >
-                Çıkış
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
+    <header className={`sticky top-0 z-20 ${cardClass}`}>
+      <div
+        className={`${cardInnerClass} flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5`}
+      >
+        <BrandBlock compact />
 
-      <nav className={`lg:hidden ${cardClass}`}>
-        <div
-          className={`${cardInnerClass} flex gap-1.5 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
-        >
+        <nav className="order-3 flex min-w-0 flex-1 gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] sm:order-none [&::-webkit-scrollbar]:hidden">
           {items.map((item) => {
             const isActive = activeTab === item.key;
             return (
@@ -134,64 +116,20 @@ export function BridgeNav({
               </a>
             );
           })}
-        </div>
-      </nav>
+        </nav>
 
-      <div className={`hidden lg:block ${cardClass}`}>
-        <div className={`${cardInnerClass} flex flex-col p-4`}>
-          <div className="px-1 pb-4">
-            <BrandBlock />
-          </div>
-          <div className="border-t border-white/[0.06]" />
-
-          <nav className="flex flex-col gap-1 py-3">
-            {items.map((item) => {
-              const isActive = activeTab === item.key;
-              return (
-                <a
-                  key={item.key}
-                  href={`/detrbridge?tab=${item.key}`}
-                  className={`relative flex items-center justify-between gap-2 rounded-[1rem] px-3.5 py-2.5 text-[13px] font-semibold tracking-tight transition ${
-                    isActive
-                      ? "text-white shadow-[0_10px_30px_-10px_rgba(30,58,138,0.7)] ring-1 ring-inset ring-white/15"
-                      : "text-white/55 hover:bg-white/[0.04] hover:text-white"
-                  }`}
-                  style={
-                    isActive ? { backgroundImage: DETRBRIDGE_BRAND_GRADIENT } : undefined
-                  }
-                >
-                  {isActive ? (
-                    <span
-                      aria-hidden
-                      className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-white/85 shadow-[0_0_8px_rgba(255,255,255,0.7)]"
-                    />
-                  ) : null}
-                  <span className={isActive ? "pl-2" : undefined}>
-                    {item.label}
-                  </span>
-                  {item.count !== undefined ? (
-                    <span className={countBadge(isActive)}>{item.count}</span>
-                  ) : null}
-                </a>
-              );
-            })}
-          </nav>
-
-          <div className="mt-auto border-t border-white/[0.06] pt-3">
-            <div className="flex items-center justify-between gap-2 px-1">
-              <SecureBadge />
-            </div>
-            <form action={signOutAction} className="mt-3">
-              <button
-                type="submit"
-                className="inline-flex w-full items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white/80 transition hover:border-rose-400/40 hover:text-rose-300"
-              >
-                Çıkış yap
-              </button>
-            </form>
-          </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <SecureBadge />
+          <form action={signOutAction}>
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:text-rose-300"
+            >
+              Çıkış
+            </button>
+          </form>
         </div>
       </div>
-    </aside>
+    </header>
   );
 }

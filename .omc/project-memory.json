@@ -259,14 +259,20 @@
   "hotPaths": [
     {
       "path": "app\\detrbridge\\_components\\domains-tab.tsx",
-      "accessCount": 22,
-      "lastAccessed": 1784800766216,
+      "accessCount": 26,
+      "lastAccessed": 1784801265387,
       "type": "file"
     },
     {
       "path": "lib\\detrbridge-domains.ts",
       "accessCount": 17,
       "lastAccessed": 1784800654614,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\page.tsx",
+      "accessCount": 9,
+      "lastAccessed": 1784801257258,
       "type": "file"
     },
     {
@@ -285,12 +291,6 @@
       "path": "lib\\detrbridge-logos.ts",
       "accessCount": 6,
       "lastAccessed": 1784800982196,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1784801103135,
       "type": "file"
     },
     {
@@ -324,6 +324,18 @@
       "type": "directory"
     },
     {
+      "path": "app\\detrbridge\\_components\\theme.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784801219540,
+      "type": "directory"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\bridge-nav.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784801248135,
+      "type": "file"
+    },
+    {
       "path": "app\\detrbridge\\_actions.ts",
       "accessCount": 1,
       "lastAccessed": 1784798829027,
@@ -352,12 +364,6 @@
       "accessCount": 1,
       "lastAccessed": 1784800608315,
       "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\theme.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784801033549,
-      "type": "directory"
     }
   ],
   "userDirectives": []

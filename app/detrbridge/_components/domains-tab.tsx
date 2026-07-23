@@ -98,20 +98,34 @@ function PriceBlock({
   );
 }
 
-/** Per-voter breakdown, e.g. "Sefa: 8/10 · Murat: 6/10". */
+/** The fixed panel of eligible voters, shown on every domain regardless of vote status. */
+const DETRBRIDGE_VOTERS = ["Sefa", "Sümeyye", "Fatih", "UBT", "Şahin", "Murat", "Aslıhan"];
+
+/**
+ * Full voter roster per domain: everyone who voted shows green with their
+ * rating, everyone who hasn't yet shows red. Matching is case-insensitive
+ * so minor casing differences in stored names don't hide a vote.
+ */
 function VotesList({ votes }: { votes: DetrbridgeVoteEntry[] }) {
-  if (votes.length === 0) return null;
+  const voteByLowerName = new Map(votes.map((vote) => [vote.voterName.trim().toLowerCase(), vote]));
   return (
     <div className="flex flex-wrap gap-1.5 border-t border-white/[0.06] pt-2">
-      {votes.map((vote) => (
-        <span
-          key={vote.voterName}
-          className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] font-medium text-white/60"
-        >
-          {vote.voterName}
-          <span className="font-bold text-white/85">{vote.rating}</span>
-        </span>
-      ))}
+      {DETRBRIDGE_VOTERS.map((voter) => {
+        const vote = voteByLowerName.get(voter.toLowerCase());
+        return (
+          <span
+            key={voter}
+            className={
+              vote
+                ? "inline-flex items-center gap-1 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[11px] font-medium text-emerald-300"
+                : "inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2 py-0.5 text-[11px] font-medium text-rose-300/80"
+            }
+          >
+            {voter}
+            {vote ? <span className="font-bold text-emerald-100">{vote.rating}</span> : null}
+          </span>
+        );
+      })}
     </div>
   );
 }
@@ -422,11 +436,9 @@ function DomainRow({ domain, voteAction, selectAction, deleteAction }: DomainRow
         </div>
       </div>
 
-      {domain.votes.length > 0 ? (
-        <div className="border-t border-white/[0.06] px-4 py-2">
-          <VotesList votes={domain.votes} />
-        </div>
-      ) : null}
+      <div className="border-t border-white/[0.06] px-4 py-2">
+        <VotesList votes={domain.votes} />
+      </div>
     </article>
   );
 }
