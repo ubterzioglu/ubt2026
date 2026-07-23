@@ -87,7 +87,7 @@ export default async function DmRaporPage() {
         style={{ background: "rgba(34,211,238,0.18)" }}
       />
 
-      <div className="animate-reveal mx-auto w-full max-w-[88rem] lg:grid lg:grid-cols-[250px_minmax(0,1fr)] lg:items-start lg:gap-6">
+      <div className="animate-reveal mx-auto flex w-full max-w-[88rem] flex-col gap-5">
         <DmNav
           activeTab="rapor"
           items={[
@@ -101,9 +101,10 @@ export default async function DmRaporPage() {
           cardClass={cardClass}
           cardInnerClass={cardInnerClass}
           signOutAction={tasksSignOutAction}
+          desktopLayout="topbar"
         />
 
-        <div className="mt-5 flex min-w-0 flex-col gap-5 lg:mt-0">
+        <div className="flex min-w-0 flex-col gap-5">
           {/* Başlık */}
           <section className={cardClass}>
             <div className={`${cardInnerClass} px-5 py-4 sm:px-6`}>
