@@ -351,7 +351,7 @@ interface DomainRowProps {
 function DomainRow({ domain, voteAction, selectAction, deleteAction }: DomainRowProps) {
   return (
     <article
-      className={`rounded-[1rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
+      className={`relative z-0 rounded-[1rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 has-[details[open]]:z-10 ${
         domain.isSelected ? "border-emerald-400/40" : "border-white/10"
       }`}
     >

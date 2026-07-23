@@ -259,8 +259,8 @@
   "hotPaths": [
     {
       "path": "app\\detrbridge\\_components\\domains-tab.tsx",
-      "accessCount": 26,
-      "lastAccessed": 1784801265387,
+      "accessCount": 27,
+      "lastAccessed": 1784801276455,
       "type": "file"
     },
     {
@@ -363,6 +363,12 @@
       "path": "supabase\\migrations\\20260723100000_add_renewal_price_to_detrbridge_domains.sql",
       "accessCount": 1,
       "lastAccessed": 1784800608315,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 1,
+      "lastAccessed": 1784801282018,
       "type": "file"
     }
   ],
