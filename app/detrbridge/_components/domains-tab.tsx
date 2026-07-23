@@ -305,72 +305,107 @@ export function DomainsTab({
 
           <VoterTallyCard domains={allDomains} />
 
-          <form action={createAction} className="mt-4 space-y-4">
-            <label className="block">
-              <span className={formLabel}>
-                Domain adı <span style={{ color: DETRBRIDGE_GOLD }}>*</span>
-              </span>
-              <input
-                type="text"
-                name="domainName"
-                required
-                minLength={3}
-                maxLength={200}
-                placeholder="örnek: corteqs.com"
-                className={darkInput}
-              />
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              <label className="block">
-                <span className={formLabel}>Yıllık fiyat (indirimli)</span>
-                <input
-                  type="number"
-                  name="priceYearly"
-                  step="0.01"
-                  min="0"
-                  placeholder="örnek: 7.43"
-                  className={darkInput}
-                />
-              </label>
-              <label className="block">
-                <span className={formLabel}>Retail yıllık fiyat</span>
-                <input
-                  type="number"
-                  name="retailPriceYearly"
-                  step="0.01"
-                  min="0"
-                  placeholder="örnek: 12.69"
-                  className={darkInput}
-                />
-              </label>
-            </div>
-            <label className="block">
-              <span className={formLabel}>Yenileme fiyatı (yıllık)</span>
-              <input
-                type="number"
-                name="renewalPriceYearly"
-                step="0.01"
-                min="0"
-                placeholder="örnek: 58.62"
-                className={darkInput}
-              />
-            </label>
-            <label className="block">
-              <span className={formLabel}>Para birimi</span>
-              <select name="priceCurrency" defaultValue="EUR" className={darkInput}>
-                <option value="EUR">EUR (€)</option>
-                <option value="USD">USD ($)</option>
-                <option value="TRY">TRY (₺)</option>
-              </select>
-            </label>
-            <button
-              type="submit"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-[0.9rem] px-6 py-2.5 text-[13px] font-bold tracking-tight text-black shadow-[0_12px_40px_-8px_rgba(30,58,138,0.5)] ring-1 ring-inset ring-white/15 transition hover:shadow-[0_16px_50px_-8px_rgba(245,183,0,0.6)]"
-              style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
-            >
+          <details className="group/upload mt-3 overflow-hidden rounded-[1rem] border border-emerald-400/40 bg-emerald-400/[0.08] shadow-[0_0_0_1px_rgba(52,211,153,0.15)]">
+            <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-emerald-300 transition hover:text-emerald-200 [&::-webkit-details-marker]:hidden">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 3v12" />
+                <path d="m7 8 5-5 5 5" />
+                <path d="M5 21h14" />
+              </svg>
               Domain öner
-            </button>
-          </form>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="ml-auto text-emerald-300/70 transition-transform duration-200 group-open/upload:rotate-180"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </summary>
+            <form
+              action={createAction}
+              className="space-y-4 border-t border-emerald-400/20 px-4 py-4"
+            >
+              <label className="block">
+                <span className={formLabel}>
+                  Domain adı <span style={{ color: DETRBRIDGE_GOLD }}>*</span>
+                </span>
+                <input
+                  type="text"
+                  name="domainName"
+                  required
+                  minLength={3}
+                  maxLength={200}
+                  placeholder="örnek: corteqs.com"
+                  className={darkInput}
+                />
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="block">
+                  <span className={formLabel}>Yıllık fiyat (indirimli)</span>
+                  <input
+                    type="number"
+                    name="priceYearly"
+                    step="0.01"
+                    min="0"
+                    placeholder="örnek: 7.43"
+                    className={darkInput}
+                  />
+                </label>
+                <label className="block">
+                  <span className={formLabel}>Retail yıllık fiyat</span>
+                  <input
+                    type="number"
+                    name="retailPriceYearly"
+                    step="0.01"
+                    min="0"
+                    placeholder="örnek: 12.69"
+                    className={darkInput}
+                  />
+                </label>
+              </div>
+              <label className="block">
+                <span className={formLabel}>Yenileme fiyatı (yıllık)</span>
+                <input
+                  type="number"
+                  name="renewalPriceYearly"
+                  step="0.01"
+                  min="0"
+                  placeholder="örnek: 58.62"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className={formLabel}>Para birimi</span>
+                <select name="priceCurrency" defaultValue="EUR" className={darkInput}>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="USD">USD ($)</option>
+                  <option value="TRY">TRY (₺)</option>
+                </select>
+              </label>
+              <button
+                type="submit"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-[0.9rem] px-6 py-2.5 text-[13px] font-bold tracking-tight text-black shadow-[0_12px_40px_-8px_rgba(30,58,138,0.5)] ring-1 ring-inset ring-white/15 transition hover:shadow-[0_16px_50px_-8px_rgba(245,183,0,0.6)]"
+                style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
+              >
+                Domain öner
+              </button>
+            </form>
+          </details>
         </div>
       </section>
 
