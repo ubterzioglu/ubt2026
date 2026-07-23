@@ -351,7 +351,7 @@ interface DomainRowProps {
 function DomainRow({ domain, voteAction, selectAction, deleteAction }: DomainRowProps) {
   return (
     <article
-      className={`relative z-0 rounded-[1rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 has-[details[open]]:z-10 ${
+      className={`rounded-[1rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
         domain.isSelected ? "border-emerald-400/40" : "border-white/10"
       }`}
     >
@@ -412,28 +412,21 @@ function DomainRow({ domain, voteAction, selectAction, deleteAction }: DomainRow
               Sil
             </button>
           </form>
-          <details className="group/vote relative">
-            <summary className="flex h-8 cursor-pointer list-none items-center justify-center rounded-full px-3 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15 [&::-webkit-details-marker]:hidden"
-              style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
-            >
-              Oyla
-            </summary>
-            <form
-              action={voteAction}
-              className="absolute right-0 top-[calc(100%+0.5rem)] z-10 flex w-max flex-col gap-2 rounded-[0.9rem] border border-white/10 bg-[#14151c] p-3 shadow-2xl"
-            >
-              <input type="hidden" name="domainId" value={domain.id} />
-              <NumberPicker name="rating" defaultValue={5} min={1} max={10} />
-              <button
-                type="submit"
-                className="inline-flex h-8 items-center justify-center rounded-[0.6rem] px-4 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15"
-                style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
-              >
-                Onayla
-              </button>
-            </form>
-          </details>
         </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3 border-t border-white/[0.06] px-4 py-2.5">
+        <form action={voteAction} className="flex flex-wrap items-center gap-2">
+          <input type="hidden" name="domainId" value={domain.id} />
+          <NumberPicker name="rating" defaultValue={5} min={1} max={10} />
+          <button
+            type="submit"
+            className="inline-flex h-8 shrink-0 items-center justify-center rounded-[0.6rem] px-4 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15"
+            style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
+          >
+            Oyla
+          </button>
+        </form>
       </div>
 
       <div className="border-t border-white/[0.06] px-4 py-2">

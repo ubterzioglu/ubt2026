@@ -259,8 +259,8 @@
   "hotPaths": [
     {
       "path": "app\\detrbridge\\_components\\domains-tab.tsx",
-      "accessCount": 27,
-      "lastAccessed": 1784801276455,
+      "accessCount": 30,
+      "lastAccessed": 1784801551493,
       "type": "file"
     },
     {
@@ -294,9 +294,21 @@
       "type": "file"
     },
     {
+      "path": "app\\detrbridge\\_components\\number-picker.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1784801551838,
+      "type": "file"
+    },
+    {
       "path": "app",
       "accessCount": 3,
       "lastAccessed": 1784799238246,
+      "type": "directory"
+    },
+    {
+      "path": "app\\detrbridge",
+      "accessCount": 3,
+      "lastAccessed": 1784801578964,
       "type": "directory"
     },
     {
@@ -306,22 +318,10 @@
       "type": "directory"
     },
     {
-      "path": "app\\detrbridge\\_components\\number-picker.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784799989145,
-      "type": "file"
-    },
-    {
       "path": "supabase\\migrations\\20260723090000_add_pricing_to_detrbridge_domains.sql",
       "accessCount": 2,
       "lastAccessed": 1784800046662,
       "type": "file"
-    },
-    {
-      "path": "app\\detrbridge",
-      "accessCount": 2,
-      "lastAccessed": 1784801095129,
-      "type": "directory"
     },
     {
       "path": "app\\detrbridge\\_components\\theme.ts",
