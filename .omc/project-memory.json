@@ -283,8 +283,8 @@
     },
     {
       "path": "",
-      "accessCount": 9,
-      "lastAccessed": 1784803067898,
+      "accessCount": 10,
+      "lastAccessed": 1784816202412,
       "type": "directory"
     },
     {
@@ -328,6 +328,12 @@
       "accessCount": 3,
       "lastAccessed": 1784799238246,
       "type": "directory"
+    },
+    {
+      "path": "app\\admin\\page.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1784816220407,
+      "type": "file"
     },
     {
       "path": "supabase\\migrations\\20260723090000_add_pricing_to_detrbridge_domains.sql",
@@ -429,6 +435,18 @@
       "path": "app\\detrbridge\\_components\\welcome-card.tsx",
       "accessCount": 1,
       "lastAccessed": 1784803606289,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\_components\\admin-gate.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784816162476,
+      "type": "file"
+    },
+    {
+      "path": "app\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784816200407,
       "type": "file"
     }
   ],
