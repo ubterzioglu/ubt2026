@@ -258,9 +258,15 @@
   },
   "hotPaths": [
     {
+      "path": "app\\detrbridge\\_components\\domains-tab.tsx",
+      "accessCount": 22,
+      "lastAccessed": 1784800766216,
+      "type": "file"
+    },
+    {
       "path": "lib\\detrbridge-domains.ts",
-      "accessCount": 7,
-      "lastAccessed": 1784799776750,
+      "accessCount": 17,
+      "lastAccessed": 1784800654614,
       "type": "file"
     },
     {
@@ -270,9 +276,15 @@
       "type": "directory"
     },
     {
-      "path": "app\\detrbridge\\_components\\domains-tab.tsx",
+      "path": "lib\\detrbridge-logos.ts",
       "accessCount": 5,
-      "lastAccessed": 1784799795425,
+      "lastAccessed": 1784799945915,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1784800776245,
       "type": "file"
     },
     {
@@ -283,8 +295,8 @@
     },
     {
       "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784799309914,
+      "accessCount": 3,
+      "lastAccessed": 1784800663589,
       "type": "file"
     },
     {
@@ -292,6 +304,18 @@
       "accessCount": 2,
       "lastAccessed": 1784799914502,
       "type": "directory"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\number-picker.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784799989145,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260723090000_add_pricing_to_detrbridge_domains.sql",
+      "accessCount": 2,
+      "lastAccessed": 1784800046662,
+      "type": "file"
     },
     {
       "path": "app\\detrbridge",
@@ -318,21 +342,15 @@
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260723090000_add_pricing_to_detrbridge_domains.sql",
+      "path": "supabase\\migrations\\20260719190000_drop_detr_legacy.sql",
       "accessCount": 1,
-      "lastAccessed": 1784799152218,
+      "lastAccessed": 1784800169660,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_components\\number-picker.tsx",
+      "path": "supabase\\migrations\\20260723100000_add_renewal_price_to_detrbridge_domains.sql",
       "accessCount": 1,
-      "lastAccessed": 1784799900249,
-      "type": "file"
-    },
-    {
-      "path": "lib\\detrbridge-logos.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784799900507,
+      "lastAccessed": 1784800608315,
       "type": "file"
     }
   ],

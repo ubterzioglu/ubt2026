@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd c:/temp_private/ubt2026 && grep -r \\\"ubterzioglu\\\" --include=\\\"*.json\\\" -l 2>/dev/null | head -5; echo \\\"---\\\"; cat vercel.json 2>/dev/null; echo \\\"---package---\\\"; grep -A2 '\\\"scripts\\...",
-  "error": "Exit code 1\nsupabase/.temp/linked-project.json\n---\n---package---\n  \"scripts\": {\n    \"dev\": \"next dev\",\n    \"build\": \"next build\",\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-841f-cwd: No such file or directory",
-  "timestamp": "2026-07-23T09:44:52.194Z",
-  "retry_count": 1
+  "tool_input_preview": "{\"command\":\"cd c:/temp_private/ubt2026 && git push origin main 2>&1\",\"description\":\"Push commit to origin/main\"}",
+  "error": "Exit code 1\nTo https://github.com/ubterzioglu/ubt2026.git\n   82b2051..658ec98  main -> main\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-f57f-cwd: No such file or directory",
+  "timestamp": "2026-07-23T10:00:14.499Z",
+  "retry_count": 4
 }
