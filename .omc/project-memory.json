@@ -370,6 +370,18 @@
       "accessCount": 1,
       "lastAccessed": 1784801282018,
       "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784801702912,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\password-field.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784801706560,
+      "type": "file"
     }
   ],
   "userDirectives": []
