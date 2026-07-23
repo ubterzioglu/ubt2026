@@ -102,8 +102,8 @@ function VoterTallyCard({ logos }: { logos: DetrbridgeLogo[] }) {
   })).sort((a, b) => b.count - a.count);
 
   return (
-    <details className="group/tally mt-3 overflow-hidden rounded-[1rem] border border-white/10 bg-white/[0.03]">
-      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-white/70 transition hover:text-white [&::-webkit-details-marker]:hidden">
+    <details className="group/tally mt-3 overflow-hidden rounded-[1rem] border border-emerald-400/40 bg-emerald-400/[0.08] shadow-[0_0_0_1px_rgba(52,211,153,0.15)]">
+      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-emerald-300 transition hover:text-emerald-200 [&::-webkit-details-marker]:hidden">
         <svg
           width="14"
           height="14"
@@ -126,12 +126,12 @@ function VoterTallyCard({ logos }: { logos: DetrbridgeLogo[] }) {
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="ml-auto text-white/40 transition-transform duration-200 group-open/tally:rotate-180"
+          className="ml-auto text-emerald-300/70 transition-transform duration-200 group-open/tally:rotate-180"
         >
           <path d="m6 9 6 6 6-6" />
         </svg>
       </summary>
-      <div className="flex flex-wrap gap-1.5 border-t border-white/[0.06] px-4 py-3">
+      <div className="flex flex-wrap gap-1.5 border-t border-emerald-400/20 px-4 py-3">
         {tally.map(({ voter, count }) => (
           <span
             key={voter}
@@ -182,8 +182,8 @@ export function LogosTab({
             Yeni logo ekle
           </h2>
 
-          <details className="group/guide mt-3 overflow-hidden rounded-[1rem] border border-rose-400/40 bg-rose-400/[0.08] shadow-[0_0_0_1px_rgba(251,113,133,0.15)]">
-            <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-rose-300 transition hover:text-rose-200 [&::-webkit-details-marker]:hidden">
+          <details className="group/guide mt-3 overflow-hidden rounded-[1rem] border border-emerald-400/40 bg-emerald-400/[0.08] shadow-[0_0_0_1px_rgba(52,211,153,0.15)]">
+            <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-emerald-300 transition hover:text-emerald-200 [&::-webkit-details-marker]:hidden">
               <svg
                 width="14"
                 height="14"
@@ -208,12 +208,12 @@ export function LogosTab({
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="ml-auto text-rose-300/70 transition-transform duration-200 group-open/guide:rotate-180"
+                className="ml-auto text-emerald-300/70 transition-transform duration-200 group-open/guide:rotate-180"
               >
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </summary>
-            <ol className="space-y-2 border-t border-rose-400/20 px-4 py-3 text-[13px] leading-5 text-white/70">
+            <ol className="space-y-2 border-t border-emerald-400/20 px-4 py-3 text-[13px] leading-5 text-white/70">
               <li>
                 <span className="font-semibold text-white/85">① Logo yükle</span> — dosyayı
                 seç; yükleyen olarak giriş yaptığın isim otomatik kaydedilir.
@@ -237,26 +237,61 @@ export function LogosTab({
 
           <VoterTallyCard logos={allLogos} />
 
-          <form action={createAction} className="mt-4 space-y-4">
-            <label className="block">
-              <span className={formLabel}>
-                Dosya <span style={{ color: DETRBRIDGE_GOLD }}>*</span> (en fazla 10 MB)
-              </span>
-              <input
-                type="file"
-                name="file"
-                required
-                className={`${darkInput} file:mr-3 file:rounded-full file:border-0 file:bg-white/10 file:px-3 file:py-1 file:text-[11px] file:font-semibold file:text-white/80`}
-              />
-            </label>
-            <button
-              type="submit"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-[0.9rem] px-6 py-2.5 text-[13px] font-bold tracking-tight text-black shadow-[0_12px_40px_-8px_rgba(30,58,138,0.5)] ring-1 ring-inset ring-white/15 transition hover:shadow-[0_16px_50px_-8px_rgba(245,183,0,0.6)]"
-              style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
-            >
+          <details className="group/upload mt-3 overflow-hidden rounded-[1rem] border border-emerald-400/40 bg-emerald-400/[0.08] shadow-[0_0_0_1px_rgba(52,211,153,0.15)]">
+            <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-emerald-300 transition hover:text-emerald-200 [&::-webkit-details-marker]:hidden">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 3v12" />
+                <path d="m7 8 5-5 5 5" />
+                <path d="M5 21h14" />
+              </svg>
               Logo ekle
-            </button>
-          </form>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="ml-auto text-emerald-300/70 transition-transform duration-200 group-open/upload:rotate-180"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </summary>
+            <form
+              action={createAction}
+              className="space-y-4 border-t border-emerald-400/20 px-4 py-4"
+            >
+              <label className="block">
+                <span className={formLabel}>
+                  Dosya <span style={{ color: DETRBRIDGE_GOLD }}>*</span> (en fazla 10 MB)
+                </span>
+                <input
+                  type="file"
+                  name="file"
+                  required
+                  className={`${darkInput} file:mr-3 file:rounded-full file:border-0 file:bg-white/10 file:px-3 file:py-1 file:text-[11px] file:font-semibold file:text-white/80`}
+                />
+              </label>
+              <button
+                type="submit"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-[0.9rem] px-6 py-2.5 text-[13px] font-bold tracking-tight text-black shadow-[0_12px_40px_-8px_rgba(30,58,138,0.5)] ring-1 ring-inset ring-white/15 transition hover:shadow-[0_16px_50px_-8px_rgba(245,183,0,0.6)]"
+                style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
+              >
+                Logo ekle
+              </button>
+            </form>
+          </details>
         </div>
       </section>
 

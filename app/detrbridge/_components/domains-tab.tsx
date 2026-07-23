@@ -172,8 +172,8 @@ function VoterTallyCard({ domains }: { domains: DetrbridgeDomain[] }) {
   })).sort((a, b) => b.count - a.count);
 
   return (
-    <details className="group/tally mt-3 overflow-hidden rounded-[1rem] border border-white/10 bg-white/[0.03]">
-      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-white/70 transition hover:text-white [&::-webkit-details-marker]:hidden">
+    <details className="group/tally mt-3 overflow-hidden rounded-[1rem] border border-emerald-400/40 bg-emerald-400/[0.08] shadow-[0_0_0_1px_rgba(52,211,153,0.15)]">
+      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-emerald-300 transition hover:text-emerald-200 [&::-webkit-details-marker]:hidden">
         <svg
           width="14"
           height="14"
@@ -196,12 +196,12 @@ function VoterTallyCard({ domains }: { domains: DetrbridgeDomain[] }) {
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="ml-auto text-white/40 transition-transform duration-200 group-open/tally:rotate-180"
+          className="ml-auto text-emerald-300/70 transition-transform duration-200 group-open/tally:rotate-180"
         >
           <path d="m6 9 6 6 6-6" />
         </svg>
       </summary>
-      <div className="flex flex-wrap gap-1.5 border-t border-white/[0.06] px-4 py-3">
+      <div className="flex flex-wrap gap-1.5 border-t border-emerald-400/20 px-4 py-3">
         {tally.map(({ voter, count }) => (
           <span
             key={voter}
@@ -250,8 +250,8 @@ export function DomainsTab({
             Yeni domain öner
           </h2>
 
-          <details className="group/guide mt-3 overflow-hidden rounded-[1rem] border border-rose-400/40 bg-rose-400/[0.08] shadow-[0_0_0_1px_rgba(251,113,133,0.15)]">
-            <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-rose-300 transition hover:text-rose-200 [&::-webkit-details-marker]:hidden">
+          <details className="group/guide mt-3 overflow-hidden rounded-[1rem] border border-emerald-400/40 bg-emerald-400/[0.08] shadow-[0_0_0_1px_rgba(52,211,153,0.15)]">
+            <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-emerald-300 transition hover:text-emerald-200 [&::-webkit-details-marker]:hidden">
               <svg
                 width="14"
                 height="14"
@@ -276,12 +276,12 @@ export function DomainsTab({
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="ml-auto text-rose-300/70 transition-transform duration-200 group-open/guide:rotate-180"
+                className="ml-auto text-emerald-300/70 transition-transform duration-200 group-open/guide:rotate-180"
               >
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </summary>
-            <ol className="space-y-2 border-t border-rose-400/20 px-4 py-3 text-[13px] leading-5 text-white/70">
+            <ol className="space-y-2 border-t border-emerald-400/20 px-4 py-3 text-[13px] leading-5 text-white/70">
               <li>
                 <span className="font-semibold text-white/85">① Domain öner</span> — ismini
                 yaz; öneren olarak giriş yaptığın isim otomatik kaydedilir.

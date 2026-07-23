@@ -259,20 +259,20 @@
   "hotPaths": [
     {
       "path": "app\\detrbridge\\_components\\domains-tab.tsx",
-      "accessCount": 36,
-      "lastAccessed": 1784802267570,
+      "accessCount": 43,
+      "lastAccessed": 1784802695250,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
+      "accessCount": 21,
+      "lastAccessed": 1784802689623,
       "type": "file"
     },
     {
       "path": "lib\\detrbridge-domains.ts",
       "accessCount": 20,
       "lastAccessed": 1784802212923,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
-      "accessCount": 14,
-      "lastAccessed": 1784802264410,
       "type": "file"
     },
     {
