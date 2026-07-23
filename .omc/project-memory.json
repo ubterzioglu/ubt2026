@@ -271,20 +271,20 @@
     },
     {
       "path": "",
-      "accessCount": 5,
-      "lastAccessed": 1784799547745,
+      "accessCount": 7,
+      "lastAccessed": 1784801035178,
       "type": "directory"
     },
     {
-      "path": "lib\\detrbridge-logos.ts",
-      "accessCount": 5,
-      "lastAccessed": 1784799945915,
+      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1784801047207,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
-      "accessCount": 5,
-      "lastAccessed": 1784800776245,
+      "path": "lib\\detrbridge-logos.ts",
+      "accessCount": 6,
+      "lastAccessed": 1784800982196,
       "type": "file"
     },
     {
@@ -352,6 +352,12 @@
       "accessCount": 1,
       "lastAccessed": 1784800608315,
       "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\theme.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784801033549,
+      "type": "directory"
     }
   ],
   "userDirectives": []
