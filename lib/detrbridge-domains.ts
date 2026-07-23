@@ -4,6 +4,11 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 type SourceState = "remote" | "env-missing" | "empty" | "error";
 
+export interface DetrbridgeVoteEntry {
+  voterName: string;
+  rating: number;
+}
+
 export interface DetrbridgeDomain {
   id: string;
   domainName: string;
@@ -12,6 +17,7 @@ export interface DetrbridgeDomain {
   /** Average of all cast votes (null when nobody has voted yet). */
   averageRating: number | null;
   voteCount: number;
+  votes: DetrbridgeVoteEntry[];
   createdAt: string;
   /** Discounted yearly price, e.g. registrar promo pricing (null when unset). */
   priceYearly: number | null;
@@ -44,6 +50,7 @@ interface SupabaseDomainRow {
 
 interface SupabaseVoteRow {
   domain_id: string;
+  voter_name: string;
   rating: number;
 }
 
@@ -65,10 +72,10 @@ function createServiceClient(): SupabaseClient | null {
   });
 }
 
-function toDomain(row: SupabaseDomainRow, votes: number[]): DetrbridgeDomain {
+function toDomain(row: SupabaseDomainRow, votes: DetrbridgeVoteEntry[]): DetrbridgeDomain {
   const voteCount = votes.length;
   const averageRating =
-    voteCount > 0 ? votes.reduce((sum, v) => sum + v, 0) / voteCount : null;
+    voteCount > 0 ? votes.reduce((sum, v) => sum + v.rating, 0) / voteCount : null;
   return {
     id: row.id,
     domainName: row.domain_name,
@@ -76,6 +83,7 @@ function toDomain(row: SupabaseDomainRow, votes: number[]): DetrbridgeDomain {
     isSelected: row.is_selected,
     averageRating,
     voteCount,
+    votes,
     createdAt: row.created_at,
     priceYearly: row.price_yearly,
     retailPriceYearly: row.retail_price_yearly,
@@ -98,15 +106,15 @@ export async function getAllDomainsAdmin(): Promise<DetrbridgeDomainsResult> {
     if (error) throw error;
     const rows = (data ?? []) as SupabaseDomainRow[];
 
-    const votesByDomain = new Map<string, number[]>();
+    const votesByDomain = new Map<string, DetrbridgeVoteEntry[]>();
     if (rows.length > 0) {
       const { data: voteRows, error: voteError } = await supabase
         .from("detrbridge_domain_votes")
-        .select("domain_id, rating");
+        .select("domain_id, voter_name, rating");
       if (voteError) throw voteError;
       for (const vote of (voteRows ?? []) as SupabaseVoteRow[]) {
         const list = votesByDomain.get(vote.domain_id) ?? [];
-        list.push(vote.rating);
+        list.push({ voterName: vote.voter_name, rating: vote.rating });
         votesByDomain.set(vote.domain_id, list);
       }
     }

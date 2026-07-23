@@ -1,4 +1,4 @@
-import type { DetrbridgeDomain } from "@/lib/detrbridge-domains";
+import type { DetrbridgeDomain, DetrbridgeVoteEntry } from "@/lib/detrbridge-domains";
 import { DETRBRIDGE_BRAND_GRADIENT, DETRBRIDGE_GOLD } from "@/app/detrbridge/_components/theme";
 import { NumberPicker } from "@/app/detrbridge/_components/number-picker";
 import { FilterBar } from "@/app/detrbridge/_components/filter-bar";
@@ -24,22 +24,50 @@ const formLabel =
 /** Read-only average-rating badge, e.g. 7.2/10 (5 oy). */
 const CURRENCY_SYMBOL: Record<string, string> = { EUR: "€", USD: "$", TRY: "₺" };
 
-/** Yearly price block: discounted price, retail strikethrough, and % off. */
+/** Yearly price: discounted price plus a % off badge (no retail strikethrough). */
 function PriceBlock({
   priceYearly,
   retailPriceYearly,
-  priceCurrency
+  priceCurrency,
+  compact
 }: {
   priceYearly: number | null;
   retailPriceYearly: number | null;
   priceCurrency: string;
+  compact?: boolean;
 }) {
   if (priceYearly === null && retailPriceYearly === null) return null;
   const symbol = CURRENCY_SYMBOL[priceCurrency] ?? priceCurrency;
+  const displayPrice = priceYearly ?? retailPriceYearly;
   const discountPct =
     priceYearly !== null && retailPriceYearly !== null && retailPriceYearly > 0
       ? Math.round((1 - priceYearly / retailPriceYearly) * 100)
       : null;
+
+  const priceEl = (
+    <span className="text-[13px] font-bold text-white">
+      {symbol}
+      {displayPrice?.toFixed(2)}/yr
+    </span>
+  );
+  const badgeEl =
+    discountPct !== null && discountPct > 0 ? (
+      <span
+        className="inline-flex shrink-0 items-center rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold text-emerald-300"
+        title={`${discountPct}% indirim`}
+      >
+        %{discountPct} OFF
+      </span>
+    ) : null;
+
+  if (compact) {
+    return (
+      <div className="flex items-center gap-2">
+        {priceEl}
+        {badgeEl}
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-between rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2">
@@ -47,24 +75,27 @@ function PriceBlock({
         Yıllık fiyat
       </p>
       <div className="flex items-center gap-2">
-        {discountPct !== null && discountPct > 0 ? (
-          <span
-            className="inline-flex shrink-0 items-center rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold text-emerald-300"
-            title={`${discountPct}% indirim`}
-          >
-            %{discountPct} OFF
-          </span>
-        ) : null}
-        <span className="text-[13px] font-bold text-white">
-          {priceYearly !== null ? `${symbol}${priceYearly.toFixed(2)}/yr` : "—"}
-        </span>
-        {retailPriceYearly !== null ? (
-          <span className="text-[11px] text-white/40 line-through">
-            {symbol}
-            {retailPriceYearly.toFixed(2)}/yr
-          </span>
-        ) : null}
+        {badgeEl}
+        {priceEl}
       </div>
+    </div>
+  );
+}
+
+/** Per-voter breakdown, e.g. "Sefa: 8/10 · Murat: 6/10". */
+function VotesList({ votes }: { votes: DetrbridgeVoteEntry[] }) {
+  if (votes.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-1.5 border-t border-white/[0.06] pt-2">
+      {votes.map((vote) => (
+        <span
+          key={vote.voterName}
+          className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] font-medium text-white/60"
+        >
+          {vote.voterName}
+          <span className="font-bold text-white/85">{vote.rating}</span>
+        </span>
+      ))}
     </div>
   );
 }
@@ -252,7 +283,7 @@ export function DomainsTab({
               : "Filtreyle eşleşen domain bulunamadı."}
           </p>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-col gap-4">
             {domains.map((domain) => (
               <DomainRow
                 key={domain.id}
@@ -279,90 +310,95 @@ interface DomainRowProps {
 function DomainRow({ domain, voteAction, selectAction, deleteAction }: DomainRowProps) {
   return (
     <article
-      className={`flex flex-col overflow-hidden rounded-[1.2rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
+      className={`overflow-hidden rounded-[1rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
         domain.isSelected ? "border-emerald-400/40" : "border-white/10"
       }`}
     >
-      <div className="relative flex items-center justify-between gap-2 border-b border-white/[0.06] bg-white/[0.04] px-4 py-4">
-        <p
-          className="truncate font-body text-[16px] font-bold text-white"
-          title={domain.domainName}
-        >
-          {domain.domainName}
-        </p>
-        {domain.isSelected ? (
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-400/15 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
-            ✓ Seçildi
-          </span>
-        ) : null}
-      </div>
-
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <div className="rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
-            Öneren
-          </p>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
+        <div className="flex min-w-[160px] flex-1 items-center gap-2">
           <p
-            className="truncate font-body text-[14px] font-semibold text-white"
-            title={domain.uploaderName}
+            className="truncate font-body text-[15px] font-bold text-white"
+            title={domain.domainName}
           >
-            {domain.uploaderName}
+            {domain.domainName}
           </p>
+          {domain.isSelected ? (
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-400/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+              ✓ Seçildi
+            </span>
+          ) : null}
         </div>
 
-        <div className="flex items-center justify-between rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
-            Puan
-          </p>
+        <p
+          className="shrink-0 text-[12px] text-white/45"
+          title="Öneren"
+        >
+          {domain.uploaderName}
+        </p>
+
+        <div className="shrink-0">
+          <PriceBlock
+            priceYearly={domain.priceYearly}
+            retailPriceYearly={domain.retailPriceYearly}
+            priceCurrency={domain.priceCurrency}
+            compact
+          />
+        </div>
+
+        <div className="shrink-0">
           <RatingBadge averageRating={domain.averageRating} voteCount={domain.voteCount} />
         </div>
 
-        <PriceBlock
-          priceYearly={domain.priceYearly}
-          retailPriceYearly={domain.retailPriceYearly}
-          priceCurrency={domain.priceCurrency}
-        />
-
-        <div className="mt-1 flex items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           {domain.isSelected ? null : (
-            <form action={selectAction} className="flex-1">
+            <form action={selectAction}>
               <input type="hidden" name="id" value={domain.id} />
               <button
                 type="submit"
-                className="inline-flex min-h-[36px] w-full items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[12px] font-semibold text-white/80 transition hover:border-emerald-400/40 hover:text-emerald-300"
+                className="inline-flex h-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 text-[12px] font-semibold text-white/80 transition hover:border-emerald-400/40 hover:text-emerald-300"
               >
                 Seç
               </button>
             </form>
           )}
-          <form action={deleteAction} className={domain.isSelected ? "flex-1" : undefined}>
+          <form action={deleteAction}>
             <input type="hidden" name="id" value={domain.id} />
             <button
               type="submit"
-              className="inline-flex min-h-[36px] w-full items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[12px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
+              className="inline-flex h-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-3 text-[12px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
             >
               Sil
             </button>
           </form>
+          <details className="group/vote relative">
+            <summary className="flex h-8 cursor-pointer list-none items-center justify-center rounded-full px-3 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15 [&::-webkit-details-marker]:hidden"
+              style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
+            >
+              Oyla
+            </summary>
+            <form
+              action={voteAction}
+              className="absolute right-0 top-[calc(100%+0.5rem)] z-10 flex w-max flex-col gap-2 rounded-[0.9rem] border border-white/10 bg-[#14151c] p-3 shadow-2xl"
+            >
+              <input type="hidden" name="domainId" value={domain.id} />
+              <NumberPicker name="rating" defaultValue={5} min={1} max={10} />
+              <button
+                type="submit"
+                className="inline-flex h-8 items-center justify-center rounded-[0.6rem] px-4 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15"
+                style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
+              >
+                Onayla
+              </button>
+            </form>
+          </details>
         </div>
-
-        <form
-          action={voteAction}
-          className="mt-1 flex flex-col gap-2 border-t border-white/[0.06] pt-3"
-        >
-          <input type="hidden" name="domainId" value={domain.id} />
-          <div className="flex items-center justify-between gap-2">
-            <NumberPicker name="rating" defaultValue={5} min={1} max={10} />
-          </div>
-          <button
-            type="submit"
-            className="inline-flex min-h-[36px] items-center justify-center rounded-[0.7rem] px-4 py-1.5 text-[12px] font-bold text-black ring-1 ring-inset ring-white/15"
-            style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
-          >
-            Oyla
-          </button>
-        </form>
       </div>
+
+      {domain.votes.length > 0 ? (
+        <div className="border-t border-white/[0.06] px-4 py-2">
+          <VotesList votes={domain.votes} />
+        </div>
+      ) : null}
     </article>
   );
 }

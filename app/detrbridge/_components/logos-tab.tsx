@@ -1,4 +1,4 @@
-import type { DetrbridgeLogo } from "@/lib/detrbridge-logos";
+import type { DetrbridgeLogo, DetrbridgeVoteEntry } from "@/lib/detrbridge-logos";
 import { DETRBRIDGE_BRAND_GRADIENT, DETRBRIDGE_GOLD } from "@/app/detrbridge/_components/theme";
 import { NumberPicker } from "@/app/detrbridge/_components/number-picker";
 import { FilterBar } from "@/app/detrbridge/_components/filter-bar";
@@ -25,6 +25,24 @@ const formLabel =
 function formatFileSize(bytes: number): string {
   if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+}
+
+/** Per-voter breakdown, e.g. "Sefa: 8/10 · Murat: 6/10". */
+function VotesList({ votes }: { votes: DetrbridgeVoteEntry[] }) {
+  if (votes.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-1.5 border-t border-white/[0.06] pt-2">
+      {votes.map((vote) => (
+        <span
+          key={vote.voterName}
+          className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] font-medium text-white/60"
+        >
+          {vote.voterName}
+          <span className="font-bold text-white/85">{vote.rating}</span>
+        </span>
+      ))}
+    </div>
+  );
 }
 
 /** Read-only average-rating badge, e.g. 7.2/10 (5 oy). */
@@ -249,6 +267,8 @@ function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps)
           </p>
           <RatingBadge averageRating={logo.averageRating} voteCount={logo.voteCount} />
         </div>
+
+        <VotesList votes={logo.votes} />
 
         <div className="mt-1 flex items-center gap-2">
           {logo.isSelected ? null : (

@@ -4,6 +4,11 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 type SourceState = "remote" | "env-missing" | "empty" | "error";
 
+export interface DetrbridgeVoteEntry {
+  voterName: string;
+  rating: number;
+}
+
 export interface DetrbridgeLogo {
   id: string;
   uploaderName: string;
@@ -15,6 +20,7 @@ export interface DetrbridgeLogo {
   /** Average of all cast votes (null when nobody has voted yet). */
   averageRating: number | null;
   voteCount: number;
+  votes: DetrbridgeVoteEntry[];
   createdAt: string;
 }
 
@@ -41,6 +47,7 @@ interface SupabaseLogoRow {
 
 interface SupabaseVoteRow {
   logo_id: string;
+  voter_name: string;
   rating: number;
 }
 
@@ -69,11 +76,11 @@ function createServiceClient(): SupabaseClient | null {
 function toLogo(
   row: SupabaseLogoRow,
   url: string | null,
-  votes: number[]
+  votes: DetrbridgeVoteEntry[]
 ): DetrbridgeLogo {
   const voteCount = votes.length;
   const averageRating =
-    voteCount > 0 ? votes.reduce((sum, v) => sum + v, 0) / voteCount : null;
+    voteCount > 0 ? votes.reduce((sum, v) => sum + v.rating, 0) / voteCount : null;
   return {
     id: row.id,
     uploaderName: row.uploader_name,
@@ -83,6 +90,7 @@ function toLogo(
     url,
     averageRating,
     voteCount,
+    votes,
     createdAt: row.created_at
   };
 }
@@ -146,15 +154,15 @@ export async function getAllLogosAdmin(): Promise<DetrbridgeLogosResult> {
     if (error) throw error;
     const rows = (data ?? []) as SupabaseLogoRow[];
 
-    const votesByLogo = new Map<string, number[]>();
+    const votesByLogo = new Map<string, DetrbridgeVoteEntry[]>();
     if (rows.length > 0) {
       const { data: voteRows, error: voteError } = await supabase
         .from("detrbridge_logo_votes")
-        .select("logo_id, rating");
+        .select("logo_id, voter_name, rating");
       if (voteError) throw voteError;
       for (const vote of (voteRows ?? []) as SupabaseVoteRow[]) {
         const list = votesByLogo.get(vote.logo_id) ?? [];
-        list.push(vote.rating);
+        list.push({ voterName: vote.voter_name, rating: vote.rating });
         votesByLogo.set(vote.logo_id, list);
       }
     }
