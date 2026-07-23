@@ -283,8 +283,8 @@
     },
     {
       "path": "",
-      "accessCount": 8,
-      "lastAccessed": 1784801888632,
+      "accessCount": 9,
+      "lastAccessed": 1784803067898,
       "type": "directory"
     },
     {
@@ -294,27 +294,39 @@
       "type": "file"
     },
     {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 6,
+      "lastAccessed": 1784803659181,
+      "type": "directory"
+    },
+    {
       "path": "app\\detrbridge\\_components\\number-picker.tsx",
       "accessCount": 5,
       "lastAccessed": 1784801551838,
       "type": "file"
     },
     {
-      "path": "lib\\admin-auth.ts",
+      "path": "app\\detrbridge",
       "accessCount": 4,
-      "lastAccessed": 1784801933107,
+      "lastAccessed": 1784803097444,
       "type": "directory"
+    },
+    {
+      "path": "lib\\detrbridge-visits.ts",
+      "accessCount": 4,
+      "lastAccessed": 1784803637849,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_actions.ts",
+      "accessCount": 4,
+      "lastAccessed": 1784803666646,
+      "type": "file"
     },
     {
       "path": "app",
       "accessCount": 3,
       "lastAccessed": 1784799238246,
-      "type": "directory"
-    },
-    {
-      "path": "app\\detrbridge",
-      "accessCount": 3,
-      "lastAccessed": 1784801578964,
       "type": "directory"
     },
     {
@@ -336,9 +348,27 @@
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_actions.ts",
+      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
       "accessCount": 2,
-      "lastAccessed": 1784801932784,
+      "lastAccessed": 1784803053090,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\visits-tab.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1784803684962,
+      "type": "file"
+    },
+    {
+      "path": "middleware.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784803689626,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260723140000_reset_detrbridge_visits_with_names.sql",
+      "accessCount": 2,
+      "lastAccessed": 1784804056621,
       "type": "file"
     },
     {
@@ -372,15 +402,33 @@
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784801702912,
-      "type": "file"
-    },
-    {
       "path": "app\\detrbridge\\_components\\password-field.tsx",
       "accessCount": 1,
       "lastAccessed": 1784801706560,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260719120000_create_detrbridge_visits.sql",
+      "accessCount": 1,
+      "lastAccessed": 1784803071716,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260723140000_add_voter_name_to_detrbridge_visits.sql",
+      "accessCount": 1,
+      "lastAccessed": 1784803083466,
+      "type": "file"
+    },
+    {
+      "path": "lib\\secure-compare.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784803599522,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\welcome-card.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1784803606289,
       "type": "file"
     }
   ],

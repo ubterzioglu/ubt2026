@@ -353,20 +353,22 @@ export async function isDetrbridgeAuthenticated(): Promise<boolean> {
 /**
  * Validates the supplied name (against the allowlist) and password and,
  * when both are correct, persists them in an HttpOnly cookie scoped to
- * /detrbridge. Returns whether sign-in succeeded.
+ * /detrbridge. Returns the normalized name on success (so the caller can log
+ * the sign-in without re-deriving the same normalization), or null on
+ * failure.
  */
 export async function signInDetrbridge(
   name: string,
   candidate: string
-): Promise<boolean> {
+): Promise<string | null> {
   const password = getDetrbridgePassword();
   // Fail closed: without a configured password no sign-in is possible.
-  if (!password) return false;
+  if (!password) return null;
   const normalizedName = name.trim().toLowerCase();
-  if (!normalizedName) return false;
-  if (!getDetrbridgeAllowedNames().includes(normalizedName)) return false;
-  if (!checkRateLimit(`detrbridge:${await getClientIp()}`)) return false;
-  if (!secureCompare(candidate.trim(), password)) return false;
+  if (!normalizedName) return null;
+  if (!getDetrbridgeAllowedNames().includes(normalizedName)) return null;
+  if (!checkRateLimit(`detrbridge:${await getClientIp()}`)) return null;
+  if (!secureCompare(candidate.trim(), password)) return null;
 
   const token = deriveSessionToken(password, normalizedName);
   const cookieStore = await cookies();
@@ -378,7 +380,7 @@ export async function signInDetrbridge(
     maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
   });
 
-  return true;
+  return normalizedName;
 }
 
 /**

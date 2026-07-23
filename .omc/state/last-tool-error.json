@@ -1,7 +1,7 @@
 {
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd c:/temp_private/ubt2026 && npx tsc --noEmit -p tsconfig.json 2>&1 | head -n 60\",\"timeout\":120000,\"description\":\"Type-check the project after editing detrbridge tabs\"}",
-  "error": "Exit code 1\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-43b6-cwd: No such file or directory",
-  "timestamp": "2026-07-23T10:24:44.934Z",
+  "tool_name": "PowerShell",
+  "tool_input_preview": "{\"command\":\"$env:SUPABASE_ACCESS_TOKEN = (Get-Content \\\"c:\\\\temp_private\\\\ubt2026\\\\.env.local\\\" | Select-String \\\"^SUPABASE_ACCESS_TOKEN=\\\").ToString().Split('=',2)[1]\\ncd c:\\\\temp_private\\\\ubt2026\\nn...",
+  "error": "Exit code 1\n{\"_tag\":\"Error\",\"error\":{\"code\":\"LegacyLinkProjectStatusError\",\"message\":\"Unexpected error retrieving remote project status: {\\\"message\\\":\\\"Unauthorized\\\"}\"}}",
+  "timestamp": "2026-07-23T10:39:54.307Z",
   "retry_count": 1
 }

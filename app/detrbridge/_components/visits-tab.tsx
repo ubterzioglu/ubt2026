@@ -22,7 +22,12 @@ function formatHours(hours: number): string {
   return Number.isInteger(hours) ? String(hours) : hours.toFixed(1).replace(".", ",");
 }
 
-/** Admin log: every unique visitor's first-ever arrival, newest first. */
+/** Title-cases the stored lowercase name for display, e.g. "şahin" -> "Şahin". */
+function displayName(voterName: string): string {
+  return voterName.charAt(0).toLocaleUpperCase("tr-TR") + voterName.slice(1);
+}
+
+/** Admin log: every successful sign-in, newest first. */
 export function VisitsTab({ visits }: VisitsTabProps) {
   return (
     <section className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl">
@@ -37,7 +42,7 @@ export function VisitsTab({ visits }: VisitsTabProps) {
           Giriş Logları
         </h2>
         <p className="mt-1 text-[13px] text-white/50">
-          Her satır, benzersiz bir ziyaretçinin panele ilk gelişini gösterir.
+          Her satır, birinin panele giriş yaptığı anı gösterir.
         </p>
       </div>
 
@@ -55,6 +60,9 @@ export function VisitsTab({ visits }: VisitsTabProps) {
               >
                 <div>
                   <p className="text-sm font-semibold text-white">
+                    {displayName(visit.voterName)}
+                  </p>
+                  <p className="mt-0.5 text-[12px] text-white/50">
                     {formatTimestamp(visit.firstSeenAt)}
                   </p>
                   {visit.userAgent ? (
