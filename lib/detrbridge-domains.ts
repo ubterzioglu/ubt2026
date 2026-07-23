@@ -23,6 +23,8 @@ export interface DetrbridgeDomain {
   priceYearly: number | null;
   /** Full/retail yearly price before discount (null when unset). */
   retailPriceYearly: number | null;
+  /** Post-promo renewal price, when the registrar quotes one separately (null when unset). */
+  renewalPriceYearly: number | null;
   priceCurrency: string;
 }
 
@@ -45,6 +47,7 @@ interface SupabaseDomainRow {
   created_at: string;
   price_yearly: number | null;
   retail_price_yearly: number | null;
+  renewal_price_yearly: number | null;
   price_currency: string;
 }
 
@@ -55,7 +58,7 @@ interface SupabaseVoteRow {
 }
 
 const DOMAIN_COLUMNS =
-  "id, domain_name, uploader_name, is_selected, created_at, price_yearly, retail_price_yearly, price_currency";
+  "id, domain_name, uploader_name, is_selected, created_at, price_yearly, retail_price_yearly, renewal_price_yearly, price_currency";
 
 function getServiceEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -87,6 +90,7 @@ function toDomain(row: SupabaseDomainRow, votes: DetrbridgeVoteEntry[]): Detrbri
     createdAt: row.created_at,
     priceYearly: row.price_yearly,
     retailPriceYearly: row.retail_price_yearly,
+    renewalPriceYearly: row.renewal_price_yearly,
     priceCurrency: row.price_currency
   };
 }
@@ -152,6 +156,7 @@ export async function getDomainCount(): Promise<number> {
 export interface CreateDomainPricing {
   priceYearly: number | null;
   retailPriceYearly: number | null;
+  renewalPriceYearly: number | null;
   priceCurrency: string;
 }
 
@@ -180,6 +185,7 @@ export async function createDomain(
       uploader_name: uploaderName,
       price_yearly: parseOptionalPrice(pricing?.priceYearly ?? null),
       retail_price_yearly: parseOptionalPrice(pricing?.retailPriceYearly ?? null),
+      renewal_price_yearly: parseOptionalPrice(pricing?.renewalPriceYearly ?? null),
       price_currency: pricing?.priceCurrency?.trim() || "EUR"
     });
     if (error) throw error;

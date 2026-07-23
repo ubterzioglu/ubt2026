@@ -211,10 +211,12 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     const domainName = (formData.get("domainName") as string | null) ?? "";
     const priceRaw = (formData.get("priceYearly") as string | null) ?? "";
     const retailPriceRaw = (formData.get("retailPriceYearly") as string | null) ?? "";
+    const renewalPriceRaw = (formData.get("renewalPriceYearly") as string | null) ?? "";
     const priceCurrency = (formData.get("priceCurrency") as string | null) ?? "EUR";
     const outcome = await createDomain(uploaderName, domainName, {
       priceYearly: priceRaw ? Number(priceRaw) : null,
       retailPriceYearly: retailPriceRaw ? Number(retailPriceRaw) : null,
+      renewalPriceYearly: renewalPriceRaw ? Number(renewalPriceRaw) : null,
       priceCurrency
     });
     revalidatePath("/detrbridge");

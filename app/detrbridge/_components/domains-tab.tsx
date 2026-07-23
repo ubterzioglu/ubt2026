@@ -28,15 +28,19 @@ const CURRENCY_SYMBOL: Record<string, string> = { EUR: "€", USD: "$", TRY: "�
 function PriceBlock({
   priceYearly,
   retailPriceYearly,
+  renewalPriceYearly,
   priceCurrency,
   compact
 }: {
   priceYearly: number | null;
   retailPriceYearly: number | null;
+  renewalPriceYearly: number | null;
   priceCurrency: string;
   compact?: boolean;
 }) {
-  if (priceYearly === null && retailPriceYearly === null) return null;
+  if (priceYearly === null && retailPriceYearly === null && renewalPriceYearly === null) {
+    return null;
+  }
   const symbol = CURRENCY_SYMBOL[priceCurrency] ?? priceCurrency;
   const displayPrice = priceYearly ?? retailPriceYearly;
   const discountPct =
@@ -59,12 +63,23 @@ function PriceBlock({
         %{discountPct} OFF
       </span>
     ) : null;
+  const renewalEl =
+    renewalPriceYearly !== null ? (
+      <span
+        className="text-[11px] text-white/40"
+        title="Yenileme fiyatı"
+      >
+        yenileme {symbol}
+        {renewalPriceYearly.toFixed(2)}/yr
+      </span>
+    ) : null;
 
   if (compact) {
     return (
       <div className="flex items-center gap-2">
         {priceEl}
         {badgeEl}
+        {renewalEl}
       </div>
     );
   }
@@ -77,6 +92,7 @@ function PriceBlock({
       <div className="flex items-center gap-2">
         {badgeEl}
         {priceEl}
+        {renewalEl}
       </div>
     </div>
   );
@@ -247,6 +263,17 @@ export function DomainsTab({
               </label>
             </div>
             <label className="block">
+              <span className={formLabel}>Yenileme fiyatı (yıllık)</span>
+              <input
+                type="number"
+                name="renewalPriceYearly"
+                step="0.01"
+                min="0"
+                placeholder="örnek: 58.62"
+                className={darkInput}
+              />
+            </label>
+            <label className="block">
               <span className={formLabel}>Para birimi</span>
               <select name="priceCurrency" defaultValue="EUR" className={darkInput}>
                 <option value="EUR">EUR (€)</option>
@@ -310,7 +337,7 @@ interface DomainRowProps {
 function DomainRow({ domain, voteAction, selectAction, deleteAction }: DomainRowProps) {
   return (
     <article
-      className={`overflow-hidden rounded-[1rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
+      className={`rounded-[1rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
         domain.isSelected ? "border-emerald-400/40" : "border-white/10"
       }`}
     >
@@ -340,6 +367,7 @@ function DomainRow({ domain, voteAction, selectAction, deleteAction }: DomainRow
           <PriceBlock
             priceYearly={domain.priceYearly}
             retailPriceYearly={domain.retailPriceYearly}
+            renewalPriceYearly={domain.renewalPriceYearly}
             priceCurrency={domain.priceCurrency}
             compact
           />
