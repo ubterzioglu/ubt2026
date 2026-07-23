@@ -475,6 +475,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
               <LogosTab
                 logos={filteredLogos}
+                allLogos={result.items}
                 totalCount={result.items.length}
                 query={query}
                 minRating={minRatingParam}
@@ -502,6 +503,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
               <DomainsTab
                 domains={filteredDomains}
+                allDomains={domainsResult.items}
                 totalCount={domainsResult.items.length}
                 query={query}
                 minRating={minRatingParam}

@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"which chromium-cli 2>/dev/null; which playwright 2>/dev/null; npx --version 2>/dev/null; echo done\",\"description\":\"Check for available browser automation tools\"}",
-  "error": "Exit code 1\n11.8.0\ndone\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-bbed-cwd: No such file or directory",
-  "timestamp": "2026-07-23T10:14:58.414Z",
-  "retry_count": 2
+  "tool_input_preview": "{\"command\":\"cd c:/temp_private/ubt2026 && npx tsc --noEmit -p tsconfig.json 2>&1 | head -n 60\",\"timeout\":120000,\"description\":\"Type-check the project after editing detrbridge tabs\"}",
+  "error": "Exit code 1\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-43b6-cwd: No such file or directory",
+  "timestamp": "2026-07-23T10:24:44.934Z",
+  "retry_count": 1
 }

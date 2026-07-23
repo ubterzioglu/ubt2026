@@ -7,6 +7,8 @@ type ServerFormAction = (formData: FormData) => void | Promise<void>;
 
 interface LogosTabProps {
   logos: DetrbridgeLogo[];
+  /** Every logo regardless of the active filter, used for the voter tally card. */
+  allLogos: DetrbridgeLogo[];
   totalCount: number;
   query: string;
   minRating: string;
@@ -85,6 +87,69 @@ function RatingBadge({
   );
 }
 
+/** Per-voter total vote count across all logos, sorted highest first. */
+function VoterTallyCard({ logos }: { logos: DetrbridgeLogo[] }) {
+  const countByLowerName = new Map<string, number>();
+  for (const logo of logos) {
+    for (const vote of logo.votes) {
+      const key = vote.voterName.trim().toLowerCase();
+      countByLowerName.set(key, (countByLowerName.get(key) ?? 0) + 1);
+    }
+  }
+  const tally = DETRBRIDGE_VOTERS.map((voter) => ({
+    voter,
+    count: countByLowerName.get(voter.toLowerCase()) ?? 0
+  })).sort((a, b) => b.count - a.count);
+
+  return (
+    <details className="group/tally mt-3 overflow-hidden rounded-[1rem] border border-white/10 bg-white/[0.03]">
+      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-[12px] font-bold text-white/70 transition hover:text-white [&::-webkit-details-marker]:hidden">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 20v-6M6 20V10M18 20V4" />
+        </svg>
+        Kim kaç logoya oy verdi?
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="ml-auto text-white/40 transition-transform duration-200 group-open/tally:rotate-180"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </summary>
+      <div className="flex flex-wrap gap-1.5 border-t border-white/[0.06] px-4 py-3">
+        {tally.map(({ voter, count }) => (
+          <span
+            key={voter}
+            className={
+              count > 0
+                ? "inline-flex items-center gap-1 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[11px] font-medium text-emerald-300"
+                : "inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2 py-0.5 text-[11px] font-medium text-rose-300/80"
+            }
+          >
+            {voter}
+            <span className="font-bold">{count}</span>
+          </span>
+        ))}
+      </div>
+    </details>
+  );
+}
+
 /**
  * Logo Seçimi panel: an upload form (file + uploader's name) plus a list of
  * candidates sorted by average vote rating, each with a vote sub-form
@@ -94,6 +159,7 @@ function RatingBadge({
  */
 export function LogosTab({
   logos,
+  allLogos,
   totalCount,
   query,
   minRating,
@@ -168,6 +234,8 @@ export function LogosTab({
               </li>
             </ol>
           </details>
+
+          <VoterTallyCard logos={allLogos} />
 
           <form action={createAction} className="mt-4 space-y-4">
             <label className="block">

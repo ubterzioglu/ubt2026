@@ -259,38 +259,38 @@
   "hotPaths": [
     {
       "path": "app\\detrbridge\\_components\\domains-tab.tsx",
-      "accessCount": 30,
-      "lastAccessed": 1784801551493,
+      "accessCount": 36,
+      "lastAccessed": 1784802267570,
       "type": "file"
     },
     {
       "path": "lib\\detrbridge-domains.ts",
-      "accessCount": 17,
-      "lastAccessed": 1784800654614,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 9,
-      "lastAccessed": 1784801257258,
+      "accessCount": 20,
+      "lastAccessed": 1784802212923,
       "type": "file"
     },
     {
       "path": "app\\detrbridge\\_components\\logos-tab.tsx",
-      "accessCount": 8,
-      "lastAccessed": 1784801083943,
+      "accessCount": 14,
+      "lastAccessed": 1784802264410,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\page.tsx",
+      "accessCount": 12,
+      "lastAccessed": 1784802274418,
       "type": "file"
     },
     {
       "path": "",
-      "accessCount": 7,
-      "lastAccessed": 1784801035178,
+      "accessCount": 8,
+      "lastAccessed": 1784801888632,
       "type": "directory"
     },
     {
       "path": "lib\\detrbridge-logos.ts",
-      "accessCount": 6,
-      "lastAccessed": 1784800982196,
+      "accessCount": 7,
+      "lastAccessed": 1784802213079,
       "type": "file"
     },
     {
@@ -298,6 +298,12 @@
       "accessCount": 5,
       "lastAccessed": 1784801551838,
       "type": "file"
+    },
+    {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 4,
+      "lastAccessed": 1784801933107,
+      "type": "directory"
     },
     {
       "path": "app",
@@ -309,12 +315,6 @@
       "path": "app\\detrbridge",
       "accessCount": 3,
       "lastAccessed": 1784801578964,
-      "type": "directory"
-    },
-    {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 3,
-      "lastAccessed": 1784801643404,
       "type": "directory"
     },
     {
@@ -337,8 +337,8 @@
     },
     {
       "path": "app\\detrbridge\\_actions.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784798829027,
+      "accessCount": 2,
+      "lastAccessed": 1784801932784,
       "type": "file"
     },
     {
