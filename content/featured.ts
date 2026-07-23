@@ -88,42 +88,42 @@ export const fallbackTools: AppToolItem[] = [
     title: "Smellable",
     summary:
       "A playful experiment about how images can trigger smell memory and imagination.",
-    href: "https://ubterzioglu.de/smellable/index.html",
+    href: "/smellable",
     badge: "Experiment"
   },
   {
     category: "tools",
     title: "BUYORBYE",
     summary: "An English purchase decision tool for reducing regret and clarifying intent before buying.",
-    href: "https://ubterzioglu.de/buyorbye/buyorbye.html",
+    href: "/buyorbye",
     badge: "Decision Tool"
   },
   {
     category: "tools",
     title: "OPARAYABEN",
     summary: "A Turkish purchase decision tool built around quick yes/no guidance.",
-    href: "https://ubterzioglu.de/buyorbyetr/buyorbyetr.html",
+    href: "/buyorbyetr",
     badge: "Decision Tool"
   },
   {
     category: "tools",
     title: "TATILATOR-2026",
     summary: "A Turkey vacation planner that turns public holiday calendars into usable planning windows.",
-    href: "https://ubterzioglu.de/holiday/holiday.html",
+    href: "/holiday",
     badge: "Planner"
   },
   {
     category: "tools",
     title: "ZPATH",
     summary: "A career and life decision helper based on structured yes/no reasoning.",
-    href: "https://ubterzioglu.de/zpath/zpath.html",
+    href: "/zpath",
     badge: "Career Tool"
   },
   {
     category: "tools",
     title: "ZATS",
     summary: "An ATS-readability checker that highlights CV structure and wording issues.",
-    href: "https://ubterzioglu.de/zats/zats.html",
+    href: "/zats",
     badge: "Career Tool"
   }
 ];

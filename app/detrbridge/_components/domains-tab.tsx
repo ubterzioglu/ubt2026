@@ -22,6 +22,53 @@ const formLabel =
   "mb-1 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50";
 
 /** Read-only average-rating badge, e.g. 7.2/10 (5 oy). */
+const CURRENCY_SYMBOL: Record<string, string> = { EUR: "€", USD: "$", TRY: "₺" };
+
+/** Yearly price block: discounted price, retail strikethrough, and % off. */
+function PriceBlock({
+  priceYearly,
+  retailPriceYearly,
+  priceCurrency
+}: {
+  priceYearly: number | null;
+  retailPriceYearly: number | null;
+  priceCurrency: string;
+}) {
+  if (priceYearly === null && retailPriceYearly === null) return null;
+  const symbol = CURRENCY_SYMBOL[priceCurrency] ?? priceCurrency;
+  const discountPct =
+    priceYearly !== null && retailPriceYearly !== null && retailPriceYearly > 0
+      ? Math.round((1 - priceYearly / retailPriceYearly) * 100)
+      : null;
+
+  return (
+    <div className="flex items-center justify-between rounded-[0.8rem] border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
+        Yıllık fiyat
+      </p>
+      <div className="flex items-center gap-2">
+        {discountPct !== null && discountPct > 0 ? (
+          <span
+            className="inline-flex shrink-0 items-center rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold text-emerald-300"
+            title={`${discountPct}% indirim`}
+          >
+            %{discountPct} OFF
+          </span>
+        ) : null}
+        <span className="text-[13px] font-bold text-white">
+          {priceYearly !== null ? `${symbol}${priceYearly.toFixed(2)}/yr` : "—"}
+        </span>
+        {retailPriceYearly !== null ? (
+          <span className="text-[11px] text-white/40 line-through">
+            {symbol}
+            {retailPriceYearly.toFixed(2)}/yr
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function RatingBadge({
   averageRating,
   voteCount
@@ -144,6 +191,38 @@ export function DomainsTab({
                 className={darkInput}
               />
             </label>
+            <div className="grid grid-cols-2 gap-3">
+              <label className="block">
+                <span className={formLabel}>Yıllık fiyat (indirimli)</span>
+                <input
+                  type="number"
+                  name="priceYearly"
+                  step="0.01"
+                  min="0"
+                  placeholder="örnek: 7.43"
+                  className={darkInput}
+                />
+              </label>
+              <label className="block">
+                <span className={formLabel}>Retail yıllık fiyat</span>
+                <input
+                  type="number"
+                  name="retailPriceYearly"
+                  step="0.01"
+                  min="0"
+                  placeholder="örnek: 12.69"
+                  className={darkInput}
+                />
+              </label>
+            </div>
+            <label className="block">
+              <span className={formLabel}>Para birimi</span>
+              <select name="priceCurrency" defaultValue="EUR" className={darkInput}>
+                <option value="EUR">EUR (€)</option>
+                <option value="USD">USD ($)</option>
+                <option value="TRY">TRY (₺)</option>
+              </select>
+            </label>
             <button
               type="submit"
               className="inline-flex min-h-[44px] items-center justify-center rounded-[0.9rem] px-6 py-2.5 text-[13px] font-bold tracking-tight text-black shadow-[0_12px_40px_-8px_rgba(30,58,138,0.5)] ring-1 ring-inset ring-white/15 transition hover:shadow-[0_16px_50px_-8px_rgba(245,183,0,0.6)]"
@@ -237,6 +316,12 @@ function DomainRow({ domain, voteAction, selectAction, deleteAction }: DomainRow
           </p>
           <RatingBadge averageRating={domain.averageRating} voteCount={domain.voteCount} />
         </div>
+
+        <PriceBlock
+          priceYearly={domain.priceYearly}
+          retailPriceYearly={domain.retailPriceYearly}
+          priceCurrency={domain.priceCurrency}
+        />
 
         <div className="mt-1 flex items-center gap-2">
           {domain.isSelected ? null : (

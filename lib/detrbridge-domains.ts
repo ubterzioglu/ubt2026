@@ -13,6 +13,11 @@ export interface DetrbridgeDomain {
   averageRating: number | null;
   voteCount: number;
   createdAt: string;
+  /** Discounted yearly price, e.g. registrar promo pricing (null when unset). */
+  priceYearly: number | null;
+  /** Full/retail yearly price before discount (null when unset). */
+  retailPriceYearly: number | null;
+  priceCurrency: string;
 }
 
 export interface DetrbridgeDomainsResult {
@@ -32,6 +37,9 @@ interface SupabaseDomainRow {
   uploader_name: string;
   is_selected: boolean;
   created_at: string;
+  price_yearly: number | null;
+  retail_price_yearly: number | null;
+  price_currency: string;
 }
 
 interface SupabaseVoteRow {
@@ -39,7 +47,8 @@ interface SupabaseVoteRow {
   rating: number;
 }
 
-const DOMAIN_COLUMNS = "id, domain_name, uploader_name, is_selected, created_at";
+const DOMAIN_COLUMNS =
+  "id, domain_name, uploader_name, is_selected, created_at, price_yearly, retail_price_yearly, price_currency";
 
 function getServiceEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -67,7 +76,10 @@ function toDomain(row: SupabaseDomainRow, votes: number[]): DetrbridgeDomain {
     isSelected: row.is_selected,
     averageRating,
     voteCount,
-    createdAt: row.created_at
+    createdAt: row.created_at,
+    priceYearly: row.price_yearly,
+    retailPriceYearly: row.retail_price_yearly,
+    priceCurrency: row.price_currency
   };
 }
 
@@ -129,9 +141,22 @@ export async function getDomainCount(): Promise<number> {
   return count ?? 0;
 }
 
+export interface CreateDomainPricing {
+  priceYearly: number | null;
+  retailPriceYearly: number | null;
+  priceCurrency: string;
+}
+
+function parseOptionalPrice(raw: number | null): number | null {
+  if (raw === null || Number.isNaN(raw)) return null;
+  if (raw < 0) return null;
+  return raw;
+}
+
 export async function createDomain(
   uploaderName: string,
-  domainName: string
+  domainName: string,
+  pricing?: CreateDomainPricing
 ): Promise<MutationResult> {
   const name = domainName.trim();
   if (name.length < 3) {
@@ -144,7 +169,10 @@ export async function createDomain(
   try {
     const { error } = await supabase.from("detrbridge_domains").insert({
       domain_name: name,
-      uploader_name: uploaderName
+      uploader_name: uploaderName,
+      price_yearly: parseOptionalPrice(pricing?.priceYearly ?? null),
+      retail_price_yearly: parseOptionalPrice(pricing?.retailPriceYearly ?? null),
+      price_currency: pricing?.priceCurrency?.trim() || "EUR"
     });
     if (error) throw error;
     return { ok: true };

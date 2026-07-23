@@ -209,7 +209,14 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
       redirect("/detrbridge" as Parameters<typeof redirect>[0]);
     }
     const domainName = (formData.get("domainName") as string | null) ?? "";
-    const outcome = await createDomain(uploaderName, domainName);
+    const priceRaw = (formData.get("priceYearly") as string | null) ?? "";
+    const retailPriceRaw = (formData.get("retailPriceYearly") as string | null) ?? "";
+    const priceCurrency = (formData.get("priceCurrency") as string | null) ?? "EUR";
+    const outcome = await createDomain(uploaderName, domainName, {
+      priceYearly: priceRaw ? Number(priceRaw) : null,
+      retailPriceYearly: retailPriceRaw ? Number(retailPriceRaw) : null,
+      priceCurrency
+    });
     revalidatePath("/detrbridge");
     redirect(
       (outcome.ok
