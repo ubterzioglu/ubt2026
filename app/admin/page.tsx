@@ -6,6 +6,22 @@ import { getAllBlogPostsAdmin } from "@/lib/blog-posts";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
 import { adminSignOutAction } from "@/app/admin/_actions";
 
+const OTHER_ROUTES: { href: string; label: string }[] = [
+  { href: "/bakcakanat", label: "Bakçakanat" },
+  { href: "/batubt", label: "Batu UBT" },
+  { href: "/buyorbye", label: "Buy or Bye" },
+  { href: "/buyorbyetr", label: "Buy or Bye (TR)" },
+  { href: "/detrbridge", label: "detrbridge" },
+  { href: "/dm", label: "DM board" },
+  { href: "/elif", label: "Elif" },
+  { href: "/holiday", label: "Holiday" },
+  { href: "/sandbox", label: "Sandbox" },
+  { href: "/skillubt", label: "Skill UBT" },
+  { href: "/smellable", label: "Smellable" },
+  { href: "/zats", label: "Zats" },
+  { href: "/zpath", label: "Zpath" }
+];
+
 function formatSlotTime(
   startsAt: string,
   timezone: string,
@@ -324,6 +340,26 @@ export default async function AdminPage() {
                 </p>
               )}
             </div>
+          </div>
+        </section>
+
+        <section className="section-panel px-6 py-6 sm:px-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sunrise">
+            Other routes
+          </p>
+          <h2 className="mt-2 font-body text-2xl font-semibold text-ink">
+            Recently added pages
+          </h2>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {OTHER_ROUTES.map((route) => (
+              <a
+                key={route.href}
+                href={route.href}
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+              >
+                {route.label}
+              </a>
+            ))}
           </div>
         </section>
       </div>
