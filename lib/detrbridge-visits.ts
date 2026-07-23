@@ -3,8 +3,8 @@ import "server-only";
 import { headers } from "next/headers";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-/** UBT'nin /detrbridge linkini paylaştığı an (TR saatiyle 19 Temmuz 2026, 07:00). */
-export const DETRBRIDGE_SHARE_MOMENT = new Date("2026-07-19T07:00:00+03:00");
+/** UBT'nin /detrbridge linkini paylaştığı an (TR saatiyle 23 Temmuz 2026, 12:29 — yeniden paylaşım). */
+export const DETRBRIDGE_SHARE_MOMENT = new Date("2026-07-23T12:29:00+03:00");
 
 /**
  * Set by middleware.ts, NOT here: Server Components can't call
