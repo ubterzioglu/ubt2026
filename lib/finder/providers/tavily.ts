@@ -57,7 +57,9 @@ async function tavilyPost<T>(
   if (response.status === 401 || response.status === 403) {
     throw new AuthOrConfigError("Tavily API anahtarı geçersiz veya yetkisiz");
   }
-  if (response.status === 429) {
+  if (response.status === 429 || response.status === 432) {
+    // 432 = Tavily plan/kullanım limiti aşıldı (kota tükendi) — rate limit ile
+    // aynı kategoride ele alınır ki run-job.ts'teki tavily2 fallback'i tetiklensin.
     throw new ProviderRateLimitError("tavily");
   }
   if (!response.ok) {

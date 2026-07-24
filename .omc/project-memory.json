@@ -264,6 +264,12 @@
       "type": "file"
     },
     {
+      "path": "lib\\finder\\run-job.ts",
+      "accessCount": 22,
+      "lastAccessed": 1784844141868,
+      "type": "file"
+    },
+    {
       "path": "app\\detrbridge\\_components\\logos-tab.tsx",
       "accessCount": 21,
       "lastAccessed": 1784802689623,
@@ -283,9 +289,15 @@
     },
     {
       "path": "",
-      "accessCount": 10,
-      "lastAccessed": 1784816202412,
+      "accessCount": 12,
+      "lastAccessed": 1784827769911,
       "type": "directory"
+    },
+    {
+      "path": "scripts\\dev-reclassify-missing-address-temp.ts",
+      "accessCount": 10,
+      "lastAccessed": 1784832008358,
+      "type": "file"
     },
     {
       "path": "lib\\detrbridge-logos.ts",
@@ -324,6 +336,12 @@
       "type": "file"
     },
     {
+      "path": ".env.local",
+      "accessCount": 4,
+      "lastAccessed": 1784828372665,
+      "type": "directory"
+    },
+    {
       "path": "app",
       "accessCount": 3,
       "lastAccessed": 1784799238246,
@@ -333,6 +351,12 @@
       "path": "app\\admin\\page.tsx",
       "accessCount": 3,
       "lastAccessed": 1784816220407,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\providers\\tavily.ts",
+      "accessCount": 3,
+      "lastAccessed": 1784832463950,
       "type": "file"
     },
     {
@@ -375,6 +399,12 @@
       "path": "supabase\\migrations\\20260723140000_reset_detrbridge_visits_with_names.sql",
       "accessCount": 2,
       "lastAccessed": 1784804056621,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\dev-finder-bulk-run.ts",
+      "accessCount": 2,
+      "lastAccessed": 1784828292927,
       "type": "file"
     },
     {
@@ -447,6 +477,84 @@
       "path": "app\\page.tsx",
       "accessCount": 1,
       "lastAccessed": 1784816200407,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\types.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784827791949,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\dev-query-cities-temp.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784827909280,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260721100000_restructure_finder_candidates.sql",
+      "accessCount": 1,
+      "lastAccessed": 1784828025337,
+      "type": "file"
+    },
+    {
+      "path": "docs\\desiremap-scraper-restructure-2026-07-21.md",
+      "accessCount": 1,
+      "lastAccessed": 1784828025848,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\dev-query-candidates-temp.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784828044349,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\queries.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784828088970,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\prompts.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784828095666,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\dev-inspect-missing-address-temp.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784828116857,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\validate.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784828135046,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\providers\\gemini.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784828140645,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\dedupe.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784828170119,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\dev-check-reclassify-result-temp.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784828232027,
+      "type": "file"
+    },
+    {
+      "path": "lib\\finder\\errors.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784828448952,
       "type": "file"
     }
   ],

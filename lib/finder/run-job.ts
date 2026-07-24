@@ -339,7 +339,7 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
   const template = await loadTemplate(runtime);
   const queries = buildQueries(job, template);
 
-  const searchConfig =
+  let searchConfig =
     providerById(runtime, job.search_provider_id) ?? providerByKey(runtime, "tavily");
   if (!searchConfig || !searchConfig.is_enabled) {
     throw new AuthOrConfigError("Etkin arama sağlayıcısı yok");
@@ -354,6 +354,11 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
   } else {
     provider = createTavilySearchProvider(resolveSecret(searchConfig.secret_ref));
   }
+
+  // Tavily ikincil anahtar — birincil kota/rate-limit hatası verirse kalıcı olarak
+  // bu sağlayıcıya geçilir (job boyunca bir kez, tekrar tekrar denenmez).
+  const tavily2Config = providerByKey(runtime, "tavily2");
+  let switchedToTavily2 = false;
 
   // SerpAPI fallback — az sonuçta geo hassasiyeti için (soft cap'te kapalı).
   const serpapiConfig = providerByKey(runtime, "serpapi");
@@ -389,20 +394,62 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
         searchDepth: depth
       });
     } catch (error: unknown) {
-      await insertQuery(runtime, {
-        stage: "seed",
-        provider_key: usedProvider.key,
-        query_text: queryText,
-        usage_units: 0,
-        estimated_cost_usd: 0,
-        result_count: 0,
-        status: "failed"
-      });
-      if (error instanceof AuthOrConfigError || error instanceof BudgetExceededError) {
-        throw error;
+      const isTavilyQuotaIssue =
+        usedProvider.key === "tavily" &&
+        (error instanceof ProviderRateLimitError || error instanceof AuthOrConfigError);
+
+      if (isTavilyQuotaIssue && !switchedToTavily2 && tavily2Config?.is_enabled) {
+        switchedToTavily2 = true;
+        await appendEvent(
+          runtime,
+          "tavily_key_switch",
+          `Birincil Tavily anahtarı kota/limit hatası verdi, tavily2'ye geçiliyor: ${errorMessage(error)}`,
+          { level: "warn" }
+        );
+        provider = createTavilySearchProvider(resolveSecret(tavily2Config.secret_ref));
+        usedProvider = provider;
+        searchConfig = tavily2Config;
+        try {
+          searchOutput = await usedProvider.search({
+            query: queryText,
+            locationLabel: job.location_label,
+            countryCode: job.country_code ?? undefined,
+            languageCode: job.language_code,
+            maxResults,
+            searchDepth: depth
+          });
+        } catch (retryError: unknown) {
+          await insertQuery(runtime, {
+            stage: "seed",
+            provider_key: usedProvider.key,
+            query_text: queryText,
+            usage_units: 0,
+            estimated_cost_usd: 0,
+            result_count: 0,
+            status: "failed"
+          });
+          if (retryError instanceof AuthOrConfigError || retryError instanceof BudgetExceededError) {
+            throw retryError;
+          }
+          await appendEvent(runtime, "search_failed", errorMessage(retryError), { level: "warn" });
+          continue;
+        }
+      } else {
+        await insertQuery(runtime, {
+          stage: "seed",
+          provider_key: usedProvider.key,
+          query_text: queryText,
+          usage_units: 0,
+          estimated_cost_usd: 0,
+          result_count: 0,
+          status: "failed"
+        });
+        if (error instanceof AuthOrConfigError || error instanceof BudgetExceededError) {
+          throw error;
+        }
+        await appendEvent(runtime, "search_failed", errorMessage(error), { level: "warn" });
+        continue;
       }
-      await appendEvent(runtime, "search_failed", errorMessage(error), { level: "warn" });
-      continue;
     }
 
     const queryId = await insertQuery(runtime, {
@@ -527,12 +574,15 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
 
 async function runExtractStage(runtime: JobRuntime): Promise<void> {
   const { job } = runtime;
-  const extractConfig =
+  let extractConfig =
     providerById(runtime, job.extract_provider_id) ?? providerByKey(runtime, "tavily");
   if (!extractConfig || !extractConfig.is_enabled) {
     throw new AuthOrConfigError("Etkin ekstraksiyon sağlayıcısı yok");
   }
-  const extractProvider = createTavilyExtractProvider(resolveSecret(extractConfig.secret_ref));
+  let extractProvider = createTavilyExtractProvider(resolveSecret(extractConfig.secret_ref));
+
+  const tavily2ConfigForExtract = providerByKey(runtime, "tavily2");
+  let switchedExtractToTavily2 = false;
 
   const requestDefaults = extractConfig.request_defaults ?? {};
   const baseDepth =
@@ -579,14 +629,48 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
         depth
       });
     } catch (error: unknown) {
-      if (error instanceof AuthOrConfigError || error instanceof BudgetExceededError) {
-        throw error;
+      const isTavilyQuotaIssue = error instanceof ProviderRateLimitError;
+
+      if (
+        isTavilyQuotaIssue &&
+        !switchedExtractToTavily2 &&
+        tavily2ConfigForExtract?.is_enabled
+      ) {
+        switchedExtractToTavily2 = true;
+        extractConfig = tavily2ConfigForExtract;
+        extractProvider = createTavilyExtractProvider(resolveSecret(tavily2ConfigForExtract.secret_ref));
+        await appendEvent(
+          runtime,
+          "tavily_key_switch",
+          `Extract aşamasında birincil Tavily anahtarı kota/limit hatası verdi, tavily2'ye geçiliyor: ${errorMessage(error)}`,
+          { level: "warn" }
+        );
+        try {
+          output = await extractProvider.extract({
+            urls: batch.map((source) => source.source_url),
+            query: job.freeform_topic ?? job.title,
+            depth
+          });
+        } catch (retryError: unknown) {
+          if (retryError instanceof AuthOrConfigError || retryError instanceof BudgetExceededError) {
+            throw retryError;
+          }
+          for (const source of batch) {
+            await updateSource(runtime, source.id, { fetch_status: "failed" });
+          }
+          await appendEvent(runtime, "extract_failed", errorMessage(retryError), { level: "warn" });
+          continue;
+        }
+      } else {
+        if (error instanceof AuthOrConfigError || error instanceof BudgetExceededError) {
+          throw error;
+        }
+        for (const source of batch) {
+          await updateSource(runtime, source.id, { fetch_status: "failed" });
+        }
+        await appendEvent(runtime, "extract_failed", errorMessage(error), { level: "warn" });
+        continue;
       }
-      for (const source of batch) {
-        await updateSource(runtime, source.id, { fetch_status: "failed" });
-      }
-      await appendEvent(runtime, "extract_failed", errorMessage(error), { level: "warn" });
-      continue;
     }
 
     const docsByUrl = new Map(output.docs.map((doc) => [normalizeUrl(doc.url), doc]));
@@ -625,26 +709,42 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
 
 // ─── Aşama 3: Sınıflandırma ──────────────────────────────────────────────────
 
-const CLASSIFY_REQUEST_DELAY_MS = 4_000;
-const CLASSIFY_RATE_LIMIT_RETRIES = 3;
-const CLASSIFY_RATE_LIMIT_BACKOFF_MS = 15_000;
+// Tier 1 Gemini 2.5 Flash RPM limiti 15 — 4sn gecikme (dakikada 15 istek) sınırda
+// kalıp anlık dalgalanmada rate-limit'e çarpıyordu. 5sn'ye çekilince dakikada 12
+// isteğe düşer, güvenli marj bırakır.
+const CLASSIFY_REQUEST_DELAY_MS = 5_000;
+const CLASSIFY_RATE_LIMIT_RETRIES = 5;
+const CLASSIFY_RATE_LIMIT_BACKOFF_MS = 20_000;
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+interface ClassifierSwitcher {
+  current: ReturnType<typeof createGeminiClassifier>;
+  switchToSecondary: (() => void) | null;
+}
+
 async function classifyWithRetry(
-  classifier: ReturnType<typeof createGeminiClassifier>,
+  switcher: ClassifierSwitcher,
   input: Parameters<ReturnType<typeof createGeminiClassifier>["classify"]>[0]
 ): Promise<{ parsed: unknown; usage: ClassifyUsage }> {
   for (let attempt = 0; ; attempt++) {
     try {
-      return await classifier.classify(input);
+      return await switcher.current.classify(input);
     } catch (error: unknown) {
-      const isLastAttempt = attempt >= CLASSIFY_RATE_LIMIT_RETRIES;
-      if (!(error instanceof ProviderRateLimitError) || isLastAttempt) {
-        throw error;
+      if (!(error instanceof ProviderRateLimitError)) throw error;
+
+      // Birincil Gemini anahtarı kota/rate-limit hatası verirse ikinci anahtara
+      // kalıcı geç (job boyunca bir kez), sonra normal backoff'a devam et.
+      if (switcher.switchToSecondary) {
+        switcher.switchToSecondary();
+        switcher.switchToSecondary = null;
+        continue;
       }
+
+      const isLastAttempt = attempt >= CLASSIFY_RATE_LIMIT_RETRIES;
+      if (isLastAttempt) throw error;
       await sleep(CLASSIFY_RATE_LIMIT_BACKOFF_MS * (attempt + 1));
     }
   }
@@ -657,8 +757,17 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
   if (!classifierConfig || !classifierConfig.is_enabled) {
     throw new AuthOrConfigError("Etkin sınıflandırıcı yok");
   }
-  const classifier = createGeminiClassifier(resolveSecret(classifierConfig.secret_ref));
   const baseModel = classifierConfig.default_model ?? SOFT_DEGRADE_MODEL;
+  const gemini2Config = providerByKey(runtime, "gemini2");
+  const switcher: ClassifierSwitcher = {
+    current: createGeminiClassifier(resolveSecret(classifierConfig.secret_ref)),
+    switchToSecondary:
+      gemini2Config?.is_enabled === true
+        ? () => {
+            switcher.current = createGeminiClassifier(resolveSecret(gemini2Config.secret_ref));
+          }
+        : null
+  };
 
   const sources = await loadSourcesByStatus(runtime, "fetched", job.max_extract_urls);
   let candidateCount = await countCandidates(runtime);
@@ -675,7 +784,7 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
     const model = runtime.softCapHit ? SOFT_DEGRADE_MODEL : baseModel;
     let classification;
     try {
-      classification = await classifyWithRetry(classifier, {
+      classification = await classifyWithRetry(switcher, {
         systemPrompt: CLASSIFIER_SYSTEM_PROMPT,
         userPrompt: buildClassifierUserPrompt(job, source),
         model
