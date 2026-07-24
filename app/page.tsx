@@ -792,6 +792,15 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             >
               Evden Eve Nakliyat
             </a>
+            <span className="text-ink/30">·</span>
+            <a
+              href="https://tekhurdametal.com/istanbul-hurdaci/"
+              target="_blank"
+              rel="noopener noreferrer dofollow"
+              className="text-accent/70 hover:text-accent transition-colors"
+            >
+              İstanbul Hurdacı
+            </a>
           </div>
           <div className="mt-1 text-xs text-ink/45">
             Spindora Tarafından Seosu Yapılmıştır.
