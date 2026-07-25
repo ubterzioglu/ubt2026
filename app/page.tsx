@@ -796,8 +796,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <span>
               <a
                 href="https://tekhurdametal.com/istanbul-hurdaci/"
-                target="_blank"
-                rel="noopener noreferrer dofollow"
+                rel="dofollow"
                 className="text-accent/70 hover:text-accent transition-colors"
               >
                 İstanbul Hurdacı
@@ -807,12 +806,66 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <span className="text-ink/30">·</span>
             <span>
               <a
+                href="https://tekhurdametal.com/hurda-fiyatlari/"
+                rel="dofollow"
+                className="text-accent/70 hover:text-accent transition-colors"
+              >
+                Hurda Fiyatları
+              </a>{" "}
+              Tek Hurda Metal
+            </span>
+            <span className="text-ink/30">·</span>
+            <span>
+              <a
+                href="https://tekhurdametal.com/hurda-demir-fiyatlari/"
+                rel="dofollow"
+                className="text-accent/70 hover:text-accent transition-colors"
+              >
+                Demir Hurda Fiyatları
+              </a>{" "}
+              Tek Hurda Metal
+            </span>
+            <span className="text-ink/30">·</span>
+            <span>
+              <a
+                href="https://tekhurdametal.com/beylikduzu-hurdaci/"
+                rel="dofollow"
+                className="text-accent/70 hover:text-accent transition-colors"
+              >
+                Beylikdüzü Hurdacı
+              </a>{" "}
+              Firması Tek Hurda Metal A.Ş
+            </span>
+            <span className="text-ink/30">·</span>
+            <span>
+              <a
                 href="https://lionerotik.com/urunler/fetis-urunleri"
-                target="_blank"
-                rel="noopener noreferrer dofollow"
+                rel="dofollow"
                 className="text-accent/70 hover:text-accent transition-colors"
               >
                 Antalya Sex Shop
+              </a>{" "}
+              Lion Erotik
+            </span>
+            <span className="text-ink/30">·</span>
+            <span>
+              <a
+                href="https://lionerotik.com/urunler/fetis-urunleri"
+                rel="dofollow"
+                className="text-accent/70 hover:text-accent transition-colors"
+              >
+                Antalya Erotik Shop
+              </a>{" "}
+              Lion Erotik
+            </span>
+            <span className="text-ink/30">·</span>
+            <span>
+              <a
+                href="https://lionerotik.com/urunler/fetis-urunleri"
+                rel="dofollow"
+                className="text-accent/70 hover:text-accent transition-colors"
+              >
+                Antalya Seks Shop
               </a>{" "}
               Lion Erotik
             </span>
