@@ -767,24 +767,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             </Link>
             <span className="text-ink/30">·</span>
             <a
-              href="https://chatio.com.tr/"
-              target="_blank"
-              rel="noopener noreferrer dofollow"
-              className="text-accent/70 hover:text-accent transition-colors"
-            >
-              Canlı Destek Yazılımı
-            </a>
-            <span className="text-ink/30">·</span>
-            <a
-              href="https://www.spindorai.com/seo/en-iyi-seo-ajansi"
-              target="_blank"
-              rel="noopener noreferrer dofollow"
-              className="text-accent/70 hover:text-accent transition-colors"
-            >
-              Seo Ajansı
-            </a>
-            <span className="text-ink/30">·</span>
-            <a
               href="https://ufuksoynakliyat.com.tr"
               target="_blank"
               rel="noopener noreferrer dofollow"
@@ -792,39 +774,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             >
               Evden Eve Nakliyat
             </a>
-            <span className="text-ink/30">·</span>
-            <span>
-              <a
-                href="https://tekhurdametal.com/istanbul-hurdaci/"
-                rel="dofollow"
-                className="text-accent/70 hover:text-accent transition-colors"
-              >
-                İstanbul Hurdacı
-              </a>{" "}
-              Firması Tek Hurda Metal A.Ş
-            </span>
-            <span className="text-ink/30">·</span>
-            <span>
-              <a
-                href="https://tekhurdametal.com/hurda-fiyatlari/"
-                rel="dofollow"
-                className="text-accent/70 hover:text-accent transition-colors"
-              >
-                Hurda Fiyatları
-              </a>{" "}
-              Tek Hurda Metal
-            </span>
-            <span className="text-ink/30">·</span>
-            <span>
-              <a
-                href="https://tekhurdametal.com/hurda-demir-fiyatlari/"
-                rel="dofollow"
-                className="text-accent/70 hover:text-accent transition-colors"
-              >
-                Demir Hurda Fiyatları
-              </a>{" "}
-              Tek Hurda Metal
-            </span>
+            <span>Şirketi Ufuksoy Nakliyat A.Ş</span>
             <span className="text-ink/30">·</span>
             <span>
               <a
@@ -836,42 +786,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               </a>{" "}
               Firması Tek Hurda Metal A.Ş
             </span>
-            <span className="text-ink/30">·</span>
-            <span>
-              <a
-                href="https://lionerotik.com/urunler/fetis-urunleri"
-                rel="dofollow"
-                className="text-accent/70 hover:text-accent transition-colors"
-              >
-                Antalya Sex Shop
-              </a>{" "}
-              Lion Erotik
-            </span>
-            <span className="text-ink/30">·</span>
-            <span>
-              <a
-                href="https://lionerotik.com/urunler/fetis-urunleri"
-                rel="dofollow"
-                className="text-accent/70 hover:text-accent transition-colors"
-              >
-                Antalya Erotik Shop
-              </a>{" "}
-              Lion Erotik
-            </span>
-            <span className="text-ink/30">·</span>
-            <span>
-              <a
-                href="https://lionerotik.com/urunler/fetis-urunleri"
-                rel="dofollow"
-                className="text-accent/70 hover:text-accent transition-colors"
-              >
-                Antalya Seks Shop
-              </a>{" "}
-              Lion Erotik
-            </span>
-          </div>
-          <div className="mt-1 text-xs text-ink/45">
-            Spindora Tarafından Seosu Yapılmıştır.
           </div>
         </div>
       </footer>
