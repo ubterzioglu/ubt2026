@@ -1,0 +1,367 @@
+<title>Service Finder — Genişletme Turu Sonuçları</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --bg-elevated: #121820;
+    --bg-inset: #0e131a;
+    --ink: #e6edf3;
+    --ink-dim: #8b96a3;
+    --ink-faint: #5b6572;
+    --accent: #4fd1c5;
+    --good: #3fb950;
+    --good-bg: rgba(63, 185, 80, 0.13);
+    --warn: #d29922;
+    --warn-bg: rgba(210, 153, 34, 0.13);
+    --critical: #f85149;
+    --critical-bg: rgba(248, 81, 73, 0.12);
+    --neutral: #6e7681;
+    --neutral-bg: rgba(110, 118, 129, 0.13);
+    --line: rgba(255, 255, 255, 0.09);
+    --line-strong: rgba(255, 255, 255, 0.16);
+  }
+
+  :root[data-theme="light"] {
+    --bg: #f6f8fa;
+    --bg-elevated: #ffffff;
+    --bg-inset: #eef1f4;
+    --ink: #0e1420;
+    --ink-dim: #57606a;
+    --ink-faint: #8b96a3;
+    --accent: #0f766e;
+    --good: #1a7f37;
+    --good-bg: rgba(26, 127, 55, 0.1);
+    --warn: #9a6700;
+    --warn-bg: rgba(154, 103, 0, 0.11);
+    --critical: #cf222e;
+    --critical-bg: rgba(207, 34, 46, 0.09);
+    --neutral: #6e7681;
+    --neutral-bg: rgba(110, 118, 129, 0.1);
+    --line: rgba(15, 20, 30, 0.09);
+    --line-strong: rgba(15, 20, 30, 0.16);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f6f8fa;
+      --bg-elevated: #ffffff;
+      --bg-inset: #eef1f4;
+      --ink: #0e1420;
+      --ink-dim: #57606a;
+      --ink-faint: #8b96a3;
+      --accent: #0f766e;
+      --good: #1a7f37;
+      --good-bg: rgba(26, 127, 55, 0.1);
+      --warn: #9a6700;
+      --warn-bg: rgba(154, 103, 0, 0.11);
+      --critical: #cf222e;
+      --critical-bg: rgba(207, 34, 46, 0.09);
+      --neutral: #6e7681;
+      --neutral-bg: rgba(110, 118, 129, 0.1);
+      --line: rgba(15, 20, 30, 0.09);
+      --line-strong: rgba(15, 20, 30, 0.16);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--ink); }
+
+  body {
+    margin: 0;
+    padding: clamp(20px, 4vw, 56px);
+    font-family: ui-sans-serif, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono { font-family: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace; }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+    flex: none;
+  }
+
+  h1 {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+    font-size: clamp(22px, 3.2vw, 30px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .subhead { color: var(--ink-dim); font-size: 14px; max-width: 62ch; }
+
+  /* stat tiles */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .stat { background: var(--bg-elevated); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .stat .label { font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); }
+  .stat .value {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+    font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+  }
+  .stat .value.accent { color: var(--accent); }
+  .stat .value.warn { color: var(--warn); }
+  .stat .value.critical { color: var(--critical); }
+  .stat .sub { font-size: 12px; color: var(--ink-faint); }
+
+  section { display: flex; flex-direction: column; gap: 14px; }
+
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+  h2 {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+    font-size: 13px; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 600;
+    color: var(--ink-dim); margin: 0;
+  }
+
+  .section-note { font-size: 12.5px; color: var(--ink-faint); }
+
+  /* matrix table */
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-elevated); }
+  table { border-collapse: collapse; width: 100%; min-width: 700px; font-size: 13.5px; }
+  thead th {
+    text-align: left;
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint);
+    font-weight: 600; padding: 12px 14px; border-bottom: 1px solid var(--line-strong); white-space: nowrap;
+  }
+  thead th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody td { padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--bg-inset); }
+  .city-cell { display: flex; align-items: center; gap: 9px; font-weight: 550; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .status-dot.done { background: var(--good); }
+  .status-dot.partial { background: var(--warn); }
+  .status-dot.empty { background: var(--critical); }
+  .status-dot.pending { background: var(--neutral); }
+  .cell-count {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .cell-count.zero { color: var(--ink-faint); }
+  td.total-col {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+    font-weight: 600; font-variant-numeric: tabular-nums;
+  }
+  .row-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+    font-size: 11px; letter-spacing: 0.03em; padding: 3px 8px; border-radius: 20px;
+  }
+  .row-status.done { background: var(--good-bg); color: var(--good); }
+  .row-status.partial { background: var(--warn-bg); color: var(--warn); }
+  .row-status.empty { background: var(--critical-bg); color: var(--critical); }
+  .row-status.pending { background: var(--neutral-bg); color: var(--neutral); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--ink-faint); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .page > * { animation: rise 0.4s ease backwards; }
+    .page > *:nth-child(1) { animation-delay: 0s; }
+    .page > *:nth-child(2) { animation-delay: 0.05s; }
+    .page > *:nth-child(3) { animation-delay: 0.1s; }
+    .page > *:nth-child(4) { animation-delay: 0.15s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  }
+</style>
+
+<div class="page">
+
+  <header>
+    <div class="eyebrow">service finder · desiremap.de</div>
+    <h1>Genişletme Turu — Sonuçlar</h1>
+    <p class="subhead">
+      13 büyük Alman şehri için FKK/Sauna Club, Bordell/Laufhaus, Erotik Studio ve Privat
+      kategorilerinde genişletilmiş tarama sonuçları. Sayılar veritabanından canlı alınmıştır.
+    </p>
+  </header>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Bu turdan aday</div>
+      <div class="value accent">68</div>
+      <div class="sub">6 şehir işlendi</div>
+    </div>
+    <div class="stat">
+      <div class="label">Bu turdan harcama</div>
+      <div class="value">$2.01</div>
+    </div>
+    <div class="stat">
+      <div class="label">DB toplam aday</div>
+      <div class="value">481</div>
+    </div>
+    <div class="stat">
+      <div class="label">Adres eksik</div>
+      <div class="value warn">188</div>
+      <div class="sub">/ 481 toplam</div>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-head">
+      <h2>Şehir × Kategori Sonuçları</h2>
+      <span class="section-note">FKK/Sauna · Bordell/Laufhaus · Erotik Studio · Privat</span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Şehir</th>
+            <th class="num">FKK</th>
+            <th class="num">Bordell</th>
+            <th class="num">Studio</th>
+            <th class="num">Privat</th>
+            <th class="num">Toplam</th>
+            <th>Durum</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="city-cell"><span class="status-dot pending"></span>Berlin</td>
+            <td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td>
+            <td class="num total-col">—</td>
+            <td><span class="row-status pending">işlenmedi</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot pending"></span>Hamburg</td>
+            <td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td>
+            <td class="num total-col">—</td>
+            <td><span class="row-status pending">işlenmedi</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot empty"></span>München</td>
+            <td class="num cell-count zero">0</td><td class="num cell-count zero">0</td><td class="num cell-count zero">0</td><td class="num cell-count zero">0</td>
+            <td class="num total-col">0</td>
+            <td><span class="row-status empty">0 aday</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot empty"></span>Frankfurt am Main</td>
+            <td class="num cell-count zero">0</td><td class="num cell-count zero">0</td><td class="num cell-count zero">0</td><td class="num cell-count zero">0</td>
+            <td class="num total-col">0</td>
+            <td><span class="row-status empty">0 aday</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot done"></span>Stuttgart</td>
+            <td class="num cell-count zero">0</td><td class="num cell-count">10</td><td class="num cell-count">6</td><td class="num cell-count">1</td>
+            <td class="num total-col">17</td>
+            <td><span class="row-status done">tamamlandı</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot done"></span>Bremen</td>
+            <td class="num cell-count">7</td><td class="num cell-count">4</td><td class="num cell-count">5</td><td class="num cell-count zero">0</td>
+            <td class="num total-col">16</td>
+            <td><span class="row-status done">tamamlandı</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot done"></span>Düsseldorf</td>
+            <td class="num cell-count">9</td><td class="num cell-count">4</td><td class="num cell-count">6</td><td class="num cell-count">1</td>
+            <td class="num total-col">20</td>
+            <td><span class="row-status done">tamamlandı</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot partial"></span>Dresden</td>
+            <td class="num cell-count">8</td><td class="num cell-count">7</td><td class="num cell-count">—</td><td class="num cell-count">—</td>
+            <td class="num total-col">15</td>
+            <td><span class="row-status partial">2 / 4</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot pending"></span>Leipzig</td>
+            <td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td>
+            <td class="num total-col">—</td>
+            <td><span class="row-status pending">başlanmadı</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot pending"></span>Hannover</td>
+            <td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td>
+            <td class="num total-col">—</td>
+            <td><span class="row-status pending">başlanmadı</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot pending"></span>Dortmund</td>
+            <td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td>
+            <td class="num total-col">—</td>
+            <td><span class="row-status pending">başlanmadı</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot pending"></span>Nürnberg</td>
+            <td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td>
+            <td class="num total-col">—</td>
+            <td><span class="row-status pending">başlanmadı</span></td>
+          </tr>
+          <tr>
+            <td class="city-cell"><span class="status-dot pending"></span>Essen</td>
+            <td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td><td class="num cell-count">—</td>
+            <td class="num total-col">—</td>
+            <td><span class="row-status pending">başlanmadı</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><span class="status-dot done"></span>tamamlandı</span>
+      <span><span class="status-dot partial"></span>kısmi</span>
+      <span><span class="status-dot empty"></span>0 aday</span>
+      <span><span class="status-dot pending"></span>işlenmedi</span>
+    </div>
+  </section>
+
+  <footer>
+    <span>desiremap.de · service finder pipeline</span>
+    <span class="mono">2026-07-25</span>
+  </footer>
+
+</div>
