@@ -14,6 +14,8 @@ interface TodosTabProps {
   deleteCommentAction: ServerFormAction;
   attachAction: ServerFormAction;
   deleteAttachmentAction: ServerFormAction;
+  /** Which tab's query param this board's links point back to. */
+  tabKey?: "todos" | "todos2";
 }
 
 const darkInput =
@@ -82,7 +84,8 @@ export function TodosTab({
   commentAction,
   deleteCommentAction,
   attachAction,
-  deleteAttachmentAction
+  deleteAttachmentAction,
+  tabKey = "todos"
 }: TodosTabProps) {
   const editing = editingId ? todos.find((item) => item.id === editingId) ?? null : null;
   const today = todayInBerlin();
@@ -136,7 +139,7 @@ export function TodosTab({
           <span className="flex items-center gap-3">
             {editing ? (
               <a
-                href="/detrbridge?tab=todos"
+                href={`/detrbridge?tab=${tabKey}`}
                 className="text-[13px] font-semibold"
                 style={{ color: DETRBRIDGE_GOLD }}
               >
@@ -231,6 +234,7 @@ export function TodosTab({
               key={item.id}
               item={item}
               today={today}
+              tabKey={tabKey}
               toggleAction={toggleAction}
               deleteAction={deleteAction}
               commentAction={commentAction}
@@ -248,6 +252,7 @@ export function TodosTab({
 interface TodoRowProps {
   item: DetrbridgeTodoItem;
   today: string;
+  tabKey: "todos" | "todos2";
   toggleAction: ServerFormAction;
   deleteAction: ServerFormAction;
   commentAction: ServerFormAction;
@@ -259,6 +264,7 @@ interface TodoRowProps {
 function TodoRow({
   item,
   today,
+  tabKey,
   toggleAction,
   deleteAction,
   commentAction,
@@ -336,7 +342,7 @@ function TodoRow({
 
         <div className="flex shrink-0 items-center gap-1.5">
           <a
-            href={`/detrbridge?tab=todos&edit=${item.id}`}
+            href={`/detrbridge?tab=${tabKey}&edit=${item.id}`}
             className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-[#F5B700]/40 hover:text-[#F5B700]"
           >
             Düzenle
