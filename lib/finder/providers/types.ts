@@ -47,7 +47,7 @@ export interface ExtractOutput {
 }
 
 export interface ExtractProvider {
-  readonly key: "tavily";
+  readonly key: "tavily" | "direct";
   extract(input: {
     urls: string[];
     query?: string;
@@ -69,5 +69,6 @@ export interface ClassifierProvider {
     systemPrompt: string;
     userPrompt: string;
     model?: string;
+    responseSchema?: Record<string, unknown>;
   }): Promise<{ parsed: unknown; usage: ClassifyUsage }>;
 }

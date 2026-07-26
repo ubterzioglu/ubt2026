@@ -48,7 +48,7 @@ export function createGeminiClassifier(apiKey: string): ClassifierProvider {
             generationConfig: {
               temperature: 0.1,
               responseMimeType: "application/json",
-              responseSchema: CLASSIFIER_RESPONSE_SCHEMA
+              responseSchema: input.responseSchema ?? CLASSIFIER_RESPONSE_SCHEMA
             }
           }),
           signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)

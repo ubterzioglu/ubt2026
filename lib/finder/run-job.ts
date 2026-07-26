@@ -13,8 +13,14 @@ import {
   errorCode,
   errorMessage
 } from "@/lib/finder/errors";
+import { parseClassifierBatchOutput } from "@/lib/finder/batch";
 import { extractDomain, makeDuplicateKey, normalizeUrl } from "@/lib/finder/dedupe";
-import { CLASSIFIER_SYSTEM_PROMPT, buildClassifierUserPrompt } from "@/lib/finder/prompts";
+import {
+  CLASSIFIER_BATCH_RESPONSE_SCHEMA,
+  CLASSIFIER_SYSTEM_PROMPT,
+  buildClassifierBatchUserPrompt
+} from "@/lib/finder/prompts";
+import { createDirectExtractProvider } from "@/lib/finder/providers/direct";
 import { createGeminiClassifier } from "@/lib/finder/providers/gemini";
 import { createSerpApiSearchProvider } from "@/lib/finder/providers/serpapi";
 import {
@@ -36,6 +42,7 @@ import type {
 const SOFT_DEGRADE_MODEL = "gemini-2.5-flash";
 const MIN_CONFIDENCE_TO_KEEP = 30;
 const EXTRACT_BATCH_SIZE = 5;
+const CLASSIFY_BATCH_SIZE = 5;
 // Informational lock tag (only ever written, never compared).
 const LOCKED_BY = "dmscraper-server-action";
 
@@ -378,9 +385,12 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
         ? (requestDefaults["search_depth"] as "basic" | "advanced")
         : "basic";
     const depth: "basic" | "advanced" = runtime.softCapHit ? "basic" : baseDepth;
+    const configuredMaxResults = Number(
+      requestDefaults["max_results"] ?? (searchConfig.provider_key === "serpapi" ? 100 : 8)
+    );
     const maxResults = runtime.softCapHit
-      ? Math.min(5, Number(requestDefaults["max_results"] ?? 8))
-      : Number(requestDefaults["max_results"] ?? 8);
+      ? Math.min(5, configuredMaxResults)
+      : configuredMaxResults;
 
     let searchOutput;
     let usedProvider = provider;
@@ -579,7 +589,10 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
   if (!extractConfig || !extractConfig.is_enabled) {
     throw new AuthOrConfigError("Etkin ekstraksiyon sağlayıcısı yok");
   }
-  let extractProvider = createTavilyExtractProvider(resolveSecret(extractConfig.secret_ref));
+  let extractProvider =
+    extractConfig.provider_key === "serpapi"
+      ? createDirectExtractProvider()
+      : createTavilyExtractProvider(resolveSecret(extractConfig.secret_ref));
 
   const tavily2ConfigForExtract = providerByKey(runtime, "tavily2");
   let switchedExtractToTavily2 = false;
@@ -709,12 +722,11 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
 
 // ─── Aşama 3: Sınıflandırma ──────────────────────────────────────────────────
 
-// Tier 1 Gemini 2.5 Flash RPM limiti 15 — 4sn gecikme (dakikada 15 istek) sınırda
-// kalıp anlık dalgalanmada rate-limit'e çarpıyordu. 5sn'ye çekilince dakikada 12
-// isteğe düşer, güvenli marj bırakır.
 const CLASSIFY_REQUEST_DELAY_MS = 5_000;
 const CLASSIFY_RATE_LIMIT_RETRIES = 5;
 const CLASSIFY_RATE_LIMIT_BACKOFF_MS = 20_000;
+const classifierQueues = new Map<string, Promise<void>>();
+const classifierNextCallAt = new Map<string, number>();
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -722,7 +734,21 @@ function sleep(ms: number): Promise<void> {
 
 interface ClassifierSwitcher {
   current: ReturnType<typeof createGeminiClassifier>;
+  rateLimitKey: string;
   switchToSecondary: (() => void) | null;
+}
+
+async function waitForClassifierSlot(rateLimitKey: string): Promise<void> {
+  const previous = classifierQueues.get(rateLimitKey) ?? Promise.resolve();
+  const scheduled = previous
+    .catch(() => undefined)
+    .then(async () => {
+      const waitMs = Math.max(0, (classifierNextCallAt.get(rateLimitKey) ?? 0) - Date.now());
+      if (waitMs > 0) await sleep(waitMs);
+      classifierNextCallAt.set(rateLimitKey, Date.now() + CLASSIFY_REQUEST_DELAY_MS);
+    });
+  classifierQueues.set(rateLimitKey, scheduled);
+  await scheduled;
 }
 
 async function classifyWithRetry(
@@ -731,6 +757,7 @@ async function classifyWithRetry(
 ): Promise<{ parsed: unknown; usage: ClassifyUsage }> {
   for (let attempt = 0; ; attempt++) {
     try {
+      await waitForClassifierSlot(switcher.rateLimitKey);
       return await switcher.current.classify(input);
     } catch (error: unknown) {
       if (!(error instanceof ProviderRateLimitError)) throw error;
@@ -757,14 +784,25 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
   if (!classifierConfig || !classifierConfig.is_enabled) {
     throw new AuthOrConfigError("Etkin sınıflandırıcı yok");
   }
-  const baseModel = classifierConfig.default_model ?? SOFT_DEGRADE_MODEL;
-  const gemini2Config = providerByKey(runtime, "gemini2");
+  const requestedModel = runtime.job.result_summary["classifier_model"];
+  const baseModel =
+    typeof requestedModel === "string" && requestedModel.length > 0
+      ? requestedModel
+      : classifierConfig.default_model ?? SOFT_DEGRADE_MODEL;
+  const secondaryClassifierConfig =
+    classifierConfig.provider_key === "gemini2"
+      ? providerByKey(runtime, "gemini")
+      : providerByKey(runtime, "gemini2");
   const switcher: ClassifierSwitcher = {
     current: createGeminiClassifier(resolveSecret(classifierConfig.secret_ref)),
+    rateLimitKey: `${classifierConfig.secret_ref}:${baseModel}`,
     switchToSecondary:
-      gemini2Config?.is_enabled === true
+      secondaryClassifierConfig?.is_enabled === true
         ? () => {
-            switcher.current = createGeminiClassifier(resolveSecret(gemini2Config.secret_ref));
+            switcher.current = createGeminiClassifier(
+              resolveSecret(secondaryClassifierConfig.secret_ref)
+            );
+            switcher.rateLimitKey = `${secondaryClassifierConfig.secret_ref}:${baseModel}`;
           }
         : null
   };
@@ -773,27 +811,27 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
   let candidateCount = await countCandidates(runtime);
   let classified = 0;
 
-  for (const source of sources) {
+  for (let offset = 0; offset < sources.length; offset += CLASSIFY_BATCH_SIZE) {
     if (candidateCount >= job.max_candidates) break;
     await updateProgress(runtime, { stage: "classify", classified, of: sources.length });
 
-    if (classified > 0) {
-      await sleep(CLASSIFY_REQUEST_DELAY_MS);
-    }
-
+    const batch = sources.slice(offset, offset + CLASSIFY_BATCH_SIZE);
     const model = runtime.softCapHit ? SOFT_DEGRADE_MODEL : baseModel;
     let classification;
     try {
       classification = await classifyWithRetry(switcher, {
         systemPrompt: CLASSIFIER_SYSTEM_PROMPT,
-        userPrompt: buildClassifierUserPrompt(job, source),
-        model
+        userPrompt: buildClassifierBatchUserPrompt(job, batch),
+        model,
+        responseSchema: CLASSIFIER_BATCH_RESPONSE_SCHEMA
       });
     } catch (error: unknown) {
       if (error instanceof AuthOrConfigError || error instanceof BudgetExceededError) {
         throw error;
       }
-      await updateSource(runtime, source.id, { fetch_status: "failed" });
+      await Promise.all(
+        batch.map((source) => updateSource(runtime, source.id, { fetch_status: "failed" }))
+      );
       await appendEvent(runtime, "classify_failed", errorMessage(error), { level: "warn" });
       continue;
     }
@@ -806,49 +844,68 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
       quantity: classification.usage.inputTokens + classification.usage.outputTokens,
       unit_cost_usd: 0,
       amount_usd: classification.usage.estimatedCostUsd,
-      source_id: source.id,
       model_name: classification.usage.model,
       request_meta: {
         input_tokens: classification.usage.inputTokens,
-        output_tokens: classification.usage.outputTokens
+        output_tokens: classification.usage.outputTokens,
+        batch_size: batch.length
       }
     });
 
-    const validation = parseCandidateResult(classification.parsed);
-    if (!validation.result) {
-      await updateSource(runtime, source.id, { fetch_status: "failed" });
+    const batchOutput = parseClassifierBatchOutput(classification.parsed, batch.length);
+    if (batchOutput.errorMessage) {
       await appendEvent(
         runtime,
         "classifier_validation_failed",
-        validation.errorMessage ?? "Doğrulama başarısız",
-        { level: "warn", payload: { source_id: source.id } }
+        batchOutput.errorMessage,
+        { level: "warn", payload: { source_ids: batch.map((source) => source.id) } }
       );
-      continue;
     }
 
-    const parsed = validation.result;
-    classified += 1;
+    for (let index = 0; index < batch.length; index += 1) {
+      const source = batch[index];
+      const rawCandidate = batchOutput.candidates[index];
+      if (!source || rawCandidate === null) {
+        if (source) await updateSource(runtime, source.id, { fetch_status: "failed" });
+        continue;
+      }
 
-    if (
-      !parsed.is_match ||
-      !parsed.canonical_name ||
-      parsed.confidence_score < MIN_CONFIDENCE_TO_KEEP
-    ) {
-      await updateSource(runtime, source.id, { fetch_status: "irrelevant" });
-      continue;
-    }
+      const validation = parseCandidateResult(rawCandidate);
+      if (!validation.result) {
+        await updateSource(runtime, source.id, { fetch_status: "failed" });
+        await appendEvent(
+          runtime,
+          "classifier_validation_failed",
+          validation.errorMessage ?? "Doğrulama başarısız",
+          { level: "warn", payload: { source_id: source.id } }
+        );
+        continue;
+      }
 
-    const candidateId = await upsertCandidate(
-      runtime,
-      source.id,
-      parsed,
-      classification.usage.model,
-      source.source_url
-    );
-    if (candidateId) {
-      candidateCount += 1;
-    } else {
-      await updateSource(runtime, source.id, { fetch_status: "duplicate" });
+      const parsed = validation.result;
+      classified += 1;
+
+      if (
+        !parsed.is_match ||
+        !parsed.canonical_name ||
+        parsed.confidence_score < MIN_CONFIDENCE_TO_KEEP
+      ) {
+        await updateSource(runtime, source.id, { fetch_status: "irrelevant" });
+        continue;
+      }
+
+      const candidateId = await upsertCandidate(
+        runtime,
+        source.id,
+        parsed,
+        classification.usage.model,
+        source.source_url
+      );
+      if (candidateId) {
+        candidateCount += 1;
+      } else {
+        await updateSource(runtime, source.id, { fetch_status: "duplicate" });
+      }
     }
   }
 

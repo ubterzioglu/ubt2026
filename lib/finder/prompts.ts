@@ -49,6 +49,7 @@ If the page is not a real venue/provider profile or listing, return:
 }`;
 
 const MAX_EXTRACTED_CHARS = 16_000;
+const MAX_BATCH_EXTRACTED_CHARS = 6_000;
 
 export function buildClassifierUserPrompt(
   job: FinderJobRow,
@@ -81,6 +82,39 @@ Rules:
 - evidence_quotes: short verbatim excerpts supporting the match itself (that this is a real venue page), max 6.
 - self_statements: short verbatim excerpts where the business explicitly describes itself/its audience, max 5. Empty array if none.
 - If multiple venues/providers appear on one page (directory index), return the best matching single candidate only, or is_match false when it is a pure listing index.`;
+}
+
+export function buildClassifierBatchUserPrompt(
+  job: FinderJobRow,
+  sources: FinderJobSourceRow[]
+): string {
+  const pages = sources
+    .map((source, index) => {
+      const extracted = (source.extracted_text ?? "").slice(0, MAX_BATCH_EXTRACTED_CHARS);
+      return `Source ${index + 1}:
+- url: ${source.source_url}
+- title: ${source.source_title ?? ""}
+- snippet: ${source.source_snippet ?? ""}
+- content:
+${extracted}`;
+    })
+    .join("\n\n");
+
+  return `Classify every source independently for this job:
+- role_key: ${job.role_key}
+- item_type: ${job.item_type}
+- target location: ${job.location_label}
+- include terms: ${JSON.stringify(job.must_include_terms)}
+- exclude terms: ${JSON.stringify(job.must_exclude_terms)}
+
+${pages}
+
+Return one results entry for every source, preserving its one-based source_index.
+Apply all system rules independently to each source. Never combine facts between sources.
+The venue/provider must be located in or clearly serve the target location; otherwise lower confidence below 50.
+Extract street, house_number and 5-digit postal_code separately.
+Keep services verbatim, maximum 15; evidence_quotes maximum 6; self_statements maximum 5.
+If a source is a pure directory index, news article, forum, review page, blog post or job ad, return is_match false for that source.`;
 }
 
 /** Gemini structured output şeması (responseMimeType: application/json ile). */
@@ -155,5 +189,23 @@ export const CLASSIFIER_RESPONSE_SCHEMA = {
       }
     },
     evidence_quotes: { type: "array", items: { type: "string" } }
+  }
+} as const;
+
+export const CLASSIFIER_BATCH_RESPONSE_SCHEMA = {
+  type: "object",
+  required: ["results"],
+  properties: {
+    results: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["source_index", "candidate"],
+        properties: {
+          source_index: { type: "number" },
+          candidate: CLASSIFIER_RESPONSE_SCHEMA
+        }
+      }
+    }
   }
 } as const;

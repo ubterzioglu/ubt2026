@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1784798774760,
+  "lastScanned": 1784985773949,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -83,7 +83,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1784798774680,
+      "lastAccessed": 1784985773897,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -96,7 +96,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1784798774681,
+      "lastAccessed": 1784985773897,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -106,7 +106,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1784798774682,
+      "lastAccessed": 1784985773899,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -119,7 +119,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1784798774715,
+      "lastAccessed": 1784985773921,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -132,7 +132,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784798774716,
+      "lastAccessed": 1784985773922,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -143,7 +143,7 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 1,
-      "lastAccessed": 1784798774716,
+      "lastAccessed": 1784985773922,
       "keyFiles": [
         "desiremap-scraper-restructure-2026-07-21.md"
       ]
@@ -152,7 +152,7 @@
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784798774717,
+      "lastAccessed": 1784985773922,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -163,7 +163,7 @@
       "path": "lib",
       "purpose": "Library code",
       "fileCount": 24,
-      "lastAccessed": 1784798774717,
+      "lastAccessed": 1784985773923,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -176,7 +176,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1784798774718,
+      "lastAccessed": 1784985773923,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -189,7 +189,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1784798774718,
+      "lastAccessed": 1784985773924,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -199,8 +199,8 @@
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
-      "fileCount": 11,
-      "lastAccessed": 1784798774719,
+      "fileCount": 14,
+      "lastAccessed": 1784985773924,
       "keyFiles": [
         "bulk-upload-logos.ts",
         "convert-cvopt-to-reviews.mjs",
@@ -213,14 +213,14 @@
       "path": "skillubt",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1784798774720,
+      "lastAccessed": 1784985773924,
       "keyFiles": []
     },
     "supabase": {
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784798774720,
+      "lastAccessed": 1784985773924,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -230,7 +230,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1784798774721,
+      "lastAccessed": 1784985773925,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -241,14 +241,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1784798774722,
+      "lastAccessed": 1784985773926,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
-      "fileCount": 38,
-      "lastAccessed": 1784798774726,
+      "fileCount": 43,
+      "lastAccessed": 1784985773930,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -258,303 +258,75 @@
   },
   "hotPaths": [
     {
-      "path": "app\\detrbridge\\_components\\domains-tab.tsx",
-      "accessCount": 44,
-      "lastAccessed": 1784802714009,
+      "path": "scripts\\dev-status-report-temp.ts",
+      "accessCount": 4,
+      "lastAccessed": 1784990288086,
       "type": "file"
     },
     {
       "path": "lib\\finder\\run-job.ts",
-      "accessCount": 22,
-      "lastAccessed": 1784844141868,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
-      "accessCount": 21,
-      "lastAccessed": 1784802689623,
-      "type": "file"
-    },
-    {
-      "path": "lib\\detrbridge-domains.ts",
-      "accessCount": 20,
-      "lastAccessed": 1784802212923,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 12,
-      "lastAccessed": 1784802274418,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 12,
-      "lastAccessed": 1784827769911,
+      "accessCount": 2,
+      "lastAccessed": 1784987894645,
       "type": "directory"
     },
     {
-      "path": "scripts\\dev-reclassify-missing-address-temp.ts",
-      "accessCount": 10,
-      "lastAccessed": 1784832008358,
+      "path": "scripts\\dev-check-all-tokens-temp.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784985849089,
       "type": "file"
     },
     {
-      "path": "lib\\detrbridge-logos.ts",
-      "accessCount": 7,
-      "lastAccessed": 1784802213079,
+      "path": "scripts\\dev-check-gemini-temp.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784986781744,
       "type": "file"
     },
     {
-      "path": "lib\\detrbridge-visits.ts",
-      "accessCount": 7,
-      "lastAccessed": 1784804179656,
+      "path": "scripts\\dev-single-job-test-temp.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784986812256,
       "type": "file"
     },
     {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 6,
-      "lastAccessed": 1784803659181,
-      "type": "directory"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\number-picker.tsx",
-      "accessCount": 5,
-      "lastAccessed": 1784801551838,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge",
-      "accessCount": 4,
-      "lastAccessed": 1784803097444,
-      "type": "directory"
-    },
-    {
-      "path": "app\\detrbridge\\_actions.ts",
-      "accessCount": 4,
-      "lastAccessed": 1784803666646,
-      "type": "file"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 4,
-      "lastAccessed": 1784828372665,
-      "type": "directory"
-    },
-    {
-      "path": "app",
-      "accessCount": 3,
-      "lastAccessed": 1784799238246,
-      "type": "directory"
-    },
-    {
-      "path": "app\\admin\\page.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1784816220407,
+      "path": "scripts\\dev-cleanup-test-job-temp.ts",
+      "accessCount": 1,
+      "lastAccessed": 1784987058756,
       "type": "file"
     },
     {
       "path": "lib\\finder\\providers\\tavily.ts",
-      "accessCount": 3,
-      "lastAccessed": 1784832463950,
+      "accessCount": 1,
+      "lastAccessed": 1784987914089,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260723090000_add_pricing_to_detrbridge_domains.sql",
-      "accessCount": 2,
-      "lastAccessed": 1784800046662,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\theme.ts",
-      "accessCount": 2,
-      "lastAccessed": 1784801219540,
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1784988718096,
       "type": "directory"
     },
     {
-      "path": "app\\detrbridge\\_components\\bridge-nav.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784801248135,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784803053090,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\visits-tab.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1784803684962,
-      "type": "file"
-    },
-    {
-      "path": "middleware.ts",
-      "accessCount": 2,
-      "lastAccessed": 1784803689626,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260723140000_reset_detrbridge_visits_with_names.sql",
-      "accessCount": 2,
-      "lastAccessed": 1784804056621,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-finder-bulk-run.ts",
-      "accessCount": 2,
-      "lastAccessed": 1784828292927,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260720120000_create_detrbridge_domains.sql",
+      "path": "scripts\\dev-verify-cleanup-temp.ts",
       "accessCount": 1,
-      "lastAccessed": 1784799130276,
+      "lastAccessed": 1784990454145,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260705120000_add_ops_columns_to_akcakanat_domains.sql",
+      "path": "scripts\\dev-delete-stuck-job-temp.ts",
       "accessCount": 1,
-      "lastAccessed": 1784799144040,
+      "lastAccessed": 1784990475585,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260719190000_drop_detr_legacy.sql",
+      "path": "docs\\service-finder-expansion-report-2026-07-25.html",
       "accessCount": 1,
-      "lastAccessed": 1784800169660,
+      "lastAccessed": 1784992118308,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260723100000_add_renewal_price_to_detrbridge_domains.sql",
+      "path": "docs\\service-finder-devir-raporu-2026-07-25.md",
       "accessCount": 1,
-      "lastAccessed": 1784800608315,
-      "type": "file"
-    },
-    {
-      "path": "package.json",
-      "accessCount": 1,
-      "lastAccessed": 1784801282018,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\password-field.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784801706560,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260719120000_create_detrbridge_visits.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784803071716,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260723140000_add_voter_name_to_detrbridge_visits.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784803083466,
-      "type": "file"
-    },
-    {
-      "path": "lib\\secure-compare.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784803599522,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\welcome-card.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784803606289,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\_components\\admin-gate.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784816162476,
-      "type": "file"
-    },
-    {
-      "path": "app\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1784816200407,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\types.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784827791949,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-query-cities-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784827909280,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260721100000_restructure_finder_candidates.sql",
-      "accessCount": 1,
-      "lastAccessed": 1784828025337,
-      "type": "file"
-    },
-    {
-      "path": "docs\\desiremap-scraper-restructure-2026-07-21.md",
-      "accessCount": 1,
-      "lastAccessed": 1784828025848,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-query-candidates-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784828044349,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\queries.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784828088970,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\prompts.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784828095666,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-inspect-missing-address-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784828116857,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\validate.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784828135046,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\providers\\gemini.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784828140645,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\dedupe.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784828170119,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-check-reclassify-result-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784828232027,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\errors.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784828448952,
+      "lastAccessed": 1784993411428,
       "type": "file"
     }
   ],

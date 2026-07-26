@@ -37,6 +37,7 @@ export function createSerpApiSearchProvider(
         num: String(input.maxResults)
       });
       for (const [key, value] of Object.entries(requestDefaults)) {
+        if (key === "num") continue;
         if (typeof value === "string" || typeof value === "number") {
           params.set(key, String(value));
         }

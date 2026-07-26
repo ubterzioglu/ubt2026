@@ -752,34 +752,41 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <div className="mx-auto max-w-7xl border-t border-line/70 py-8 text-center text-sm text-ink/55">
           <div>| ©2026 | UBT | All rights reserved. | Without a test you cannot be the best! |</div>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[0.82rem] leading-[1.6] sm:text-base sm:leading-[1.55]">
-            <Link
-              href="/blog"
+            <a
+              href="https://www.spindorai.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-accent/70 hover:text-accent transition-colors"
             >
-              Blog
-            </Link>
-            <span className="text-ink/30">·</span>
-            <Link
-              href="/skillubt"
-              className="text-accent/70 hover:text-accent transition-colors"
-            >
-              Skills
-            </Link>
+              Seo Aracı
+            </a>
             <span className="text-ink/30">·</span>
             <a
-              href="https://ufuksoynakliyat.com.tr"
+              href="https://aryateknoloji.com"
               target="_blank"
-              rel="noopener noreferrer dofollow"
+              rel="noopener noreferrer"
               className="text-accent/70 hover:text-accent transition-colors"
             >
-              Evden Eve Nakliyat
+              Arya Teknoloji
             </a>
-            <span>Şirketi Ufuksoy Nakliyat A.Ş</span>
+            <span className="text-ink/30">·</span>
+            <span>
+              <a
+                href="https://ufuksoynakliyat.com.tr/"
+                target="_blank"
+                rel="noopener noreferrer dofollow"
+                className="text-accent/70 hover:text-accent transition-colors"
+              >
+                Evden Eve Nakliyat
+              </a>{" "}
+              Şirketi Ufuksoy Nakliyat A.Ş
+            </span>
             <span className="text-ink/30">·</span>
             <span>
               <a
                 href="https://tekhurdametal.com/beylikduzu-hurdaci/"
-                rel="dofollow"
+                target="_blank"
+                rel="noopener noreferrer dofollow"
                 className="text-accent/70 hover:text-accent transition-colors"
               >
                 Beylikdüzü Hurdacı
