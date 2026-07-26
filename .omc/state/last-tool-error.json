@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd c:/temp_private/ubt2026 && npx tsc --noEmit -p . 2>&1 | head -50\",\"timeout\":120000,\"description\":\"Type-check the project\"}",
-  "error": "Exit code 1\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-7c16-cwd: No such file or directory",
-  "timestamp": "2026-07-26T12:02:56.175Z",
-  "retry_count": 2
+  "tool_input_preview": "{\"command\":\"git -C c:/temp_private/ubt2026 push origin main\",\"description\":\"Push commit to origin main\"}",
+  "error": "Exit code 1\nTo https://github.com/ubterzioglu/ubt2026.git\n   f430a8a..f03d9b5  main -> main\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-01a9-cwd: No such file or directory",
+  "timestamp": "2026-07-26T12:08:15.966Z",
+  "retry_count": 3
 }

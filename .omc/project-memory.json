@@ -259,8 +259,8 @@
   "hotPaths": [
     {
       "path": "app\\page.tsx",
-      "accessCount": 5,
-      "lastAccessed": 1785067366105,
+      "accessCount": 6,
+      "lastAccessed": 1785067630826,
       "type": "directory"
     },
     {
