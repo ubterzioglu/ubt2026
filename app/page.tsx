@@ -772,9 +772,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <span className="text-ink/30">·</span>
             <span>
               <a
-                href="https://ufuksoynakliyat.com.tr/"
-                target="_blank"
-                rel="noopener noreferrer dofollow"
+                href="https://ufuksoynakliyat.com.tr"
+                rel="dofollow"
                 className="text-accent/70 hover:text-accent transition-colors"
               >
                 Evden Eve Nakliyat
@@ -784,14 +783,24 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <span className="text-ink/30">·</span>
             <span>
               <a
-                href="https://tekhurdametal.com/beylikduzu-hurdaci/"
-                target="_blank"
-                rel="noopener noreferrer dofollow"
+                href="https://tekhurdametal.com/istanbul-hurdaci/"
+                rel="dofollow"
                 className="text-accent/70 hover:text-accent transition-colors"
               >
-                Beylikdüzü Hurdacı
+                İstanbul Hurdacı
               </a>{" "}
               Firması Tek Hurda Metal A.Ş
+            </span>
+            <span className="text-ink/30">·</span>
+            <span>
+              <a
+                href="https://lionerotik.com/urunler/fetis-urunleri"
+                rel="dofollow"
+                className="text-accent/70 hover:text-accent transition-colors"
+              >
+                Antalya Sex Shop
+              </a>{" "}
+              Lion Erotik
             </span>
           </div>
         </div>
