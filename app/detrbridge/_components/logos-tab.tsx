@@ -16,6 +16,8 @@ interface LogosTabProps {
   voteAction: ServerFormAction;
   selectAction: ServerFormAction;
   deleteAction: ServerFormAction;
+  /** Frozen round: hides upload/vote forms and Seç/Sil, shows past results only. */
+  readOnly?: boolean;
 }
 
 const darkInput =
@@ -166,10 +168,19 @@ export function LogosTab({
   createAction,
   voteAction,
   selectAction,
-  deleteAction
+  deleteAction,
+  readOnly = false
 }: LogosTabProps) {
   return (
     <div className="space-y-5">
+      {readOnly && (
+        <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
+          Bu tur donduruldu — yeni logo eklenemez, oy verilemez. Sonuçlar salt
+          okunur olarak gösteriliyor.
+        </div>
+      )}
+
+      {!readOnly && (
       <section className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl">
         <div className="px-6 py-5 sm:px-8">
           <h2 className="flex items-center gap-2 font-body text-base font-semibold text-white">
@@ -294,6 +305,7 @@ export function LogosTab({
           </details>
         </div>
       </section>
+      )}
 
       <FilterBar
         tab="logos"
@@ -321,6 +333,7 @@ export function LogosTab({
                 voteAction={voteAction}
                 selectAction={selectAction}
                 deleteAction={deleteAction}
+                readOnly={readOnly}
               />
             ))}
           </div>
@@ -335,9 +348,10 @@ interface LogoRowProps {
   voteAction: ServerFormAction;
   selectAction: ServerFormAction;
   deleteAction: ServerFormAction;
+  readOnly?: boolean;
 }
 
-function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps) {
+function LogoRow({ logo, voteAction, selectAction, deleteAction, readOnly = false }: LogoRowProps) {
   return (
     <article
       className={`flex flex-col overflow-hidden rounded-[1.2rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
@@ -387,6 +401,7 @@ function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps)
 
         <VotesList votes={logo.votes} />
 
+        {!readOnly && (
         <div className="mt-1 flex items-center gap-2">
           {logo.isSelected ? null : (
             <form action={selectAction} className="flex-1">
@@ -409,7 +424,9 @@ function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps)
             </button>
           </form>
         </div>
+        )}
 
+        {!readOnly && (
         <form
           action={voteAction}
           className="mt-1 flex flex-col gap-2 border-t border-white/[0.06] pt-3"
@@ -426,6 +443,7 @@ function LogoRow({ logo, voteAction, selectAction, deleteAction }: LogoRowProps)
             Oyla
           </button>
         </form>
+        )}
       </div>
     </article>
   );

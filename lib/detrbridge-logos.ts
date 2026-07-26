@@ -15,6 +15,7 @@ export interface DetrbridgeLogo {
   isSelected: boolean;
   fileName: string;
   sizeBytes: number;
+  round: number;
   /** Signed download URL (null when signing failed). */
   url: string | null;
   /** Average of all cast votes (null when nobody has voted yet). */
@@ -42,6 +43,7 @@ interface SupabaseLogoRow {
   storage_path: string;
   file_name: string;
   size_bytes: number;
+  round: number;
   created_at: string;
 }
 
@@ -52,7 +54,7 @@ interface SupabaseVoteRow {
 }
 
 const LOGO_COLUMNS =
-  "id, uploader_name, is_selected, storage_path, file_name, size_bytes, created_at";
+  "id, uploader_name, is_selected, storage_path, file_name, size_bytes, round, created_at";
 
 const LOGO_BUCKET = "detrbridge-logos";
 const SIGNED_URL_TTL_SECONDS = 60 * 60 * 8; // 8 hours, matches the admin session
@@ -87,6 +89,7 @@ function toLogo(
     isSelected: row.is_selected,
     fileName: row.file_name,
     sizeBytes: row.size_bytes,
+    round: row.round,
     url,
     averageRating,
     voteCount,
@@ -139,17 +142,18 @@ async function removeLogoObjects(
 }
 
 /**
- * Returns every logo candidate with a signed preview URL and its vote
- * average, sorted by average rating (highest first, unvoted logos last),
- * then by creation time.
+ * Returns every logo candidate for one voting round, with a signed preview
+ * URL and its vote average, sorted by average rating (highest first,
+ * unvoted logos last), then by creation time.
  */
-export async function getAllLogosAdmin(): Promise<DetrbridgeLogosResult> {
+export async function getAllLogosAdmin(round: number = 1): Promise<DetrbridgeLogosResult> {
   const supabase = createServiceClient();
   if (!supabase) return { source: "env-missing", items: [] };
   try {
     const { data, error } = await supabase
       .from("detrbridge_logos")
       .select(LOGO_COLUMNS)
+      .eq("round", round)
       .order("created_at", { ascending: true });
     if (error) throw error;
     const rows = (data ?? []) as SupabaseLogoRow[];
@@ -212,19 +216,21 @@ export async function getAllLogosAdmin(): Promise<DetrbridgeLogosResult> {
 }
 
 /** Lightweight total count for nav badges — no rows, no signed URLs. */
-export async function getLogoCount(): Promise<number> {
+export async function getLogoCount(round: number = 1): Promise<number> {
   const supabase = createServiceClient();
   if (!supabase) return 0;
   const { count, error } = await supabase
     .from("detrbridge_logos")
-    .select("id", { count: "exact", head: true });
+    .select("id", { count: "exact", head: true })
+    .eq("round", round);
   if (error) return 0;
   return count ?? 0;
 }
 
 export async function createLogo(
   input: { uploaderName: string },
-  file: File
+  file: File,
+  round: number = 2
 ): Promise<MutationResult> {
   const uploaderName = input.uploaderName.trim();
   if (uploaderName.length < 2) {
@@ -244,7 +250,8 @@ export async function createLogo(
       uploader_name: uploaderName,
       storage_path: uploaded.path,
       file_name: file.name || "logo",
-      size_bytes: file.size
+      size_bytes: file.size,
+      round
     });
     if (error) throw error;
     return { ok: true };
@@ -281,6 +288,15 @@ export async function castVote(
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
+    const { data: logoRow, error: logoError } = await supabase
+      .from("detrbridge_logos")
+      .select("round")
+      .eq("id", logoId)
+      .maybeSingle();
+    if (logoError) throw logoError;
+    if (!logoRow || (logoRow as { round: number }).round !== 2) {
+      return { ok: false, errorMessage: "Bu tur dondurulmuş, oy kabul edilmiyor." };
+    }
     const { error } = await supabase
       .from("detrbridge_logo_votes")
       .upsert(
@@ -293,6 +309,101 @@ export async function castVote(
     return {
       ok: false,
       errorMessage: error instanceof Error ? error.message : "Oy kaydedilemedi."
+    };
+  }
+}
+
+/**
+ * Promotes the top-rated logos from round 1 into round 2 as fresh
+ * candidates (new rows, same storage_path — the file itself is not
+ * duplicated) so they can be re-voted on from zero. Idempotent: logos
+ * whose storage_path already exists in round 2 are skipped, so calling
+ * this more than once does not create duplicates.
+ */
+export async function promoteTopLogosToRound2(count: number = 5): Promise<MutationResult> {
+  const supabase = createServiceClient();
+  if (!supabase) {
+    return { ok: false, errorMessage: "Service credentials missing." };
+  }
+  try {
+    const { data: round1Rows, error: round1Error } = await supabase
+      .from("detrbridge_logos")
+      .select("id, uploader_name, storage_path, file_name, size_bytes, created_at")
+      .eq("round", 1)
+      .order("created_at", { ascending: true });
+    if (round1Error) throw round1Error;
+    const round1 = (round1Rows ?? []) as {
+      id: string;
+      uploader_name: string;
+      storage_path: string;
+      file_name: string;
+      size_bytes: number;
+      created_at: string;
+    }[];
+
+    const averageById = new Map<string, number | null>();
+    if (round1.length > 0) {
+      const { data: voteRows, error: voteError } = await supabase
+        .from("detrbridge_logo_votes")
+        .select("logo_id, rating")
+        .in(
+          "logo_id",
+          round1.map((row) => row.id)
+        );
+      if (voteError) throw voteError;
+      const ratingsById = new Map<string, number[]>();
+      for (const vote of (voteRows ?? []) as { logo_id: string; rating: number }[]) {
+        const list = ratingsById.get(vote.logo_id) ?? [];
+        list.push(vote.rating);
+        ratingsById.set(vote.logo_id, list);
+      }
+      for (const row of round1) {
+        const ratings = ratingsById.get(row.id) ?? [];
+        averageById.set(
+          row.id,
+          ratings.length > 0 ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length : null
+        );
+      }
+    }
+
+    const { data: existingRound2, error: existingError } = await supabase
+      .from("detrbridge_logos")
+      .select("storage_path")
+      .eq("round", 2);
+    if (existingError) throw existingError;
+    const alreadyPromoted = new Set(
+      ((existingRound2 ?? []) as { storage_path: string }[]).map((row) => row.storage_path)
+    );
+
+    const topLogos = round1
+      .filter((row) => !alreadyPromoted.has(row.storage_path))
+      .sort((a, b) => {
+        const avgA = averageById.get(a.id) ?? null;
+        const avgB = averageById.get(b.id) ?? null;
+        if (avgA === null && avgB === null) return 0;
+        if (avgA === null) return 1;
+        if (avgB === null) return -1;
+        return avgB - avgA;
+      })
+      .slice(0, count);
+
+    if (topLogos.length === 0) return { ok: true };
+
+    const rowsToInsert = topLogos.map((row) => ({
+      uploader_name: row.uploader_name,
+      storage_path: row.storage_path,
+      file_name: row.file_name,
+      size_bytes: row.size_bytes,
+      round: 2
+    }));
+
+    const { error: insertError } = await supabase.from("detrbridge_logos").insert(rowsToInsert);
+    if (insertError) throw insertError;
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      errorMessage: error instanceof Error ? error.message : "Tura taşınamadı."
     };
   }
 }

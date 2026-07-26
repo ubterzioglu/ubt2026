@@ -25,7 +25,8 @@ import {
   createLogo,
   castVote,
   selectLogo,
-  deleteLogo
+  deleteLogo,
+  promoteTopLogosToRound2
 } from "@/lib/detrbridge-logos";
 import { recordDetrbridgeVisit, getDetrbridgeVisits } from "@/lib/detrbridge-visits";
 import { DomainsTab } from "@/app/detrbridge/_components/domains-tab";
@@ -96,7 +97,9 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
         ? "todos"
         : requestedTab === "domains"
           ? "domains"
-          : "logos";
+          : requestedTab === "logos-round2"
+            ? "logos-round2"
+            : "logos";
 
   const errorParam = readParam(params.error);
   const editTodoId = readParam(params.edit) || null;
@@ -105,14 +108,24 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
   const minRating = minRatingParam ? Number(minRatingParam) : null;
   const sessionName = await getDetrbridgeSessionName();
   const firstVisit = await recordDetrbridgeVisit();
-  const result = activeTab === "logos" ? await getAllLogosAdmin() : null;
+  const result = activeTab === "logos" ? await getAllLogosAdmin(1) : null;
+  const round2Result = activeTab === "logos-round2" ? await getAllLogosAdmin(2) : null;
   const visits = activeTab === "visits" ? await getDetrbridgeVisits() : [];
   const todosResult = activeTab === "todos" ? await getAllTodosAdmin() : null;
   const domainsResult = activeTab === "domains" ? await getAllDomainsAdmin() : null;
-  const [logoCount, domainCount] = await Promise.all([getLogoCount(), getDomainCount()]);
+  const [logoCount, logoCountRound2, domainCount] = await Promise.all([
+    getLogoCount(1),
+    getLogoCount(2),
+    getDomainCount()
+  ]);
 
   const filteredLogos =
     result?.items.filter(
+      (logo) =>
+        matchesText([logo.uploaderName], query) && matchesRating(logo.averageRating, minRating)
+    ) ?? [];
+  const filteredLogosRound2 =
+    round2Result?.items.filter(
       (logo) =>
         matchesText([logo.uploaderName], query) && matchesRating(logo.averageRating, minRating)
     ) ?? [];
@@ -124,7 +137,8 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     ) ?? [];
 
   const NAV_ITEMS: BridgeNavItem[] = [
-    { key: "logos", label: "Logo Seçimi", count: logoCount },
+    { key: "logos", label: "Logo Seçimi · 1. Tur", count: logoCount },
+    { key: "logos-round2", label: "Logo Seçimi · 2. Tur", count: logoCountRound2 },
     { key: "domains", label: "Domain Önerileri", count: domainCount },
     { key: "todos", label: "Görevler" },
     { key: "visits", label: "Giriş Logları" }
@@ -200,6 +214,88 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     }
     revalidatePath("/detrbridge");
     redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+  }
+
+  async function createRound2Action(formData: FormData) {
+    "use server";
+    const uploaderName = await getDetrbridgeSessionName();
+    if (!uploaderName) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const file = formData.get("file");
+    if (!(file instanceof File)) {
+      redirect(
+        `/detrbridge?tab=logos-round2&error=${encodeURIComponent("Dosya seçilmedi.")}` as Parameters<
+          typeof redirect
+        >[0]
+      );
+    }
+    const outcome = await createLogo({ uploaderName }, file as File, 2);
+    revalidatePath("/detrbridge");
+    redirect(
+      (outcome.ok
+        ? "/detrbridge?tab=logos-round2"
+        : `/detrbridge?tab=logos-round2&error=${encodeURIComponent(outcome.errorMessage ?? "Logo eklenemedi.")}`) as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function voteRound2Action(formData: FormData) {
+    "use server";
+    const voterName = await getDetrbridgeSessionName();
+    if (!voterName) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const logoId = (formData.get("logoId") as string | null) ?? "";
+    const rating = Number((formData.get("rating") as string | null) ?? "0");
+    const outcome = logoId
+      ? await castVote(logoId, voterName, rating)
+      : { ok: false, errorMessage: "Logo bulunamadı." };
+    revalidatePath("/detrbridge");
+    redirect(
+      (outcome.ok
+        ? "/detrbridge?tab=logos-round2"
+        : `/detrbridge?tab=logos-round2&error=${encodeURIComponent(outcome.errorMessage ?? "Oy kaydedilemedi.")}`) as Parameters<
+        typeof redirect
+      >[0]
+    );
+  }
+
+  async function selectRound2Action(formData: FormData) {
+    "use server";
+    if (!(await isDetrbridgeAuthenticated())) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (id) {
+      await selectLogo(id);
+    }
+    revalidatePath("/detrbridge");
+    redirect("/detrbridge?tab=logos-round2" as Parameters<typeof redirect>[0]);
+  }
+
+  async function deleteRound2Action(formData: FormData) {
+    "use server";
+    if (!(await isDetrbridgeAuthenticated())) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const id = (formData.get("id") as string | null) ?? "";
+    if (id) {
+      await deleteLogo(id);
+    }
+    revalidatePath("/detrbridge");
+    redirect("/detrbridge?tab=logos-round2" as Parameters<typeof redirect>[0]);
+  }
+
+  async function promoteAction() {
+    "use server";
+    if (!(await isDetrbridgeAuthenticated())) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    await promoteTopLogosToRound2(5);
+    revalidatePath("/detrbridge");
+    redirect("/detrbridge?tab=logos-round2" as Parameters<typeof redirect>[0]);
   }
 
   async function createDomainAction(formData: FormData) {
@@ -483,7 +579,52 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
                 voteAction={voteAction}
                 selectAction={selectAction}
                 deleteAction={deleteAction}
+                readOnly
               />
+            </>
+          ) : null}
+
+          {activeTab === "logos-round2" && round2Result ? (
+            <>
+              {round2Result.source === "env-missing" && (
+                <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
+                  Supabase bağlantısı yapılandırılmamış
+                  (SUPABASE_SERVICE_ROLE_KEY eksik). Logolar yüklenemiyor.
+                </div>
+              )}
+              {round2Result.source === "error" && (
+                <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
+                  Logolar yüklenirken hata oluştu: {round2Result.errorMessage}
+                </div>
+              )}
+
+              {round2Result.items.length === 0 ? (
+                <div className="rounded-[1.3rem] border border-dashed border-white/15 px-5 py-8 text-center text-[13px] text-white/50">
+                  <p className="mb-4">
+                    2. Tur henüz başlamadı. 1. Turdaki en yüksek 5 logoyu bu tura taşı.
+                  </p>
+                  <form action={promoteAction}>
+                    <button
+                      type="submit"
+                      className="inline-flex min-h-[44px] items-center justify-center rounded-[0.9rem] bg-emerald-400/90 px-6 py-2.5 text-[13px] font-bold tracking-tight text-black transition hover:bg-emerald-400"
+                    >
+                      İlk 5 Logoyu 2. Tura Taşı
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <LogosTab
+                  logos={filteredLogosRound2}
+                  allLogos={round2Result.items}
+                  totalCount={round2Result.items.length}
+                  query={query}
+                  minRating={minRatingParam}
+                  createAction={createRound2Action}
+                  voteAction={voteRound2Action}
+                  selectAction={selectRound2Action}
+                  deleteAction={deleteRound2Action}
+                />
+              )}
             </>
           ) : null}
 
