@@ -749,9 +749,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </section>
 
       <footer className="px-4 pt-8 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl border-t border-line/70 py-8 text-center text-sm text-ink/55">
-          <div>| ©2026 | UBT | All rights reserved. | Without a test you cannot be the best! |</div>
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[0.82rem] leading-[1.6] sm:text-base sm:leading-[1.55]">
+        <div className="mx-auto max-w-7xl border-t border-line/70 py-8 text-center text-ink/55">
+          <div className="flex flex-nowrap items-center justify-center gap-x-3 overflow-x-auto whitespace-nowrap text-[0.6rem] leading-none sm:text-xs">
+            <span>| ©2026 | UBT | All rights reserved. | Without a test you cannot be the best! |</span>
             <a
               href="https://www.spindorai.com"
               target="_blank"

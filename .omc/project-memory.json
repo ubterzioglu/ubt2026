@@ -258,6 +258,12 @@
   },
   "hotPaths": [
     {
+      "path": "app\\page.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1785067366105,
+      "type": "directory"
+    },
+    {
       "path": "scripts\\dev-status-report-temp.ts",
       "accessCount": 4,
       "lastAccessed": 1784990288086,
@@ -267,6 +273,12 @@
       "path": "lib\\finder\\run-job.ts",
       "accessCount": 2,
       "lastAccessed": 1784987894645,
+      "type": "directory"
+    },
+    {
+      "path": "",
+      "accessCount": 2,
+      "lastAccessed": 1785067333997,
       "type": "directory"
     },
     {
@@ -300,12 +312,6 @@
       "type": "file"
     },
     {
-      "path": "",
-      "accessCount": 1,
-      "lastAccessed": 1784988718096,
-      "type": "directory"
-    },
-    {
       "path": "scripts\\dev-verify-cleanup-temp.ts",
       "accessCount": 1,
       "lastAccessed": 1784990454145,
@@ -327,6 +333,12 @@
       "path": "docs\\service-finder-devir-raporu-2026-07-25.md",
       "accessCount": 1,
       "lastAccessed": 1784993411428,
+      "type": "file"
+    },
+    {
+      "path": "lib\\footer-clients.ts",
+      "accessCount": 1,
+      "lastAccessed": 1785067341956,
       "type": "file"
     }
   ],
