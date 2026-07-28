@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1784985773949,
+  "lastScanned": 1785220278913,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -83,7 +83,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1784985773897,
+      "lastAccessed": 1785220278708,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -96,7 +96,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1784985773897,
+      "lastAccessed": 1785220278709,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -106,7 +106,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 14,
-      "lastAccessed": 1784985773899,
+      "lastAccessed": 1785220278711,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
@@ -119,7 +119,7 @@
       "path": "content",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1784985773921,
+      "lastAccessed": 1785220278767,
       "keyFiles": [
         "featured.ts",
         "geo.ts",
@@ -132,7 +132,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784985773922,
+      "lastAccessed": 1785220278769,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -142,17 +142,19 @@
     "docs": {
       "path": "docs",
       "purpose": "Documentation",
-      "fileCount": 1,
-      "lastAccessed": 1784985773922,
+      "fileCount": 3,
+      "lastAccessed": 1785220278770,
       "keyFiles": [
-        "desiremap-scraper-restructure-2026-07-21.md"
+        "desiremap-scraper-restructure-2026-07-21.md",
+        "service-finder-devir-raporu-2026-07-25.md",
+        "service-finder-expansion-report-2026-07-25.html"
       ]
     },
     "experience": {
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784985773922,
+      "lastAccessed": 1785220278770,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -162,8 +164,8 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 24,
-      "lastAccessed": 1784985773923,
+      "fileCount": 25,
+      "lastAccessed": 1785220278770,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -176,7 +178,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1784985773923,
+      "lastAccessed": 1785220278771,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -189,7 +191,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1784985773924,
+      "lastAccessed": 1785220278771,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -199,8 +201,8 @@
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
-      "fileCount": 14,
-      "lastAccessed": 1784985773924,
+      "fileCount": 13,
+      "lastAccessed": 1785220278772,
       "keyFiles": [
         "bulk-upload-logos.ts",
         "convert-cvopt-to-reviews.mjs",
@@ -213,14 +215,14 @@
       "path": "skillubt",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1784985773924,
+      "lastAccessed": 1785220278773,
       "keyFiles": []
     },
     "supabase": {
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1784985773924,
+      "lastAccessed": 1785220278773,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -230,7 +232,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1784985773925,
+      "lastAccessed": 1785220278774,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -241,14 +243,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1784985773926,
+      "lastAccessed": 1785220278775,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
-      "fileCount": 43,
-      "lastAccessed": 1784985773930,
+      "fileCount": 45,
+      "lastAccessed": 1785220278779,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -256,91 +258,6 @@
       ]
     }
   },
-  "hotPaths": [
-    {
-      "path": "app\\page.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1785067630826,
-      "type": "directory"
-    },
-    {
-      "path": "scripts\\dev-status-report-temp.ts",
-      "accessCount": 4,
-      "lastAccessed": 1784990288086,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\run-job.ts",
-      "accessCount": 2,
-      "lastAccessed": 1784987894645,
-      "type": "directory"
-    },
-    {
-      "path": "",
-      "accessCount": 2,
-      "lastAccessed": 1785067333997,
-      "type": "directory"
-    },
-    {
-      "path": "scripts\\dev-check-all-tokens-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784985849089,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-check-gemini-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784986781744,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-single-job-test-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784986812256,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-cleanup-test-job-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784987058756,
-      "type": "file"
-    },
-    {
-      "path": "lib\\finder\\providers\\tavily.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784987914089,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-verify-cleanup-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784990454145,
-      "type": "file"
-    },
-    {
-      "path": "scripts\\dev-delete-stuck-job-temp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1784990475585,
-      "type": "file"
-    },
-    {
-      "path": "docs\\service-finder-expansion-report-2026-07-25.html",
-      "accessCount": 1,
-      "lastAccessed": 1784992118308,
-      "type": "file"
-    },
-    {
-      "path": "docs\\service-finder-devir-raporu-2026-07-25.md",
-      "accessCount": 1,
-      "lastAccessed": 1784993411428,
-      "type": "file"
-    },
-    {
-      "path": "lib\\footer-clients.ts",
-      "accessCount": 1,
-      "lastAccessed": 1785067341956,
-      "type": "file"
-    }
-  ],
+  "hotPaths": [],
   "userDirectives": []
 }
