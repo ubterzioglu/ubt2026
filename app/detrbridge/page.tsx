@@ -155,7 +155,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     { key: "logos-round2", label: "Logo Seçimi · 2. Tur", count: logoCountRound2 },
     { key: "domains", label: "Domain Önerileri", count: domainCount },
     { key: "todos", label: "Görevler" },
-    { key: "todos2", label: "Görevler 2" },
+    { key: "todos2", label: "Toplantı Konuları" },
     { key: "visits", label: "Giriş Logları" }
   ];
 
