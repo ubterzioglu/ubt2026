@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd \\\"C:/Users/BARIS-~1/AppData/Local/Temp/claude/c--temp-private-ubt2026/01f57c49-ef66-43af-9bc8-6d2846979198/scratchpad\\\" && node -e \\\"\\nimport('fs').then(async (fs) => {\\n  const { creat...",
+  "error": "Exit code 1\ntotal todos2 rows: 5\ntotal comments: 5\n- Sorumluluk alanlarının belirlenmesi\n- Görev takip sisteminin oluşturulması\n- Fiyatlandırma workshop'u düzenlenmesi\n- Haftalık zaman planlamasının yapılması\n- Şeffaf görev dağılımı ve anonim geri bildirim sistemi kurulması\n/usr/bin/bash: line 13: /c/Users/BARIS-~1/AppData/Local/Temp/claude-03f5-cwd: No such file or directory",
+  "timestamp": "2026-07-28T07:15:16.138Z",
+  "retry_count": 3
+}
