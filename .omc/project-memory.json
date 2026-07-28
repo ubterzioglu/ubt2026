@@ -258,6 +258,13 @@
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "app\\detrbridge\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785220756591,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }
