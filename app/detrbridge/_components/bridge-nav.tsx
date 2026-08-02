@@ -6,6 +6,7 @@ export type BridgeTabKey =
   | "domains"
   | "todos"
   | "todos2"
+  | "meeting-brief"
   | "visits";
 
 export interface BridgeNavItem {

@@ -39,6 +39,7 @@ import {
   deleteDomain
 } from "@/lib/detrbridge-domains";
 import { TodosTab } from "@/app/detrbridge/_components/todos-tab";
+import { MeetingBriefTab } from "@/app/detrbridge/_components/meeting-brief-tab";
 import {
   getAllTodosAdmin,
   createTodo,
@@ -112,7 +113,9 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
             ? "logos-round2"
             : requestedTab === "todos2"
               ? "todos2"
-              : "logos";
+              : requestedTab === "meeting-brief"
+                ? "meeting-brief"
+                : "logos";
 
   const errorParam = readParam(params.error);
   const editTodoId = readParam(params.edit) || null;
@@ -156,6 +159,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     { key: "domains", label: "Domain Önerileri", count: domainCount },
     { key: "todos", label: "Görevler" },
     { key: "todos2", label: "Toplantı Konuları" },
+    { key: "meeting-brief", label: "Toplantı Özeti" },
     { key: "visits", label: "Giriş Logları" }
   ];
 
@@ -878,6 +882,8 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
               />
             </>
           ) : null}
+
+          {activeTab === "meeting-brief" ? <MeetingBriefTab /> : null}
 
           {activeTab === "visits" ? <VisitsTab visits={visits} /> : null}
         </div>
