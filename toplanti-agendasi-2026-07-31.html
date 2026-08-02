@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>detrbridge · Toplantı Gündemi · 31 Temmuz 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0a0c12;
+    --deck: rgba(255, 255, 255, 0.03);
+    --hairline: rgba(255, 255, 255, 0.09);
+    --navy: #1e3a8a;
+    --navy-mid: #3b5fc4;
+    --gold: #f5b700;
+    --text: #f4f6fb;
+    --fog: rgba(244, 246, 251, 0.55);
+    --faint: rgba(244, 246, 251, 0.32);
+    --spine-w: 2px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Archivo", "Segoe UI", system-ui, sans-serif;
+    background:
+      radial-gradient(55% 50% at 16% 0%, rgba(30, 58, 138, 0.24), transparent 60%),
+      radial-gradient(48% 48% at 88% 4%, rgba(245, 183, 0, 0.12), transparent 58%),
+      linear-gradient(180deg, #0a0c12 0%, #07080d 55%, #050609 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono {
+    font-family: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 28px 72px;
+  }
+
+  /* ── Masthead ─────────────────────────────────────────── */
+  header {
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 28px;
+    margin-bottom: 8px;
+  }
+
+  .brandline {
+    height: 3px;
+    width: 120px;
+    background: linear-gradient(115deg, #1e3a8a 0%, #3b5fc4 50%, #f5b700 100%);
+    border-radius: 2px;
+    margin-bottom: 22px;
+  }
+
+  .eyebrow {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: clamp(30px, 5.5vw, 46px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    text-transform: uppercase;
+  }
+
+  h1 .thin { font-weight: 400; color: var(--fog); }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    margin-top: 20px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--fog);
+  }
+  .meta b { color: var(--text); font-weight: 600; }
+
+  /* ── Toplantı ilkesi ──────────────────────────────────── */
+  .principle {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    margin: 26px 0 40px;
+    padding: 14px 18px;
+    border: 1px solid rgba(245, 183, 0, 0.28);
+    border-radius: 14px;
+    background: rgba(245, 183, 0, 0.06);
+  }
+  .principle .tag {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+  .principle p { font-size: 14px; color: var(--text); }
+  .principle p span { color: var(--faint); }
+
+  /* ── Gündem: halat + maddeler ─────────────────────────── */
+  .agenda {
+    position: relative;
+    padding-left: 56px;
+  }
+
+  /* köprü halatı: laciverttan altına inen omurga */
+  .agenda::before {
+    content: "";
+    position: absolute;
+    left: 17px;
+    top: 6px;
+    bottom: 6px;
+    width: var(--spine-w);
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-mid) 55%, var(--gold) 100%);
+    border-radius: 2px;
+  }
+
+  .item {
+    position: relative;
+    padding: 20px 0 24px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .item:last-child { border-bottom: none; }
+
+  /* halata asılı düğüm */
+  .item::before {
+    content: "";
+    position: absolute;
+    left: -44px;
+    top: 27px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 0 4px rgba(245, 183, 0, 0.12);
+  }
+
+  .item .no {
+    position: absolute;
+    left: -58px;
+    top: 46px;
+    width: 38px;
+    text-align: center;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+  }
+
+  .item-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 12px;
+  }
+
+  .item h2 {
+    font-size: 16.5px;
+    font-weight: 800;
+    letter-spacing: -0.005em;
+    line-height: 1.35;
+    flex: 1 1 320px;
+  }
+
+  .chip {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .chip.who {
+    color: var(--gold);
+    border: 1px solid rgba(245, 183, 0, 0.35);
+    background: rgba(245, 183, 0, 0.08);
+  }
+  .chip.due {
+    color: #93c5fd;
+    border: 1px solid rgba(147, 197, 253, 0.3);
+    background: rgba(147, 197, 253, 0.08);
+  }
+
+  .note {
+    margin-top: 10px;
+    font-size: 13.5px;
+    color: var(--fog);
+    max-width: 62ch;
+  }
+
+  .quote {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-left: 2px solid var(--gold);
+    background: var(--deck);
+    border-radius: 0 12px 12px 0;
+    font-size: 13px;
+    color: var(--fog);
+    white-space: pre-wrap;
+    max-width: 66ch;
+  }
+  .quote .src {
+    display: block;
+    margin-bottom: 6px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .file {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 12px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: #93c5fd;
+    border: 1px dashed rgba(147, 197, 253, 0.35);
+    border-radius: 9px;
+    padding: 5px 12px;
+  }
+  .file svg { flex-shrink: 0; }
+
+  .decision {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .decision .lbl {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+  .decision .line {
+    flex: 1;
+    border-bottom: 1px dotted rgba(244, 246, 251, 0.22);
+    height: 1em;
+  }
+
+  /* ── Zaman kalırsa ────────────────────────────────────── */
+  .overflow-section { margin-top: 44px; }
+  .overflow-section > .tag {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--faint);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 4px;
+  }
+  .overflow-section > .tag::after {
+    content: "";
+    flex: 1;
+    border-top: 1px dashed var(--hairline);
+  }
+  .overflow-section .agenda::before {
+    background: none;
+    border-left: 2px dashed rgba(245, 183, 0, 0.4);
+  }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    justify-content: space-between;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--faint);
+  }
+  footer a { color: var(--fog); text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+
+  /* ── Giriş animasyonu ─────────────────────────────────── */
+  @media (prefers-reduced-motion: no-preference) {
+    header, .principle, .item, .overflow-section, footer {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: rise 0.55s cubic-bezier(0.22, 0.9, 0.3, 1) forwards;
+    }
+    .principle { animation-delay: 0.08s; }
+    .item:nth-child(1) { animation-delay: 0.14s; }
+    .item:nth-child(2) { animation-delay: 0.18s; }
+    .item:nth-child(3) { animation-delay: 0.22s; }
+    .item:nth-child(4) { animation-delay: 0.26s; }
+    .item:nth-child(5) { animation-delay: 0.3s; }
+    .item:nth-child(6) { animation-delay: 0.34s; }
+    .item:nth-child(7) { animation-delay: 0.38s; }
+    .item:nth-child(8) { animation-delay: 0.42s; }
+    .item:nth-child(9) { animation-delay: 0.46s; }
+    .item:nth-child(10) { animation-delay: 0.5s; }
+    .item:nth-child(11) { animation-delay: 0.54s; }
+    .item:nth-child(12) { animation-delay: 0.58s; }
+    .item:nth-child(13) { animation-delay: 0.62s; }
+    .overflow-section { animation-delay: 0.68s; }
+    footer { animation-delay: 0.74s; }
+    @keyframes rise {
+      to { opacity: 1; transform: none; }
+    }
+  }
+
+  /* ── Yazdırma: beyaz zemin, mürekkep dostu ────────────── */
+  @media print {
+    body { background: #fff; color: #111420; }
+    :root {
+      --text: #111420;
+      --fog: #3d4354;
+      --faint: #8a8f9e;
+      --hairline: #d8dbe4;
+      --deck: #f4f5f9;
+      --ink: #fff;
+    }
+    .page { max-width: none; padding: 0; }
+    header, .principle, .item, .overflow-section, footer {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+    }
+    .item { break-inside: avoid; }
+    .chip.who { color: #8a6400; }
+    .chip.due { color: #1e3a8a; border-color: #1e3a8a55; }
+    .file { color: #1e3a8a; border-color: #1e3a8a55; }
+    .quote { background: #f4f5f9; }
+  }
+
+  @media (max-width: 560px) {
+    .page { padding: 40px 18px 56px; }
+    .agenda { padding-left: 44px; }
+    .agenda::before { left: 11px; }
+    .item::before { left: -38px; }
+    .item .no { left: -50px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="brandline"></div>
+    <p class="eyebrow">detrbridge · Toplantı Gündemi</p>
+    <h1>31 Temmuz 2026 <span class="thin">Perşembe</span></h1>
+    <div class="meta">
+      <span><b>13</b> gündem maddesi · <b>1</b> yedek konu</span>
+      <span>Katılımcılar: <b>UBT · Şahin · Sümeyye · Murat</b></span>
+    </div>
+  </header>
+
+  <div class="principle">
+    <span class="tag">Toplantı ilkesi</span>
+    <p>Toplantının efektif olması adına kısa ve öz konuşulması öneriliyor. <span>— Murat</span></p>
+  </div>
+
+  <section class="agenda" aria-label="Gündem maddeleri">
+
+    <article class="item">
+      <span class="no">01</span>
+      <div class="item-head">
+        <h2>Sorumluluk alanlarının belirlenmesi</h2>
+        <span class="chip who">UBT</span>
+      </div>
+      <p class="note">Web sitesi, pazarlama, sosyal medya, finans ve benzeri alanlar için sorumlu kişilerin net olarak belirlenmesi.</p>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">02</span>
+      <div class="item-head">
+        <h2>Görev takip sisteminin oluşturulması</h2>
+        <span class="chip who">UBT</span>
+      </div>
+      <p class="note">Kullanımı kolay ve düzenli bir dashboard üzerinden görevlerin, sorumluların, teslim tarihlerinin ve ilerleme durumlarının şeffaf şekilde takip edilmesi.</p>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">03</span>
+      <div class="item-head">
+        <h2>Fiyatlandırma workshop'u düzenlenmesi</h2>
+        <span class="chip who">UBT</span>
+      </div>
+      <p class="note">Bir web sitesinin sahip olabileceği özelliklerin ve hizmetlerin ayrı ayrı değerlendirilerek yaklaşık maliyetlerinin belirlenmesi ve standart bir fiyatlandırma modelinin oluşturulması.</p>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">04</span>
+      <div class="item-head">
+        <h2>Haftalık zaman planlamasının yapılması</h2>
+        <span class="chip who">UBT</span>
+      </div>
+      <p class="note">Grup üyelerinin projeye haftalık olarak ayırabilecekleri minimum, maksimum veya ortalama sürenin belirlenmesi.</p>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">05</span>
+      <div class="item-head">
+        <h2>Şeffaf görev dağılımı ve anonim geri bildirim sistemi kurulması</h2>
+        <span class="chip who">UBT</span>
+      </div>
+      <p class="note">Görev dağılımının herkes tarafından görülebilir ve adil şekilde yapılması; şikâyet, dilek ve önerilerin çatışmaya dönüşmeden iletilebilmesi için anonim bir geri bildirim sisteminin oluşturulması.</p>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">06</span>
+      <div class="item-head">
+        <h2>Aylık aidat sisteminin oluşturulması</h2>
+        <span class="chip who">UBT</span>
+      </div>
+      <p class="note">Aylık 200–250 TL tutarında bir aidat belirlenmesi ve bunun ortak bir hesapta toplanması öneriliyor. Hesap aktif edildiğinde katkılar oraya aktarılacak; kimin ne kadar katkı sağladığı şeffaf şekilde görülebilecek. Oluşan ortak havuzdan grup giderleri karşılanacak. Bu toplantıda detaylı görüşülmesi planlanıyor.</p>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">07</span>
+      <div class="item-head">
+        <h2>Mevcut sitenin Grove kimliğiyle değiştirilmesi için planlama</h2>
+        <span class="chip who">UBT</span>
+      </div>
+      <p class="note">Mevcut web sitesinin Grove logo/marka kimliğiyle değiştirilip devreye alınması (rotate edilmesi) için bir geçiş planının oluşturulması.</p>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">08</span>
+      <div class="item-head">
+        <h2>Kurumsal e-posta sisteminin kesinleştirilmesi</h2>
+        <span class="chip who">UBT</span>
+      </div>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">09</span>
+      <div class="item-head">
+        <h2>Maskot konusunun kısaca tartışılması</h2>
+        <span class="chip who">UBT</span>
+      </div>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">10</span>
+      <div class="item-head">
+        <h2>Site için SEO çalışmasının yapıldığı dokümanın hazırlanması</h2>
+        <span class="chip who">Ortak</span>
+      </div>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">11</span>
+      <div class="item-head">
+        <h2>Şahin'in aday task önerisi: basit admin paneli (Tailwind v4, yapay zekasız)</h2>
+        <span class="chip who">Şahin</span>
+      </div>
+      <blockquote class="quote"><span class="src">Şahin'in WhatsApp mesajı · 30.07.2026</span>"Basit bir task isteyeceğim sizden. Yapıp yapmamak size kalmış. Gerçekten neye nasıl yaklaştığınızı görmek istiyorum. Çok detaya girmeden aşırı basit bir admin paneli yapılsın. İnteraktif bir yapıda. React/Next vs değil mevzu. Tek şartım Tailwind v4 ile yazılması. Hiçbir yapay zeka kullanmadan. Ekrandaki gibi çok basit bir şey yapılsa da yeter. Maksat ne kadar zamanda yapacaklar, GitHub kullanabiliyorlar mı? Sonrasında revize vereceğim. Onu başka branch'ta yönetebiliyorlar mı gibi basit şeyler. Eğer Tailwind v4 ile yazamam derseniz CSS de okey. Sadece neyi neden yaptığınızı bilin yeter. Yapay zeka kullanmayın lütfen."</blockquote>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">12</span>
+      <div class="item-head">
+        <h2>Grove Development admin paneli için istek listesinin hazırlanması</h2>
+        <span class="chip who">Sümeyye</span>
+      </div>
+      <p class="note">Geliştirilmesi devam eden Grove Development web uygulamasının admin panelinde nelerin olması istendiğinin maddeler halinde hazırlanması. API listesindeki endpoint'ler paylaşıldı; listede olmayan talepler ayrıca belirtilmeli.</p>
+      <span class="file">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        api listesi.xlsx · panoda ekli
+      </span>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+    <article class="item">
+      <span class="no">13</span>
+      <div class="item-head">
+        <h2>SEO key/value çalışmasının değerlendirilmesi ve revize verilmesi</h2>
+        <span class="chip who">Sümeyye</span>
+      </div>
+      <p class="note">SEO için key'leri verilen ve karşılarına yerleştirilen value kısmının değerlendirilmesi, sonrasında revizelerin iletilmesi.</p>
+      <span class="file">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        tr.json · panoda ekli
+      </span>
+      <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+    </article>
+
+  </section>
+
+  <section class="overflow-section" aria-label="Zaman kalırsa">
+    <p class="tag">Zaman kalırsa</p>
+    <div class="agenda">
+      <article class="item">
+        <span class="no">+1</span>
+        <div class="item-head">
+          <h2>Murat'ın kafasındaki projenin tanıtımı ve destek talebi</h2>
+          <span class="chip who">Murat</span>
+          <span class="chip due">31 Tem 2026</span>
+        </div>
+        <p class="note">Zaman kalırsa Murat'ın üzerinde düşündüğü bir projeyi tanıtması ve konuyla ilgili gruptan destek talep etmesi.</p>
+        <div class="decision"><span class="lbl">Karar</span><span class="line"></span></div>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <span>Kaynak: <a href="https://ubterzioglu.de/detrbridge?tab=todos2">detrbridge · Toplantı Konuları panosu</a></span>
+    <span>31.07.2026 itibarıyla panodaki açık konulardan derlendi</span>
+  </footer>
+
+</div>
+</body>
+</html>

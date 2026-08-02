@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="31 Temmuz 2026 UBT ekip toplantısı — görevler, kararlar ve bilgiler">
+  <title>UBT Toplantı Özeti · Görevler, Kararlar, Bilgiler</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0b1728;
+      --surface: rgba(17, 33, 53, .82);
+      --surface-strong: #12243a;
+      --line: rgba(164, 190, 220, .16);
+      --text: #eef6ff;
+      --muted: #a9bbce;
+      --accent: #6ce5c3;
+      --accent-2: #78a8ff;
+      --warm: #ffc36c;
+      --danger: #ff8f8f;
+      --shadow: 0 18px 60px rgba(0, 0, 0, .28);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(120,168,255,.16), transparent 30rem),
+        radial-gradient(circle at 92% 14%, rgba(108,229,195,.11), transparent 26rem),
+        linear-gradient(180deg, #06101d 0%, #091729 55%, #07111f 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .25;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+    }
+    a { color: inherit; }
+    .container { width: min(1180px, calc(100% - 32px)); margin-inline: auto; }
+    .hero { padding: 72px 0 38px; position: relative; }
+    .eyebrow {
+      display: inline-flex; gap: 10px; align-items: center;
+      padding: 8px 13px; border: 1px solid var(--line); border-radius: 999px;
+      background: rgba(11,23,40,.65); color: var(--accent); font-size: .78rem;
+      font-weight: 750; letter-spacing: .11em; text-transform: uppercase;
+    }
+    .eyebrow::before { content:""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+    h1 {
+      margin: 24px 0 18px; max-width: 950px;
+      font-size: clamp(2.45rem, 7vw, 5.9rem); line-height: .96; letter-spacing: -.065em;
+    }
+    h1 span { color: transparent; background: linear-gradient(90deg, var(--accent), #d8fff4 45%, var(--accent-2)); background-clip: text; -webkit-background-clip: text; }
+    .lead { max-width: 760px; margin: 0; color: var(--muted); font-size: clamp(1rem, 2vw, 1.23rem); }
+    .summary-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 34px;
+    }
+    .summary-card {
+      padding: 18px; border: 1px solid var(--line); border-radius: 18px;
+      background: linear-gradient(145deg, rgba(20,40,64,.82), rgba(10,24,41,.68));
+      box-shadow: var(--shadow);
+    }
+    .summary-card strong { display: block; font-size: 1.8rem; letter-spacing: -.04em; }
+    .summary-card span { color: var(--muted); font-size: .86rem; }
+    .toolbar-wrap {
+      position: sticky; top: 0; z-index: 20; padding: 10px 0;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(7,17,31,.95), rgba(7,17,31,.72));
+      border-bottom: 1px solid rgba(164,190,220,.08);
+    }
+    .toolbar { display: flex; gap: 10px; align-items: center; }
+    .nav-pills {
+      display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; flex: 1;
+    }
+    .nav-pills::-webkit-scrollbar { display:none; }
+    .nav-pills a {
+      white-space: nowrap; text-decoration: none; padding: 10px 15px; border-radius: 999px;
+      border: 1px solid var(--line); background: rgba(17,33,53,.72); color: var(--muted);
+      font-weight: 700; font-size: .9rem; transition: .2s ease;
+    }
+    .nav-pills a:hover { color: var(--text); border-color: rgba(108,229,195,.45); transform: translateY(-1px); }
+    .search {
+      width: min(290px, 35vw); padding: 11px 14px; border-radius: 14px; outline: none;
+      border: 1px solid var(--line); background: rgba(17,33,53,.8); color: var(--text);
+      font: inherit;
+    }
+    .search:focus { border-color: rgba(108,229,195,.55); box-shadow: 0 0 0 3px rgba(108,229,195,.08); }
+    main { padding: 24px 0 80px; }
+    section { scroll-margin-top: 88px; padding-top: 46px; }
+    .section-head {
+      display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 22px;
+    }
+    .section-kicker { color: var(--accent); font-size: .78rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    h2 { margin: 4px 0 0; font-size: clamp(2rem, 4vw, 3.6rem); letter-spacing: -.05em; line-height: 1.03; }
+    .section-note { margin: 0; max-width: 470px; color: var(--muted); text-align: right; }
+    .task-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .task-card {
+      display: grid; grid-template-columns: 56px minmax(0, 1fr) auto;
+      grid-template-areas: "num title badges" "num desc desc" "num meta meta" "num footer footer";
+      column-gap: 18px; align-items: center;
+    }
+    .task-index { grid-area: num; align-self: start; }
+    .task-card .card-topline { grid-area: badges; justify-content: flex-end; }
+    .task-card h3 { grid-area: title; margin: 0; }
+    .task-card > p { grid-area: desc; margin-top: 8px; }
+    .task-card .meta-grid { grid-area: meta; }
+    .task-card footer { grid-area: footer; }
+    .task-card, .info-card {
+      position: relative; overflow: hidden; padding: 22px; border: 1px solid var(--line);
+      border-radius: var(--radius); background: linear-gradient(160deg, rgba(19,39,63,.92), rgba(10,24,41,.82));
+      box-shadow: var(--shadow); transition: transform .2s ease, border-color .2s ease;
+    }
+    .task-card:hover, .info-card:hover { transform: translateY(-3px); border-color: rgba(108,229,195,.35); }
+    .task-card::after {
+      content:""; position:absolute; width:120px; height:120px; right:-55px; top:-55px;
+      border-radius:50%; background:radial-gradient(circle, rgba(120,168,255,.16), transparent 66%);
+    }
+    .card-topline { display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .priority, .status, .decision-type {
+      display:inline-flex; align-items:center; min-height:28px; padding:5px 9px; border-radius:999px;
+      font-size:.72rem; font-weight:800; letter-spacing:.035em;
+    }
+    .priority { background:rgba(120,168,255,.12); color:#b9d1ff; border:1px solid rgba(120,168,255,.18); }
+    .priority-yuksek { background:rgba(255,195,108,.12); color:#ffdca8; border-color:rgba(255,195,108,.2); }
+    .priority-dusuk { background:rgba(169,187,206,.1); color:#c5d1dd; border-color:rgba(169,187,206,.15); }
+    .status { color:var(--accent); background:rgba(108,229,195,.1); border:1px solid rgba(108,229,195,.17); }
+    h3 { margin: 16px 0 9px; font-size: 1.15rem; line-height: 1.3; letter-spacing: -.018em; }
+    .task-card p, .decision-card p { margin:0; color:#c3d2e2; font-size:.92rem; }
+    .meta-grid { display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 0; }
+    .meta-grid div { flex:1 1 240px; padding:11px; border-radius:14px; background:rgba(5,16,29,.46); border:1px solid rgba(164,190,220,.09); }
+    dt { color:#7f97af; font-size:.68rem; text-transform:uppercase; letter-spacing:.09em; font-weight:800; }
+    dd { margin:3px 0 0; color:#e4eef8; font-size:.83rem; line-height:1.35; }
+    .task-card footer { margin-top:16px; padding-top:13px; border-top:1px solid rgba(164,190,220,.09); }
+    .source { color:#7f97af; font-size:.72rem; font-weight:650; }
+    .decision-list { display:grid; gap:12px; }
+    .decision-card {
+      display:grid; grid-template-columns:72px 1fr; gap:18px; padding:20px;
+      border:1px solid var(--line); border-radius:20px; background:rgba(17,33,53,.72);
+      box-shadow:0 12px 36px rgba(0,0,0,.18);
+    }
+    .decision-index, .task-index {
+      display:grid; place-items:center; width:56px; height:56px; border-radius:18px;
+      background:linear-gradient(145deg, rgba(108,229,195,.17), rgba(120,168,255,.12));
+      color:var(--accent); font-weight:850; font-size:1.05rem; border:1px solid rgba(108,229,195,.16);
+    }
+    .decision-content h3 { margin:8px 0 6px; }
+    .decision-type { padding:4px 8px; min-height:auto; color:#bed3ff; background:rgba(120,168,255,.11); }
+    .decision-content .source { display:block; margin-top:10px; }
+    .info-grid { display:grid; grid-template-columns:1fr; gap:12px; }
+    .info-card {
+      display:grid; grid-template-columns:48px minmax(0,1fr); column-gap:18px;
+      grid-template-areas:"icon title" "icon list" "icon source"; align-items:start;
+    }
+    .info-card .info-icon { grid-area:icon; }
+    .info-card h3 { grid-area:title; margin:0; align-self:center; }
+    .info-card ul { grid-area:list; margin:10px 0 14px; }
+    .info-card > .source { grid-area:source; }
+    .info-icon {
+      display:grid; place-items:center; width:48px; height:48px; border-radius:16px;
+      color:var(--accent); background:rgba(108,229,195,.1); border:1px solid rgba(108,229,195,.18);
+      font-size:1.25rem; font-weight:850;
+    }
+    .info-card ul { margin:13px 0 18px; padding-left:20px; color:#c3d2e2; }
+    .info-card li { margin:8px 0; }
+    .empty {
+      display:none; margin:30px 0; padding:24px; text-align:center; color:var(--muted);
+      border:1px dashed var(--line); border-radius:18px;
+    }
+    .footer-note {
+      margin-top:50px; padding:22px; border:1px solid var(--line); border-radius:20px;
+      background:rgba(10,24,41,.62); color:var(--muted); font-size:.88rem;
+    }
+    .footer-note strong { color:var(--text); }
+    .hidden-by-search { display:none !important; }
+    @media (max-width: 980px) {
+      .summary-grid { grid-template-columns:repeat(2,1fr); }
+      .toolbar { align-items:stretch; flex-direction:column; }
+      .search { width:100%; }
+      .section-head { align-items:start; flex-direction:column; }
+      .section-note { text-align:left; }
+    }
+    @media (max-width: 660px) {
+      .hero { padding-top:48px; }
+      .summary-grid, .info-grid { grid-template-columns:1fr; }
+      .task-card { grid-template-columns:46px minmax(0,1fr); column-gap:12px; grid-template-areas:"num badges" "num title" "num desc" "num meta" "num footer"; }
+      .task-card .card-topline { justify-content:flex-start; }
+      .task-card h3 { margin-top:12px; }
+      .decision-card { grid-template-columns:46px 1fr; gap:12px; padding:16px; }
+      .decision-index, .task-index { width:42px; height:42px; border-radius:13px; font-size:.85rem; }
+      .info-card { grid-template-columns:40px minmax(0,1fr); column-gap:12px; }
+      .info-icon { width:40px; height:40px; border-radius:13px; font-size:1.05rem; }
+      h1 { font-size:clamp(2.55rem, 16vw, 4rem); }
+    }
+    @media print {
+      :root { --text:#101820; --muted:#425466; --line:#d9e1e8; }
+      body { background:white; color:#101820; }
+      body::before, .toolbar-wrap { display:none; }
+      .hero { padding:24px 0; }
+      h1 span { color:#101820; background:none; }
+      .summary-card, .task-card, .decision-card, .info-card, .footer-note {
+        background:white; color:#101820; box-shadow:none; break-inside:avoid; border-color:#d9e1e8;
+      }
+      .task-card p, .decision-card p, .info-card ul { color:#34495e; }
+      .source { color:#64748b; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <span class="eyebrow">UBT · Toplantı Brifingi</span>
+      <h1>Görevler.<br><span>Kararlar.</span><br>Bilgiler.</h1>
+      <p class="lead">31 Temmuz 2026 tarihli iki toplantı oturumunun; kesinleşen maddeler ile açık konuları birbirinden ayıran, uygulanabilir ve kaynak zaman damgalı özeti.</p>
+      <div class="summary-grid" aria-label="Toplantı istatistikleri">
+        <div class="summary-card"><strong>12</strong><span>Görev / takip maddesi</span></div>
+        <div class="summary-card"><strong>10</strong><span>Karar / çalışma ilkesi</span></div>
+        <div class="summary-card"><strong>72 dk</strong><span>Toplam görüşme süresi</span></div>
+        <div class="summary-card"><strong>6</strong><span>Toplam katılımcı</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar-wrap">
+    <div class="container toolbar">
+      <nav class="nav-pills" aria-label="Sayfa bölümleri">
+        <a href="#gorevler">01 · Görevler</a>
+        <a href="#kararlar">02 · Kararlar</a>
+        <a href="#bilgiler">03 · Bilgiler</a>
+      </nav>
+      <input id="search" class="search" type="search" placeholder="Başlık, kişi veya konu ara…" aria-label="Sayfada ara">
+    </div>
+  </div>
+
+  <main class="container">
+    <section id="gorevler">
+      <div class="section-head">
+        <div><span class="section-kicker">01 / Uygulama</span><h2>Görevler</h2></div>
+        <p class="section-note">Kesin sorumlusu veya tarihi olmayan maddeler açıkça işaretlendi; konuşma içindeki örnek atamalar karar olarak yazılmadı.</p>
+      </div>
+      <div class="task-grid">
+<article class="task-card searchable" data-status="Planlandı" data-priority="Yüksek">
+  <div class="card-topline">
+    <span class="priority priority-yuksek">Yüksek</span>
+    <span class="status">Planlandı</span>
+  </div>
+  <div class="task-index">01</div>
+  <h3>Sorumluluk alanlarını ve temas kişilerini belirleme</h3>
+  <p>Web sitesi, pazarlama, sosyal medya, finans/muhasebe gibi alanlar için birer temas kişisi belirlenip görev kapsamları dokümante edilecek. Toplantıda geçen kişi–rol örnekleri kesin atama değildir.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Tüm ekip · kolaylaştırıcı: Umut</dd></div>
+    <div><dt>Hedef</dt><dd>Önümüzdeki 10 gün</dd></div>
+  </dl>
+  <footer><span class="source">1. oturum · 29:43–31:52</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Başlatılacak" data-priority="Yüksek">
+  <div class="card-topline">
+    <span class="priority priority-yuksek">Yüksek</span>
+    <span class="status">Başlatılacak</span>
+  </div>
+  <div class="task-index">02</div>
+  <h3>Görev takip panelini geçici merkez olarak kullanma</h3>
+  <p>Mevcut paneldeki “Görevler” alanı kararlar, görevler ve ilerleme için ortak çalışma alanı olacak; dağınık/eski içerikler düzenlenecek ve gerekli kayıtlar taşınacak.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Umut + ekip</dd></div>
+    <div><dt>Hedef</dt><dd>Hemen</dd></div>
+  </dl>
+  <footer><span class="source">1. oturum · 39:08–40:08</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Taahhüt edildi" data-priority="Yüksek">
+  <div class="card-topline">
+    <span class="priority priority-yuksek">Yüksek</span>
+    <span class="status">Taahhüt edildi</span>
+  </div>
+  <div class="task-index">03</div>
+  <h3>Toplantı çıktısını yazılı dosya halinde paylaşma</h3>
+  <p>Konuşulan konular; kararlar, yapılacaklar ve başlıklar halinde düzenlenerek ekip ile paylaşılacak.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Umut</dd></div>
+    <div><dt>Hedef</dt><dd>Transkript sonrası</dd></div>
+  </dl>
+  <footer><span class="source">1. oturum · 28:02–28:42 ve 38:49–39:08</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Planlandı" data-priority="Yüksek">
+  <div class="card-topline">
+    <span class="priority priority-yuksek">Yüksek</span>
+    <span class="status">Planlandı</span>
+  </div>
+  <div class="task-index">04</div>
+  <h3>Türkiye ve Almanya için fiyatlandırma çalıştayı</h3>
+  <p>Web sitesi ve diğer hizmetler için özellik, kapsam, efor ve test boyutlarını içeren; ekip içi kullanılacak iki ayrı fiyat çerçevesi hazırlanacak.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Tüm ekip · geliştirme/test desteği: Umut</dd></div>
+    <div><dt>Hedef</dt><dd>Yaklaşan toplantılarda</dd></div>
+  </dl>
+  <footer><span class="source">1. oturum · 40:38–42:57</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Açık konu" data-priority="Orta">
+  <div class="card-topline">
+    <span class="priority priority-orta">Orta</span>
+    <span class="status">Açık konu</span>
+  </div>
+  <div class="task-index">05</div>
+  <h3>Operasyon giderleri ve ortak fon modelini netleştirme</h3>
+  <p>Sunucu, domain ve kurumsal e-posta giderleri birlikte hesaplanacak; aylık katkı tutarı kesinleştirilecek. Hesap hareketlerinin düzenli ve şeffaf paylaşılması esas olacak.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Umut + ekip</dd></div>
+    <div><dt>Hedef</dt><dd>Bir sonraki değerlendirme</dd></div>
+  </dl>
+  <footer><span class="source">1. oturum · 44:44–47:37 ve 53:31–56:43</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="İlerliyor" data-priority="Yüksek">
+  <div class="card-topline">
+    <span class="priority priority-yuksek">Yüksek</span>
+    <span class="status">İlerliyor</span>
+  </div>
+  <div class="task-index">06</div>
+  <h3>Showcase web sitesini yayına hazırlama</h3>
+  <p>Mevcut ön yüz canlı/staging ortama taşınacak; ekip geri bildirimi alınacak. Admin paneli, backend bağlantıları ve içerikler kademeli olarak tamamlanacak.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Web ekibi · koordinasyon: Sümeyya</dd></div>
+    <div><dt>Hedef</dt><dd>Devam ediyor</dd></div>
+  </dl>
+  <footer><span class="source">1. oturum · 48:01–51:11</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Planlandı" data-priority="Yüksek">
+  <div class="card-topline">
+    <span class="priority priority-yuksek">Yüksek</span>
+    <span class="status">Planlandı</span>
+  </div>
+  <div class="task-index">07</div>
+  <h3>SEO aracına erişim verip gereklilikleri uygulama</h3>
+  <p>Umut, premium SEO aracına bir ekip üyesi için erişim açacak. Araç önerileri site tamamlanmadan önce tasarıma ve koda işlenecek.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Erişim: Umut · uygulama: web ekibi</dd></div>
+    <div><dt>Hedef</dt><dd>Erişim: hafta sonu / Pazartesi–Salı; uygulama: finalden önce</dd></div>
+  </dl>
+  <footer><span class="source">1. oturum · 51:24–52:58</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Değerlendirilecek" data-priority="Orta">
+  <div class="card-topline">
+    <span class="priority priority-orta">Orta</span>
+    <span class="status">Değerlendirilecek</span>
+  </div>
+  <div class="task-index">08</div>
+  <h3>Kurumsal e-posta çözümünü karşılaştırıp seçme</h3>
+  <p>Mevcut Zoho tabanlı çözüm ile domain sağlayıcısı/Hostinger benzeri alternatifler maliyet ve kullanım açısından değerlendirilecek.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Tüm ekip</dd></div>
+    <div><dt>Hedef</dt><dd>Açık</dd></div>
+  </dl>
+  <footer><span class="source">1. oturum · 53:31–56:43</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Değerlendirilecek" data-priority="Düşük">
+  <div class="card-topline">
+    <span class="priority priority-dusuk">Düşük</span>
+    <span class="status">Değerlendirilecek</span>
+  </div>
+  <div class="task-index">09</div>
+  <h3>Maskot taslaklarını değerlendirip karar verme</h3>
+  <p>Drive klasöründeki maskot taslakları incelenecek; kullanılması kararlaştırılırsa seçilen maskotun farklı açıları hazırlanarak siteye entegre edilecek.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Tüm ekip · görseller: Umut</dd></div>
+    <div><dt>Hedef</dt><dd>Açık</dd></div>
+  </dl>
+  <footer><span class="source">1. oturum · 57:08–58:24</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Taahhüt edildi" data-priority="Orta">
+  <div class="card-topline">
+    <span class="priority priority-orta">Orta</span>
+    <span class="status">Taahhüt edildi</span>
+  </div>
+  <div class="task-index">10</div>
+  <h3>ATS / işe alım otomasyonu fikrini tek sayfada anlatma</h3>
+  <p>Doğal dille ilan üretimi, başvuru puanlama, aday sıralama ve kişiselleştirilmiş geri bildirim akışını anlatan bir sayfalık tek sayfalık doküman veya PDF hazırlanıp Umut’a gönderilecek.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Murat Berat</dd></div>
+    <div><dt>Hedef</dt><dd>Proje değerlendirme toplantısından önce</dd></div>
+  </dl>
+  <footer><span class="source">2. oturum · 07:40–12:16</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Planlandı" data-priority="Orta">
+  <div class="card-topline">
+    <span class="priority priority-orta">Orta</span>
+    <span class="status">Planlandı</span>
+  </div>
+  <div class="task-index">11</div>
+  <h3>Bir sonraki toplantı için anket açma</h3>
+  <p>3–4 gün açık kalacak bir tarih anketi ile takip toplantısı belirlenecek; toplantı süresi gidişata göre yaklaşık 30–60 dakika olacak.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Sümeyya</dd></div>
+    <div><dt>Hedef</dt><dd>2 hafta içinde</dd></div>
+  </dl>
+  <footer><span class="source">2. oturum · 12:34–13:15</span></footer>
+</article>
+
+
+<article class="task-card searchable" data-status="Devam ediyor" data-priority="Orta">
+  <div class="card-topline">
+    <span class="priority priority-orta">Orta</span>
+    <span class="status">Devam ediyor</span>
+  </div>
+  <div class="task-index">12</div>
+  <h3>Yeni iş fırsatlarını ekip için olgunlaştırma</h3>
+  <p>Burak’ın ortaklık modeliyle gelebilecek projeleri, 2–3 basit web sitesi işini, Şahin üzerinden gelebilecek daha büyük işleri ve ABD bağlantısından doğabilecek fırsatları takip edecek.</p>
+  <dl class="meta-grid">
+    <div><dt>Sorumlu</dt><dd>Umut</dd></div>
+    <div><dt>Hedef</dt><dd>Süreç içinde</dd></div>
+  </dl>
+  <footer><span class="source">2. oturum · 04:10–06:52</span></footer>
+</article>
+</div>
+    </section>
+
+    <section id="kararlar">
+      <div class="section-head">
+        <div><span class="section-kicker">02 / Çerçeve</span><h2>Kararlar</h2></div>
+        <p class="section-note">Ekip iletişimi, çalışma disiplini, ürün önceliği ve ticari yaklaşım konusunda mutabık kalınan başlıklar.</p>
+      </div>
+      <div class="decision-list">
+<article class="decision-card searchable">
+  <div class="decision-index">01</div>
+  <div class="decision-content">
+    <span class="decision-type">Kesin karar</span>
+    <h3>Tek WhatsApp grubu, profesyonel iletişim</h3>
+    <p>İkinci bir sohbet grubu açılmayacak. Mevcut grup iş odaklı ve daha resmî kullanılacak; bilgi kirliliği oluşturacak yoğun sohbetten kaçınılacak.</p>
+    <span class="source">1. oturum · 18:33–20:33</span>
+  </div>
+</article>
+
+
+<article class="decision-card searchable">
+  <div class="decision-index">02</div>
+  <div class="decision-content">
+    <span class="decision-type">Çalışma ilkesi</span>
+    <h3>Üslup yapıcı ve kırıcı olmayan biçimde korunacak</h3>
+    <p>Eleştiri ve uyarılar profesyonel biçimde yapılacak; imalı, incitici veya yıkıcı yazışmalardan kaçınılacak.</p>
+    <span class="source">1. oturum · 20:47–22:38</span>
+  </div>
+</article>
+
+
+<article class="decision-card searchable">
+  <div class="decision-index">03</div>
+  <div class="decision-content">
+    <span class="decision-type">Çalışma ilkesi</span>
+    <h3>Mesajlara en geç 48 saat içinde dönüş beklentisi</h3>
+    <p>Bir talep yerine getirilemiyorsa dahi okunduğu ve yapılamayacağı ya da daha sonra ele alınacağı bildirilecek. Unutulan işler için hatırlatma yapmak normal ve istenen bir davranış.</p>
+    <span class="source">1. oturum · 22:38–28:02</span>
+  </div>
+</article>
+
+
+<article class="decision-card searchable">
+  <div class="decision-index">04</div>
+  <div class="decision-content">
+    <span class="decision-type">Kesin karar</span>
+    <h3>Kararlar ve görevler yazılı olarak kayıt altına alınacak</h3>
+    <p>Yanlış anlamaları azaltmak ve geriye dönük iz bırakmak için toplantı çıktıları ve çalışma kararları dokümante edilecek.</p>
+    <span class="source">1. oturum · 10:25–14:50 ve 28:02–28:42</span>
+  </div>
+</article>
+
+
+<article class="decision-card searchable">
+  <div class="decision-index">05</div>
+  <div class="decision-content">
+    <span class="decision-type">Yapısal karar</span>
+    <h3>Alan sorumluları lider değil, temas noktası olacak</h3>
+    <p>Her alan için bir sorumlu/temas kişisi bulunacak; bu kişi işi tek başına yapan hiyerarşik lider olarak değil, koordinasyon ve raporlama noktası olarak konumlanacak.</p>
+    <span class="source">1. oturum · 29:43–31:52</span>
+  </div>
+</article>
+
+
+<article class="decision-card searchable">
+  <div class="decision-index">06</div>
+  <div class="decision-content">
+    <span class="decision-type">Ürün kararı</span>
+    <h3>Önce hızlı vitrin, sonra kapsamlı ürün</h3>
+    <p>Dışarıdan iletişim kurulabilecek mevcut showcase site kısa vadede kullanılacak. Daha kapsamlı görev, müşteri, finans ve yönetim paneli arka planda baskı oluşturmadan geliştirilecek; hazır olduğunda geçiş yapılacak.</p>
+    <span class="source">1. oturum · 33:55–38:11</span>
+  </div>
+</article>
+
+
+<article class="decision-card searchable">
+  <div class="decision-index">07</div>
+  <div class="decision-content">
+    <span class="decision-type">Ticari ilke</span>
+    <h3>Ücretsiz iş varsayılan yaklaşım olmayacak</h3>
+    <p>Eş-dost dahil işler karşılıksız yapılmayacak. Öğrenme veya stratejik fayda amacıyla düşük ücret ya da müşteri yönlendirmesi karşılığı çalışma gibi istisnalar ekipçe değerlendirilebilir.</p>
+    <span class="source">1. oturum · 42:58–44:44</span>
+  </div>
+</article>
+
+
+<article class="decision-card searchable">
+  <div class="decision-index">08</div>
+  <div class="decision-content">
+    <span class="decision-type">Ticari karar</span>
+    <h3>Fiyatlar standartlaştırılacak ve ekip içinde tutulacak</h3>
+    <p>Teklif verirken her defasında yeniden tartışmamak için Türkiye ve Almanya pazarlarına uygun, hizmet kapsamına göre ayrıştırılmış iç fiyat listeleri hazırlanacak.</p>
+    <span class="source">1. oturum · 40:38–42:57</span>
+  </div>
+</article>
+
+
+<article class="decision-card searchable">
+  <div class="decision-index">09</div>
+  <div class="decision-content">
+    <span class="decision-type">Öncelik kararı</span>
+    <h3>Öncelik çekirdek Grow/ekip işlerinde</h3>
+    <p>Murat’ın ATS fikri değerli bulundu; ancak geliştirmeye başlamadan önce ekibin mevcut çekirdek işleri birlikte tamamlanacak. Yan proje şimdilik dokümante edilip olgunlaştırılacak.</p>
+    <span class="source">2. oturum · 06:52–12:34</span>
+  </div>
+</article>
+
+
+<article class="decision-card searchable">
+  <div class="decision-index">10</div>
+  <div class="decision-content">
+    <span class="decision-type">Mali ilke</span>
+    <h3>Ortak giderlerde şeffaflık</h3>
+    <p>Sunucu ve diğer ortak masraflar için bir fon oluşturulması benimsendi; kesin kişi başı tutar henüz karara bağlanmadı. Gelir-gider hareketleri düzenli olarak ekiple paylaşılacak.</p>
+    <span class="source">1. oturum · 44:44–47:37</span>
+  </div>
+</article>
+</div>
+    </section>
+
+    <section id="bilgiler">
+      <div class="section-head">
+        <div><span class="section-kicker">03 / Bağlam</span><h2>Bilgiler</h2></div>
+        <p class="section-note">Proje durumu, teknik altyapı, fırsatlar ve henüz karara bağlanmamış noktalar.</p>
+      </div>
+      <div class="info-grid">
+<article class="info-card searchable">
+  <div class="info-icon" aria-hidden="true">◷</div>
+  <h3>Toplantı özeti</h3>
+  <ul>
+    <li><strong>Tarih:</strong> 31 Temmuz 2026</li><li><strong>Oturumlar:</strong> 58 dakika + 14 dakika (toplam yaklaşık 72 dakika)</li><li><strong>Katılımcılar:</strong> Aslıhan, Fatih Çalışkan, Murat Berat Başarı, Sefa Eyer, Sümeyya Nacar, Umut Barış Terzioğlu</li><li><strong>Ana amaç:</strong> Profesyonel çalışma çerçevesi, sorumluluklar, ürün planı, fiyatlandırma ve operasyon altyapısını netleştirmek</li>
+  </ul>
+  <span class="source">Her iki oturum</span>
+</article>
+
+
+<article class="info-card searchable">
+  <div class="info-icon" aria-hidden="true">▦</div>
+  <h3>Web sitesi mevcut durumu</h3>
+  <ul>
+    <li>Üç dil desteği hedeflenen bir vitrin sitesi hazırlanıyor.</li><li>Admin girişi/paneli, hakkımızda, hizmetler, projeler, blog, iletişim formu ve WhatsApp bağlantısı tasarımda yer alıyor.</li><li>Frontend başlangıç sürümü ekip tarafından olumlu değerlendirildi; backend ve admin bağlantıları aşamalı tamamlanacak.</li><li>Blog bölümünün düzenli ve güncel teknik içeriklerle beslenmesi planlanıyor.</li>
+  </ul>
+  <span class="source">1. oturum · 48:01–52:58</span>
+</article>
+
+
+<article class="info-card searchable">
+  <div class="info-icon" aria-hidden="true">▤</div>
+  <h3>Teknik altyapı</h3>
+  <ul>
+    <li>Mevcut uzaktaki sunucunun Almanya menşeli bir sağlayıcıdan alındığı belirtildi.</li><li>Transkriptte sunucu kapasitesi yaklaşık <strong>320 GB ve 16 çekirdek</strong>, mevcut site sayısı ise <strong>25–30</strong> olarak ifade edildi.</li><li>Sunucu maliyetinin yaklaşık <strong>20 € / ay</strong> olduğu söylendi; ekip katkısının kesin modeli henüz net değil.</li><li>Kurumsal e-posta için mevcut Zoho benzeri çalışma alanı kullanılabilir; alternatif çözümler de değerlendirilecek.</li>
+  </ul>
+  <span class="source">1. oturum · 44:44–56:43</span>
+</article>
+
+
+<article class="info-card searchable">
+  <div class="info-icon" aria-hidden="true">◇</div>
+  <h3>İş fırsatları ve gelir kanalları</h3>
+  <ul>
+    <li>Burak tarafında, altyapı ekipçe geliştirilip gelir veya hisse paylaşımıyla ilerleyebilecek proje fikirleri bulunuyor.</li><li>Yakın çevreden gelebilecek 2–3 basit kişisel web sitesi işi için yaklaşık 150–200 € seviyesinde fiyat konuşuldu.</li><li>Şahin üzerinden gelecekte daha kapsamlı işler gelebileceği belirtildi.</li><li>ABD’deki bir bağlantı ve Türkiye’deki Aytekin üzerinden kapasite fazlası işlerin ekibe yönlendirilmesi gündemde.</li>
+  </ul>
+  <span class="source">2. oturum · 04:10–06:52</span>
+</article>
+
+
+<article class="info-card searchable">
+  <div class="info-icon" aria-hidden="true">✦</div>
+  <h3>ATS ürün fikri</h3>
+  <ul>
+    <li>Şirket profilinden ve doğal dilde girilen ihtiyaçtan otomatik iş ilanı üretme.</li><li>Başvuruları/CV’leri kriterlere göre puanlama ve yüksek uyumlu adayları sıralama.</li><li>Puan kaybının nedenlerini güçlü ve zayıf yönlerle açıklama.</li><li>Olumlu veya olumsuz tüm adaylara kişiselleştirilmiş, profesyonel geri bildirim üretme.</li><li>LinkedIn verisi/entegrasyonu ve teknik erişim yöntemi henüz araştırılması gereken bir alan.</li>
+  </ul>
+  <span class="source">2. oturum · 07:40–11:59</span>
+</article>
+
+
+<article class="info-card searchable">
+  <div class="info-icon" aria-hidden="true">?</div>
+  <h3>Açık konular</h3>
+  <ul>
+    <li>Alan sorumlularının isimleri ve görev sınırları</li><li>Aylık ortak fonun kişi başı kesin tutarı</li><li>Kurumsal e-posta sağlayıcısı ve kullanıcı maliyeti</li><li>Maskotun kullanılıp kullanılmayacağı</li><li>Kapsamlı iç panelin ürün sınırları ve geliştirme takvimi</li><li>Fiyat listelerinin detayları ve indirim/stratejik takas kuralları</li>
+  </ul>
+  <span class="source">Her iki oturumdaki kesinleşmemiş maddeler</span>
+</article>
+</div>
+    </section>
+
+    <div id="empty" class="empty">Aramanızla eşleşen bir madde bulunamadı.</div>
+
+    <aside class="footer-note">
+      <strong>Not:</strong> Bu doküman transkriptte açıkça desteklenen ifadelerden hazırlanmıştır. Tutarlar ve teknik özellikler toplantıda sözlü olarak aktarıldığı haliyle özetlenmiş; kesinleşmeyen konular “açık konu” olarak bırakılmıştır.
+    </aside>
+  </main>
+
+  <script>
+    const search = document.getElementById('search');
+    const cards = [...document.querySelectorAll('.searchable')];
+    const empty = document.getElementById('empty');
+
+    const normalize = value => value
+      .toLocaleLowerCase('tr-TR')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+    search.addEventListener('input', () => {
+      const query = normalize(search.value.trim());
+      let visible = 0;
+      cards.forEach(card => {
+        const match = !query || normalize(card.textContent).includes(query);
+        card.classList.toggle('hidden-by-search', !match);
+        if (match) visible++;
+      });
+      empty.style.display = visible ? 'none' : 'block';
+    });
+  </script>
+</body>
+</html>
