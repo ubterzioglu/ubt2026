@@ -261,9 +261,15 @@
   "hotPaths": [
     {
       "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 5,
-      "lastAccessed": 1785659720631,
+      "accessCount": 6,
+      "lastAccessed": 1785692163296,
       "type": "file"
+    },
+    {
+      "path": "app",
+      "accessCount": 3,
+      "lastAccessed": 1785692586449,
+      "type": "directory"
     },
     {
       "path": "app\\detrbridge\\_components\\bridge-nav.tsx",
@@ -278,15 +284,39 @@
       "type": "file"
     },
     {
-      "path": "grovegrove.html",
-      "accessCount": 1,
-      "lastAccessed": 1785659469557,
+      "path": "app\\detrbridge\\_components\\theme.ts",
+      "accessCount": 2,
+      "lastAccessed": 1785692173592,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_components\\theme.ts",
+      "path": "app\\bakcakanat\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1785692536759,
+      "type": "directory"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\logos-tab.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1785692626576,
+      "type": "file"
+    },
+    {
+      "path": "lib\\detrbridge-logos.ts",
+      "accessCount": 2,
+      "lastAccessed": 1785692626630,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 2,
+      "lastAccessed": 1785694681901,
+      "type": "directory"
+    },
+    {
+      "path": "grovegrove.html",
       "accessCount": 1,
-      "lastAccessed": 1785659493749,
+      "lastAccessed": 1785659469557,
       "type": "file"
     },
     {
@@ -300,6 +330,126 @@
       "accessCount": 1,
       "lastAccessed": 1785659515398,
       "type": "file"
+    },
+    {
+      "path": "docs\\superpowers\\plans\\2026-07-19-detrbridge-logo-voting.md",
+      "accessCount": 1,
+      "lastAccessed": 1785692114961,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\filter-bar.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785692155436,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\number-picker.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785692155490,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_actions.ts",
+      "accessCount": 1,
+      "lastAccessed": 1785692163782,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 1,
+      "lastAccessed": 1785692163980,
+      "type": "file"
+    },
+    {
+      "path": "app\\zats\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785692293923,
+      "type": "file"
+    },
+    {
+      "path": "app\\zpath\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785692294606,
+      "type": "file"
+    },
+    {
+      "path": "app\\sandbox\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785692508720,
+      "type": "file"
+    },
+    {
+      "path": "app\\elif\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785692509001,
+      "type": "file"
+    },
+    {
+      "path": "public\\tools\\smellable\\app.js",
+      "accessCount": 1,
+      "lastAccessed": 1785692526321,
+      "type": "file"
+    },
+    {
+      "path": "app\\smellable\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785692526475,
+      "type": "file"
+    },
+    {
+      "path": "app\\batubt\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785692536515,
+      "type": "file"
+    },
+    {
+      "path": "public\\tools\\holiday\\app.js",
+      "accessCount": 1,
+      "lastAccessed": 1785692555766,
+      "type": "file"
+    },
+    {
+      "path": "public\\tools\\buyorbye\\data-en.js",
+      "accessCount": 1,
+      "lastAccessed": 1785692556436,
+      "type": "file"
+    },
+    {
+      "path": "lib\\cv-reviews.ts",
+      "accessCount": 1,
+      "lastAccessed": 1785692586693,
+      "type": "file"
+    },
+    {
+      "path": "app\\skillubt\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785692586731,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785694634444,
+      "type": "file"
+    },
+    {
+      "path": "content\\featured.ts",
+      "accessCount": 1,
+      "lastAccessed": 1785694665758,
+      "type": "file"
+    },
+    {
+      "path": ".kilo\\plans\\1775568999885-swift-lagoon.md",
+      "accessCount": 1,
+      "lastAccessed": 1785694686316,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\seed.sql",
+      "accessCount": 1,
+      "lastAccessed": 1785694689189,
+      "type": "directory"
     }
   ],
   "userDirectives": []
