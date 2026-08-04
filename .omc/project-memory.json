@@ -267,15 +267,33 @@
   },
   "hotPaths": [
     {
+      "path": "lib\\admin-auth.ts",
+      "accessCount": 21,
+      "lastAccessed": 1785854535522,
+      "type": "file"
+    },
+    {
       "path": "app\\ubtsa\\page.tsx",
-      "accessCount": 12,
-      "lastAccessed": 1785851586954,
+      "accessCount": 14,
+      "lastAccessed": 1785855693152,
       "type": "file"
     },
     {
       "path": "content\\ubtsa-konsept.ts",
       "accessCount": 11,
       "lastAccessed": 1785851306261,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\page.tsx",
+      "accessCount": 10,
+      "lastAccessed": 1785854700277,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\page.tsx",
+      "accessCount": 10,
+      "lastAccessed": 1785856221476,
       "type": "file"
     },
     {
@@ -291,34 +309,34 @@
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\page.tsx",
+      "path": "middleware.ts",
+      "accessCount": 8,
+      "lastAccessed": 1785854562932,
+      "type": "file"
+    },
+    {
+      "path": "app",
       "accessCount": 7,
-      "lastAccessed": 1785851599682,
-      "type": "file"
-    },
-    {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 5,
-      "lastAccessed": 1785851196054,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_actions.ts",
-      "accessCount": 4,
-      "lastAccessed": 1785851411190,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 3,
-      "lastAccessed": 1785848745208,
+      "lastAccessed": 1785853399715,
       "type": "directory"
     },
     {
-      "path": "middleware.ts",
-      "accessCount": 3,
-      "lastAccessed": 1785850708605,
+      "path": "",
+      "accessCount": 6,
+      "lastAccessed": 1785853056161,
+      "type": "directory"
+    },
+    {
+      "path": "app\\ubtsa\\_actions.ts",
+      "accessCount": 5,
+      "lastAccessed": 1785853088758,
       "type": "file"
+    },
+    {
+      "path": "lib\\appointments.ts",
+      "accessCount": 4,
+      "lastAccessed": 1785854230332,
+      "type": "directory"
     },
     {
       "path": "app\\ubtsa\\_components\\madde-item.tsx",
@@ -345,6 +363,24 @@
       "type": "file"
     },
     {
+      "path": "app\\admin\\_components\\admin-gate.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1785853311013,
+      "type": "file"
+    },
+    {
+      "path": "lib\\secure-compare.ts",
+      "accessCount": 3,
+      "lastAccessed": 1785853364604,
+      "type": "file"
+    },
+    {
+      "path": "app\\admin\\_actions.ts",
+      "accessCount": 3,
+      "lastAccessed": 1785853364906,
+      "type": "file"
+    },
+    {
       "path": "app\\ubtsa\\_components\\comment-thread.tsx",
       "accessCount": 2,
       "lastAccessed": 1785851171056,
@@ -363,15 +399,45 @@
       "type": "file"
     },
     {
-      "path": "weiterbildung_isbirligi.html",
-      "accessCount": 1,
-      "lastAccessed": 1785845610827,
+      "path": "app\\detrbridge\\_actions.ts",
+      "accessCount": 2,
+      "lastAccessed": 1785853088479,
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\_actions.ts",
+      "path": "app\\sandbox\\page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1785853134127,
+      "type": "file"
+    },
+    {
+      "path": "app\\api\\elif-auth\\route.ts",
+      "accessCount": 2,
+      "lastAccessed": 1785853378122,
+      "type": "file"
+    },
+    {
+      "path": "app\\api\\zelifs\\route.ts",
+      "accessCount": 2,
+      "lastAccessed": 1785854573342,
+      "type": "file"
+    },
+    {
+      "path": "lib\\detrbridge-brief-comments.ts",
+      "accessCount": 2,
+      "lastAccessed": 1785855957161,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260804140000_create_detrbridge_brief_comments.sql",
+      "accessCount": 2,
+      "lastAccessed": 1785856037121,
+      "type": "file"
+    },
+    {
+      "path": "weiterbildung_isbirligi.html",
       "accessCount": 1,
-      "lastAccessed": 1785845618898,
+      "lastAccessed": 1785845610827,
       "type": "file"
     },
     {
@@ -417,12 +483,6 @@
       "type": "file"
     },
     {
-      "path": "lib\\secure-compare.ts",
-      "accessCount": 1,
-      "lastAccessed": 1785846976690,
-      "type": "file"
-    },
-    {
       "path": "standalone-tools",
       "accessCount": 1,
       "lastAccessed": 1785848703754,
@@ -432,12 +492,6 @@
       "path": "app\\skillubt\\page.tsx",
       "accessCount": 1,
       "lastAccessed": 1785848759336,
-      "type": "file"
-    },
-    {
-      "path": "app\\sandbox\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785848759516,
       "type": "file"
     },
     {
@@ -456,18 +510,6 @@
       "path": "app\\ubtsa\\_components\\notes-section.tsx",
       "accessCount": 1,
       "lastAccessed": 1785851333494,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260804140000_create_detrbridge_brief_comments.sql",
-      "accessCount": 1,
-      "lastAccessed": 1785851354502,
-      "type": "file"
-    },
-    {
-      "path": "lib\\detrbridge-brief-comments.ts",
-      "accessCount": 1,
-      "lastAccessed": 1785851380219,
       "type": "file"
     },
     {
@@ -511,6 +553,18 @@
       "accessCount": 1,
       "lastAccessed": 1785851657099,
       "type": "directory"
+    },
+    {
+      "path": "app\\globals.css",
+      "accessCount": 1,
+      "lastAccessed": 1785853033809,
+      "type": "directory"
+    },
+    {
+      "path": "app\\layout.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1785853035352,
+      "type": "file"
     }
   ],
   "userDirectives": []
