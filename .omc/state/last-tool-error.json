@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"sed -n '140,175p' AGENTS.md\",\"description\":\"Read Docker deploy section of AGENTS.md\"}",
-  "error": "Exit code 1\n### Next.js Configuration\n\n- `typedRoutes: true` — route refs are type-checked.\n- `output: \"standalone\"` — optimized for Docker deployment.\n- No API routes or middleware currently.\n- `next.config.ts` uses TypeScript (not JS).\n\n### ESLint\n\n- Extends `next/core-web-vitals`.\n- Zero warnings policy enforced via `--max-warnings=0`.\n\n### Docker\n\n- Multi-stage build (base → deps → builder → runner).\n- Node 20 Alpine, non-root user in production stage.\n- Health check on port 3000.\n\n### Gener...",
-  "timestamp": "2026-08-04T15:53:34.541Z",
-  "retry_count": 2
-}

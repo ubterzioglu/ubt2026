@@ -381,6 +381,12 @@
       "type": "file"
     },
     {
+      "path": "supabase\\migrations\\20260804140000_create_detrbridge_brief_comments.sql",
+      "accessCount": 3,
+      "lastAccessed": 1785861830948,
+      "type": "file"
+    },
+    {
       "path": "app\\ubtsa\\_components\\comment-thread.tsx",
       "accessCount": 2,
       "lastAccessed": 1785851171056,
@@ -426,12 +432,6 @@
       "path": "lib\\detrbridge-brief-comments.ts",
       "accessCount": 2,
       "lastAccessed": 1785855957161,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260804140000_create_detrbridge_brief_comments.sql",
-      "accessCount": 2,
-      "lastAccessed": 1785856037121,
       "type": "file"
     },
     {
