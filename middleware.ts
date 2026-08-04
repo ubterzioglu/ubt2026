@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+import { verifyEdgeSessionToken } from "@/lib/edge-session-token";
+
 const DETRBRIDGE_VISITOR_COOKIE = "ubt_detrbridge_visitor";
 const VISITOR_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365 * 5; // 5 years
 const FIRST_VISIT_HEADER = "x-detrbridge-first-visit";
@@ -64,7 +66,40 @@ function withUbtsaVisitorCookie(request: NextRequest): NextResponse {
   return response;
 }
 
-export function middleware(request: NextRequest) {
+const ELIF_SESSION_COOKIE = "elif_auth";
+const ELIF_SESSION_LABEL = "elif";
+
+const SUPER_ADMIN_COOKIE = "ubt_super_admin";
+const SUPER_ADMIN_LABEL = "super";
+
+/**
+ * Edge-side twin of `isSuperAdmin()` in lib/admin-auth.ts. That module is
+ * `server-only` and built on `node:crypto`, neither of which exists here, so
+ * the same check is re-derived with the Web Crypto helper.
+ *
+ * Fails CLOSED: no APPOINTMENT_ADMIN_ACCESS_KEY configured -> no bypass.
+ */
+async function isEdgeSuperAdmin(request: NextRequest): Promise<boolean> {
+  const token = request.cookies.get(SUPER_ADMIN_COOKIE)?.value ?? "";
+  const accessKey = process.env.APPOINTMENT_ADMIN_ACCESS_KEY?.trim() ?? "";
+  return verifyEdgeSessionToken(token, accessKey, SUPER_ADMIN_LABEL);
+}
+
+/**
+ * Guards the static /zelifs assets. The `elif_auth` cookie holds an HMAC token
+ * minted by /api/elif-auth (keyed by ZELIFS_PASSWORD), so it has to be verified
+ * rather than compared against a literal. A super-admin session opens it too.
+ */
+async function isElifAuthed(request: NextRequest): Promise<boolean> {
+  const token = request.cookies.get(ELIF_SESSION_COOKIE)?.value ?? "";
+  const password = process.env.ZELIFS_PASSWORD?.trim() ?? "";
+  if (await verifyEdgeSessionToken(token, password, ELIF_SESSION_LABEL)) {
+    return true;
+  }
+  return isEdgeSuperAdmin(request);
+}
+
+export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/detrbridge")) {
     return withDetrbridgeVisitorCookie(request);
   }
@@ -73,9 +108,7 @@ export function middleware(request: NextRequest) {
     return withUbtsaVisitorCookie(request);
   }
 
-  const isAuthed = request.cookies.get("elif_auth")?.value === "1";
-
-  if (!isAuthed) {
+  if (!(await isElifAuthed(request))) {
     return NextResponse.redirect(new URL("/elif", request.url));
   }
 

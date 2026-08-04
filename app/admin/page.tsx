@@ -4,23 +4,9 @@ import { getAllCvReviewRequests } from "@/lib/cv-reviews";
 import { getAllNewsUpdatesAdmin } from "@/lib/news-updates";
 import { getAllBlogPostsAdmin } from "@/lib/blog-posts";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
+import { OverviewAccordion } from "@/app/admin/_components/overview-accordion";
+import { RouteList } from "@/app/admin/_components/route-list";
 import { adminSignOutAction } from "@/app/admin/_actions";
-
-const OTHER_ROUTES: { href: string; label: string }[] = [
-  { href: "/bakcakanat", label: "Bakçakanat" },
-  { href: "/batubt", label: "Batu UBT" },
-  { href: "/buyorbye", label: "Buy or Bye" },
-  { href: "/buyorbyetr", label: "Buy or Bye (TR)" },
-  { href: "/detrbridge", label: "detrbridge" },
-  { href: "/dm", label: "DM board" },
-  { href: "/elif", label: "Elif" },
-  { href: "/holiday", label: "Holiday" },
-  { href: "/sandbox", label: "Sandbox" },
-  { href: "/skillubt", label: "Skill UBT" },
-  { href: "/smellable", label: "Smellable" },
-  { href: "/zats", label: "Zats" },
-  { href: "/zpath", label: "Zpath" }
-];
 
 function formatSlotTime(
   startsAt: string,
@@ -204,163 +190,112 @@ export default async function AdminPage() {
           </article>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-3">
-          <div className="section-panel px-6 py-6 sm:px-8">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sunrise">
-                  Upcoming slots
-                </p>
-                <h2 className="mt-2 font-body text-2xl font-semibold text-ink">Next availability</h2>
-              </div>
-              <a
-                href="/admin/slots"
-                className="text-sm font-semibold text-accent hover:text-accent/80"
-              >
-                View all
-              </a>
-            </div>
-            <div className="mt-6 space-y-3">
-              {nextSlots.length > 0 ? (
-                nextSlots.map((slot) => (
-                  <article
-                    key={slot.id}
-                    className="rounded-[1.35rem] border border-line/80 bg-white/85 px-4 py-4"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h3 className="text-base font-semibold text-ink">{slot.title}</h3>
-                        <p className="mt-1 text-sm text-ink/70">
-                          {formatSlotTime(slot.startsAt, slot.timezone, slot.endsAt)}
+        <RouteList />
+
+        <section className="flex flex-col gap-4">
+          <OverviewAccordion
+            eyebrow="Upcoming slots"
+            title="Next availability"
+            count={nextSlots.length}
+            viewAllHref="/admin/slots"
+          >
+            {nextSlots.length > 0 ? (
+              nextSlots.map((slot) => (
+                <article
+                  key={slot.id}
+                  className="rounded-[1.35rem] border border-line/80 bg-white/85 px-4 py-4"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="text-base font-semibold text-ink">{slot.title}</h3>
+                      <p className="mt-1 text-sm text-ink/70">
+                        {formatSlotTime(slot.startsAt, slot.timezone, slot.endsAt)}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
+                      {slot.isBooked ? "Booked" : slot.isPublic ? "Open" : "Hidden"}
+                    </span>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <p className="rounded-[1.35rem] border border-dashed border-line/80 px-4 py-5 text-sm text-ink/68">
+                No future slots are available yet.
+              </p>
+            )}
+          </OverviewAccordion>
+
+          <OverviewAccordion
+            eyebrow="Recent requests"
+            title="Latest bookings"
+            count={recentAppointments.length}
+            viewAllHref="/admin/appointments"
+          >
+            {recentAppointments.length > 0 ? (
+              recentAppointments.map((appointment) => (
+                <article
+                  key={appointment.id}
+                  className="rounded-[1.35rem] border border-line/80 bg-white/85 px-4 py-4"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="text-base font-semibold text-ink">{appointment.fullName}</h3>
+                      <p className="mt-1 text-sm text-ink/70">{appointment.email}</p>
+                      {appointment.slot ? (
+                        <p className="mt-2 text-sm text-ink/68">
+                          {formatSlotTime(
+                            appointment.slot.startsAt,
+                            appointment.slot.timezone,
+                            appointment.slot.endsAt
+                          )}
                         </p>
-                      </div>
-                      <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
-                        {slot.isBooked ? "Booked" : slot.isPublic ? "Open" : "Hidden"}
-                      </span>
+                      ) : null}
                     </div>
-                  </article>
-                ))
-              ) : (
-                <p className="rounded-[1.35rem] border border-dashed border-line/80 px-4 py-5 text-sm text-ink/68">
-                  No future slots are available yet.
-                </p>
-              )}
-            </div>
-          </div>
+                    <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
+                      {appointment.status}
+                    </span>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <p className="rounded-[1.35rem] border border-dashed border-line/80 px-4 py-5 text-sm text-ink/68">
+                No appointment requests have been submitted yet.
+              </p>
+            )}
+          </OverviewAccordion>
 
-          <div className="section-panel px-6 py-6 sm:px-8">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sunrise">
-                  Recent requests
-                </p>
-                <h2 className="mt-2 font-body text-2xl font-semibold text-ink">Latest bookings</h2>
-              </div>
-              <a
-                href="/admin/appointments"
-                className="text-sm font-semibold text-accent hover:text-accent/80"
-              >
-                View all
-              </a>
-            </div>
-            <div className="mt-6 space-y-3">
-              {recentAppointments.length > 0 ? (
-                recentAppointments.map((appointment) => (
-                  <article
-                    key={appointment.id}
-                    className="rounded-[1.35rem] border border-line/80 bg-white/85 px-4 py-4"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h3 className="text-base font-semibold text-ink">{appointment.fullName}</h3>
-                        <p className="mt-1 text-sm text-ink/70">{appointment.email}</p>
-                        {appointment.slot ? (
-                          <p className="mt-2 text-sm text-ink/68">
-                            {formatSlotTime(
-                              appointment.slot.startsAt,
-                              appointment.slot.timezone,
-                              appointment.slot.endsAt
-                            )}
-                          </p>
-                        ) : null}
-                      </div>
-                      <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
-                        {appointment.status}
-                      </span>
+          <OverviewAccordion
+            eyebrow="CV queue"
+            title="Latest CV reviews"
+            count={recentCvReviews.length}
+            viewAllHref="/admin/cv-reviews"
+          >
+            {recentCvReviews.length > 0 ? (
+              recentCvReviews.map((request) => (
+                <article
+                  key={request.id}
+                  className="rounded-[1.35rem] border border-line/80 bg-white/85 px-4 py-4"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="text-base font-semibold text-ink">{request.fullName}</h3>
+                      <p className="mt-1 text-sm text-ink/70">{request.whatsappNumber}</p>
+                      <p className="mt-2 line-clamp-2 break-all text-sm text-ink/68">
+                        {request.linkedinUrl}
+                      </p>
                     </div>
-                  </article>
-                ))
-              ) : (
-                <p className="rounded-[1.35rem] border border-dashed border-line/80 px-4 py-5 text-sm text-ink/68">
-                  No appointment requests have been submitted yet.
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="section-panel px-6 py-6 sm:px-8">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sunrise">
-                  CV queue
-                </p>
-                <h2 className="mt-2 font-body text-2xl font-semibold text-ink">Latest CV reviews</h2>
-              </div>
-              <a
-                href="/admin/cv-reviews"
-                className="text-sm font-semibold text-accent hover:text-accent/80"
-              >
-                View all
-              </a>
-            </div>
-            <div className="mt-6 space-y-3">
-              {recentCvReviews.length > 0 ? (
-                recentCvReviews.map((request) => (
-                  <article
-                    key={request.id}
-                    className="rounded-[1.35rem] border border-line/80 bg-white/85 px-4 py-4"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h3 className="text-base font-semibold text-ink">{request.fullName}</h3>
-                        <p className="mt-1 text-sm text-ink/70">{request.whatsappNumber}</p>
-                        <p className="mt-2 line-clamp-2 break-all text-sm text-ink/68">
-                          {request.linkedinUrl}
-                        </p>
-                      </div>
-                      <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
-                        {request.status}
-                      </span>
-                    </div>
-                  </article>
-                ))
-              ) : (
-                <p className="rounded-[1.35rem] border border-dashed border-line/80 px-4 py-5 text-sm text-ink/68">
-                  No CV review requests have been submitted yet.
-                </p>
-              )}
-            </div>
-          </div>
-        </section>
-
-        <section className="section-panel px-6 py-6 sm:px-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sunrise">
-            Other routes
-          </p>
-          <h2 className="mt-2 font-body text-2xl font-semibold text-ink">
-            Recently added pages
-          </h2>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {OTHER_ROUTES.map((route) => (
-              <a
-                key={route.href}
-                href={route.href}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-              >
-                {route.label}
-              </a>
-            ))}
-          </div>
+                    <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
+                      {request.status}
+                    </span>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <p className="rounded-[1.35rem] border border-dashed border-line/80 px-4 py-5 text-sm text-ink/68">
+                No CV review requests have been submitted yet.
+              </p>
+            )}
+          </OverviewAccordion>
         </section>
       </div>
     </main>

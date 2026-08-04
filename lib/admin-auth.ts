@@ -38,6 +38,77 @@ export const BAKCAKANAT_ACCESS_COOKIE = "ubt_bakcakanat_access";
 const ADMIN_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 8; // 8 hours
 
 /**
+ * Site-wide super-admin session.
+ *
+ * Every board cookie above is path-scoped (`/admin`, `/dm`, `/batubt`, …), so
+ * the admin cookie is never even sent to the other boards — signing into the
+ * admin panel could not unlock them no matter how the checks were written.
+ * This second cookie is scoped to `/` and is minted alongside the admin cookie
+ * at sign-in; each board's gate ORs it in, so whoever holds the appointment
+ * admin key walks into every board without re-entering its password.
+ *
+ * The value is an HMAC of a fixed label keyed by the admin key itself (the same
+ * pattern /detrbridge and /ubtsa already use), not the key itself: a leaked
+ * cookie never exposes the reusable literal key, and rotating
+ * APPOINTMENT_ADMIN_ACCESS_KEY revokes every super-admin session at once
+ * because verification re-derives from the *current* value.
+ */
+export const SUPER_ADMIN_COOKIE = "ubt_super_admin";
+const SUPER_ADMIN_LABEL = "super";
+
+/**
+ * Identity a super admin assumes on the name-based boards. Both
+ * DETRBRIDGE_ALLOWED_NAMES and UBTSA_ALLOWED_NAMES already contain it, and it
+ * is what gets stamped on comments written through a super-admin session.
+ */
+const SUPER_ADMIN_BOARD_NAME = "ubt";
+
+/**
+ * Grants the site-wide super-admin session. Only ever called after the admin
+ * key has been verified.
+ */
+async function grantSuperAdmin(accessKey: string): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(SUPER_ADMIN_COOKIE, deriveSessionToken(accessKey, SUPER_ADMIN_LABEL), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
+  });
+}
+
+/**
+ * Clears the super-admin session. Expires the cookie with the exact attributes
+ * used at sign-in — see signOutBakcakanat for why.
+ */
+export async function revokeSuperAdmin(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(SUPER_ADMIN_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0
+  });
+}
+
+/**
+ * True when the current request carries a valid super-admin session.
+ *
+ * Fails CLOSED: without a configured APPOINTMENT_ADMIN_ACCESS_KEY no cookie can
+ * verify, so a forgotten env var never turns into blanket access.
+ */
+export async function isSuperAdmin(): Promise<boolean> {
+  const accessKey = getAdminAccessKey();
+  if (!accessKey) return false;
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SUPER_ADMIN_COOKIE)?.value ?? "";
+  if (!token) return false;
+  return verifySessionToken(token, accessKey, SUPER_ADMIN_LABEL);
+}
+
+/**
  * Reads the task-board admin key (empty string if neither it nor the
  * appointment-admin fallback is configured).
  */
@@ -60,6 +131,7 @@ export async function getAdminAccessFromCookie(): Promise<string> {
  * True when the current request already carries a valid admin session cookie.
  */
 export async function isAdminAuthenticated(): Promise<boolean> {
+  if (await isSuperAdmin()) return true;
   const accessKey = await getAdminAccessFromCookie();
   return hasAdminAccess(accessKey);
 }
@@ -93,6 +165,9 @@ export async function signInAdmin(candidate: string): Promise<boolean> {
     maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
   });
 
+  // Signing into the admin panel is what makes someone a super admin.
+  await grantSuperAdmin(accessKey);
+
   return true;
 }
 
@@ -109,12 +184,14 @@ export async function signOutAdmin(): Promise<void> {
     path: "/admin",
     maxAge: 0
   });
+  await revokeSuperAdmin();
 }
 
 /**
  * True when the current request carries a valid task-board session cookie.
  */
 export async function isTasksAdminAuthenticated(): Promise<boolean> {
+  if (await isSuperAdmin()) return true;
   const accessKey = getTasksAdminAccessKey();
   // Fail closed: no key configured anywhere -> nobody gets in.
   if (!accessKey) return false;
@@ -149,6 +226,10 @@ export async function signInTasksAdmin(candidate: string): Promise<boolean> {
 /**
  * Clears the task-board session cookie (sign out). Expires it with the exact
  * attributes used at sign-in — see signOutBakcakanat for why.
+ *
+ * Also revokes the super-admin session: otherwise a super admin's "sign out"
+ * would appear to do nothing, because the board's gate would keep letting them
+ * back in through the site-wide cookie.
  */
 export async function signOutTasksAdmin(): Promise<void> {
   const cookieStore = await cookies();
@@ -159,6 +240,7 @@ export async function signOutTasksAdmin(): Promise<void> {
     path: "/dm",
     maxAge: 0
   });
+  await revokeSuperAdmin();
 }
 
 /**
@@ -173,6 +255,7 @@ function getBatubtAdminAccessKey(): string {
  * True when the current request carries a valid BatuBT session cookie.
  */
 export async function isBatubtAuthenticated(): Promise<boolean> {
+  if (await isSuperAdmin()) return true;
   const accessKey = getBatubtAdminAccessKey();
   // Fail closed: no key configured -> nobody gets in.
   if (!accessKey) return false;
@@ -206,7 +289,8 @@ export async function signInBatubt(candidate: string): Promise<boolean> {
 
 /**
  * Clears the BatuBT session cookie (sign out). Expires it with the exact
- * attributes used at sign-in — see signOutBakcakanat for why.
+ * attributes used at sign-in — see signOutBakcakanat for why. Also revokes the
+ * super-admin session, for the reason given in signOutTasksAdmin.
  */
 export async function signOutBatubt(): Promise<void> {
   const cookieStore = await cookies();
@@ -217,6 +301,7 @@ export async function signOutBatubt(): Promise<void> {
     path: "/batubt",
     maxAge: 0
   });
+  await revokeSuperAdmin();
 }
 
 /**
@@ -235,6 +320,7 @@ function getBakcakanatPassword(): string {
  * reachable just because an env var was forgotten.
  */
 export async function isBakcakanatAuthenticated(): Promise<boolean> {
+  if (await isSuperAdmin()) return true;
   const password = getBakcakanatPassword();
   if (!password) return false;
   const cookieStore = await cookies();
@@ -272,6 +358,9 @@ export async function signInBakcakanat(candidate: string): Promise<boolean> {
  * `cookies().delete()`: the plain deletion Set-Cookie carries no Secure/
  * HttpOnly/SameSite flags, and browsers can refuse to drop a Secure cookie
  * (set in production over HTTPS) without attribute parity.
+ *
+ * Also revokes the super-admin session, for the reason given in
+ * signOutTasksAdmin.
  */
 export async function signOutBakcakanat(): Promise<void> {
   const cookieStore = await cookies();
@@ -282,6 +371,7 @@ export async function signOutBakcakanat(): Promise<void> {
     path: "/bakcakanat",
     maxAge: 0
   });
+  await revokeSuperAdmin();
 }
 
 /**
@@ -327,6 +417,7 @@ function getDetrbridgeAllowedNames(): string[] {
  * invalid. Fails CLOSED: without a configured password nobody gets in.
  */
 export async function getDetrbridgeSessionName(): Promise<string | null> {
+  if (await isSuperAdmin()) return SUPER_ADMIN_BOARD_NAME;
   const password = getDetrbridgePassword();
   if (!password) return null;
   const cookieStore = await cookies();
@@ -385,7 +476,8 @@ export async function signInDetrbridge(
 
 /**
  * Clears the detrbridge session cookie (sign out). Expires it with the
- * exact attributes used at sign-in — see signOutBakcakanat for why.
+ * exact attributes used at sign-in — see signOutBakcakanat for why. Also
+ * revokes the super-admin session, for the reason given in signOutTasksAdmin.
  */
 export async function signOutDetrbridge(): Promise<void> {
   const cookieStore = await cookies();
@@ -396,6 +488,7 @@ export async function signOutDetrbridge(): Promise<void> {
     path: "/detrbridge",
     maxAge: 0
   });
+  await revokeSuperAdmin();
 }
 
 /**
@@ -450,6 +543,7 @@ function getUbtsaAllowedNames(): string[] {
  * session does not verify.
  */
 export async function getUbtsaSessionName(): Promise<string | null> {
+  if (await isSuperAdmin()) return SUPER_ADMIN_BOARD_NAME;
   const cookieStore = await cookies();
   const value = cookieStore.get(UBTSA_ACCESS_COOKIE)?.value ?? "";
   const separator = value.lastIndexOf("|");
@@ -512,7 +606,8 @@ export async function signInUbtsa(
 
 /**
  * Clears the ubtsa session cookie (sign out). Expires it with the exact
- * attributes used at sign-in — see signOutBakcakanat for why.
+ * attributes used at sign-in — see signOutBakcakanat for why. Also revokes the
+ * super-admin session, for the reason given in signOutTasksAdmin.
  */
 export async function signOutUbtsa(): Promise<void> {
   const cookieStore = await cookies();
@@ -523,4 +618,5 @@ export async function signOutUbtsa(): Promise<void> {
     path: "/ubtsa",
     maxAge: 0
   });
+  await revokeSuperAdmin();
 }

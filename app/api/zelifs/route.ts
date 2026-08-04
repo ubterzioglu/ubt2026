@@ -1,12 +1,16 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { isSuperAdmin } from "@/lib/admin-auth";
 import { verifySessionToken } from "@/lib/secure-compare";
 import { getZelifsState, saveZelifsState } from "@/lib/zelifs";
 
 const SESSION_LABEL = "elif";
 
 async function isAuthed(): Promise<boolean> {
+  // A super admin reaches the /zelifs page through middleware, so this endpoint
+  // has to honour the same session or the page would load with 401s.
+  if (await isSuperAdmin()) return true;
   const password = process.env.ZELIFS_PASSWORD?.trim();
   // Fail closed: without a configured password no session can be valid.
   if (!password) return false;
