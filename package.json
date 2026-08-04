@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "migrate": "node scripts/apply-migration.js"
+    "migrate": "pwsh scripts/db-migrations.ps1",
+    "migrate:apply": "pwsh scripts/db-migrations.ps1 -Apply"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
