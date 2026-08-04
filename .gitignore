@@ -4,6 +4,9 @@ node_modules
 .env.local
 .env.*.local
 .env.local.md
+# scripts/build-prod-env.ps1 ciktisi - service role key icerir, asla commitleme
+.env.production
+.env.production.*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
