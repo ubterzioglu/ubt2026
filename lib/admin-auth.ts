@@ -397,3 +397,108 @@ export async function signOutDetrbridge(): Promise<void> {
     maxAge: 0
   });
 }
+
+/**
+ * The `/ubtsa` konsept board is gated the same way as /detrbridge: a small
+ * name allowlist plus one shared password (UBTSA_PASSWORD). The cookie stores
+ * `name|token`, where token is an HMAC of the name keyed by the current
+ * password — a leaked cookie never exposes the literal password, and changing
+ * UBTSA_PASSWORD revokes every existing session because verification
+ * re-derives the token from the *current* value. The signed-in name is what
+ * gets stamped on every comment, so it must be trustworthy.
+ */
+export const UBTSA_ACCESS_COOKIE = "ubt_ubtsa_access";
+
+/** Allowlisted names for the ubtsa board (lowercase). */
+const UBTSA_ALLOWED_NAMES = ["ubt", "serkan"];
+
+/** The two people who may sign in — exported for the gate's name picker. */
+export const UBTSA_NAMES: readonly string[] = UBTSA_ALLOWED_NAMES;
+
+/**
+ * Reads the ubtsa board password (empty string if not configured).
+ * No fallback: the board is gated solely by UBTSA_PASSWORD.
+ */
+function getUbtsaPassword(): string {
+  return process.env.UBTSA_PASSWORD?.trim() ?? "";
+}
+
+/** Normalized (lowercase) name allowlist for the ubtsa board. */
+function getUbtsaAllowedNames(): string[] {
+  return UBTSA_ALLOWED_NAMES.map((name) => name.trim().toLowerCase());
+}
+
+/**
+ * Returns the signed-in ubtsa name, or null when the session is invalid.
+ * Fails CLOSED: without a configured password nobody gets in.
+ */
+export async function getUbtsaSessionName(): Promise<string | null> {
+  const password = getUbtsaPassword();
+  if (!password) return null;
+  const cookieStore = await cookies();
+  const value = cookieStore.get(UBTSA_ACCESS_COOKIE)?.value ?? "";
+  const separator = value.lastIndexOf("|");
+  if (separator < 0) return null;
+  const name = value.slice(0, separator).trim().toLowerCase();
+  const token = value.slice(separator + 1);
+  if (!getUbtsaAllowedNames().includes(name)) return null;
+  if (!verifySessionToken(token, password, name)) return null;
+  return name;
+}
+
+/**
+ * True when the current request carries a valid ubtsa session cookie.
+ *
+ * Fails CLOSED: if UBTSA_PASSWORD is not configured (e.g. forgotten on the
+ * production host), nobody gets in — the board must never become publicly
+ * readable just because an env var is missing.
+ */
+export async function isUbtsaAuthenticated(): Promise<boolean> {
+  return (await getUbtsaSessionName()) !== null;
+}
+
+/**
+ * Validates the supplied name (against the allowlist) and password and, when
+ * both are correct, persists them in an HttpOnly cookie scoped to /ubtsa.
+ * Returns the normalized name on success, or null on failure.
+ */
+export async function signInUbtsa(
+  name: string,
+  candidate: string
+): Promise<string | null> {
+  const password = getUbtsaPassword();
+  // Fail closed: without a configured password no sign-in is possible.
+  if (!password) return null;
+  const normalizedName = name.trim().toLowerCase();
+  if (!normalizedName) return null;
+  if (!getUbtsaAllowedNames().includes(normalizedName)) return null;
+  if (!checkRateLimit(`ubtsa:${await getClientIp()}`)) return null;
+  if (!secureCompare(candidate.trim(), password)) return null;
+
+  const token = deriveSessionToken(password, normalizedName);
+  const cookieStore = await cookies();
+  cookieStore.set(UBTSA_ACCESS_COOKIE, `${normalizedName}|${token}`, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/ubtsa",
+    maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
+  });
+
+  return normalizedName;
+}
+
+/**
+ * Clears the ubtsa session cookie (sign out). Expires it with the exact
+ * attributes used at sign-in — see signOutBakcakanat for why.
+ */
+export async function signOutUbtsa(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(UBTSA_ACCESS_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/ubtsa",
+    maxAge: 0
+  });
+}

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weiterbildung ve İş Birliği Konsepti</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #0f766e;
+      --primary-soft: #ccfbf1;
+      --border: #e5e7eb;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f766e, #155e75);
+      color: #fff;
+      padding: 56px 24px;
+    }
+
+    .hero-inner,
+    .layout {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.15;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      color: rgba(255,255,255,.85);
+      font-size: 1.05rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 28px;
+      padding: 32px 0 64px;
+      align-items: start;
+    }
+
+    nav {
+      position: sticky;
+      top: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+
+    nav strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    nav a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 9px;
+      color: #374151;
+      text-decoration: none;
+      font-size: .92rem;
+    }
+
+    nav a:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px 28px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 22px;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      color: var(--primary);
+      font-size: 1.45rem;
+      line-height: 1.3;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.3rem;
+    }
+
+    li + li { margin-top: 10px; }
+
+    li::marker { color: var(--primary); }
+
+    .footer {
+      text-align: center;
+      padding: 0 24px 36px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      nav { position: static; max-height: none; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .hero { padding: 28px 0; }
+      nav { display: none; }
+      .layout { display: block; width: 100%; padding: 20px 0; }
+      section { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>Weiterbildung ve İş Birliği Konsepti</h1>
+      <p>Metin, içeriği değiştirilmeden konu akışına göre bölümlendirilmiştir.</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav aria-label="İçindekiler">
+      <strong>İçindekiler</strong>
+      <a href="#bolum-1">1. Giriş ve Konseptin Genel Açıklaması</a>
+      <a href="#bolum-2">2. Gutschein Şartı</a>
+      <a href="#bolum-3">3. Kendi İşini Kurma Desteği</a>
+      <a href="#bolum-4">4. Yeni Bir Meslek Öğrenmek</a>
+      <a href="#bolum-5">5. Kendi İşini Kurmak</a>
+      <a href="#bolum-6">6. Çilingircilik Örneği</a>
+      <a href="#bolum-7">7. Job Center Başvurusu</a>
+      <a href="#bolum-8">8. Business ve Finance Plan</a>
+      <a href="#bolum-9">9. Maddi Destekler</a>
+      <a href="#bolum-10">10. İş Bulma ve Başvuru Desteği</a>
+      <a href="#bolum-11">11. Vermittlungsgutschein</a>
+      <a href="#bolum-12">12. Cyber Security Eğitimi</a>
+      <a href="#bolum-13">13. Ön Koşullar</a>
+      <a href="#bolum-14">14. Modüller ve Eğitmenler</a>
+      <a href="#bolum-15">15. Laptop Hediyesi</a>
+      <a href="#bolum-16">16. İş Birliği Modeli</a>
+      <a href="#bolum-17">17. Başvuru Desteği</a>
+      <a href="#bolum-18">18. Kazanç Modeli</a>
+      <a href="#bolum-19">19. Sorular ve Görüşme</a>
+      <a href="#bolum-20">20. Hedef Kitle</a>
+      <a href="#bolum-21">21. Kapanış</a>
+    </nav>
+
+    <main>
+      <section id="bolum-1">
+        <h2>1. Giriş ve Konseptin Genel Açıklaması</h2>
+        <ul>
+          <li>Merhaba Umut.</li>
+          <li>Şöyle bir erkenden mesaj göndereyim dedim de sana.</li>
+          <li>Daha sonra akşamüstü unutmayayım.</li>
+          <li>Zaten bizimkisi de yılan hikayesine dönüştü.</li>
+          <li>Bugün, yarın görüşeceğiz diye.</li>
+          <li>Şimdi zaten konsept çok basit.</li>
+          <li>Biraz bahsetmiştim.</li>
+          <li>Ben senin web siteni görmüştüm.</li>
+          <li>Orada Almanya'dan gelen Türk arkadaşlara yardımcı olduğunu gördüm web sitesinde.</li>
+          <li>Bunlar yeni gelenler olsun, birkaç seneden beri orada yaşayanlar olsun vs.</li>
+          <li>Şimdi bizim, benim konseptime uyan bölüm ise şu:</li>
+          <li>Bu arkadaşların arasında gerek job center, gerek agentür ve arbayta kayıtlı olanlar varsa yani işsiz olanlar varsa,</li>
+          <li>şu anda yaptıkları işten memnun değillerse ve onu değiştirmek istiyorlarsa,</li>
+          <li>başka yeni bir şey öğrenmek istiyorlarsa biz ona "Vitabiner" diyoruz biliyorsun.</li>
+          <li>onu Job Center veya Agentur für Arbeit üzerinden yapabiliyorlar.</li>
+          <li>Hem de bedava yapabiliyorlar.</li>
+          <li>Yani yeni bir şey öğreniyorlar, yeni bir meslek öğreniyorlar vs.</li>
+          <li>Bunu bedavaya yapabiliyorlar.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-2">
+        <h2>2. Vermittlungsgutschein veya Bildungsgutschein Şartı</h2>
+        <ul>
+          <li>Tabi bunun karşılığında Job Center'dan o Zahberberte dediğimiz kişiden Vermittungsgutschein veya Bildungsgutschein almak şartıyla eğer bunu alırlarsa o zaman buraya katılmaya hak kazanıyorlar.</li>
+          <li>Benim bu konuda çalıştığım değişik firmalar var.</li>
+          <li>Bir tanesinde böyle bir Vita Bildung 4 ila 6-7 hafta arasında sürebiliyor.</li>
+          <li>Burada tabii ki yeni bir meslek öğrenmek, öğrenmenin dışında bir de ona yani firmalara nasıl yazışma yaparsın, nasıl şey gönderirsin, beraber gönderirsin falan vesaire nasıl daha etkili bir şekilde bunu yaparsın, bunu da gösteriyorlar.</li>
+          <li>Aynı zamanda da iş bulma konusunda bir miktar yardımcı olabiliyorlar.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-3">
+        <h2>3. Kendi İşini Kurmak İsteyenlere Sağlanan Destek</h2>
+        <ul>
+          <li>Onun dışında bir de kendini SEP işlemlik yapmak isteyen yani kendi iş yerini açmak isteyen arkadaşlara da yardımcı olunabiliyor.</li>
+          <li>Bunun için yine Job Center'dan bir Vermittus kurşun alınıyor SEP işlemlik üzerine.</li>
+          <li>Bu SEP işlemlik yapacak arkadaşlar yalnız şunu da yapmak zorundalar.</li>
+          <li>Bu şeyin içerisinde, Vita Bill'in içerisinde.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-4">
+        <h2>4. Birinci Seçenek: Yeni Bir Meslek Öğrenmek</h2>
+        <ul>
+          <li>Şimdi birincisini anlattım.</li>
+          <li>Birincisi meslek yapmak üzerine.</li>
+          <li>Yani bu bulunduğu meslekten sağlık sorunları, psikolojik nedenler vesaire ötürü bunu yapmak istemeyen, meslek değiştirmek isteyen arkadaşlar başka bir meslek öğrenebiliyor.</li>
+          <li>Bu bir.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-5">
+        <h2>5. İkinci Seçenek: Kendi İşini Kurmak</h2>
+        <ul>
+          <li>İkincisi kendi işini yapmak isteyen arkadaşlar yani sahip işlemek olmak isteyen arkadaşlar.</li>
+          <li>Bunlar da ilk etapta Job Center veya Agentur für Arbeitten o feminist kuşağını aldıktan sonra bu Bu firmalarda başladıklarında biz onlara billiustere gidiyoruz.</li>
+          <li>Burada başladıklarında ilk önce bir business plan yapmayı öğreniyorlar.</li>
+          <li>Finance plan yapmayı öğreniyorlar.</li>
+          <li>Ondan sonra onun akabinde onların yapacağı işin tutarlı olup olmadığına o firma karar veriyor.</li>
+          <li>Yani o White Abbey'in yaptıkları firma karar veriyor.</li>
+          <li>Onun akabinde de eğer track face guide dediğimiz o yazılı belgeyi yani bu iş yürür ve bu kişi bu işi yapabilir adlı belgeyi alabilirse o zaman bunu alıp tekrar job center'a ve agent de fabrika götürüyor.</li>
+          <li>Bu her ikisinden birisi de nereye kayıtlıysa onlara bu konuda nasıl söyleyeyim, maddi olanaklar sağlıyor.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-6">
+        <h2>6. Çilingircilik Üzerinden Verilen Kişisel Örnek</h2>
+        <ul>
+          <li>Mesela diyelim ki, mesela ben kendimden örnek vereyim istersen.</li>
+          <li>Ben 15 sene önce böyle bir şey yapmıştım.</li>
+          <li>O zamanlar bir senenin üstünde işsizdim.</li>
+          <li>Bir tanıdığım bir arkadaş vardı, uzun süre görüşmediğim birkaç sene.</li>
+          <li>Sonra bir gün böyle, benim o zamanki eşim, eski eşim, kapıyı çekerken, dış kapıyı, anahtarı içeride unutmuş.</li>
+          <li>Neyse, çilingirci çağırdık.</li>
+          <li>Ondan sonra Amel'le şu üstü de istiyorlar biliyorsun.</li>
+          <li>Çilingirci geldi ama kim geldi?</li>
+          <li>Benim o arkadaş geldi.</li>
+          <li>Ben de şaşırdım.</li>
+          <li>O da şaşırdı falan.</li>
+          <li>Nasıl oldu diye böyle.</li>
+          <li>Ondan sonra ben o kapıyı açtıktan sonra ben tabii ki biraz konuyla ilgilendiğim için sordum.</li>
+          <li>Ya bu nedir?</li>
+          <li>Ne yapıyorsun?</li>
+          <li>Ne kadar kazanıyorsun?</li>
+          <li>Dedi ya ben bir seneden beri bu işi yapıyorum dedi içine gireceğim dedi vesaire peki nasıl oldu falan ben dedi arbaşsatma üzerinden yaptım dedi tamam güzel şu anda ben de arbaşsatmayım tabii bana işin detaylarını falan anlattı biraz biraz da gösterdi nasıl yapıldığını falan gösterdi bu iş için sana ausbildung yani meslek lazım değil dedi eğer senin El becerim varsa bunu yapabiliyorsan bir türlü bir yerde kursta mursta veya benim gibi arkadaşların öğrendiysem bunu yapabilirsin dedi.</li>
+          <li>O da çok güzel.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-7">
+        <h2>7. Job Center’a Başvuru Süreci</h2>
+        <ul>
+          <li>Neyse ben Arbastelant'a gittim.</li>
+          <li>Dedim ben çilingircilik yapmak istiyorum dedim.</li>
+          <li>Sayfıştanlık olarak falan.</li>
+          <li>Zahper Bart'ı önce bir şaşırdı tabii ama ondan sonra dedi bu konuda bana nasıl bir referans verebilirsin dedi.</li>
+          <li>Benim mesleğim otelcilikti aslında.</li>
+          <li>Otelcilik mesleği öğrenmiştim Almanya'da.</li>
+          <li>Ama babam marangozdu Türkiye'den.</li>
+          <li>Dedem marangoz, bizim ailem marangoz.</li>
+          <li>Dedim işte böyle benim babam marangozdur, dedem marangozdur, ben de biraz öğrenmişimdir, el yatkınlığım vardır falan diye.</li>
+          <li>Neyse bana bir şekilde feminist kutuşağını verdi.</li>
+          <li>Ben bu feminist kutuşağını işte o bildiğimiz yere gittim.</li>
+          <li>Onlara bunu verdim, feminist kutuşağını.</li>
+          <li>O şaynı onlara veriyorsun.</li>
+          <li>O zaman onlar diyor ki tamam sen o zaman burada, sebep işlemli şikayet üzerine yapmak istediğin konu üzerine bizden 6 hafta boyunca, o zamanlar biraz daha uzundu, benim yaptığım zamanlar 15 sene önce.</li>
+          <li>2 ay üzerinden gidiyorduk biz ama şu anda kısaldı.</li>
+          <li>Şu anda mesela 5-6 haftada bitirebiliyorsun bunu.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-8">
+        <h2>8. Business Plan ve Finance Plan Eğitimi</h2>
+        <ul>
+          <li>Neyse orada işte sana kendi işlerini açacağın için business plan nasıl yapılır, nelere dikkat etmek gerekir, finance plan nasıl yapılır, nelere dikkat etmek gerekir.</li>
+          <li>Ondan sonra bir de o altı hafta içerisinde sana bazı testler veriyorlar, şunu yapıyorlar, bunu yapıyorlar.</li>
+          <li>Altı hafta sonunda senden bizzat kendin business planı hazırlamanı, finans planı hazırlamanı istiyorlar.</li>
+          <li>Bunun içerisinde tabi çok detay var.</li>
+          <li>Yani reklam nasıl yapılır falan da tut, müşteriye nasıl davranılır falan hepsi bunlar içerisinde.</li>
+          <li>Ondan sonra sana sonunda diyorlar ki tamam sen testi geçtin Senin seçtiğin bu konuda şu anda burada yani çalışmak istediğin alan bu şehirde, şurada, burada mümkündür.</li>
+          <li>Çok fazla konkurense yani ne bileyim yarış, seninle yarış halinde olan firma çok fazla yok falan dedikten sonra sana o track, fish, kite, beşerliğinin veriyorlar.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-9">
+        <h2>9. Başlangıç Sermayesi ve Maddi Destekler</h2>
+        <ul>
+          <li>Sana onunla gidiyorsun.</li>
+          <li>Dediğim gibi job center'a veya neredeyse kayıtlıyorsan, gönül tufağı, abart.</li>
+          <li>Orada mesela sana soruyorlar ki tamam sen bu işe başlarken ne kadar para ihtiyacım var?</li>
+          <li>Sen de diyorsun ki işte ne bileyim bu materyaller lazım, şu lazım, bu lazım.</li>
+          <li>Bana bir 5000 Euro lazım.</li>
+          <li>Tamam diyorlar sana bu parayı göndereceğiz.</li>
+          <li>Ama sen her bunları satın aldığında bize işte satın alma belgesini göndermen lazım.</li>
+          <li>Tamam güzel.</li>
+          <li>Ve bunun yanında aylık olarak hala sana desteklerini veriyorlar.</li>
+          <li>Yani ne bileyim kira yardımın olsun, şu olsun, bu olsun.</li>
+          <li>Bir altı ay onu devam ediyorlar.</li>
+          <li>Yani konsept bu şekilde ilerliyor.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-10">
+        <h2>10. Eğitim Sonrası İş Bulma ve Başvuru Desteği</h2>
+        <ul>
+          <li>Sahip işlenmek olursan, meslek yaparsan, birinci bölümde anlatmıştım zaten.</li>
+          <li>Sen altı, yedi hafta içerisinde mesleğini yapıyorsun.</li>
+          <li>Ondan sonra Dediğim gibi sana bir miktar belki iş bulma konusunda yardımcı olabilirler ama zaten sen yeni bir meslek yaptığın için firmalara, yazışmalarına falan yapıyorsun.</li>
+          <li>O yazışma konusunda işte Beberbunk, Bebanskreis 5 dediğimiz olaylarda da zaten sana en baştan yardımcı oluyorlar.</li>
+          <li>Sana bunları bu şekilde detaylı anlatıyorum ki yani şu anda kafanda belki o şekilde tanıdığın insanlar vardır, çalışmıyorlardır, işte ne bileyim mesleklerine hoşnut değillerdir falan.</li>
+          <li>Neyi nasıl detaylı bir şekilde nasıl yapabilirleri anlatmak istiyorum.</li>
+          <li>Yani sana sorarlarsa ya bu işin arka planı nedir?</li>
+          <li>Sen de onları bu şekilde anlatabilirsin diyorum.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-11">
+        <h2>11. Vermittlungsgutschein ile Yapılabilen Programlar</h2>
+        <ul>
+          <li>Başka bir yöntem daha var.</li>
+          <li>Şimdi bu anlattığım yöntem, Famittus Gutschein içindi.</li>
+          <li>Bu Famittus Gutschein ile bunları yapabiliyorsun 6-7 hafta içerisinde, takriben.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-12">
+        <h2>12. Bildungsgutschein ve Cyber Security Eğitimi</h2>
+        <ul>
+          <li>Şimdi bir de Billus Gutschein diye bir şey var.</li>
+          <li>Bu biraz daha kapsamlı.</li>
+          <li>Mesela şu anda benim elimde Cyber Security diye bir VitaBulum var.</li>
+          <li>Sadece bunu bir firma sunuyor Almanya'da.</li>
+          <li>Ve Almanya çapında da bu dalda çok fazla insan aranıyor şu anda.</li>
+          <li>çalışmak için ve parası da çok güzel yani.</li>
+          <li>White Abilene'den sonra.</li>
+          <li>Bu en az 6 ay en fazla da 12 veya 15 ay süren bir White Abilene.</li>
+          <li>Burada Cyber Security zaten düşünebilirsiniz neler olduğunu.</li>
+          <li>Yani İnternet alanında internetle güvenlik alanıyla ilgili konularda işte bu arkadaşlar eğitim alıyorlar.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-13">
+        <h2>13. Cyber Security Eğitiminin Ön Koşulları</h2>
+        <ul>
+          <li>Tabi IT bilgisi olması lazım biraz bunların yani hiç IT bilgisi olmadan da buraya girmek pek akıl işi değil.</li>
+          <li>Bir miktar bilmeleri lazım.</li>
+          <li>En azından yani network nedir ne bileyim işte yani Böyle normal bilgisayar kullanması falan.</li>
+          <li>Bunlardan biraz anlaması lazım bu kişilerin.</li>
+          <li>Bunu yapmak isteyenlerin.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-14">
+        <h2>14. Modüller ve Eğitmenler</h2>
+        <ul>
+          <li>Orada da mesela iki modül.</li>
+          <li>Yani orada modüller var.</li>
+          <li>Bir modül var.</li>
+          <li>Onun yanına bir modül daha ekleyebilirsin.</li>
+          <li>Biraz kapsamlı.</li>
+          <li>Yani o konuda hangi eğitimi almak istiyorsan modülleri ekleyebiliyorsun.</li>
+          <li>Veya tek bir modülle kalabiliyorsun.</li>
+          <li>Bu firmada istihbarat şeyleri bile ne derler ona?</li>
+          <li>Devletin istihbarattan görevlendirdiği kişiler bile eğitim veriyorlar bu firmada.</li>
+          <li>O yüzden çok ilginç.</li>
+          <li>Gerçekten de sağlam bir emniyet mesleği bu.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-15">
+        <h2>15. Laptop Hediyesi ve Motivasyon Teklifi</h2>
+        <ul>
+          <li>İşte böyle bir insanların ilgisini çekmek için de şöyle bir teklif yapıyorlar mesela.</li>
+          <li>İki modül alana yani iki modül öğrenmek isteyen iki modülü öğrenip bitiren VitaBildung'u bir tane laptop hediye ediyoruz falan diyorlar mesela insanları biraz böyle motive etmek için.</li>
+          <li>Bu mesela Billions Goods şahane olan bir VitaBildung.</li>
+          <li>Bu da çok değişik bir şey.</li>
+          <li>Şu anda da çok aranan bir meslekte.</li>
+          <li>O yüzden bunu da mesela ilgilenen arkadaşlar olursa IT bölümünde bunu da sunabiliriz.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-16">
+        <h2>16. Olası İş Birliği Modeli</h2>
+        <ul>
+          <li>Peki yani bizim çalışmamız bu konuda nasıl olabilir?</li>
+          <li>İşte sen böyle işsiz olup gerek Job Center'da gerek Agentur ve Arbeit'ta işsiz olup yeni bir meslek öğrenmek isteyen, kendini self-staging yapmak isteyen veya daha kapsamlı bir "Billong" dediğimiz işle yapmak isteyen arkadaşlara bu şekilde yönlendirebilirsin.</li>
+          <li>Senin çok fazla vakit harcamana gerek yok.</li>
+          <li>Eğer bu kafa yapısında olan arkadaşlar varsa direkt bana yönlendirip, bir miktar anlatıp kafalarına yeterse bana yönlendirip geri kısmını ben alabilirim.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-17">
+        <h2>17. Başvuru ve Gutschein Alma Konusunda Verilecek Destek</h2>
+        <ul>
+          <li>Arkadaşları işte Job Center'a yönlendiririm.</li>
+          <li>Agentürfe Haber'te yönlendiririm.</li>
+          <li>Onların o feminist kutuşağını ve bildiğiniz kutuşağını almalarını sağlayabilirim.</li>
+          <li>Çünkü benim elime böyle Hazır ilmi programları falan var, yazışmalar var.</li>
+          <li>Onları kendilerine veririm.</li>
+          <li>Onlar zaten onu ZAHR abartılarına gönderiyorlar.</li>
+          <li>%50, %60 falan kabul ediliyor.</li>
+          <li>Bazen ikinci görüşmede, birinci görüşmede red olsa bile ikinci görüşmede kabul edilebiliyor.</li>
+          <li>Ondan sonra arkadaşlar bu shine'ları aldıktan sonra write'e bölümlerine başlıyorlar.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-18">
+        <h2>18. Yönlendirme Başına Kazanç Modeli</h2>
+        <ul>
+          <li>Whiteaburling'e başladıktan 4 hafta sonra da biz buradan tabii ki gelir elde ediyoruz.</li>
+          <li>Şöyle diyeyim, yani senin mesela bana tavsiye edip Whiteaburling'e giden arkadaşlar, olursa sen hemen hemen hiçbir şey yapmadan kişi başına 500 euro alabiliyorsun.</li>
+          <li>Yani söylediğim haftada bir kişi olursa ayda 2000 euro falan eder bir ek kazanç.</li>
+          <li>Güzel bir ek kazanç olabilir senin için bu.</li>
+          <li>Bu şekilde ilerleyebiliriz eğer senin ilgini çekiyorsa.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-19">
+        <h2>19. Sorular ve Yeniden Görüşme Önerisi</h2>
+        <ul>
+          <li>Daha başka sorularım varsa benim şu anda pek cevaplayamadığım, tabii sorabilirsin tekrar onları cevaplayabilirim.</li>
+          <li>Veya başka bir uygun zamanlar, inşallah yani, ikimizin de uygun olduğu bir zaman olursa, o zaman tekrar bir camla görüşme yaparız.</li>
+          <li>O zaman tekrar bir durumu genel olarak değerlendiririz neler yapabiliriz diye.</li>
+          <li>Benim anlatabileceklerim bu konuda bu kadar.</li>
+          <li>Çünkü çok da fazla bir detay yok.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-20">
+        <h2>20. Hedef Kitle ve Çevredeki Kişilere Ulaşılması</h2>
+        <ul>
+          <li>Sonuçta bu şu anda işsiz olan arkadaşlara bağlı veya senin çevrene bağlı diyeyim.</li>
+          <li>Ne kadar çok fazla o kişilerle haşır neşir oluyorsun bilemiyorum tabii ki.</li>
+          <li>Ama yani sen bu işi yapıyorsan yani Türkiye'den gelen arkadaşlara bu şekilde yardımcı olabiliyorsan sanırım ki herhalde böyle bir 3-4 sene, 5 sene burada olup da onların aralarında işsiz olan arkadaşlar varsa onlardan mesela onlara bu bilgileri sunabiliriz.</li>
+          <li>Daha sonra da yardımcı olabiliriz.</li>
+        </ul>
+      </section>
+
+      <section id="bolum-21">
+        <h2>21. Kapanış</h2>
+        <ul>
+          <li>Peki dediğim gibi daha sonra eğer soruların varsa sorabilirsin cevaplarım veya işte uygun zamanda tekrar görüşürüz.</li>
+          <li>İnşallah bir şeyler yapabiliriz.</li>
+          <li>Teşekkürler, kolay gelsin sana.</li>
+          <li>İyi günler.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <div class="footer">Hazırlanan HTML dokümanı</div>
+</body>
+</html>
