@@ -41,6 +41,11 @@ import {
 import { TodosTab } from "@/app/detrbridge/_components/todos-tab";
 import { MeetingBriefTab } from "@/app/detrbridge/_components/meeting-brief-tab";
 import {
+  addBriefComment,
+  deleteBriefComment,
+  getAllBriefComments
+} from "@/lib/detrbridge-brief-comments";
+import {
   getAllTodosAdmin,
   createTodo,
   updateTodo,
@@ -89,6 +94,18 @@ function matchesText(names: string[], query: string): boolean {
   return names.some((name) => name.toLowerCase().includes(needle));
 }
 
+/**
+ * Post-action target for the "Toplantı Özeti" tab: back to the madde that was
+ * just acted on, with its thread expanded (?open) and scrolled into view
+ * (#anchor), plus an optional error message.
+ */
+function briefItemUrl(itemKey: string, errorMessage?: string): string {
+  const query = new URLSearchParams({ tab: "meeting-brief" });
+  if (itemKey) query.set("open", itemKey);
+  if (errorMessage) query.set("error", errorMessage);
+  return `/detrbridge?${query.toString()}${itemKey ? `#${itemKey}` : ""}`;
+}
+
 const cardClass =
   "overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl";
 const cardInnerClass = "";
@@ -130,6 +147,9 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
   const todosResult = activeTab === "todos" ? await getAllTodosAdmin() : null;
   const todos2Result = activeTab === "todos2" ? await getAllTodos2Admin() : null;
   const domainsResult = activeTab === "domains" ? await getAllDomainsAdmin() : null;
+  const briefComments =
+    activeTab === "meeting-brief" ? await getAllBriefComments() : null;
+  const openBriefItemKey = readParam(params.open) || null;
   const [logoCount, logoCountRound2, domainCount] = await Promise.all([
     getLogoCount(1),
     getLogoCount(2),
@@ -693,6 +713,43 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
   }
 
+  async function addBriefCommentAction(formData: FormData) {
+    "use server";
+    // Yazar oturumdan alınır — formdan gelen bir isme asla güvenilmez.
+    const author = await getDetrbridgeSessionName();
+    if (!author) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const itemKey = (formData.get("itemKey") as string | null) ?? "";
+    const body = (formData.get("body") as string | null) ?? "";
+    const outcome = await addBriefComment(itemKey, body, author);
+    revalidatePath("/detrbridge");
+    redirect(
+      briefItemUrl(
+        itemKey,
+        outcome.ok ? undefined : (outcome.errorMessage ?? "Yorum eklenemedi.")
+      ) as Parameters<typeof redirect>[0]
+    );
+  }
+
+  async function deleteBriefCommentAction(formData: FormData) {
+    "use server";
+    const author = await getDetrbridgeSessionName();
+    if (!author) {
+      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    }
+    const commentId = (formData.get("commentId") as string | null) ?? "";
+    const itemKey = (formData.get("itemKey") as string | null) ?? "";
+    const outcome = await deleteBriefComment(commentId, author);
+    revalidatePath("/detrbridge");
+    redirect(
+      briefItemUrl(
+        itemKey,
+        outcome.ok ? undefined : (outcome.errorMessage ?? "Yorum silinemedi.")
+      ) as Parameters<typeof redirect>[0]
+    );
+  }
+
   return (
     <main
       className="relative isolate min-h-screen overflow-x-clip px-4 py-8 sm:px-6 lg:px-8"
@@ -883,7 +940,29 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
             </>
           ) : null}
 
-          {activeTab === "meeting-brief" ? <MeetingBriefTab /> : null}
+          {activeTab === "meeting-brief" && briefComments ? (
+            <>
+              {briefComments.source === "env-missing" && (
+                <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
+                  Supabase bağlantısı yapılandırılmamış
+                  (SUPABASE_SERVICE_ROLE_KEY eksik). Özet okunabilir ama yorumlar
+                  yüklenemiyor.
+                </div>
+              )}
+              {briefComments.source === "error" && (
+                <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
+                  Yorumlar yüklenirken hata oluştu: {briefComments.errorMessage}
+                </div>
+              )}
+              <MeetingBriefTab
+                commentsByItemKey={briefComments.byItemKey}
+                sessionName={sessionName ?? ""}
+                openItemKey={openBriefItemKey}
+                addCommentAction={addBriefCommentAction}
+                deleteCommentAction={deleteBriefCommentAction}
+              />
+            </>
+          ) : null}
 
           {activeTab === "visits" ? <VisitsTab visits={visits} /> : null}
         </div>

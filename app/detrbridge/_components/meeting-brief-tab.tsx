@@ -3,330 +3,31 @@
 import { useState, type ReactNode } from "react";
 
 import {
+  BRIEF_DECISIONS,
+  BRIEF_INFOS,
+  BRIEF_OPEN_ITEMS,
+  BRIEF_TASKS,
+  MEETING_DURATION_LABEL,
+  MEETING_PARTICIPANT_COUNT,
+  type BriefPriority
+} from "@/content/detrbridge-brief";
+import type { BriefComment } from "@/lib/detrbridge-brief-comments";
+import { BriefCommentThread } from "@/app/detrbridge/_components/brief-comment-thread";
+import {
   DETRBRIDGE_BRAND_GRADIENT,
   DETRBRIDGE_GOLD
 } from "@/app/detrbridge/_components/theme";
 
-type BriefPriority = "Yüksek" | "Orta" | "Düşük";
-
-interface BriefTask {
-  index: string;
-  priority: BriefPriority;
-  status: string;
-  title: string;
-  description: string;
-  owner: string;
-  target: string;
-  source: string;
+interface MeetingBriefTabProps {
+  /** Madde anahtarı -> o maddenin yorumları (eskiden yeniye). */
+  commentsByItemKey: Record<string, BriefComment[]>;
+  /** Oturumdaki isim: yeni yorumun yazarı ve kimin silebileceğini belirler. */
+  sessionName: string;
+  /** Sayfa açılışında hangi maddenin yorum akışı açık gelsin (?open=...). */
+  openItemKey: string | null;
+  addCommentAction: (formData: FormData) => void | Promise<void>;
+  deleteCommentAction: (formData: FormData) => void | Promise<void>;
 }
-
-interface BriefDecision {
-  index: string;
-  type: string;
-  title: string;
-  description: string;
-  source: string;
-}
-
-interface BriefInfo {
-  icon: string;
-  title: string;
-  items: string[];
-  source: string;
-}
-
-const MEETING_DURATION_LABEL = "72 dk";
-const PARTICIPANT_COUNT = 6;
-
-const TASKS: BriefTask[] = [
-  {
-    index: "01",
-    priority: "Yüksek",
-    status: "Planlandı",
-    title: "Sorumluluk alanlarını ve temas kişilerini belirleme",
-    description:
-      "Web sitesi, pazarlama, sosyal medya, finans/muhasebe gibi alanlar için birer temas kişisi belirlenip görev kapsamları dokümante edilecek. Toplantıda geçen kişi–rol örnekleri kesin atama değildir.",
-    owner: "Tüm ekip · kolaylaştırıcı: Umut",
-    target: "Önümüzdeki 10 gün",
-    source: "1. oturum · 29:43–31:52"
-  },
-  {
-    index: "02",
-    priority: "Yüksek",
-    status: "Başlatılacak",
-    title: "Görev takip panelini geçici merkez olarak kullanma",
-    description:
-      "Mevcut paneldeki “Görevler” alanı kararlar, görevler ve ilerleme için ortak çalışma alanı olacak; dağınık/eski içerikler düzenlenecek ve gerekli kayıtlar taşınacak.",
-    owner: "Umut + ekip",
-    target: "Hemen",
-    source: "1. oturum · 39:08–40:08"
-  },
-  {
-    index: "03",
-    priority: "Yüksek",
-    status: "Taahhüt edildi",
-    title: "Toplantı çıktısını yazılı dosya halinde paylaşma",
-    description:
-      "Konuşulan konular; kararlar, yapılacaklar ve başlıklar halinde düzenlenerek ekip ile paylaşılacak.",
-    owner: "Umut",
-    target: "Transkript sonrası",
-    source: "1. oturum · 28:02–28:42 ve 38:49–39:08"
-  },
-  {
-    index: "04",
-    priority: "Yüksek",
-    status: "Planlandı",
-    title: "Türkiye ve Almanya için fiyatlandırma çalıştayı",
-    description:
-      "Web sitesi ve diğer hizmetler için özellik, kapsam, efor ve test boyutlarını içeren; ekip içi kullanılacak iki ayrı fiyat çerçevesi hazırlanacak.",
-    owner: "Tüm ekip · geliştirme/test desteği: Umut",
-    target: "Yaklaşan toplantılarda",
-    source: "1. oturum · 40:38–42:57"
-  },
-  {
-    index: "05",
-    priority: "Orta",
-    status: "Açık konu",
-    title: "Operasyon giderleri ve ortak fon modelini netleştirme",
-    description:
-      "Sunucu, domain ve kurumsal e-posta giderleri birlikte hesaplanacak; aylık katkı tutarı kesinleştirilecek. Hesap hareketlerinin düzenli ve şeffaf paylaşılması esas olacak.",
-    owner: "Umut + ekip",
-    target: "Bir sonraki değerlendirme",
-    source: "1. oturum · 44:44–47:37 ve 53:31–56:43"
-  },
-  {
-    index: "06",
-    priority: "Yüksek",
-    status: "İlerliyor",
-    title: "Showcase web sitesini yayına hazırlama",
-    description:
-      "Mevcut ön yüz canlı/staging ortama taşınacak; ekip geri bildirimi alınacak. Admin paneli, backend bağlantıları ve içerikler kademeli olarak tamamlanacak.",
-    owner: "Web ekibi · koordinasyon: Sümeyya",
-    target: "Devam ediyor",
-    source: "1. oturum · 48:01–51:11"
-  },
-  {
-    index: "07",
-    priority: "Yüksek",
-    status: "Planlandı",
-    title: "SEO aracına erişim verip gereklilikleri uygulama",
-    description:
-      "Umut, premium SEO aracına bir ekip üyesi için erişim açacak. Araç önerileri site tamamlanmadan önce tasarıma ve koda işlenecek.",
-    owner: "Erişim: Umut · uygulama: web ekibi",
-    target: "Erişim: hafta sonu / Pazartesi–Salı; uygulama: finalden önce",
-    source: "1. oturum · 51:24–52:58"
-  },
-  {
-    index: "08",
-    priority: "Orta",
-    status: "Değerlendirilecek",
-    title: "Kurumsal e-posta çözümünü karşılaştırıp seçme",
-    description:
-      "Mevcut Zoho tabanlı çözüm ile domain sağlayıcısı/Hostinger benzeri alternatifler maliyet ve kullanım açısından değerlendirilecek.",
-    owner: "Tüm ekip",
-    target: "Açık",
-    source: "1. oturum · 53:31–56:43"
-  },
-  {
-    index: "09",
-    priority: "Düşük",
-    status: "Değerlendirilecek",
-    title: "Maskot taslaklarını değerlendirip karar verme",
-    description:
-      "Drive klasöründeki maskot taslakları incelenecek; kullanılması kararlaştırılırsa seçilen maskotun farklı açıları hazırlanarak siteye entegre edilecek.",
-    owner: "Tüm ekip · görseller: Umut",
-    target: "Açık",
-    source: "1. oturum · 57:08–58:24"
-  },
-  {
-    index: "10",
-    priority: "Orta",
-    status: "Taahhüt edildi",
-    title: "ATS / işe alım otomasyonu fikrini tek sayfada anlatma",
-    description:
-      "Doğal dille ilan üretimi, başvuru puanlama, aday sıralama ve kişiselleştirilmiş geri bildirim akışını anlatan bir sayfalık doküman veya PDF hazırlanıp Umut’a gönderilecek.",
-    owner: "Murat Berat",
-    target: "Proje değerlendirme toplantısından önce",
-    source: "2. oturum · 07:40–12:16"
-  },
-  {
-    index: "11",
-    priority: "Orta",
-    status: "Planlandı",
-    title: "Bir sonraki toplantı için anket açma",
-    description:
-      "3–4 gün açık kalacak bir tarih anketi ile takip toplantısı belirlenecek; toplantı süresi gidişata göre yaklaşık 30–60 dakika olacak.",
-    owner: "Sümeyya",
-    target: "2 hafta içinde",
-    source: "2. oturum · 12:34–13:15"
-  },
-  {
-    index: "12",
-    priority: "Orta",
-    status: "Devam ediyor",
-    title: "Yeni iş fırsatlarını ekip için olgunlaştırma",
-    description:
-      "Burak’ın ortaklık modeliyle gelebilecek projeleri, 2–3 basit web sitesi işini, Şahin üzerinden gelebilecek daha büyük işleri ve ABD bağlantısından doğabilecek fırsatları takip edecek.",
-    owner: "Umut",
-    target: "Süreç içinde",
-    source: "2. oturum · 04:10–06:52"
-  }
-];
-
-const DECISIONS: BriefDecision[] = [
-  {
-    index: "01",
-    type: "Kesin karar",
-    title: "Tek WhatsApp grubu, profesyonel iletişim",
-    description:
-      "İkinci bir sohbet grubu açılmayacak. Mevcut grup iş odaklı ve daha resmî kullanılacak; bilgi kirliliği oluşturacak yoğun sohbetten kaçınılacak.",
-    source: "1. oturum · 18:33–20:33"
-  },
-  {
-    index: "02",
-    type: "Çalışma ilkesi",
-    title: "Üslup yapıcı ve kırıcı olmayan biçimde korunacak",
-    description:
-      "Eleştiri ve uyarılar profesyonel biçimde yapılacak; imalı, incitici veya yıkıcı yazışmalardan kaçınılacak.",
-    source: "1. oturum · 20:47–22:38"
-  },
-  {
-    index: "03",
-    type: "Çalışma ilkesi",
-    title: "Mesajlara en geç 48 saat içinde dönüş beklentisi",
-    description:
-      "Bir talep yerine getirilemiyorsa dahi okunduğu ve yapılamayacağı ya da daha sonra ele alınacağı bildirilecek. Unutulan işler için hatırlatma yapmak normal ve istenen bir davranış.",
-    source: "1. oturum · 22:38–28:02"
-  },
-  {
-    index: "04",
-    type: "Kesin karar",
-    title: "Kararlar ve görevler yazılı olarak kayıt altına alınacak",
-    description:
-      "Yanlış anlamaları azaltmak ve geriye dönük iz bırakmak için toplantı çıktıları ve çalışma kararları dokümante edilecek.",
-    source: "1. oturum · 10:25–14:50 ve 28:02–28:42"
-  },
-  {
-    index: "05",
-    type: "Yapısal karar",
-    title: "Alan sorumluları lider değil, temas noktası olacak",
-    description:
-      "Her alan için bir sorumlu/temas kişisi bulunacak; bu kişi işi tek başına yapan hiyerarşik lider olarak değil, koordinasyon ve raporlama noktası olarak konumlanacak.",
-    source: "1. oturum · 29:43–31:52"
-  },
-  {
-    index: "06",
-    type: "Ürün kararı",
-    title: "Önce hızlı vitrin, sonra kapsamlı ürün",
-    description:
-      "Dışarıdan iletişim kurulabilecek mevcut showcase site kısa vadede kullanılacak. Daha kapsamlı görev, müşteri, finans ve yönetim paneli arka planda baskı oluşturmadan geliştirilecek; hazır olduğunda geçiş yapılacak.",
-    source: "1. oturum · 33:55–38:11"
-  },
-  {
-    index: "07",
-    type: "Ticari ilke",
-    title: "Ücretsiz iş varsayılan yaklaşım olmayacak",
-    description:
-      "Eş-dost dahil işler karşılıksız yapılmayacak. Öğrenme veya stratejik fayda amacıyla düşük ücret ya da müşteri yönlendirmesi karşılığı çalışma gibi istisnalar ekipçe değerlendirilebilir.",
-    source: "1. oturum · 42:58–44:44"
-  },
-  {
-    index: "08",
-    type: "Ticari karar",
-    title: "Fiyatlar standartlaştırılacak ve ekip içinde tutulacak",
-    description:
-      "Teklif verirken her defasında yeniden tartışmamak için Türkiye ve Almanya pazarlarına uygun, hizmet kapsamına göre ayrıştırılmış iç fiyat listeleri hazırlanacak.",
-    source: "1. oturum · 40:38–42:57"
-  },
-  {
-    index: "09",
-    type: "Öncelik kararı",
-    title: "Öncelik çekirdek Grow/ekip işlerinde",
-    description:
-      "Murat’ın ATS fikri değerli bulundu; ancak geliştirmeye başlamadan önce ekibin mevcut çekirdek işleri birlikte tamamlanacak. Yan proje şimdilik dokümante edilip olgunlaştırılacak.",
-    source: "2. oturum · 06:52–12:34"
-  },
-  {
-    index: "10",
-    type: "Mali ilke",
-    title: "Ortak giderlerde şeffaflık",
-    description:
-      "Sunucu ve diğer ortak masraflar için bir fon oluşturulması benimsendi; kesin kişi başı tutar henüz karara bağlanmadı. Gelir-gider hareketleri düzenli olarak ekiple paylaşılacak.",
-    source: "1. oturum · 44:44–47:37"
-  }
-];
-
-const INFOS: BriefInfo[] = [
-  {
-    icon: "◷",
-    title: "Toplantı özeti",
-    items: [
-      "**Tarih:** 31 Temmuz 2026",
-      "**Oturumlar:** 58 dakika + 14 dakika (toplam yaklaşık 72 dakika)",
-      "**Katılımcılar:** Aslıhan, Fatih Çalışkan, Murat Berat Başarı, Sefa Eyer, Sümeyya Nacar, Umut Barış Terzioğlu",
-      "**Ana amaç:** Profesyonel çalışma çerçevesi, sorumluluklar, ürün planı, fiyatlandırma ve operasyon altyapısını netleştirmek"
-    ],
-    source: "Her iki oturum"
-  },
-  {
-    icon: "▦",
-    title: "Web sitesi mevcut durumu",
-    items: [
-      "Üç dil desteği hedeflenen bir vitrin sitesi hazırlanıyor.",
-      "Admin girişi/paneli, hakkımızda, hizmetler, projeler, blog, iletişim formu ve WhatsApp bağlantısı tasarımda yer alıyor.",
-      "Frontend başlangıç sürümü ekip tarafından olumlu değerlendirildi; backend ve admin bağlantıları aşamalı tamamlanacak.",
-      "Blog bölümünün düzenli ve güncel teknik içeriklerle beslenmesi planlanıyor."
-    ],
-    source: "1. oturum · 48:01–52:58"
-  },
-  {
-    icon: "▤",
-    title: "Teknik altyapı",
-    items: [
-      "Mevcut uzaktaki sunucunun Almanya menşeli bir sağlayıcıdan alındığı belirtildi.",
-      "Transkriptte sunucu kapasitesi yaklaşık **320 GB ve 16 çekirdek**, mevcut site sayısı ise **25–30** olarak ifade edildi.",
-      "Sunucu maliyetinin yaklaşık **20 € / ay** olduğu söylendi; ekip katkısının kesin modeli henüz net değil.",
-      "Kurumsal e-posta için mevcut Zoho benzeri çalışma alanı kullanılabilir; alternatif çözümler de değerlendirilecek."
-    ],
-    source: "1. oturum · 44:44–56:43"
-  },
-  {
-    icon: "◇",
-    title: "İş fırsatları ve gelir kanalları",
-    items: [
-      "Burak tarafında, altyapı ekipçe geliştirilip gelir veya hisse paylaşımıyla ilerleyebilecek proje fikirleri bulunuyor.",
-      "Yakın çevreden gelebilecek 2–3 basit kişisel web sitesi işi için yaklaşık 150–200 € seviyesinde fiyat konuşuldu.",
-      "Şahin üzerinden gelecekte daha kapsamlı işler gelebileceği belirtildi.",
-      "ABD’deki bir bağlantı ve Türkiye’deki Aytekin üzerinden kapasite fazlası işlerin ekibe yönlendirilmesi gündemde."
-    ],
-    source: "2. oturum · 04:10–06:52"
-  },
-  {
-    icon: "✦",
-    title: "ATS ürün fikri",
-    items: [
-      "Şirket profilinden ve doğal dilde girilen ihtiyaçtan otomatik iş ilanı üretme.",
-      "Başvuruları/CV’leri kriterlere göre puanlama ve yüksek uyumlu adayları sıralama.",
-      "Puan kaybının nedenlerini güçlü ve zayıf yönlerle açıklama.",
-      "Olumlu veya olumsuz tüm adaylara kişiselleştirilmiş, profesyonel geri bildirim üretme.",
-      "LinkedIn verisi/entegrasyonu ve teknik erişim yöntemi henüz araştırılması gereken bir alan."
-    ],
-    source: "2. oturum · 07:40–11:59"
-  },
-  {
-    icon: "?",
-    title: "Açık konular",
-    items: [
-      "Alan sorumlularının isimleri ve görev sınırları",
-      "Aylık ortak fonun kişi başı kesin tutarı",
-      "Kurumsal e-posta sağlayıcısı ve kullanıcı maliyeti",
-      "Maskotun kullanılıp kullanılmayacağı",
-      "Kapsamlı iç panelin ürün sınırları ve geliştirme takvimi",
-      "Fiyat listelerinin detayları ve indirim/stratejik takas kuralları"
-    ],
-    source: "Her iki oturumdaki kesinleşmemiş maddeler"
-  }
-];
 
 const PRIORITY_BADGE: Record<BriefPriority, string> = {
   Yüksek: "border-[#F5B700]/30 bg-[#F5B700]/10 text-[#F5D77A]",
@@ -404,6 +105,67 @@ function SectionHead({
   );
 }
 
+interface CommentBlockProps {
+  itemKey: string;
+  comments: BriefComment[];
+  open: boolean;
+  onOpenChange: (itemKey: string, open: boolean) => void;
+  sessionName: string;
+  addCommentAction: (formData: FormData) => void | Promise<void>;
+  deleteCommentAction: (formData: FormData) => void | Promise<void>;
+}
+
+/**
+ * Bir maddenin altındaki açılır yorum akışı.
+ *
+ * Modül seviyesinde tanımlı (MeetingBriefTab'ın içinde değil): aksi halde her
+ * arama tuşunda yeni bir bileşen tipi doğar, açık akış kapanır ve yazılmakta
+ * olan yorum silinirdi.
+ */
+function CommentBlock({
+  itemKey,
+  comments,
+  open,
+  onOpenChange,
+  sessionName,
+  addCommentAction,
+  deleteCommentAction
+}: CommentBlockProps) {
+  return (
+    <details
+      open={open}
+      onToggle={(event) => onOpenChange(itemKey, event.currentTarget.open)}
+      className="mt-4 border-t border-white/[0.06] pt-3"
+    >
+      <summary className="flex cursor-pointer list-none items-center gap-2 text-[12px] font-semibold text-white/50 outline-none transition hover:text-white focus-visible:ring-2 focus-visible:ring-[#F5B700]/40 [&::-webkit-details-marker]:hidden">
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        {comments.length > 0 ? `Yorumlar · ${comments.length}` : "Yorum yaz"}
+      </summary>
+      <div className="mt-3">
+        <BriefCommentThread
+          itemKey={itemKey}
+          comments={comments}
+          sessionName={sessionName}
+          addCommentAction={addCommentAction}
+          deleteCommentAction={deleteCommentAction}
+        />
+      </div>
+    </details>
+  );
+}
+
 function IndexTile({ children }: { children: ReactNode }) {
   return (
     <span
@@ -416,32 +178,109 @@ function IndexTile({ children }: { children: ReactNode }) {
 }
 
 /**
- * "Toplantı Özeti" panel: static brief of the 31 Temmuz 2026 UBT meeting
- * (tasks, decisions, context notes), ported from the standalone
- * grovegrove.html briefing page into the detrbridge navy/gold theme.
- * Content is fixed — only the text search is interactive.
+ * "Toplantı Özeti" panel: the 31 Temmuz 2026 UBT meeting brief (open topics,
+ * tasks, decisions, context notes) in the detrbridge navy/gold theme.
+ *
+ * The brief text itself is fixed — it lives in content/detrbridge-brief.ts.
+ * What is interactive: the text search, and a comment thread under every single
+ * madde. Threads are expanded client-side (so typing in the search box never
+ * collapses an open thread) and start expanded for the madde the server
+ * redirected back to after a comment was posted (?open=<key>).
  */
-export function MeetingBriefTab() {
+export function MeetingBriefTab({
+  commentsByItemKey,
+  sessionName,
+  openItemKey,
+  addCommentAction,
+  deleteCommentAction
+}: MeetingBriefTabProps) {
   const [query, setQuery] = useState("");
+  const [openKeys, setOpenKeys] = useState<ReadonlySet<string>>(
+    () => new Set(openItemKey ? [openItemKey] : [])
+  );
   const normalizedQuery = normalize(query.trim());
 
-  const visibleTasks = TASKS.filter((task) =>
+  function commentsFor(itemKey: string): BriefComment[] {
+    return commentsByItemKey[itemKey] ?? [];
+  }
+
+  /** Yorum metinleri de aramaya dahil — bir konu yorumundan da bulunabilsin. */
+  function commentText(itemKey: string): string {
+    return commentsFor(itemKey)
+      .map((comment) => `${comment.author} ${comment.body}`)
+      .join(" ");
+  }
+
+  function setOpen(itemKey: string, open: boolean) {
+    setOpenKeys((previous) => {
+      if (previous.has(itemKey) === open) return previous;
+      const next = new Set(previous);
+      if (open) {
+        next.add(itemKey);
+      } else {
+        next.delete(itemKey);
+      }
+      return next;
+    });
+  }
+
+  /** Maddenin altına yorum akışını basar. */
+  function commentBlock(itemKey: string) {
+    return (
+      <CommentBlock
+        itemKey={itemKey}
+        comments={commentsFor(itemKey)}
+        open={openKeys.has(itemKey)}
+        onOpenChange={setOpen}
+        sessionName={sessionName}
+        addCommentAction={addCommentAction}
+        deleteCommentAction={deleteCommentAction}
+      />
+    );
+  }
+
+  const visibleOpenItems = BRIEF_OPEN_ITEMS.filter((item) =>
+    matchesQuery([item.title, item.source, commentText(item.key)].join(" "), normalizedQuery)
+  );
+  const visibleTasks = BRIEF_TASKS.filter((task) =>
     matchesQuery(
-      [task.title, task.description, task.owner, task.target, task.status, task.priority, task.source].join(" "),
+      [
+        task.title,
+        task.description,
+        task.owner,
+        task.target,
+        task.status,
+        task.priority,
+        task.source,
+        commentText(task.key)
+      ].join(" "),
       normalizedQuery
     )
   );
-  const visibleDecisions = DECISIONS.filter((decision) =>
+  const visibleDecisions = BRIEF_DECISIONS.filter((decision) =>
     matchesQuery(
-      [decision.title, decision.description, decision.type, decision.source].join(" "),
+      [
+        decision.title,
+        decision.description,
+        decision.type,
+        decision.source,
+        commentText(decision.key)
+      ].join(" "),
       normalizedQuery
     )
   );
-  const visibleInfos = INFOS.filter((info) =>
-    matchesQuery([info.title, ...info.items, info.source].join(" "), normalizedQuery)
+  const visibleInfos = BRIEF_INFOS.filter((info) =>
+    matchesQuery(
+      [info.title, ...info.items, info.source, commentText(info.key)].join(" "),
+      normalizedQuery
+    )
   );
   const nothingVisible =
-    visibleTasks.length + visibleDecisions.length + visibleInfos.length === 0;
+    visibleOpenItems.length +
+      visibleTasks.length +
+      visibleDecisions.length +
+      visibleInfos.length ===
+    0;
 
   return (
     <div className="space-y-5">
@@ -454,26 +293,28 @@ export function MeetingBriefTab() {
           UBT · Toplantı Brifingi
         </span>
         <h2 className="mt-4 font-body text-3xl font-bold leading-[1.05] tracking-[-0.04em] text-white sm:text-4xl">
-          Görevler.{" "}
+          Açık konular.{" "}
           <span
             className="bg-clip-text text-transparent"
             style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
           >
             Kararlar.
           </span>{" "}
-          Bilgiler.
+          Görevler.
         </h2>
         <p className="mt-3 max-w-2xl text-[13px] leading-relaxed text-white/55">
           31 Temmuz 2026 tarihli iki toplantı oturumunun; kesinleşen maddeler ile açık
-          konuları birbirinden ayıran, uygulanabilir ve kaynak zaman damgalı özeti.
+          konuları birbirinden ayıran, uygulanabilir ve kaynak zaman damgalı özeti. Her
+          maddenin altına yorum bırakabilirsin.
         </p>
 
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {[
-            { value: String(TASKS.length), label: "Görev / takip maddesi" },
-            { value: String(DECISIONS.length), label: "Karar / çalışma ilkesi" },
+            { value: String(BRIEF_OPEN_ITEMS.length), label: "Açık konu" },
+            { value: String(BRIEF_TASKS.length), label: "Görev / takip maddesi" },
+            { value: String(BRIEF_DECISIONS.length), label: "Karar / çalışma ilkesi" },
             { value: MEETING_DURATION_LABEL, label: "Toplam görüşme süresi" },
-            { value: String(PARTICIPANT_COUNT), label: "Toplam katılımcı" }
+            { value: String(MEETING_PARTICIPANT_COUNT), label: "Toplam katılımcı" }
           ].map((stat) => (
             <article
               key={stat.label}
@@ -488,6 +329,7 @@ export function MeetingBriefTab() {
         <div className="mt-6 flex flex-wrap items-center gap-2.5">
           <nav className="flex flex-1 gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {[
+              { href: "#brief-acik-konular", label: "00 · Açık Konular" },
               { href: "#brief-gorevler", label: "01 · Görevler" },
               { href: "#brief-kararlar", label: "02 · Kararlar" },
               { href: "#brief-bilgiler", label: "03 · Bilgiler" }
@@ -512,6 +354,41 @@ export function MeetingBriefTab() {
         </div>
       </section>
 
+      {visibleOpenItems.length > 0 ? (
+        <section id="brief-acik-konular" className="scroll-mt-24 space-y-4">
+          <SectionHead
+            kicker="00 / Karara bağlanmadı"
+            title="Açık Konular"
+            note="Toplantıda konuşulan ama sonuca bağlanmayan başlıklar. Her biri ayrı bir kart — görüşünü doğrudan ilgili konunun altına yaz."
+          />
+          <div className="grid gap-3 lg:grid-cols-2">
+            {visibleOpenItems.map((item) => (
+              <article
+                key={item.key}
+                id={item.key}
+                className="scroll-mt-24 rounded-[1.5rem] border border-[#F5B700]/20 bg-[#F5B700]/[0.04] p-5 backdrop-blur-xl transition hover:border-[#F5B700]/40 sm:p-6"
+              >
+                <div className="flex items-start gap-4">
+                  <IndexTile>{item.index}</IndexTile>
+                  <div className="min-w-0 flex-1">
+                    <span
+                      className={`${badgeBase} border-[#F5B700]/30 bg-[#F5B700]/10 text-[#F5D77A]`}
+                    >
+                      Açık konu
+                    </span>
+                    <h4 className="mt-2 font-body text-base font-semibold tracking-tight text-white">
+                      {item.title}
+                    </h4>
+                    <span className={`mt-3 block ${sourceClass}`}>{item.source}</span>
+                  </div>
+                </div>
+                {commentBlock(item.key)}
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {visibleTasks.length > 0 ? (
         <section id="brief-gorevler" className="scroll-mt-24 space-y-4">
           <SectionHead
@@ -522,8 +399,9 @@ export function MeetingBriefTab() {
           <div className="space-y-3">
             {visibleTasks.map((task) => (
               <article
-                key={task.index}
-                className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition hover:border-[#F5B700]/30 sm:p-6"
+                key={task.key}
+                id={task.key}
+                className="scroll-mt-24 rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition hover:border-[#F5B700]/30 sm:p-6"
               >
                 <div className="flex items-start gap-4">
                   <IndexTile>{task.index}</IndexTile>
@@ -560,9 +438,8 @@ export function MeetingBriefTab() {
                         <dd className="mt-0.5 text-[12px] text-white/80">{task.target}</dd>
                       </div>
                     </dl>
-                    <footer className="mt-4 border-t border-white/[0.06] pt-3">
-                      <span className={sourceClass}>{task.source}</span>
-                    </footer>
+                    <span className={`mt-4 block ${sourceClass}`}>{task.source}</span>
+                    {commentBlock(task.key)}
                   </div>
                 </div>
               </article>
@@ -581,8 +458,9 @@ export function MeetingBriefTab() {
           <div className="space-y-3">
             {visibleDecisions.map((decision) => (
               <article
-                key={decision.index}
-                className="flex items-start gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition hover:border-[#F5B700]/30 sm:p-6"
+                key={decision.key}
+                id={decision.key}
+                className="flex scroll-mt-24 items-start gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition hover:border-[#F5B700]/30 sm:p-6"
               >
                 <IndexTile>{decision.index}</IndexTile>
                 <div className="min-w-0 flex-1">
@@ -596,6 +474,7 @@ export function MeetingBriefTab() {
                     {decision.description}
                   </p>
                   <span className={`mt-3 block ${sourceClass}`}>{decision.source}</span>
+                  {commentBlock(decision.key)}
                 </div>
               </article>
             ))}
@@ -608,13 +487,14 @@ export function MeetingBriefTab() {
           <SectionHead
             kicker="03 / Bağlam"
             title="Bilgiler"
-            note="Proje durumu, teknik altyapı, fırsatlar ve henüz karara bağlanmamış noktalar."
+            note="Proje durumu, teknik altyapı ve fırsatlar."
           />
           <div className="space-y-3">
             {visibleInfos.map((info) => (
               <article
-                key={info.title}
-                className="flex items-start gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition hover:border-[#F5B700]/30 sm:p-6"
+                key={info.key}
+                id={info.key}
+                className="flex scroll-mt-24 items-start gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition hover:border-[#F5B700]/30 sm:p-6"
               >
                 <span
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.9rem] border text-lg font-bold"
@@ -637,6 +517,7 @@ export function MeetingBriefTab() {
                     ))}
                   </ul>
                   <span className={`mt-3 block ${sourceClass}`}>{info.source}</span>
+                  {commentBlock(info.key)}
                 </div>
               </article>
             ))}
