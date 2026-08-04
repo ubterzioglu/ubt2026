@@ -36,9 +36,41 @@ function withDetrbridgeVisitorCookie(request: NextRequest): NextResponse {
   return response;
 }
 
+const UBTSA_VISITOR_COOKIE = "ubt_ubtsa_visitor";
+const UBTSA_FIRST_VISIT_HEADER = "x-ubtsa-first-visit";
+
+/**
+ * Mints the /ubtsa visitor cookie, for the same reason as /detrbridge above:
+ * a Server Component cannot call cookies().set() during a render. The page
+ * reads the header below to decide whether to show its welcome card. No
+ * visitor id is stored — the cookie only answers "have you been here before",
+ * so a bare flag is enough.
+ */
+function withUbtsaVisitorCookie(request: NextRequest): NextResponse {
+  const seen = request.cookies.get(UBTSA_VISITOR_COOKIE)?.value;
+  if (seen) return NextResponse.next();
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(UBTSA_FIRST_VISIT_HEADER, "1");
+
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  response.cookies.set(UBTSA_VISITOR_COOKIE, "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/ubtsa",
+    maxAge: VISITOR_COOKIE_MAX_AGE_SECONDS
+  });
+  return response;
+}
+
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/detrbridge")) {
     return withDetrbridgeVisitorCookie(request);
+  }
+
+  if (request.nextUrl.pathname.startsWith("/ubtsa")) {
+    return withUbtsaVisitorCookie(request);
   }
 
   const isAuthed = request.cookies.get("elif_auth")?.value === "1";
@@ -51,5 +83,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/zelifs/:path*", "/detrbridge/:path*"]
+  matcher: ["/zelifs/:path*", "/detrbridge/:path*", "/ubtsa/:path*"]
 };

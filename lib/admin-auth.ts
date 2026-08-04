@@ -399,13 +399,18 @@ export async function signOutDetrbridge(): Promise<void> {
 }
 
 /**
- * The `/ubtsa` konsept board is gated the same way as /detrbridge: a small
- * name allowlist plus one shared password (UBTSA_PASSWORD). The cookie stores
- * `name|token`, where token is an HMAC of the name keyed by the current
- * password — a leaked cookie never exposes the literal password, and changing
- * UBTSA_PASSWORD revokes every existing session because verification
- * re-derives the token from the *current* value. The signed-in name is what
- * gets stamped on every comment, so it must be trustworthy.
+ * The `/ubtsa` konsept board is gated by a small name allowlist where **each
+ * person has their own password**, unlike /detrbridge's single shared secret:
+ * `ubt` signs in with UBT_UBTSA_PASSWORD, `serkan` with UBTSA_PASSWORD. That
+ * way either credential can be rotated (or revoked) without locking the other
+ * person out, and a password handed to one person never opens the board under
+ * the other's name.
+ *
+ * The cookie stores `name|token`, where token is an HMAC of the name keyed by
+ * *that name's* password — a leaked cookie never exposes the literal password,
+ * and changing a password revokes only that person's sessions because
+ * verification re-derives the token from the current value. The signed-in name
+ * is stamped on every comment, so it has to be trustworthy.
  */
 export const UBTSA_ACCESS_COOKIE = "ubt_ubtsa_access";
 
@@ -416,11 +421,22 @@ const UBTSA_ALLOWED_NAMES = ["ubt", "serkan"];
 export const UBTSA_NAMES: readonly string[] = UBTSA_ALLOWED_NAMES;
 
 /**
- * Reads the ubtsa board password (empty string if not configured).
- * No fallback: the board is gated solely by UBTSA_PASSWORD.
+ * Reads the password belonging to one ubtsa user (empty string when that
+ * user has no password configured, or the name is not on the allowlist).
+ *
+ * Deliberately a static switch rather than `process.env[variable]`: static
+ * access is what Next.js's env handling is built around, so this keeps
+ * working the same way in every build target.
  */
-function getUbtsaPassword(): string {
-  return process.env.UBTSA_PASSWORD?.trim() ?? "";
+function getUbtsaPasswordFor(name: string): string {
+  switch (name) {
+    case "ubt":
+      return process.env.UBT_UBTSA_PASSWORD?.trim() ?? "";
+    case "serkan":
+      return process.env.UBTSA_PASSWORD?.trim() ?? "";
+    default:
+      return "";
+  }
 }
 
 /** Normalized (lowercase) name allowlist for the ubtsa board. */
@@ -430,11 +446,10 @@ function getUbtsaAllowedNames(): string[] {
 
 /**
  * Returns the signed-in ubtsa name, or null when the session is invalid.
- * Fails CLOSED: without a configured password nobody gets in.
+ * Fails CLOSED per user: if that person's password is not configured, their
+ * session does not verify.
  */
 export async function getUbtsaSessionName(): Promise<string | null> {
-  const password = getUbtsaPassword();
-  if (!password) return null;
   const cookieStore = await cookies();
   const value = cookieStore.get(UBTSA_ACCESS_COOKIE)?.value ?? "";
   const separator = value.lastIndexOf("|");
@@ -442,6 +457,8 @@ export async function getUbtsaSessionName(): Promise<string | null> {
   const name = value.slice(0, separator).trim().toLowerCase();
   const token = value.slice(separator + 1);
   if (!getUbtsaAllowedNames().includes(name)) return null;
+  const password = getUbtsaPasswordFor(name);
+  if (!password) return null;
   if (!verifySessionToken(token, password, name)) return null;
   return name;
 }
@@ -458,20 +475,25 @@ export async function isUbtsaAuthenticated(): Promise<boolean> {
 }
 
 /**
- * Validates the supplied name (against the allowlist) and password and, when
- * both are correct, persists them in an HttpOnly cookie scoped to /ubtsa.
- * Returns the normalized name on success, or null on failure.
+ * Validates the supplied name (against the allowlist) and that person's own
+ * password and, when both are correct, persists them in an HttpOnly cookie
+ * scoped to /ubtsa. Returns the normalized name on success, or null on
+ * failure.
+ *
+ * Because each name has its own password, entering ubt's password while
+ * "serkan" is selected fails — the credential is checked against the chosen
+ * identity, not against a pool.
  */
 export async function signInUbtsa(
   name: string,
   candidate: string
 ): Promise<string | null> {
-  const password = getUbtsaPassword();
-  // Fail closed: without a configured password no sign-in is possible.
-  if (!password) return null;
   const normalizedName = name.trim().toLowerCase();
   if (!normalizedName) return null;
   if (!getUbtsaAllowedNames().includes(normalizedName)) return null;
+  const password = getUbtsaPasswordFor(normalizedName);
+  // Fail closed: without a configured password for this user, no sign-in.
+  if (!password) return null;
   if (!checkRateLimit(`ubtsa:${await getClientIp()}`)) return null;
   if (!secureCompare(candidate.trim(), password)) return null;
 

@@ -598,10 +598,284 @@ export const UBTSA_ITEM_COUNT = UBTSA_SECTIONS.reduce(
 );
 
 /**
- * Bilinen tüm madde anahtarları. Yorum yazma akışı, gelen `itemKey`
- * değerini buna karşı doğrular — böylece uydurma anahtarlarla tabloya
- * öksüz satır yazılamaz.
+ * Yorumlanabilir "not" maddesi — özet, sorular ve insan modeli bölümlerinin
+ * ortak şekli, hepsi aynı bileşenle basılabilsin diye. `detail` boş
+ * bırakılabilir; doluysa başlığın altında daha soluk bir açıklama olarak
+ * çıkar. Anahtarlar madde anahtarlarıyla aynı isim alanını paylaşır (`b*-m*`
+ * maddeler, `o*` özet, `s*` sorular, `p*` insan modeli) ve çakışmaz.
  */
-export const UBTSA_ITEM_KEYS: ReadonlySet<string> = new Set(
-  UBTSA_SECTIONS.flatMap((section) => section.items.map((item) => item.key))
-);
+export interface UbtsaNote {
+  /** Stabil yorum anahtarı — asla yeniden numaralandırma. */
+  key: string;
+  /** Maddenin kendisi: özet cümlesi, soru ya da profil şartı. */
+  title: string;
+  /** Neden önemli olduğu — cevabın veya şartın neyi güvenceye aldığı. */
+  detail?: string;
+}
+
+export const UBTSA_QUESTIONS_TITLE = "UBT'nin Soruları";
+
+export const UBTSA_QUESTIONS_INTRO =
+  "Konsept bir ses kaydından çıkarılmış metne dayanıyor ve kayıtta kilit terimler bozuk geçiyor (\"Vitabiner\", \"feminist kuşağı\", \"White Abilene\", \"track face guide\"). Bu yüzden aşağıdaki soruların cevapları sözlü değil, yazılı olarak isteniyor. Her sorunun altına yorum bırakabilirsin.";
+
+/**
+ * UBT'nin, işi kabul etmeden önce karşı tarafa sorması gereken sorular.
+ * Konseptin tamamı okunarak çıkarıldı ve bilerek "garantici" tutuldu: her
+ * biri, sözlü verilen bir vaadi yazılı ve doğrulanabilir bir taahhüde
+ * çevirmeyi hedefliyor.
+ */
+export const UBTSA_QUESTIONS: readonly UbtsaNote[] = [
+  {
+    key: "s1",
+    title:
+      "Kişi başına ödenecek 500 €'nun hukuki dayanağı ne, sözleşmede hangi hizmetin karşılığı olarak geçecek?",
+    detail: "Gutschein'lı katılımcı getiren üçüncü kişiye kişi başı prim ödenmesi, eğitim kurumunun AZAV onayı ve rekabet mevzuatı açısından tartışmalı bir alan. Ödemenin adı, dayanağı ve karşılığındaki hizmet tanımı yazılı olmalı ki ileride \"aracılık primi\" tartışması çıktığında elimde belge olsun."
+  },
+  {
+    key: "s2",
+    title:
+      "Sözleşmeyi kiminle imzalıyorum — seninle mi, eğitim kurumuyla mı? Kurumun tam unvanı, HRB numarası ve AZAV sertifika numarası nedir?",
+    detail: "Sertifikayı ve kurumun sicilini kendim doğrulayabilmem lazım; sertifikayı veren fachkundige Stelle ve geçerlilik tarihi de dahil. Karşımdaki taraf şahıs mı tüzel kişi mi, ödeme yükümlüsü kim — bunlar belirsizse alacağımı kime karşı ileri süreceğim de belirsiz."
+  },
+  {
+    key: "s3",
+    title:
+      "Ödeme tam olarak hangi anda hak ediliyor ve hangi durumlarda geri isteniyor?",
+    detail: "\"Başladıktan 4 hafta sonra\" deniyor. Katılımcı 5. haftada bırakırsa, kursu tamamlamazsa ya da Gutschein sonradan iptal edilirse ödeme geri talep edilecek mi? Rückforderung koşulları yazılı değilse, aylar sonra gelen bir geri ödeme talebiyle karşılaşabilirim."
+  },
+  {
+    key: "s4",
+    title:
+      "Bugüne kadar kaç kişi yönlendirildi; kaçı Gutschein aldı, kaçı kursu bitirdi, kaçı iş buldu? Aynı işi yapan bir partnerle konuşabilir miyim?",
+    detail: "\"Haftada bir kişi olursa ayda 2000 €\" bir varsayım, veri değil. Gerçek dönüşüm oranını görmeden kendi çevreme hangi sıklıkta ve hangi beklentiyle yaklaşacağımı planlayamam. Bağımsız bir referans, anlatılanın tek kaynaktan doğrulanmasını sağlar."
+  },
+  {
+    key: "s5",
+    title:
+      "Yönlendireceğim kişilerin verisini hangi hukuki zeminde aktaracağım; aramızda veri işleme sözleşmesi ve katılımcıdan açık rıza metni olacak mı?",
+    detail: "Aktarılacak bilgi sadece isim değil: işsizlik durumu, hatta konseptte geçtiği gibi sağlık ve psikolojik nedenlerle meslek değiştirme isteği. Bunlar DSGVO'da özel kategori veri. Rıza metni ve sözleşme yoksa ihlalin muhatabı doğrudan ben olurum."
+  },
+  {
+    key: "s6",
+    title:
+      "Başvurusu reddedilen %40-50'lik kesim için yazılı bir akış var mı; ikinci görüşmede de red alan kişiye ne söyleyeceğim?",
+    detail: "Kabul oranı %50-60 olarak veriliyor. Reddedilenler benim tavsiyemle Job Center'a gitmiş olacak ve sonucu bana dönecek. Bu kişilere sunulacak net bir plan yoksa, kaybedeceğim şey komisyon değil, o çevredeki itibarım."
+  },
+  {
+    key: "s7",
+    title:
+      "Cyber Security programının sonunda katılımcı hangi belgeyi alıyor; son 12 ayın mezun sayısı ve işe yerleşme oranı nedir?",
+    detail: "Kurum içi bir katılım belgesi ile akredite bir sertifika arasında iş piyasasında ciddi fark var. Ayrıca \"bu dalda çok insan aranıyor\" ve \"devletin istihbarat görevlileri ders veriyor\" ifadeleri doğrulanabilir olmalı — insanları 6-15 ay sürecek bir programa yönlendiriyorum."
+  },
+  {
+    key: "s8",
+    title:
+      "\"İki modülü bitirene laptop\" teşviki Job Center / Agentur mevzuatıyla uyumlu mu; kurumun bunu gösteren yazılı bir görüşü var mı?",
+    detail: "Katılımcıya verilen maddi teşvik, kurum açısından pazarlama olabilir ama katılımcı açısından Gutschein'ın kötüye kullanımı tartışmasına yol açarsa riske giren kişi katılımcı olur. Yönlendiren taraf olarak bu riski bilmeden aktaramam."
+  },
+  {
+    key: "s9",
+    title:
+      "Bu gelir benim tarafımda neyi tetikliyor — Gewerbe gerekiyor mu, KDV'li mi faturalanacak, mevcut faaliyetimle çakışması var mı?",
+    detail: "Düzenli ve kişi başı ödenen bir gelir, arızi kazanç sayılmaz. Ödemenin resmi fatura karşılığı ve banka üzerinden yapılacağını baştan netleştirmek, hem vergi tarafını hem de ilerideki ispat yükünü çözer."
+  },
+  {
+    key: "s10",
+    title:
+      "Anlaşmanın sınırları ne: münhasırlık veya rekabet yasağı istenecek mi, süre ne kadar, tek taraflı nasıl çıkarım ve çıkınca devam eden yönlendirmelerin ödemesi ne olur?",
+    detail: "Konsept \"ilgini çekiyorsa bu şekilde ilerleyebiliriz\" diye bitiyor — yani çerçeve tamamen açık. Süre, münhasırlık ve çıkış koşulları baştan yazılmazsa, işi bırakmak istediğimde hem devam eden yönlendirmelerin ödemesi hem de başka sağlayıcılarla çalışma hakkım tartışmalı hale gelir."
+  }
+];
+
+export const UBTSA_SUMMARY_TITLE = "Konsept Özeti";
+
+export const UBTSA_SUMMARY_INTRO =
+  "Tam metin bir ses kaydının çözümü olduğu için günlük konuşma cümleleriyle ilerliyor. Aşağısı aynı içeriğin karar vermeye yarayacak hâli: 12 maddede konseptin tamamı. Ayrıntı için soldaki İçindekiler'den tam metne geçebilirsin.";
+
+/**
+ * Konseptin tamamının genelleştirilmiş özeti. Tam metindeki 166 maddenin
+ * içinden iş kararını ilgilendiren bilgi çekilerek yazıldı; sohbet, anı ve
+ * tekrar cümleleri elendi. Sırayla teklifin ne olduğu, iki yol, gelir modeli
+ * ve açık kalan noktalar.
+ */
+export const UBTSA_SUMMARY: readonly UbtsaNote[] = [
+  {
+    key: "o1",
+    title:
+      "Teklif, Almanya'da Job Center veya Agentur für Arbeit'a kayıtlı işsizleri ücretsiz meslek eğitimine yönlendirmek üzerine.",
+    detail:
+      "Hedef kitle UBT'nin web sitesi üzerinden ulaştığı, Almanya'daki Türk topluluğu — hem yeni gelenler hem yıllardır orada yaşayanlar."
+  },
+  {
+    key: "o2",
+    title:
+      "Kapı Gutschein: kişi kendi danışmanından Vermittlungsgutschein veya Bildungsgutschein almak zorunda.",
+    detail:
+      "Gutschein olmadan katılım yok. Eğitimin bedeli kişiye değil, bu belge üzerinden kuruma ödeniyor."
+  },
+  {
+    key: "o3",
+    title:
+      "Birinci yol — meslek değiştirme: 4-7 hafta süren kısa program.",
+    detail:
+      "Mevcut işini sağlık veya psikolojik nedenlerle sürdüremeyen kişi yeni bir alana geçiyor; program ayrıca firmalara nasıl başvurulacağını da öğretiyor."
+  },
+  {
+    key: "o4",
+    title:
+      "İkinci yol — kendi işini kurma: 5-6 haftalık business ve finance plan eğitimi.",
+    detail:
+      "Sonunda kişi planı kendi hazırlıyor; kurum işin tutarlı olup olmadığına ve o şehirde rekabet açısından yürüyüp yürümeyeceğine karar veriyor."
+  },
+  {
+    key: "o5",
+    title:
+      "Kurum olumlu görüş verirse maddi destek devreye giriyor: başlangıç sermayesi ve yaklaşık altı ay aylık destek.",
+    detail:
+      "Konseptte 5.000 € örneği veriliyor; para harcama belgesi karşılığı ödeniyor, yanında kira gibi kalemler için aylık destek sürüyor."
+  },
+  {
+    key: "o6",
+    title:
+      "Serkan bu yolu 15 yıl önce kendisi kullanmış: otelcilikten çilingirciliğe geçmiş.",
+    detail:
+      "El becerisini referans göstererek Gutschein almış. Örneğin asıl anlamı: ausbildung şartı olmayan meslekler bu yola uygun."
+  },
+  {
+    key: "o7",
+    title:
+      "Bildungsgutschein tarafındaki asıl ürün Cyber Security programı: 6-15 ay, modüler.",
+    detail:
+      "Tek bir kurum sunuyor; modül eklenerek kapsam genişletilebiliyor, iki modül bitirene laptop gibi teşvikler var."
+  },
+  {
+    key: "o8",
+    title:
+      "Cyber Security programı IT temeli olmayan kişiye uygun değil.",
+    detail:
+      "Konseptin kendi ifadesi: hiç IT bilgisi olmadan girmek akıl işi değil; en azından network ve temel bilgisayar kullanımı bilinmeli."
+  },
+  {
+    key: "o9",
+    title:
+      "UBT'den beklenen rol dar: uygun profilleri tespit edip yönlendirmek.",
+    detail:
+      "Başvuru, Gutschein alma ve kurumla ilişki Serkan'da. Konseptin ifadesiyle \"senin çok fazla vakit harcamana gerek yok\"."
+  },
+  {
+    key: "o10",
+    title:
+      "Serkan başvuru için hazır materyal sağlıyor ve kabul oranını %50-60 veriyor.",
+    detail:
+      "Birinci görüşmede red alan bazı kişilerin ikinci görüşmede kabul edildiği söyleniyor. Yani yönlendirilen herkesin girmesi beklenmiyor."
+  },
+  {
+    key: "o11",
+    title:
+      "Gelir modeli: kişi eğitime başladıktan 4 hafta sonra kişi başı 500 €.",
+    detail:
+      "Konseptte \"haftada bir kişi olursa ayda ~2.000 € ek gelir\" örneği veriliyor. Bu bir hedef, geçmiş veri değil."
+  },
+  {
+    key: "o12",
+    title:
+      "Anlaşmanın çerçevesi henüz tamamen açık.",
+    detail:
+      "Süre, münhasırlık, ödeme koşulları, sözleşmenin tarafı ve komisyonun hukuki dayanağı konuşulmamış. Konsept \"ilgini çekiyorsa bu şekilde ilerleyebiliriz\" diye bitiyor."
+  }
+];
+
+export const UBTSA_PERSONA_TITLE = "UBT'nin Önerebileceği İnsan Modeli";
+
+export const UBTSA_PERSONA_INTRO =
+  "Konseptin tamamından çıkarılan uygun aday profili. İlk sekiz madde doğrudan metinde geçen şartlardan; son iki madde metinde hiç konuşulmayan ama Gutschein sürecinde belirleyici olan iki eksik. Yanlış kişiyi yönlendirmenin maliyeti komisyon değil, o çevredeki itibar.";
+
+/**
+ * Yönlendirilecek kişi profili. Sıra kasıtlı: önce elemeyi yapan zorunlu
+ * şartlar, sonra hangi programa kimin uyduğu, en sonda konseptte hiç
+ * geçmeyen ama pratikte süreci bitiren iki koşul.
+ */
+export const UBTSA_PERSONA: readonly UbtsaNote[] = [
+  {
+    key: "p1",
+    title:
+      "Job Center veya Agentur für Arbeit'a kayıtlı ve şu anda işsiz olmalı.",
+    detail:
+      "Bu, tartışmasız ön şart. Çalışan biri — işinden ne kadar memnunsuz olursa olsun — bu kapsamda değil, boşuna yönlendirilmemeli."
+  },
+  {
+    key: "p2",
+    title:
+      "Meslek değiştirmek için somut ve anlatılabilir bir gerekçesi olmalı.",
+    detail:
+      "Sağlık sorunu, fiziksel olarak sürdürülemeyen iş, psikolojik nedenler. Gutschein'ı veren danışmanı ikna eden şey bu gerekçe; \"canım istemiyor\" ile Gutschein çıkmıyor."
+  },
+  {
+    key: "p3",
+    title:
+      "Danışmanıyla ilişkisini yürütebilen, randevusuna giden, süreci takip eden biri olmalı.",
+    detail:
+      "Kabul oranı %50-60 ve bazen ikinci görüşmede çıkıyor. Yani ilk redde pes etmeyecek, evrakını takip edecek kişi lazım."
+  },
+  {
+    key: "p4",
+    title:
+      "El becerisi olup ausbildung'u olmayanlar en uygun grup.",
+    detail:
+      "Çilingircilik örneğinin gösterdiği tam olarak bu: ausbildung şartı olmayan mesleklerde, aile mesleği veya pratik tecrübe referans olarak kullanılabiliyor."
+  },
+  {
+    key: "p5",
+    title:
+      "Kendi işini kurma yolu için: plan yazabilecek ve riski taşıyabilecek kişi.",
+    detail:
+      "6 hafta sonunda business ve finance planı kendisi hazırlayacak, iş fikri o şehirde rekabet değerlendirmesinden geçecek. Fikri olmayan kişi bu yola sokulmamalı."
+  },
+  {
+    key: "p6",
+    title:
+      "Cyber Security programı için: en az temel IT bilgisi olan kişi.",
+    detail:
+      "Network nedir bilen, bilgisayarı rahat kullanan. Sıfırdan giren kişi 6-15 ayını riske atar — bu, konseptin kendi uyarısı."
+  },
+  {
+    key: "p7",
+    title:
+      "Uzun programlar için hayat şartları 6-15 ay boyunca müsait olmalı.",
+    detail:
+      "Gutschein süresince destek devam ediyor ama aile, çocuk ve geçim yükü programa devamı fiilen imkânsız kılıyorsa kişi yarıda bırakır — bu hem onun hem yönlendirenin kaybı."
+  },
+  {
+    key: "p8",
+    title:
+      "Beklentisi gerçekçi olmalı: bu bir meslek değiştirme programı, hediye kampanyası değil.",
+    detail:
+      "\"Bedava kurs + laptop\" beklentisiyle gelen kişi ilk zorlukta bırakır. Motivasyonu iş değiştirmek olan kişi aranıyor."
+  },
+  {
+    key: "p9",
+    title:
+      "Almanca seviyesi eğitimi takip etmeye yetmeli — konseptte hiç konuşulmayan konu.",
+    detail:
+      "6-15 aylık teknik bir eğitim Almanca veriliyor. B1 altı bir seviyeyle programa giren kişi büyük olasılıkla tamamlayamaz. Yönlendirmeden önce sorulması gereken ilk şeylerden biri, ama teklifte hiç geçmiyor."
+  },
+  {
+    key: "p10",
+    title:
+      "İkamet ve çalışma statüsü oturmuş olmalı — bu da konseptte geçmiyor.",
+    detail:
+      "Job Center kaydı ve Gutschein hakkı, kişinin oturum ve çalışma iznine bağlı. \"Yeni gelenler\" hedef kitlede sayılıyor ama yeni gelen herkesin bu hakkı yok; statü teyit edilmeden yönlendirme yapılmamalı."
+  }
+];
+
+/**
+ * Bilinen tüm yorum anahtarları (maddeler + özet + sorular + insan modeli).
+ * Yorum yazma akışı, gelen `itemKey` değerini buna karşı doğrular — böylece
+ * uydurma anahtarlarla tabloya öksüz satır yazılamaz.
+ */
+export const UBTSA_ITEM_KEYS: ReadonlySet<string> = new Set([
+  ...UBTSA_SECTIONS.flatMap((section) => section.items.map((item) => item.key)),
+  ...UBTSA_SUMMARY.map((note) => note.key),
+  ...UBTSA_QUESTIONS.map((question) => question.key),
+  ...UBTSA_PERSONA.map((note) => note.key)
+]);

@@ -1,4 +1,5 @@
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getUbtsaSessionName, UBTSA_NAMES } from "@/lib/admin-auth";
@@ -7,17 +8,34 @@ import {
   deleteUbtsaComment,
   getAllUbtsaComments
 } from "@/lib/ubtsa-comments";
+import { getUbtsaVisits } from "@/lib/ubtsa-visits";
 import {
   UBTSA_ITEM_COUNT,
+  UBTSA_PERSONA,
+  UBTSA_PERSONA_INTRO,
+  UBTSA_PERSONA_TITLE,
+  UBTSA_QUESTIONS,
+  UBTSA_QUESTIONS_INTRO,
+  UBTSA_QUESTIONS_TITLE,
   UBTSA_SECTIONS,
   UBTSA_SUBTITLE,
+  UBTSA_SUMMARY,
+  UBTSA_SUMMARY_INTRO,
+  UBTSA_SUMMARY_TITLE,
   UBTSA_TITLE
 } from "@/content/ubtsa-konsept";
 import { ubtsaSignInAction, ubtsaSignOutAction } from "@/app/ubtsa/_actions";
 import { BoardHeader } from "@/app/ubtsa/_components/board-header";
+import { GuideSection } from "@/app/ubtsa/_components/guide-section";
 import { KonseptNav } from "@/app/ubtsa/_components/konsept-nav";
 import { KonseptSection } from "@/app/ubtsa/_components/konsept-section";
+import { NotesSection } from "@/app/ubtsa/_components/notes-section";
 import { UbtsaLogin } from "@/app/ubtsa/_components/ubtsa-login";
+import {
+  VisitsSection,
+  formatSignedInAt
+} from "@/app/ubtsa/_components/visits-section";
+import { WelcomeCard } from "@/app/ubtsa/_components/welcome-card";
 import { UBTSA_PAGE_BACKGROUND } from "@/app/ubtsa/_components/theme";
 
 export const metadata = {
@@ -65,7 +83,13 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
 
   const openItemKey = readParam(params.open) || null;
   const errorParam = readParam(params.error);
-  const comments = await getAllUbtsaComments();
+  const [comments, visits] = await Promise.all([
+    getAllUbtsaComments(),
+    getUbtsaVisits()
+  ]);
+
+  // Set by middleware on the very first request from this browser.
+  const isFirstVisit = (await headers()).get("x-ubtsa-first-visit") === "1";
 
   async function addCommentAction(formData: FormData) {
     "use server";
@@ -114,8 +138,14 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
           subtitle={UBTSA_SUBTITLE}
           sectionCount={UBTSA_SECTIONS.length}
           itemCount={UBTSA_ITEM_COUNT}
+          questionCount={UBTSA_QUESTIONS.length}
           commentCount={comments.totalCount}
           sessionName={sessionName}
+          lastVisitLabel={
+            visits.items[0]
+              ? `${visits.items[0].name} · ${formatSignedInAt(visits.items[0].signedInAt)}`
+              : null
+          }
           signOutAction={ubtsaSignOutAction}
         />
 
@@ -140,9 +170,62 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
         )}
 
         <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[268px_minmax(0,1fr)]">
-          <KonseptNav commentsByItemKey={comments.byItemKey} />
+          <KonseptNav
+            commentsByItemKey={comments.byItemKey}
+            openItemKey={openItemKey}
+            recentVisits={visits.items.slice(0, 8)}
+          />
 
           <div className="space-y-4">
+            <WelcomeCard sessionName={sessionName} isFirstVisit={isFirstVisit} />
+
+            <GuideSection sessionName={sessionName} />
+
+            <NotesSection
+              id="konsept-ozeti"
+              title={UBTSA_SUMMARY_TITLE}
+              eyebrow="Özet"
+              intro={UBTSA_SUMMARY_INTRO}
+              itemNoun="madde"
+              items={UBTSA_SUMMARY}
+              tone="sky"
+              commentsByItemKey={comments.byItemKey}
+              sessionName={sessionName}
+              openItemKey={openItemKey}
+              addCommentAction={addCommentAction}
+              deleteCommentAction={deleteCommentAction}
+            />
+
+            <NotesSection
+              id="ubt-sorulari"
+              title={UBTSA_QUESTIONS_TITLE}
+              eyebrow="Karar öncesi"
+              intro={UBTSA_QUESTIONS_INTRO}
+              itemNoun="soru"
+              items={UBTSA_QUESTIONS}
+              tone="amber"
+              commentsByItemKey={comments.byItemKey}
+              sessionName={sessionName}
+              openItemKey={openItemKey}
+              addCommentAction={addCommentAction}
+              deleteCommentAction={deleteCommentAction}
+            />
+
+            <NotesSection
+              id="insan-modeli"
+              title={UBTSA_PERSONA_TITLE}
+              eyebrow="Profil"
+              intro={UBTSA_PERSONA_INTRO}
+              itemNoun="madde"
+              items={UBTSA_PERSONA}
+              tone="violet"
+              commentsByItemKey={comments.byItemKey}
+              sessionName={sessionName}
+              openItemKey={openItemKey}
+              addCommentAction={addCommentAction}
+              deleteCommentAction={deleteCommentAction}
+            />
+
             {UBTSA_SECTIONS.map((section) => (
               <KonseptSection
                 key={section.id}
@@ -154,6 +237,8 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
                 deleteCommentAction={deleteCommentAction}
               />
             ))}
+
+            <VisitsSection visits={visits} />
 
             <p className="pb-6 pt-2 text-center text-[12px] text-slate-400">
               Her maddeye tıklayarak yorum bırakabilirsin · ubterzioglu.de ·

@@ -5,9 +5,13 @@ interface BoardHeaderProps {
   subtitle: string;
   sectionCount: number;
   itemCount: number;
+  /** UBT'nin karar öncesi soruları. */
+  questionCount: number;
   commentCount: number;
   /** Signed-in name, shown so it is obvious who comments get stamped with. */
   sessionName: string;
+  /** Most recent sign-in, pre-formatted; null when nothing is logged yet. */
+  lastVisitLabel: string | null;
   signOutAction: () => void | Promise<void>;
 }
 
@@ -17,8 +21,10 @@ export function BoardHeader({
   subtitle,
   sectionCount,
   itemCount,
+  questionCount,
   commentCount,
   sessionName,
+  lastVisitLabel,
   signOutAction
 }: BoardHeaderProps) {
   return (
@@ -39,7 +45,29 @@ export function BoardHeader({
           </p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2.5">
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2.5">
+          {lastVisitLabel && (
+            <a
+              href="#giris-loglari"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.07] px-3 py-1.5 text-[11.5px] font-medium text-white/70 backdrop-blur-sm transition hover:bg-white/15 hover:text-white"
+            >
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+              Son giriş: {lastVisitLabel}
+            </a>
+          )}
           <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[12px] font-semibold capitalize backdrop-blur-sm">
             <span
               aria-hidden
@@ -61,6 +89,7 @@ export function BoardHeader({
       <dl className="mt-6 flex flex-wrap gap-2.5">
         <Stat label="bölüm" value={sectionCount} />
         <Stat label="madde" value={itemCount} />
+        <Stat label="soru" value={questionCount} />
         <Stat label="yorum" value={commentCount} />
       </dl>
     </header>

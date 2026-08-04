@@ -4,6 +4,7 @@ import type { Route } from "next";
 import { redirect } from "next/navigation";
 
 import { signInUbtsa, signOutUbtsa } from "@/lib/admin-auth";
+import { recordUbtsaSignIn } from "@/lib/ubtsa-visits";
 
 /**
  * ubtsa gate sign-in. Validates the name (against the allowlist) and the
@@ -15,6 +16,9 @@ export async function ubtsaSignInAction(formData: FormData): Promise<void> {
   const name = String(formData.get("name") ?? "");
   const candidate = String(formData.get("access") ?? "");
   const signedInName = await signInUbtsa(name, candidate);
+  if (signedInName) {
+    await recordUbtsaSignIn(signedInName);
+  }
   redirect((signedInName ? "/ubtsa" : "/ubtsa?error=1") as Route);
 }
 

@@ -44,3 +44,71 @@ export const UBTSA_GRID_TEXTURE = {
 /** Shared card treatment for sections and the sticky table of contents. */
 export const UBTSA_CARD_CLASS =
   "rounded-[1.15rem] border border-slate-200/80 bg-white shadow-[0_12px_30px_-18px_rgba(15,23,42,0.25)]";
+
+/**
+ * Accent flavours for the three note sections. The konsept's own text stays
+ * teal; everything that is UBT's own analysis gets a different hue so the two
+ * can never be confused while reading:
+ *
+ * - `sky`   → Konsept Özeti (aynı içerik, sadeleştirilmiş)
+ * - `amber` → UBT'nin Soruları (karar öncesi, uyarı tonu)
+ * - `violet`→ UBT'nin Önerebileceği İnsan Modeli (profil çalışması)
+ */
+export type NoteTone = "sky" | "amber" | "violet";
+
+export const NOTE_TONES = {
+  sky: {
+    sectionBorder: "border-sky-300/70",
+    sectionBg: "bg-sky-50/60",
+    sectionShadow: "shadow-[0_12px_30px_-18px_rgba(12,74,110,0.25)]",
+    headerBorder: "border-sky-300/60",
+    chipBg: "bg-sky-600",
+    heading: "text-sky-900",
+    meta: "text-sky-700/70",
+    intro: "text-sky-900/75",
+    itemBorder: "border-sky-200/80",
+    indexBadge: "bg-sky-600/15 text-sky-800",
+    countBadge: "border-sky-600/30 bg-sky-600/10 text-sky-800",
+    threadBorder: "border-sky-400/25",
+    focusRing: "focus-visible:ring-2 focus-visible:ring-sky-500/40",
+    navHover: "hover:bg-sky-50 hover:text-sky-900",
+    navBadge: "bg-sky-600/15 text-sky-800",
+    navTitle: "text-sky-700"
+  },
+  amber: {
+    sectionBorder: "border-amber-300/70",
+    sectionBg: "bg-amber-50/60",
+    sectionShadow: "shadow-[0_12px_30px_-18px_rgba(120,53,15,0.25)]",
+    headerBorder: "border-amber-300/60",
+    chipBg: "bg-amber-500",
+    heading: "text-amber-900",
+    meta: "text-amber-700/70",
+    intro: "text-amber-900/75",
+    itemBorder: "border-amber-200/80",
+    indexBadge: "bg-amber-500/15 text-amber-800",
+    countBadge: "border-amber-500/30 bg-amber-500/10 text-amber-800",
+    threadBorder: "border-amber-400/25",
+    focusRing: "focus-visible:ring-2 focus-visible:ring-amber-500/40",
+    navHover: "hover:bg-amber-50 hover:text-amber-900",
+    navBadge: "bg-amber-500/15 text-amber-800",
+    navTitle: "text-amber-700"
+  },
+  violet: {
+    sectionBorder: "border-violet-300/70",
+    sectionBg: "bg-violet-50/60",
+    sectionShadow: "shadow-[0_12px_30px_-18px_rgba(76,29,149,0.22)]",
+    headerBorder: "border-violet-300/60",
+    chipBg: "bg-violet-600",
+    heading: "text-violet-900",
+    meta: "text-violet-700/70",
+    intro: "text-violet-900/75",
+    itemBorder: "border-violet-200/80",
+    indexBadge: "bg-violet-600/15 text-violet-800",
+    countBadge: "border-violet-600/30 bg-violet-600/10 text-violet-800",
+    threadBorder: "border-violet-400/25",
+    focusRing: "focus-visible:ring-2 focus-visible:ring-violet-500/40",
+    navHover: "hover:bg-violet-50 hover:text-violet-900",
+    navBadge: "bg-violet-600/15 text-violet-800",
+    navTitle: "text-violet-700"
+  }
+} as const;
