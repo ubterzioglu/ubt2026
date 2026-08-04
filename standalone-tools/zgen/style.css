@@ -1,0 +1,686 @@
+/* =========================================================
+   ZGEN – style.css (CLEAN FINAL)
+   Palette: #01A1F1 #7CBB00 #F65314 #8F03B7 #FFBB00
+   Rules: pure black background, solid colorful cards (no glass)
+   ========================================================= */
+
+/* RESET */
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  line-height:1.45;
+}
+
+/* A11Y */
+.sr-only{
+  position:absolute !important;
+  width:1px;height:1px;
+  padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);
+  white-space:nowrap;border:0;
+}
+kbd{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size:.9em;
+  padding:.12rem .35rem;
+  border-radius:.5rem;
+  background: rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.18);
+}
+
+/* LAYOUT */
+.wrap{
+  min-height:100%;
+  padding:28px 18px 80px;
+}
+.shell{
+  max-width:1040px;
+  margin:0 auto;
+}
+
+/* HERO */
+.hero{
+  display:flex;
+  gap:18px;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin: 6px 0 18px;
+}
+.title{
+  margin:0;
+  font-size: clamp(28px, 4vw, 44px);
+  letter-spacing:.08em;
+}
+.subtitle{
+  margin:8px 0 0;
+  color: rgba(255,255,255,.78);
+  max-width: 70ch;
+}
+.hero-right{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:10px;
+  min-width: 240px;
+}
+.pill{
+  padding:10px 12px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.90);
+  font-size: 13px;
+}
+
+/* Palette dots */
+.palette-dots{
+  display:flex;
+  gap:10px;
+  padding:8px 10px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+}
+.dot{
+  width:16px;height:16px;
+  border-radius:999px;
+  border:2px solid rgba(0,0,0,.55);
+}
+.dot-blue{ background:#01A1F1; }
+.dot-green{ background:#7CBB00; }
+.dot-orange{ background:#F65314; }
+.dot-purple{ background:#8F03B7; }
+.dot-yellow{ background:#FFBB00; }
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:16px;
+}
+
+/* CARDS (solid color) */
+.card{
+  border-radius: 18px;
+  padding: 16px 16px 14px;
+  border: 2px solid rgba(0,0,0,.35);
+  box-shadow: 0 14px 30px rgba(0,0,0,.40);
+}
+.card-head{ margin-bottom: 12px; }
+.card-title{
+  margin:0;
+  font-size: 18px;
+  letter-spacing:.02em;
+}
+.card-sub{
+  margin:6px 0 0;
+  color: rgba(0,0,0,.80);
+  font-weight: 800;
+}
+
+/* Solid palette cards */
+.card-blue{ background:#01A1F1; color:#061018; }
+.card-green{ background:#7CBB00; color:#0b1300; }
+.card-orange{ background:#F65314; color:#170800; }
+.card-purple{ background:#8F03B7; color:#0e0013; }
+.card-yellow{ background:#FFBB00; color:#1a1200; }
+
+/* Improve readability on purple */
+.card-purple .card-sub,
+.card-purple .micro,
+.card-purple .mini-title,
+.card-purple .bullets,
+.card-purple .chips,
+.card-purple .acc-head{ color: rgba(255,255,255,.92); }
+.card-purple .acc-kicker{ color: rgba(255,255,255,.75); }
+
+/* INPUTS */
+.input-row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.input{
+  flex: 1 1 220px;
+  height: 46px;
+  border-radius: 12px;
+  border: 2px solid rgba(0,0,0,.35);
+  background: rgba(255,255,255,.92);
+  color:#0b0b0b;
+  padding: 0 14px;
+  font-size: 16px;
+  outline: none;
+}
+.input:focus{
+  border-color: rgba(0,0,0,.70);
+  box-shadow: 0 0 0 3px rgba(0,0,0,.18);
+}
+.btn{
+  height:46px;
+  border-radius: 12px;
+  border: 2px solid rgba(0,0,0,.45);
+  background: #000;
+  color:#fff;
+  padding: 0 14px;
+  font-weight: 900;
+  letter-spacing:.02em;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.btn:hover{ transform: translateY(-1px); }
+.btn:active{ transform: translateY(0px); }
+
+/* MICRO TEXT */
+.micro{
+  margin:10px 0 0;
+  font-size: 13px;
+  font-weight: 750;
+  color: rgba(0,0,0,.78);
+}
+
+/* =========================================================
+   CARD 1: Birth year + right inner ZGENCHECK (FINAL)
+   NOTE: Your HTML must use:
+     <div class="blue-split">
+       <div class="blue-left">...</div>
+       <aside class="inner-card inner-card--right">...</aside>
+     </div>
+   ========================================================= */
+
+.blue-split{
+  display:grid;
+  grid-template-columns: 1.5fr .85fr;
+  gap:16px;
+  align-items:stretch;
+}
+.blue-left{ min-width:0; }
+
+/* Inner ZGENCHECK card */
+.inner-card--right{
+  /* layout */
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+
+  /* visuals */
+  padding:12px;
+  border-radius:18px;
+  background: rgba(255,255,255,.78);
+  border: 2px dashed rgba(0,0,0,.28);
+  box-shadow: 0 10px 22px rgba(0,0,0,.14);
+  backdrop-filter: blur(2px);
+}
+
+/* IMPORTANT: kill default margins inside inner card */
+.inner-card--right h1,
+.inner-card--right h2,
+.inner-card--right h3,
+.inner-card--right h4,
+.inner-card--right p,
+.inner-card--right ul,
+.inner-card--right ol{
+  margin:0 !important;
+}
+
+/* header row inside inner card */
+.inner-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+/* typography */
+.inner-title{
+  font-size:14px;
+  font-weight:1000;
+  letter-spacing:.02em;
+  line-height:1.1;
+}
+.inner-sub{
+  font-size:12px;
+  font-weight:750;
+  color: rgba(0,0,0,.62);
+  line-height:1.2;
+}
+.inner-text{
+  font-size:12px;
+  font-weight:700;
+  color: rgba(0,0,0,.62);
+  line-height:1.25;
+}
+
+/* mini button (for the inner card) */
+.btn-mini{
+  height:30px;
+  padding:0 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  border: 2px solid rgba(0,0,0,.18);
+  background: rgba(0,0,0,.86);
+  color:#fff;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex: 0 0 auto;
+}
+
+/* Mobile stack */
+@media (max-width: 860px){
+  .blue-split{ grid-template-columns: 1fr; }
+  .inner-head{ justify-content:flex-start; flex-wrap:wrap; }
+}
+
+/* =========================================================
+   CARD 2 layout
+   ========================================================= */
+.two-col{
+  display:grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap:14px;
+  align-items:start;
+}
+.mini-title{
+  margin:0 0 8px;
+  font-size: 14px;
+  letter-spacing:.02em;
+  color: rgba(0,0,0,.82);
+  font-weight: 950;
+}
+
+/* Lists */
+.bullets{
+  margin:0;
+  padding-left: 18px;
+}
+.bullets li{
+  margin: 6px 0;
+  font-weight: 750;
+}
+
+/* Right sidebox */
+.sidebox{
+  border-radius: 16px;
+  padding: 12px;
+  border: 2px solid rgba(0,0,0,.35);
+  background: rgba(255,255,255,.18);
+}
+.card-purple .sidebox{
+  background: rgba(0,0,0,.25);
+  border-color: rgba(255,255,255,.18);
+}
+
+/* =========================================================
+   AVATARS (IMAGE-BASED + PAIRS)
+   ========================================================= */
+.avatar-row{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom: 10px;
+}
+
+/* Pair wrapper: keeps two circles aligned + same height */
+.avatar-pair{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex: 0 0 auto;
+}
+
+/* Avatar container = circle frame */
+.avatar{
+  border-radius: 999px;
+  overflow:hidden;
+  border: 3px solid rgba(0,0,0,.45);
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 10px 22px rgba(0,0,0,.25);
+  flex: 0 0 auto;
+  display:block;
+}
+
+/* Sizes */
+.avatar.lg{ width:78px; height:78px; }   /* Card 2 pair */
+.avatar.xl{ width:86px; height:86px; }   /* Accordion pairs */
+.avatar.sm{ width:64px; height:64px; }   /* reserved */
+
+/* Image inside circle */
+.avatar-img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit: cover;
+}
+
+/* Purple card avatar borders */
+.card-purple .avatar{
+  border-color: rgba(255,255,255,.22);
+  background: rgba(255,255,255,.10);
+}
+
+/* Avatar text blocks */
+.avatar-title{
+  font-weight: 950;
+  letter-spacing:.02em;
+}
+.avatar-sub{
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(0,0,0,.75);
+}
+.card-purple .avatar-sub{ color: rgba(255,255,255,.78); }
+
+/* Chips list */
+.chips{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.chips li{
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 2px solid rgba(0,0,0,.30);
+  background: rgba(255,255,255,.88);
+  color:#000;
+  font-weight: 900;
+}
+.card-purple .chips li{
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.18);
+  color:#fff;
+}
+
+/* =========================================================
+   ACCORDION
+   ========================================================= */
+.accordion{
+  display:grid;
+  gap:16px;
+}
+.acc{
+  padding: 0;
+  overflow:hidden;
+}
+.acc-head{
+  width:100%;
+  border:0;
+  background: transparent;
+  padding: 14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  font: inherit;
+}
+.acc-title{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  text-align:left;
+}
+.acc-kicker{
+  font-size: 12px;
+  font-weight: 950;
+  color: rgba(0,0,0,.70);
+  letter-spacing:.04em;
+  text-transform: uppercase;
+}
+.acc-name{
+  font-size: 18px;
+  font-weight: 1000;
+}
+.acc-icon{
+  width:38px;height:38px;
+  border-radius: 12px;
+  display:grid;
+  place-items:center;
+  border: 2px solid rgba(0,0,0,.35);
+  background: rgba(255,255,255,.85);
+  color:#000;
+  font-weight: 1000;
+  font-size: 18px;
+}
+.card-purple .acc-icon{
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.18);
+  color:#fff;
+}
+
+.acc-body{ padding: 0 16px 14px; }
+
+/* Avatars row inside accordion */
+.acc-avatars{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin: 10px 0 12px;
+  flex-wrap: wrap;
+}
+
+/* 2 columns inside accordion body */
+.acc-cols{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:14px;
+}
+
+/* Tags */
+.avatar-tags{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-left: 6px;
+  flex: 1 1 220px;
+}
+.tag{
+  display:inline-flex;
+  align-items:center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 950;
+  letter-spacing:.02em;
+  border: 2px solid rgba(0,0,0,.30);
+  background: rgba(255,255,255,.85);
+  color:#000;
+}
+.card-purple .tag{
+  border-color: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.12);
+  color:#fff;
+}
+
+/* Do/Don't boxes */
+.dos, .donts{
+  border-radius: 16px;
+  padding: 12px;
+  border: 2px solid rgba(0,0,0,.25);
+  background: rgba(255,255,255,.16);
+}
+.card-purple .dos,
+.card-purple .donts{
+  border-color: rgba(255,255,255,.18);
+  background: rgba(0,0,0,.22);
+}
+.dos-title, .donts-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* Joke bubble */
+.joke-line{
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-style: italic;
+  font-weight: 900;
+  border: 2px dashed rgba(0,0,0,.30);
+  background: rgba(255,255,255,.12);
+}
+.card-purple .joke-line{
+  border-color: rgba(255,255,255,.22);
+  background: rgba(255,255,255,.08);
+}
+
+/* Corner widget */
+.corner-widget{
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  display:flex;
+  gap:10px;
+  z-index: 20;
+}
+.widget-avatar{
+  width:46px;
+  height:46px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,.22);
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+  background:#000;
+  object-fit: cover;
+}
+.widget-avatar.logo{
+  border-color: rgba(255,255,255,.14);
+}
+
+/* RESPONSIVE (general) */
+@media (max-width: 860px){
+  .hero{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .hero-right{
+    align-items:flex-start;
+    min-width: 0;
+  }
+  .two-col{ grid-template-columns: 1fr; }
+  .acc-cols{ grid-template-columns: 1fr; }
+
+  /* slightly smaller avatars on mobile */
+  .avatar.lg{ width:72px; height:72px; }
+  .avatar.xl{ width:78px; height:78px; }
+}
+.gen-infinity {
+  font-size: 72px;
+  line-height: 1;
+  margin: 0 18px;
+  font-weight: 500;
+
+  /* Fallback (no gradient) */
+  color: rgba(255, 255, 255, 0.7);
+
+  /* Gradient text (works in modern browsers) */
+  background: linear-gradient(135deg, #8F03B7, #01A1F1);
+  background-clip: text;            /* standard */
+  -webkit-background-clip: text;    /* safari/chrome older */
+  
+  /* Use transparent text fill without the webkit-only property */
+  -webkit-text-fill-color: initial; /* neutralize if VS complains */
+  color: transparent;
+
+  opacity: 0.7;
+  user-select: none;
+  pointer-events: none;
+}
+
+
+@media (max-width: 720px) {
+  .gen-infinity {
+    font-size: 56px;
+    margin: 12px 0;
+  }
+}
+
+
+
+/* =========================================================
+   GENERATION CHART (white card)
+   - Shows when user starts typing in #birthYear
+   - No JS needed (uses :has + :placeholder-shown)
+   ========================================================= */
+
+.card-white{
+  background:#fff;
+  color:#000;
+}
+
+/* Keep sub text readable on white */
+.card-white .card-sub,
+.card-white .micro,
+.card-white .mini-title,
+.card-white .bullets,
+.card-white .chips,
+.card-white .acc-head,
+.card-white .acc-kicker{
+  color: rgba(0,0,0,.78);
+}
+
+/* Hide by default */
+#genChart{ display:none; }
+
+/* Show once the input is not empty */
+.wrap:has(#birthYear:not(:placeholder-shown)) #genChart{
+  display:block;
+}
+
+/* Chart layout */
+.genchart-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+
+.genchart-item{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:12px;
+  border-radius:16px;
+  border:2px solid rgba(0,0,0,.18);
+  background: rgba(0,0,0,.03);
+}
+
+.genchart-meta{
+  min-width: 0;
+}
+
+.genchart-name{
+  font-weight: 1000;
+  letter-spacing: .01em;
+  line-height: 1.15;
+}
+
+.genchart-range{
+  margin-top: 4px;
+  font-weight: 850;
+  color: rgba(0,0,0,.68);
+}
+
+/* On white card, avatars should use darker border */
+.card-white .avatar{
+  border-color: rgba(0,0,0,.28);
+  background: rgba(0,0,0,.04);
+}
+
+/* Responsive */
+@media (max-width: 860px){
+  .genchart-grid{
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,568 @@
+Add a small standalone tool called ZGEN (Generation Finder) to this repo. It's a fully static, zero-dependency HTML/CSS/JS mini-app: the user types a birth year, sees which generation they belong to (Silent, Boomer, Gen X, Gen Y, Gen Z, Alpha, Beta) with traits/vibes, then gets a directional compatibility guide (do's/don'ts/joke) against every other generation in an accordion. No backend, no build step, no external requests — everything is bundled.
+
+Create a folder named `zgen/` at the repo root (or wherever standalone static tools/pages live in this project — check for an existing convention first, e.g. a `public/` or `static-tools/` folder, and place it there instead if one exists) containing exactly these 4 files, then a 5th `img/` subfolder with 14 avatar images.
+
+## 1. `zgen/index.html`
+
+Write this file verbatim:
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZGEN – Generation Finder</title>
+
+  <meta name="description" content="Enter your birth year and instantly see your generation, core traits, and how to get along with other generations. Runs entirely in your browser." />
+  <meta name="robots" content="index,follow" />
+
+  <link rel="stylesheet" href="style.css" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ZGEN – Generation Finder" />
+  <meta property="og:description" content="Type your birth year. Get your generation + traits + compatibility tips. No signup. Runs locally in your browser." />
+  <meta name="twitter:card" content="summary" />
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="shell">
+
+      <!-- HEADER -->
+      <header class="hero">
+        <div class="hero-left">
+          <h1 class="title">ZGEN</h1>
+          <p class="subtitle">
+            Enter your birth year and instantly see your generation, traits, and how to get along with other generations.
+            No signup. No data stored. Runs locally in your browser.
+          </p>
+        </div>
+
+        <div class="hero-right">
+          <div class="palette-dots" aria-label="Color palette">
+            <span class="dot dot-blue" title="#01A1F1"></span>
+            <span class="dot dot-green" title="#7CBB00"></span>
+            <span class="dot dot-orange" title="#F65314"></span>
+            <span class="dot dot-purple" title="#8F03B7"></span>
+            <span class="dot dot-yellow" title="#FFBB00"></span>
+          </div>
+          <div class="pill" id="statusPill">Waiting for birth year…</div>
+        </div>
+      </header>
+
+      <main class="grid">
+
+        <!-- CARD 1: INPUT -->
+        <section class="card card-blue" aria-labelledby="c1">
+          <div class="card-head">
+            <h2 id="c1" class="card-title">1) Birth year</h2>
+            <p class="card-sub">Just one field. No extra questions.</p>
+          </div>
+
+          <div class="input-row">
+            <label class="sr-only" for="birthYear">Birth year</label>
+            <input
+              id="birthYear"
+              class="input"
+              inputmode="numeric"
+              placeholder="Supported birth years: 1928–2100"
+              maxlength="4"
+              autocomplete="off"
+            />
+            <button class="btn" id="showBtn" type="button">Show my generation</button>
+          </div>
+
+          <p class="micro"> Tip: Supported birth years: 1928–2100 -  You can also press <kbd>Enter</kbd>.</p>
+        </section>
+
+        <!-- CARD 2: YOU ARE GEN ... -->
+        <section class="card card-green" id="youCard" aria-labelledby="c2" hidden>
+          <div class="card-head">
+            <h2 id="c2" class="card-title">2) Your generation</h2>
+            <p class="card-sub" id="youGenLine">You are <strong>Gen ?</strong>.</p>
+          </div>
+
+          <div class="two-col">
+            <!-- LEFT: 10 traits -->
+            <div>
+              <h3 class="mini-title" id="traitsTitle">Typical traits</h3>
+              <ul class="bullets" id="traits10">
+                <!-- rendered by JS -->
+              </ul>
+            </div>
+
+            <!-- RIGHT: male+female avatar + 5 vibes -->
+            <aside class="sidebox">
+              <div class="avatar-row">
+                <div class="avatar-pair" aria-hidden="true">
+                  <div class="avatar lg">
+                    <img id="avatarYouM" class="avatar-img" src="img/gen_placeholder_m.jpg" alt="" loading="lazy" decoding="async" />
+                  </div>
+                  <div class="avatar lg">
+                    <img id="avatarYouF" class="avatar-img" src="img/gen_placeholder_f.jpg" alt="" loading="lazy" decoding="async" />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="avatar-title" id="avatarTitle">Your vibe</div>
+                  <div class="avatar-sub" id="avatarSub">Short, punchy bullets.</div>
+                </div>
+              </div>
+
+              <ul class="chips" id="vibe5">
+                <!-- rendered by JS -->
+              </ul>
+            </aside>
+          </div>
+        </section>
+
+        <!-- COMPATIBILITY HEADER -->
+        <section class="card card-orange" id="compatHeader" aria-labelledby="c3" hidden>
+          <div class="card-head">
+            <h2 id="c3" class="card-title">3) Compatibility (optional)</h2>
+            <p class="card-sub">
+              Tap a card to expand. Do’s & Don’ts are placeholders until you paste real data.
+            </p>
+          </div>
+        </section>
+
+        <!-- ACCORDIONS (DYNAMIC) -->
+        <section class="accordion" id="accordions" hidden></section>
+
+        <!-- CARD 1.5: GENERATION CHART (always shows after typing) -->
+        <section class="card card-white genchart" id="genChart" aria-labelledby="cChart">
+          <div class="card-head">
+            <h2 id="cChart" class="card-title">Generation chart</h2>
+            <p class="card-sub">Quick reference: names, ranges, and avatars.</p>
+          </div>
+
+          <div class="genchart-grid">
+            <!-- Silent -->
+            <article class="genchart-item">
+              <div class="avatar-pair" aria-hidden="true">
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_silent_m.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_silent_f.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+              <div class="genchart-meta">
+                <div class="genchart-name">Silent Generation</div>
+                <div class="genchart-range">1928–1945</div>
+              </div>
+            </article>
+
+            <!-- Boomers -->
+            <article class="genchart-item">
+              <div class="avatar-pair" aria-hidden="true">
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_boomer_m.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_boomer_f.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+              <div class="genchart-meta">
+                <div class="genchart-name">Baby Boomers</div>
+                <div class="genchart-range">1946–1964</div>
+              </div>
+            </article>
+
+            <!-- Gen X -->
+            <article class="genchart-item">
+              <div class="avatar-pair" aria-hidden="true">
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_genx_m.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_genx_f.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+              <div class="genchart-meta">
+                <div class="genchart-name">Gen X</div>
+                <div class="genchart-range">1965–1980</div>
+              </div>
+            </article>
+
+            <!-- Gen Y -->
+            <article class="genchart-item">
+              <div class="avatar-pair" aria-hidden="true">
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_geny_m.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_geny_f.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+              <div class="genchart-meta">
+                <div class="genchart-name">Millennials (Gen Y)</div>
+                <div class="genchart-range">1981–1996</div>
+              </div>
+            </article>
+
+            <!-- Gen Z -->
+            <article class="genchart-item">
+              <div class="avatar-pair" aria-hidden="true">
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_genz_m.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_genz_f.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+              <div class="genchart-meta">
+                <div class="genchart-name">Gen Z</div>
+                <div class="genchart-range">1997–2012</div>
+              </div>
+            </article>
+
+            <!-- Alpha -->
+            <article class="genchart-item">
+              <div class="avatar-pair" aria-hidden="true">
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_alpha_m.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_alpha_f.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+              <div class="genchart-meta">
+                <div class="genchart-name">Gen Alpha</div>
+                <div class="genchart-range">2013–2025</div>
+              </div>
+            </article>
+
+            <!-- Beta -->
+            <article class="genchart-item">
+              <div class="avatar-pair" aria-hidden="true">
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_beta_m.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="avatar lg">
+                  <img class="avatar-img" src="img/gen_beta_f.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+              <div class="genchart-meta">
+                <div class="genchart-name">Gen Beta</div>
+                <div class="genchart-range">2026–2100</div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- DATA -->
+  <script src="data.js"></script>
+
+  <!-- APP LOGIC -->
+  <script>
+    const birthYearEl = document.getElementById("birthYear");
+    const showBtn = document.getElementById("showBtn");
+
+    const statusPill = document.getElementById("statusPill");
+    const youCard = document.getElementById("youCard");
+    const youGenLine = document.getElementById("youGenLine");
+
+    const traitsTitle = document.getElementById("traitsTitle");
+    const traits10El = document.getElementById("traits10");
+    const vibe5El = document.getElementById("vibe5");
+
+    const avatarTitle = document.getElementById("avatarTitle");
+    const avatarSub = document.getElementById("avatarSub");
+
+    const avatarYouM = document.getElementById("avatarYouM");
+    const avatarYouF = document.getElementById("avatarYouF");
+
+    const compatHeader = document.getElementById("compatHeader");
+    const accordions = document.getElementById("accordions");
+
+    const FALLBACK_M = "img/gen_placeholder_m.jpg";
+    const FALLBACK_F = "img/gen_placeholder_f.jpg";
+
+    function esc(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderList(ulEl, items) {
+      ulEl.innerHTML = (items || []).map(x => `<li>${esc(x)}</li>`).join("");
+    }
+
+    function getGenByYear(year) {
+      const gens = ZGEN_DATA?.generations || [];
+      return gens.find(g => year >= g.range[0] && year <= g.range[1]) || null;
+    }
+
+    function getProfile(genId) {
+      // Expecting: ZGEN_DATA.profiles[genId] = { traits:[...10], vibes:[...5] }
+      return ZGEN_DATA?.profiles?.[genId] || null;
+    }
+
+    function getCompat(youId, otherId) {
+      const hit = ZGEN_DATA?.compat?.[youId]?.[otherId];
+      return hit || {
+        dos: ["Do #1 (placeholder)", "Do #2 (placeholder)", "Do #3 (placeholder)", "Do #4 (placeholder)", "Do #5 (placeholder)"],
+        donts: ["Don’t #1 (placeholder)", "Don’t #2 (placeholder)", "Don’t #3 (placeholder)", "Don’t #4 (placeholder)", "Don’t #5 (placeholder)"],
+        joke: "Placeholder joke (optional)."
+      };
+    }
+
+    function pickCardColorClass(i) {
+      const arr = ["card-purple", "card-yellow", "card-blue", "card-green", "card-orange"];
+      return arr[i % arr.length];
+    }
+
+    function avatarPairHTML(gen, sizeClass) {
+      const m = gen.avatars?.m || FALLBACK_M;
+      const f = gen.avatars?.f || FALLBACK_F;
+
+      const altBase = gen.avatarAlt || gen.name || "Generation avatar";
+      const altM = `${altBase} (male)`;
+      const altF = `${altBase} (female)`;
+
+      return `
+        <div class="avatar-pair">
+          <div class="avatar ${sizeClass}">
+            <img class="avatar-img" src="${m}" alt="${esc(altM)}" loading="lazy" decoding="async" />
+          </div>
+          <div class="avatar ${sizeClass}">
+            <img class="avatar-img" src="${f}" alt="${esc(altF)}" loading="lazy" decoding="async" />
+          </div>
+        </div>
+      `;
+    }
+
+    function makeCard({ youGen, otherGen, content, colorClass }) {
+      const card = document.createElement("article");
+      card.className = `acc card ${colorClass}`;
+      card.dataset.gen = otherGen.id;
+
+      card.innerHTML = `
+        <button class="acc-head" type="button" aria-expanded="false">
+          <div class="acc-title">
+            <span class="acc-kicker">How to get along with</span>
+            <span class="acc-name">${esc(otherGen.name)}</span>
+          </div>
+          <span class="acc-icon" aria-hidden="true">+</span>
+        </button>
+
+        <div class="acc-body" hidden>
+          <div class="acc-avatars">
+            ${avatarPairHTML(youGen, "xl")}
+
+            <div class="gen-infinity" aria-hidden="true">∞</div>
+
+            ${avatarPairHTML(otherGen, "xl")}
+
+            <div class="avatar-tags">
+              <span class="tag">You</span>
+              <span class="tag">${esc(otherGen.name)}</span>
+            </div>
+          </div>
+
+          <div class="acc-cols">
+            <div class="dos">
+              <h3 class="mini-title dos-title">✅ Do’s</h3>
+              <ul class="bullets">
+                ${(content.dos || []).map(x => `<li>${esc(x)}</li>`).join("")}
+              </ul>
+            </div>
+
+            <div class="donts">
+              <h3 class="mini-title donts-title">❌ Don’ts</h3>
+              <ul class="bullets">
+                ${(content.donts || []).map(x => `<li>${esc(x)}</li>`).join("")}
+              </ul>
+            </div>
+          </div>
+
+          <p class="micro joke-line">“${esc(content.joke || "")}”</p>
+        </div>
+      `;
+
+      const head = card.querySelector(".acc-head");
+      const body = card.querySelector(".acc-body");
+      const icon = card.querySelector(".acc-icon");
+
+      head.addEventListener("click", () => {
+        const isOpen = head.getAttribute("aria-expanded") === "true";
+        head.setAttribute("aria-expanded", String(!isOpen));
+        body.hidden = isOpen;
+        icon.textContent = isOpen ? "+" : "–";
+      });
+
+      return card;
+    }
+
+    function renderCompatibility(youGen) {
+      accordions.innerHTML = "";
+      const others = (ZGEN_DATA?.generations || []).filter(g => g.id !== youGen.id);
+
+      others.forEach((other, idx) => {
+        const content = getCompat(youGen.id, other.id);
+        const colorClass = pickCardColorClass(idx);
+        accordions.appendChild(makeCard({ youGen, otherGen: other, content, colorClass }));
+      });
+    }
+
+    function setYouAvatars(gen) {
+      const m = gen.avatars?.m || FALLBACK_M;
+      const f = gen.avatars?.f || FALLBACK_F;
+
+      avatarYouM.src = m;
+      avatarYouF.src = f;
+
+      // Decorative inside card 2 (title already says which gen).
+      avatarYouM.alt = "";
+      avatarYouF.alt = "";
+    }
+
+    function renderProfile(gen) {
+      const profile = getProfile(gen.id);
+
+      if (profile?.traits?.length) {
+        traitsTitle.textContent = "Typical traits";
+        renderList(traits10El, profile.traits);
+      } else {
+        traitsTitle.textContent = "Typical traits (placeholder)";
+        renderList(traits10El, [
+          "Trait #1 (placeholder)",
+          "Trait #2 (placeholder)",
+          "Trait #3 (placeholder)",
+          "Trait #4 (placeholder)",
+          "Trait #5 (placeholder)",
+          "Trait #6 (placeholder)",
+          "Trait #7 (placeholder)",
+          "Trait #8 (placeholder)",
+          "Trait #9 (placeholder)",
+          "Trait #10 (placeholder)"
+        ]);
+      }
+
+      if (profile?.vibes?.length) {
+        avatarTitle.textContent = "Your vibe";
+        avatarSub.textContent = "Quick summary bullets.";
+        renderList(vibe5El, profile.vibes);
+      } else {
+        avatarTitle.textContent = `${gen.name} vibe (placeholder)`;
+        avatarSub.textContent = "We’ll fill these with real content later.";
+        renderList(vibe5El, [
+          "Vibe #1 (placeholder)",
+          "Vibe #2 (placeholder)",
+          "Vibe #3 (placeholder)",
+          "Vibe #4 (placeholder)",
+          "Vibe #5 (placeholder)"
+        ]);
+      }
+    }
+
+    function updateUI() {
+      const raw = (birthYearEl.value || "").trim();
+      const year = Number(raw);
+
+      // Only accept years that map to the generations you defined
+      const valid =
+        raw.length === 4 &&
+        Number.isInteger(year) &&
+        year >= 1928 &&
+        year <= 2100;
+
+      if (!valid) {
+        statusPill.textContent = "Supported birth years: 1928–2100";
+        youCard.hidden = true;
+        compatHeader.hidden = true;
+        accordions.hidden = true;
+        return;
+      }
+
+      const youGen = getGenByYear(year);
+
+      // If data isn't loaded OR ranges are wrong, don't silently fall back
+      if (!youGen) {
+        statusPill.textContent = "Supported birth years: 1928–2100";
+        youCard.hidden = true;
+        compatHeader.hidden = true;
+        accordions.hidden = true;
+        return;
+      }
+
+      statusPill.textContent = `Detected: ${youGen.name}`;
+      youGenLine.innerHTML = `You are <strong>${esc(youGen.name)}</strong>.`;
+
+      setYouAvatars(youGen);
+      renderProfile(youGen);
+
+      renderCompatibility(youGen);
+
+      youCard.hidden = false;
+      compatHeader.hidden = false;
+      accordions.hidden = false;
+    }
+
+    showBtn.addEventListener("click", updateUI);
+    birthYearEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") updateUI();
+    });
+    birthYearEl.addEventListener("input", updateUI);
+  </script>
+</body>
+</html>
+```
+
+## 2. `zgen/data.js`
+
+Fetch this file's exact content from the private GitHub repo `ubterzioglu/ubterzioglude` (branch `main`, path `zgen/zgen-data.js`) using the `gh` CLI (already authenticated as the repo owner) and save it as `zgen/data.js` unchanged:
+
+```bash
+gh api repos/ubterzioglu/ubterzioglude/contents/zgen/zgen-data.js --jq '.content' | base64 -d > zgen/data.js
+```
+
+If `gh` isn't available or isn't authenticated for that account, ask the user to paste the file's contents instead — do not fabricate the data (it's a ~1000-line directional compatibility matrix for 7 generations × 7 generations, plus traits/vibes per generation; guessing it would produce wrong content).
+
+## 3. `zgen/style.css`
+
+Same source, fetch verbatim:
+
+```bash
+gh api repos/ubterzioglu/ubterzioglude/contents/zgen/style.css --jq '.content' | base64 -d > zgen/style.css
+```
+
+## 4. `zgen/img/` — 14 avatar images
+
+Download all of these (male + female avatar per generation) from the same repo:
+
+```bash
+mkdir -p zgen/img
+for gen in silent boomer genx geny genz alpha beta; do
+  for sex in m f; do
+    fname="gen_${gen}_${sex}.jpg"
+    gh api "repos/ubterzioglu/ubterzioglude/contents/img/${fname}" --jq '.content' | base64 -d > "zgen/img/${fname}"
+  done
+done
+```
+
+Verify each downloaded file starts with the JPEG magic bytes `ffd8ffe0` (a failed/auth-error fetch would instead contain JSON or HTML text) before treating the download as done.
+
+## Verification
+
+Serve the folder statically and confirm `index.html`, `data.js`, `style.css`, and at least one image return 200:
+
+```bash
+cd zgen && python -m http.server 8099 &
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8099/index.html
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8099/data.js
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8099/style.css
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8099/img/gen_genz_f.jpg
+```
+
+Do not add a backend, analytics, a build step, or any external asset/CDN reference — this tool is intentionally 100% self-contained and must keep working if the folder is copied anywhere with no config.

@@ -1,7 +1,7 @@
 /**
  * /ubtsa board theme tokens. Palette: teal (#0f766e) · cyan (#155e75) —
- * carried over from the source document (weiterbildung_isbirligi.html) so the
- * board still reads as "that document, now with comments".
+ * carried over from the original document the konsept was first written in,
+ * so the board still reads as "that document, now with comments".
  *
  * Unlike the other boards here (detrbridge navy/gold, DM magenta/cyan, BatuBT
  * yellow/violet) this one is deliberately LIGHT: it is a ~130-madde reading

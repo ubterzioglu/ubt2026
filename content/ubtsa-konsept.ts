@@ -1,7 +1,11 @@
 /**
- * "Weiterbildung ve İş Birliği Konsepti" içeriği — weiterbildung_isbirligi.html
- * dosyasının veri karşılığı. Metin içeriği DEĞİŞTİRİLMEDEN, konu akışına göre
- * bölümlere ve maddelere ayrılmıştır.
+ * "Weiterbildung ve İş Birliği Konsepti" içeriği. Metin DEĞİŞTİRİLMEDEN, konu
+ * akışına göre bölümlere ve maddelere ayrılmıştır.
+ *
+ * BU DOSYA /ubtsa'nın TEK kaynağıdır. İçerik hiçbir HTML/markdown dosyasından
+ * runtime'da okunmaz — sayfa yalnızca buradaki veriyi render eder. İlk
+ * dökümün geldiği HTML `docs/archive/root-files/weiterbildung_isbirligi.html`
+ * altında arşivdedir ve artık kaynak değildir; metin düzeltmesi buraya yapılır.
  *
  * Her maddenin `key` alanı stabildir (`b{bölüm}-m{madde}`) ve veritabanındaki
  * yorumların (`ubtsa_comments.item_key`) bağlandığı anahtardır. Bir maddenin
