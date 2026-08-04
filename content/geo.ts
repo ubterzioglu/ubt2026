@@ -9,7 +9,11 @@ export interface GeoLocation {
   title: string;
   description: string;
   keywords: string[];
+  intro: string;
   highlight: string;
+  proofPoints: string[];
+  serviceFit: string;
+  ctaCopy: string;
   services: string[];
   faq: Array<{ question: string; answer: string }>;
 }
@@ -35,8 +39,19 @@ export const geoLocations: GeoLocation[] = [
       "QA Consultant NRW",
       "Software Quality Dortmund Germany"
     ],
+    intro:
+      "Dortmund is the home base for UBT's QA work in Germany, making it the strongest location page for local consulting, on-site workshops, and NRW-based delivery.",
     highlight:
       "Based in Dortmund since 2021. Delivering test leadership and automation expertise for complex enterprise systems in the NRW region.",
+    proofPoints: [
+      "Local presence in Dortmund since 2021.",
+      "Swisslog test leadership experience in North Rhine-Westphalia.",
+      "Enterprise QA background across warehouse automation, automotive, and release validation."
+    ],
+    serviceFit:
+      "Best fit for Dortmund and NRW teams that need hands-on test planning, automation review, FAT/SAT coordination, or structured QA mentoring close to their delivery site.",
+    ctaCopy:
+      "Book a free Dortmund QA consultation to review your current test process, automation coverage, or release risk.",
     services: [
       "Test Strategy & Planning",
       "Test Automation (Selenium, Ranorex)",
@@ -82,8 +97,19 @@ export const geoLocations: GeoLocation[] = [
       "Selenium Automation Germany",
       "QA Consultant Deutschland"
     ],
+    intro:
+      "This Germany-wide page summarizes UBT's remote and on-site QA consulting offer for teams that need senior test strategy without being tied to one city.",
     highlight:
       "Experienced QA professional based in Germany, serving clients across the country with test strategy, automation engineering, and release quality support.",
+    proofPoints: [
+      "Based in Germany with enterprise project experience for German and European clients.",
+      "18+ years across mechanical engineering, test management, automation, and quality leadership.",
+      "Professional communication in English, German, and Turkish business contexts."
+    ],
+    serviceFit:
+      "Best fit for German companies that need a senior QA partner for test strategy reviews, automation framework decisions, release readiness, or cross-team QA process improvement.",
+    ctaCopy:
+      "Book a free Germany-wide QA consultation to discuss remote, hybrid, or on-site support options.",
     services: [
       "Enterprise Test Management",
       "Automation Framework Design",
@@ -128,8 +154,19 @@ export const geoLocations: GeoLocation[] = [
       "Quality Assurance Frankfurt",
       "Senior QA Frankfurt Germany"
     ],
+    intro:
+      "Frankfurt teams often need reliable testing around business-critical platforms, integrations, and distributed delivery; this page focuses on that enterprise QA fit.",
     highlight:
       "Available for QA consulting and testing engagements in Frankfurt and the Hesse region, with experience across enterprise software and logistics platforms.",
+    proofPoints: [
+      "Experience with enterprise systems where integrations, traceability, and release confidence matter.",
+      "Automation toolkit covering Selenium, Ranorex, Java, C#, Jenkins, Postman, Jira, and Xray.",
+      "Comfortable supporting remote-first Frankfurt teams with structured reporting and periodic on-site alignment."
+    ],
+    serviceFit:
+      "Best fit for Frankfurt and Hesse teams working on fintech-adjacent, logistics, B2B, or internal software where defects carry operational cost.",
+    ctaCopy:
+      "Book a free Frankfurt QA consultation to review your automation coverage, defect flow, or release readiness.",
     services: [
       "Test Automation Setup",
       "Quality Process Consulting",
@@ -175,8 +212,19 @@ export const geoLocations: GeoLocation[] = [
       "QA Consulting Berlin",
       "Selenium Automation Berlin"
     ],
+    intro:
+      "Berlin product teams need QA that stays lean without becoming superficial; this page focuses on practical test strategy for fast-moving software teams.",
     highlight:
       "Experienced in fast-paced agile environments. Open to working with Berlin-based product companies and startups on test strategy and automation.",
+    proofPoints: [
+      "Hands-on automation framework experience for teams that need fast feedback loops.",
+      "Agile QA background with sprint-level test planning, risk-based coverage, and transparent reporting.",
+      "Practical product-builder mindset from UBT's own tools and community projects."
+    ],
+    serviceFit:
+      "Best fit for Berlin startups and product companies that need to introduce QA discipline without slowing product iteration.",
+    ctaCopy:
+      "Book a free Berlin QA consultation to identify the smallest test process that can protect your next release.",
     services: [
       "Startup QA Setup",
       "Agile Test Integration",
@@ -221,8 +269,19 @@ export const geoLocations: GeoLocation[] = [
       "Quality Assurance Hamburg",
       "Logistics Software Testing Hamburg"
     ],
+    intro:
+      "Hamburg's logistics and commerce profile maps closely to UBT's recent warehouse automation work, where software quality directly affects physical operations.",
     highlight:
       "Strong match for Hamburg's logistics and e-commerce sector. Extensive background in warehouse automation testing with Swisslog-level complexity.",
+    proofPoints: [
+      "Recent WMS/WES and intralogistics testing experience at Swisslog.",
+      "FAT, SAT, UAT, integration testing, and go-live support across automated warehouse environments.",
+      "Project exposure to large retail and logistics contexts including EDEKA and Albert Heijn."
+    ],
+    serviceFit:
+      "Best fit for Hamburg logistics, e-commerce, and operations-heavy software teams that need rigorous integration testing and stable go-live support.",
+    ctaCopy:
+      "Book a free Hamburg QA consultation to discuss logistics software testing, WMS/WES validation, or release stabilization.",
     services: [
       "Logistics Software QA",
       "WMS & WES Testing",
@@ -268,8 +327,19 @@ export const geoLocations: GeoLocation[] = [
       "QA Consultant Istanbul",
       "Yazılım Test Mühendisi İstanbul"
     ],
+    intro:
+      "Istanbul connects UBT's Daimler/Mercedes-Benz QA roots with current Germany-based consulting, making it a strong fit for Turkish teams and professionals targeting German quality standards.",
     highlight:
       "10+ years of Daimler QA experience in Istanbul. Deep knowledge of the Turkish tech ecosystem and professional standards in the German-Turkish business corridor.",
+    proofPoints: [
+      "10+ years of Daimler/Mercedes-Benz experience in Istanbul before relocating to Germany.",
+      "Strong understanding of both Turkish and German software delivery expectations.",
+      "CV and career support experience for QA professionals moving toward the German job market."
+    ],
+    serviceFit:
+      "Best fit for Istanbul-based companies or QA professionals who need German-market quality expectations, test strategy guidance, or career-oriented QA advice.",
+    ctaCopy:
+      "Book a free Istanbul QA consultation to review your QA process, CV positioning, or Germany transition strategy.",
     services: [
       "Remote QA Consulting (TR)",
       "German-Turkish Tech Bridge",

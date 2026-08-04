@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-css-tags, @next/next/no-img-element */
 import type { Metadata } from "next";
+import Link from "next/link";
 import Script from "next/script";
 
 import { buildMetadata } from "@/lib/seo";
@@ -77,7 +79,7 @@ export default function ZpathPage() {
               <p>Your feedback keeps this alive and pushes me to build more.</p>
               <p>
                 Looking for more tools?{" "}
-                <a href="/#tools-developed-by-ubt">Click!</a>
+                <Link href="/#tools-developed-by-ubt">Click!</Link>
               </p>
               <p>
                 Thanks. <strong>UBT</strong>.
@@ -85,12 +87,12 @@ export default function ZpathPage() {
             </div>
 
             <div className="corner-widget">
-              <a href="/">
+              <Link href="/">
                 <img src="/img/logoubt.png" alt="UBT" className="widget-avatar" />
-              </a>
-              <a href="/">
+              </Link>
+              <Link href="/">
                 <img src="/img/picprofile.png" alt="Profile" className="widget-avatar logo" />
-              </a>
+              </Link>
             </div>
           </main>
         </div>

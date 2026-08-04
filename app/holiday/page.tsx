@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-css-tags, @next/next/no-img-element */
 import type { Metadata } from "next";
+import Link from "next/link";
 import Script from "next/script";
 
 import { buildMetadata } from "@/lib/seo";
@@ -33,12 +35,12 @@ export default function HolidayPage() {
               </div>
 
               <div className="headRight">
-                <a href="/">
+                <Link href="/">
                   <img className="ubtLogo" src="/img/logoubt.png" alt="UBT logo" />
-                </a>
-                <a href="/">
+                </Link>
+                <Link href="/">
                   <img className="ubtPic" src="/img/picprofile.png" alt="UBT profile" />
-                </a>
+                </Link>
               </div>
             </div>
           </header>

@@ -79,6 +79,12 @@ export default async function GeoPage({ params }: Props) {
               </Link>
             </li>
             <li aria-hidden="true">/</li>
+            <li>
+              <Link href="/geo" className="transition hover:text-accent">
+                Locations
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
             <li className="font-semibold text-ink">
               {loc.city}, {loc.country}
             </li>
@@ -92,7 +98,8 @@ export default async function GeoPage({ params }: Props) {
           <h1 className="mb-5 text-3xl font-extrabold leading-tight text-ink sm:text-4xl">
             QA Engineering in {loc.city}
           </h1>
-          <p className="text-base leading-7 text-ink/70">{loc.description}</p>
+          <p className="text-base leading-7 text-ink/70">{loc.intro}</p>
+          <p className="mt-4 text-sm leading-7 text-ink/68">{loc.description}</p>
         </header>
 
         <section className="mb-12 rounded-[1.35rem] border border-line/60 bg-white/80 px-6 py-6">
@@ -100,8 +107,23 @@ export default async function GeoPage({ params }: Props) {
           <p className="text-sm leading-7 text-ink/70">{loc.highlight}</p>
         </section>
 
+        <section className="mb-12 rounded-[1.35rem] border border-line/60 bg-white/80 px-6 py-6">
+          <h2 className="mb-4 text-lg font-bold text-ink">Why This Fit Is Credible</h2>
+          <ul className="flex flex-col gap-3">
+            {loc.proofPoints.map((point) => (
+              <li key={point} className="flex gap-3 text-sm leading-7 text-ink/70">
+                <span className="mt-0.5 text-accent" aria-hidden="true">
+                  ✓
+                </span>
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <section className="mb-12">
           <h2 className="mb-5 text-xl font-extrabold text-ink">Services Available</h2>
+          <p className="mb-5 text-sm leading-7 text-ink/70">{loc.serviceFit}</p>
           <ul className="flex flex-col gap-3">
             {loc.services.map((service) => (
               <li
@@ -134,10 +156,7 @@ export default async function GeoPage({ params }: Props) {
 
         <section className="rounded-[1.35rem] border border-accent/20 bg-accent/5 px-6 py-6">
           <h2 className="mb-2 text-lg font-bold text-ink">Work Together</h2>
-          <p className="mb-5 text-sm leading-7 text-ink/70">
-            Available for test strategy reviews, automation consulting, and QA advisory in{" "}
-            {loc.city}. Book a free appointment or send a message.
-          </p>
+          <p className="mb-5 text-sm leading-7 text-ink/70">{loc.ctaCopy}</p>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/#book-appointment"

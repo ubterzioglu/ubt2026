@@ -3,8 +3,14 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const inputFile = resolve(__dirname, "../cvopt_participants_rows.json");
-const outputFile = resolve(__dirname, "../migrate_cvopt_to_cv_review_requests.sql");
+const inputFile = resolve(
+  __dirname,
+  "../.local-archive/private-data/cvopt/cvopt_participants_rows.json"
+);
+const outputFile = resolve(
+  __dirname,
+  "../.local-archive/private-data/cvopt/migrate_cvopt_to_cv_review_requests.sql"
+);
 
 const participants = JSON.parse(readFileSync(inputFile, "utf-8"));
 

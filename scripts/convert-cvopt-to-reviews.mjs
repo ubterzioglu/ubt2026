@@ -1,6 +1,8 @@
 import { readFileSync, writeFileSync } from "fs";
 
-const data = JSON.parse(readFileSync("cvopt_participants_rows.json", "utf-8"));
+const inputFile = ".local-archive/private-data/cvopt/cvopt_participants_rows.json";
+const outputFile = ".local-archive/private-data/cvopt/insert_cvopt_to_review_requests.sql";
+const data = JSON.parse(readFileSync(inputFile, "utf-8"));
 
 function normalizeWhatsapp(num) {
   const stripped = num.replace(/[^\d+]/g, "");
@@ -74,9 +76,9 @@ ${values.join(",\n")}
 ON CONFLICT (id) DO NOTHING;
 `;
 
-writeFileSync("insert_cvopt_to_review_requests.sql", sql, "utf-8");
+writeFileSync(outputFile, sql, "utf-8");
 
-console.log(`Done: ${values.length} rows written to insert_cvopt_to_review_requests.sql`);
+console.log(`Done: ${values.length} rows written to ${outputFile}`);
 if (skipped.length > 0) {
   console.log(`\nSkipped ${skipped.length} duplicate(s):`);
   skipped.forEach((s) =>

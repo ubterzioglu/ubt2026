@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-css-tags, @next/next/no-img-element */
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { buildMetadata } from "@/lib/seo";
 
@@ -86,12 +88,12 @@ export default function BuyOrByePage() {
             <div className="hero-right">
               <div className="hero-toprow" aria-label="Header controls">
                 <div className="mini-avatars" aria-label="UBT links">
-                  <a href="/" aria-label="UBT home (logo)">
+                  <Link href="/" aria-label="UBT home (logo)">
                     <img src="/img/logoubt.png" alt="UBT logo" className="mini-avatar" />
-                  </a>
-                  <a href="/" aria-label="UBT home (profile)">
+                  </Link>
+                  <Link href="/" aria-label="UBT home (profile)">
                     <img src="/img/picprofile.png" alt="UBT profile" className="mini-avatar" />
-                  </a>
+                  </Link>
                 </div>
 
                 <div className="palette-dots" aria-label="Color palette">

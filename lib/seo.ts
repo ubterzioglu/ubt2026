@@ -5,6 +5,18 @@ import type { Metadata } from "next";
 export const BASE_URL = "https://ubterzioglu.de";
 export const SITE_NAME = "Umut Barış Terzioğlu";
 export const BRAND_SUFFIX = "Senior QA Engineer";
+export const SEARCH_INDEX_DISALLOW_PATHS = [
+  "/admin",
+  "/admin/",
+  "/dm",
+  "/dm/",
+  "/detrbridge",
+  "/detrbridge/",
+  "/elif",
+  "/elif/",
+  "/sandbox",
+  "/sandbox/"
+] as const;
 
 export const defaultKeywords = [
   "QA Engineer Germany",
@@ -34,14 +46,18 @@ interface PageSeoInput {
   ogType?: "website" | "article" | "profile";
 }
 
+function buildCanonical(path?: string): string {
+  if (!path) return BASE_URL;
+  if (path.startsWith("https://") || path.startsWith("http://")) return path;
+  return `${BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
 export function buildMetadata(input: PageSeoInput = {}): Metadata {
   const title = input.title ?? `${SITE_NAME} — Senior QA Engineer in Dortmund, Germany`;
   const description =
     input.description ??
     "Portfolio of Umut Barış Terzioğlu — Senior Software Quality Assurance Engineer with 18+ years in test strategy, automation, and enterprise delivery.";
-  const canonical = input.canonical
-    ? `${BASE_URL}${input.canonical}`
-    : BASE_URL;
+  const canonical = buildCanonical(input.canonical);
   const ogType = input.ogType ?? "website";
 
   // When no explicit ogImage is passed, omit the images field so Next.js applies

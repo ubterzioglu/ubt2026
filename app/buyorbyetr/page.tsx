@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-css-tags, @next/next/no-img-element */
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { buildMetadata } from "@/lib/seo";
 
@@ -41,12 +43,12 @@ export default function BuyOrByeTrPage() {
             <div className="hero-right">
               <div className="hero-toprow" aria-label="Üst alan kontrolleri">
                 <div className="mini-avatars" aria-label="UBT bağlantıları">
-                  <a href="/" aria-label="UBT ana sayfa (logo)">
+                  <Link href="/" aria-label="UBT ana sayfa (logo)">
                     <img src="/img/logoubt.png" alt="UBT logo" className="mini-avatar" />
-                  </a>
-                  <a href="/" aria-label="UBT ana sayfa (profil)">
+                  </Link>
+                  <Link href="/" aria-label="UBT ana sayfa (profil)">
                     <img src="/img/picprofile.png" alt="UBT profil" className="mini-avatar" />
-                  </a>
+                  </Link>
                 </div>
 
                 <div className="palette-dots" aria-label="Renk paleti">

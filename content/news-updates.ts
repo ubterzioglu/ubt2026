@@ -22,16 +22,5 @@ export const fallbackNewsUpdates: NewsUpdateItem[] = [
     sortOrder: 20,
     isPublished: true,
     createdAt: new Date("2026-04-09").toISOString()
-  },
-  {
-    id: "news-update-3",
-    title: "QA content and tools continue to grow",
-    summary:
-      "More practical testing notes, small tools, and community-facing updates are being prepared for upcoming releases.",
-    imageUrl: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=400&fit=crop&auto=format&q=80",
-    detailHref: "/#articles",
-    sortOrder: 30,
-    isPublished: true,
-    createdAt: new Date("2026-04-09").toISOString()
   }
 ];

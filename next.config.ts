@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  outputFileTracingRoot: process.cwd(),
   // Lint runs locally via `npm run lint`; skipping it in `next build`
   // shaves the lint pass off every Coolify deployment.
   eslint: {

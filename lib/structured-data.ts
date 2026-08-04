@@ -104,6 +104,35 @@ export function buildProfilePageSchema() {
   };
 }
 
+interface CollectionPageInput {
+  name: string;
+  description: string;
+  url: string;
+  itemUrls: string[];
+}
+
+export function buildCollectionPageSchema(input: CollectionPageInput) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${input.url}#collection`,
+    url: input.url,
+    name: input.name,
+    description: input.description,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: input.itemUrls.map((url, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url
+      }))
+    },
+    about: {
+      "@id": `${BASE_URL}/#person`
+    }
+  };
+}
+
 interface BlogPostingInput {
   title: string;
   description: string;

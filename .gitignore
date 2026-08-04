@@ -21,3 +21,4 @@ check.api
 desiremap-candidates*.json
 docs/logoubt/
 docs/logoubt2/
+.local-archive/

@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-css-tags, @next/next/no-img-element */
 import type { Metadata } from "next";
+import Link from "next/link";
 import Script from "next/script";
 
 import { buildMetadata } from "@/lib/seo";
@@ -114,7 +116,7 @@ export default function ZatsPage() {
                   <p>Your feedback keeps this alive and pushes me to build more.</p>
                   <p>
                     Looking for more tools?{" "}
-                    <a href="/#tools-developed-by-ubt">Click!</a>
+                    <Link href="/#tools-developed-by-ubt">Click!</Link>
                   </p>
                   <p>
                     Thanks. <strong>UBT</strong>.
@@ -135,12 +137,12 @@ export default function ZatsPage() {
 
             {/* Corner Widget */}
             <div className="corner-widget">
-              <a href="/" aria-label="Go to Home">
+              <Link href="/" aria-label="Go to Home">
                 <img src="/img/picprofile.png" alt="Profile" className="widget-avatar" />
-              </a>
-              <a href="/" aria-label="Go to Home">
+              </Link>
+              <Link href="/" aria-label="Go to Home">
                 <img src="/img/logoubt.png" alt="Logo" className="widget-avatar logo" />
-              </a>
+              </Link>
             </div>
             {/* /Corner Widget */}
           </main>
