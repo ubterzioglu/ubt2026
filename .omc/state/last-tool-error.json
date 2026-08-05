@@ -1,7 +1,7 @@
 {
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"ls docs/ 2>/dev/null | head -20; echo \\\"--- gitignore env? ---\\\"; grep -nE \\\"env|\\\\.md\\\" .gitignore 2>/dev/null | head\",\"description\":\"Check docs folder and gitignore\"}",
-  "error": "Exit code 1\narchive\ndesiremap-scraper-restructure-2026-07-21.md\nlogodetrbridge\nlogoubt\nlogoubt2\nservice-finder-devir-raporu-2026-07-25.md\nservice-finder-expansion-report-2026-07-25.html\nsuperpowers\n--- gitignore env? ---\n3:.env\n4:.env.local\n5:.env.*.local\n6:.env.local.md\n18:.env.local.rebase\n19:.env.local.bak\n/usr/bin/bash: line 1: /c/Users/BARIS-~1/AppData/Local/Temp/claude-ed74-cwd: No such file or directory",
-  "timestamp": "2026-08-04T20:02:21.036Z",
+  "tool_name": "PowerShell",
+  "tool_input_preview": "{\"command\":\"$envVars = @{}; foreach ($line in Get-Content .env.local) { if ($line -match '^\\\\s*([A-Za-z_][A-Za-z0-9_]*)\\\\s*=\\\\s*(.*)$') { $envVars[$Matches[1]] = $Matches[2].Trim().Trim('\\\"') } }; $en...",
+  "error": "Exit code 2\nfail aws-0-eu-central-1 : psql: error: connection to server at \"aws-0-eu-central-1.pooler.supabase.com\" (18.198.145.\r\nfail aws-1-eu-central-1 : psql: error: connection to server at \"aws-1-eu-central-1.pooler.supabase.com\" (3.65.151.22\r\nfail aws-0-eu-central-2 : psql: error: connection to server at \"aws-0-eu-central-2.pooler.supabase.com\" (51.96.34.18\r\nOK -> aws-1-eu-central-2\r\nfail aws-0-eu-west-1 : psql: error: connection to server at \"aws-0-eu-west-1.pooler.supabase.com\" (34.241.16...",
+  "timestamp": "2026-08-05T07:44:57.427Z",
   "retry_count": 1
 }

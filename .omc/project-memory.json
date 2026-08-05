@@ -267,6 +267,12 @@
   },
   "hotPaths": [
     {
+      "path": "app\\detrbridge\\page.tsx",
+      "accessCount": 26,
+      "lastAccessed": 1785916334380,
+      "type": "file"
+    },
+    {
       "path": "lib\\admin-auth.ts",
       "accessCount": 21,
       "lastAccessed": 1785854535522,
@@ -276,6 +282,12 @@
       "path": "app\\ubtsa\\page.tsx",
       "accessCount": 14,
       "lastAccessed": 1785855693152,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\meeting-brief-tab.tsx",
+      "accessCount": 13,
+      "lastAccessed": 1785916353589,
       "type": "file"
     },
     {
@@ -291,16 +303,10 @@
       "type": "file"
     },
     {
-      "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 10,
-      "lastAccessed": 1785856221476,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\meeting-brief-tab.tsx",
+      "path": "",
       "accessCount": 9,
-      "lastAccessed": 1785851751931,
-      "type": "file"
+      "lastAccessed": 1785915260774,
+      "type": "directory"
     },
     {
       "path": "app\\ubtsa\\_components\\board-header.tsx",
@@ -315,15 +321,15 @@
       "type": "file"
     },
     {
+      "path": "lib\\detrbridge-todos.ts",
+      "accessCount": 8,
+      "lastAccessed": 1785916246236,
+      "type": "file"
+    },
+    {
       "path": "app",
       "accessCount": 7,
       "lastAccessed": 1785853399715,
-      "type": "directory"
-    },
-    {
-      "path": "",
-      "accessCount": 7,
-      "lastAccessed": 1785866678776,
       "type": "directory"
     },
     {
@@ -435,21 +441,21 @@
       "type": "file"
     },
     {
+      "path": "supabase\\migrations\\20260726100000_create_detrbridge_todos2.sql",
+      "accessCount": 2,
+      "lastAccessed": 1785915131916,
+      "type": "file"
+    },
+    {
+      "path": "app\\detrbridge\\_components\\theme.ts",
+      "accessCount": 2,
+      "lastAccessed": 1785915658071,
+      "type": "file"
+    },
+    {
       "path": "weiterbildung_isbirligi.html",
       "accessCount": 1,
       "lastAccessed": 1785845610827,
-      "type": "file"
-    },
-    {
-      "path": "lib\\detrbridge-todos.ts",
-      "accessCount": 1,
-      "lastAccessed": 1785845650934,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260726100000_create_detrbridge_todos2.sql",
-      "accessCount": 1,
-      "lastAccessed": 1785845650996,
       "type": "file"
     },
     {
@@ -516,12 +522,6 @@
       "path": "supabase\\migrations\\20260804140000_create_ubtsa_visits.sql",
       "accessCount": 1,
       "lastAccessed": 1785851381934,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\theme.ts",
-      "accessCount": 1,
-      "lastAccessed": 1785851385501,
       "type": "file"
     },
     {
