@@ -1,5 +1,5 @@
 import type { DetrbridgeVisit } from "@/lib/detrbridge-visits";
-import { DETRBRIDGE_BRAND_GRADIENT, DETRBRIDGE_GOLD } from "@/app/detrbridge/_components/theme";
+import { DETRBRIDGE_BRAND_GRADIENT } from "@/app/detrbridge/_components/theme";
 
 interface VisitsTabProps {
   visits: DetrbridgeVisit[];
@@ -16,10 +16,6 @@ function formatTimestamp(value: string): string {
     hour: "2-digit",
     minute: "2-digit"
   }).format(date);
-}
-
-function formatHours(hours: number): string {
-  return Number.isInteger(hours) ? String(hours) : hours.toFixed(1).replace(".", ",");
 }
 
 /** Title-cases the stored lowercase name for display, e.g. "şahin" -> "Şahin". */
@@ -56,30 +52,13 @@ export function VisitsTab({ visits }: VisitsTabProps) {
             {visits.map((visit) => (
               <li
                 key={visit.id}
-                className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 sm:px-8"
+                className="flex items-center justify-between gap-3 px-6 py-2 sm:px-8"
               >
-                <div>
-                  <p className="text-sm font-semibold text-white">
-                    {displayName(visit.voterName)}
-                  </p>
-                  <p className="mt-0.5 text-[12px] text-white/50">
-                    {formatTimestamp(visit.firstSeenAt)}
-                  </p>
-                  {visit.userAgent ? (
-                    <p className="mt-0.5 max-w-md truncate text-[11px] text-white/40">
-                      {visit.userAgent}
-                    </p>
-                  ) : null}
-                </div>
-                <span
-                  className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold"
-                  style={{
-                    borderColor: "rgba(245,183,0,0.35)",
-                    background: "rgba(245,183,0,0.10)",
-                    color: DETRBRIDGE_GOLD
-                  }}
-                >
-                  Paylaşımdan {formatHours(visit.hoursAfterShare)} saat sonra
+                <span className="truncate text-[13px] font-semibold text-white">
+                  {displayName(visit.voterName)}
+                </span>
+                <span className="shrink-0 text-[12px] tabular-nums text-white/45">
+                  {formatTimestamp(visit.firstSeenAt)}
                 </span>
               </li>
             ))}

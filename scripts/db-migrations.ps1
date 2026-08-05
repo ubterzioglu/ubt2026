@@ -43,7 +43,33 @@ if ($supabaseUrl -notmatch '^https://([a-z0-9]+)\.supabase\.co') {
     throw "NEXT_PUBLIC_SUPABASE_URL beklenen bicimde degil: $supabaseUrl"
 }
 $projectRef = $Matches[1]
-$connString = "postgresql://postgres@db.$projectRef.supabase.co:5432/postgres"
+
+# Baglanti adayi sirasi: once dogrudan host, sonra pooler.
+#
+# db.<ref>.supabase.co artik SADECE IPv6 cozuyor (Supabase IPv4'u ucretli
+# eklentiye tasidi). IPv6 rotasi olmayan agdan buraya baglanmak timeout ile
+# biter; o yuzden .env.local'daki DB_POOLER_HOST'a (IPv4'lu session-mode
+# pooler) dusuyoruz. Pooler'in kullanici adi "postgres.<ref>" formatinda --
+# dogrudan baglantidaki duz "postgres" ile ayni degil.
+$env:PGPASSWORD = $dbPass
+$candidates = @("postgresql://postgres@db.$projectRef.supabase.co:5432/postgres")
+$poolerHost = $envVars['DB_POOLER_HOST']
+if ($poolerHost) {
+    $candidates += "postgresql://postgres.$projectRef@${poolerHost}:5432/postgres"
+}
+
+$connString = $null
+foreach ($candidate in $candidates) {
+    psql $candidate -t -A -c 'select 1' *> $null
+    if ($LASTEXITCODE -eq 0) {
+        $connString = $candidate
+        break
+    }
+    Write-Host "Baglanilamadi, siradaki adaya geciliyor: $(($candidate -split '@')[1])"
+}
+if (-not $connString) {
+    throw 'Hicbir baglanti adayi calismadi (dogrudan host + DB_POOLER_HOST).'
+}
 
 # --- Dosya version'lari -------------------------------------------------------
 
@@ -66,7 +92,6 @@ foreach ($file in $migrationFiles) {
 
 # --- Bekleyenleri TEK sorguda bul --------------------------------------------
 
-$env:PGPASSWORD = $dbPass
 $versionList = ($byVersion.Keys) -join ','
 $query = @"
 select v

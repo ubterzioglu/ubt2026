@@ -9,7 +9,7 @@ interface TodosTabProps {
   createAction: ServerFormAction;
   updateAction: ServerFormAction;
   toggleAction: ServerFormAction;
-  deleteAction: ServerFormAction;
+  archiveAction: ServerFormAction;
   commentAction: ServerFormAction;
   deleteCommentAction: ServerFormAction;
   attachAction: ServerFormAction;
@@ -71,8 +71,9 @@ function formatFileSize(bytes: number): string {
 /**
  * "Görevler" panel: add/edit accordion form, then a list of todo rows each
  * with a status toggle, collapsible attachments and comment thread.
- * Ported from the retired /detr board — same CRUD surface, no per-session
- * "kim" prefill (detrbridge has no per-user identity, single shared gate).
+ * Ported from the retired /detr board — same surface minus destructive
+ * delete (görevler arşivlenir, silinmez) and no per-session "kim" prefill
+ * (detrbridge has no per-user identity, single shared gate).
  */
 export function TodosTab({
   todos,
@@ -80,7 +81,7 @@ export function TodosTab({
   createAction,
   updateAction,
   toggleAction,
-  deleteAction,
+  archiveAction,
   commentAction,
   deleteCommentAction,
   attachAction,
@@ -89,9 +90,15 @@ export function TodosTab({
 }: TodosTabProps) {
   const editing = editingId ? todos.find((item) => item.id === editingId) ?? null : null;
   const today = todayInBerlin();
-  const openCount = todos.filter((item) => item.status === "open").length;
-  const doneCount = todos.length - openCount;
-  const overdueCount = todos.filter(
+  // Arşivdekiler aktif listeden ve istatistiklerden tamamen çıkar; sayfanın
+  // en altındaki arşiv kartında durur.
+  const activeTodos = todos.filter((item) => item.archivedAt === null);
+  const archivedTodos = todos
+    .filter((item) => item.archivedAt !== null)
+    .sort((a, b) => (b.archivedAt ?? "").localeCompare(a.archivedAt ?? ""));
+  const openCount = activeTodos.filter((item) => item.status === "open").length;
+  const doneCount = activeTodos.length - openCount;
+  const overdueCount = activeTodos.filter(
     (item) => item.status === "open" && item.dueDate !== null && item.dueDate < today
   ).length;
   const formOpen = Boolean(editing);
@@ -100,7 +107,7 @@ export function TodosTab({
     <div className="space-y-5">
       <section className="grid gap-3 grid-cols-2 sm:grid-cols-4">
         {[
-          { label: "Toplam", value: todos.length },
+          { label: "Toplam", value: activeTodos.length },
           { label: "Açık", value: openCount },
           { label: "Tamamlanan", value: doneCount },
           { label: "Geciken", value: overdueCount }
@@ -224,19 +231,19 @@ export function TodosTab({
       </details>
 
       <section className="space-y-2">
-        {todos.length === 0 ? (
+        {activeTodos.length === 0 ? (
           <p className="rounded-[1.3rem] border border-dashed border-white/15 px-5 py-8 text-center text-[13px] text-white/50">
             Henüz görev yok. Yukarıdan ilk görevi ekle.
           </p>
         ) : (
-          todos.map((item) => (
+          activeTodos.map((item) => (
             <TodoRow
               key={item.id}
               item={item}
               today={today}
               tabKey={tabKey}
               toggleAction={toggleAction}
-              deleteAction={deleteAction}
+              archiveAction={archiveAction}
               commentAction={commentAction}
               deleteCommentAction={deleteCommentAction}
               attachAction={attachAction}
@@ -245,6 +252,69 @@ export function TodosTab({
           ))
         )}
       </section>
+
+      {archivedTodos.length > 0 ? (
+        <details className="group/archive overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.02] backdrop-blur-xl">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 sm:px-8 [&::-webkit-details-marker]:hidden">
+            <h2 className="flex items-center gap-2.5 font-body text-base font-semibold text-white/70">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/15 bg-white/[0.05] text-white/50">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 8v13H3V8" />
+                  <path d="M1 3h22v5H1z" />
+                  <path d="M10 12h4" />
+                </svg>
+              </span>
+              Arşiv
+              <span className="rounded-full bg-white/[0.06] px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white/50">
+                {archivedTodos.length}
+              </span>
+            </h2>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-white/35 transition-transform duration-200 group-open/archive:rotate-180"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+          <div className="space-y-2 px-4 pb-5 pt-1 sm:px-6">
+            <p className="pb-1 text-[12px] text-white/40">
+              Arşivlenen görevler silinmez — yorumları ve dosyalarıyla birlikte burada
+              durur, “Geri al” ile listeye döner.
+            </p>
+            {archivedTodos.map((item) => (
+              <TodoRow
+                key={item.id}
+                item={item}
+                today={today}
+                tabKey={tabKey}
+                archived
+                toggleAction={toggleAction}
+                archiveAction={archiveAction}
+                commentAction={commentAction}
+                deleteCommentAction={deleteCommentAction}
+                attachAction={attachAction}
+                deleteAttachmentAction={deleteAttachmentAction}
+              />
+            ))}
+          </div>
+        </details>
+      ) : null}
     </div>
   );
 }
@@ -253,8 +323,10 @@ interface TodoRowProps {
   item: DetrbridgeTodoItem;
   today: string;
   tabKey: "todos" | "todos2";
+  /** Arşiv kartı içinde mi render ediliyor — aksiyonlar buna göre değişir. */
+  archived?: boolean;
   toggleAction: ServerFormAction;
-  deleteAction: ServerFormAction;
+  archiveAction: ServerFormAction;
   commentAction: ServerFormAction;
   deleteCommentAction: ServerFormAction;
   attachAction: ServerFormAction;
@@ -265,21 +337,24 @@ function TodoRow({
   item,
   today,
   tabKey,
+  archived = false,
   toggleAction,
-  deleteAction,
+  archiveAction,
   commentAction,
   deleteCommentAction,
   attachAction,
   deleteAttachmentAction
 }: TodoRowProps) {
   const isDone = item.status === "done";
-  const isOverdue = !isDone && item.dueDate !== null && item.dueDate < today;
+  // Arşivdeki bir görev "gecikmiş" sayılmaz; takip edilmiyor demektir.
+  const isOverdue =
+    !archived && !isDone && item.dueDate !== null && item.dueDate < today;
 
   return (
     <article
       className={`rounded-[0.95rem] border bg-white/[0.03] backdrop-blur-xl transition hover:border-white/20 ${
         isOverdue ? "border-rose-400/30" : "border-white/10"
-      }`}
+      } ${archived ? "opacity-70" : ""}`}
     >
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2.5 sm:flex-nowrap">
         <form action={toggleAction} className="shrink-0">
@@ -335,25 +410,43 @@ function TodoRow({
 
         <span
           className="hidden shrink-0 text-[11px] text-white/40 lg:inline"
-          title={`Yazıldı: ${formatTimestamp(item.createdAt)}`}
+          title={
+            archived && item.archivedAt
+              ? `Arşivlendi: ${formatTimestamp(item.archivedAt)} · Yazıldı: ${formatTimestamp(item.createdAt)}`
+              : `Yazıldı: ${formatTimestamp(item.createdAt)}`
+          }
         >
-          {formatTimestamp(item.createdAt)}
+          {archived && item.archivedAt
+            ? `Arşiv · ${formatTimestamp(item.archivedAt)}`
+            : formatTimestamp(item.createdAt)}
         </span>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <a
-            href={`/detrbridge?tab=${tabKey}&edit=${item.id}`}
-            className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-[#F5B700]/40 hover:text-[#F5B700]"
-          >
-            Düzenle
-          </a>
-          <form action={deleteAction}>
+          {archived ? null : (
+            <a
+              href={`/detrbridge?tab=${tabKey}&edit=${item.id}`}
+              className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-[#F5B700]/40 hover:text-[#F5B700]"
+            >
+              Düzenle
+            </a>
+          )}
+          <form action={archiveAction}>
             <input type="hidden" name="id" value={item.id} />
+            <input type="hidden" name="archived" value={archived ? "0" : "1"} />
             <button
               type="submit"
-              className="inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:border-rose-400/40 hover:bg-rose-400/10 hover:text-rose-300"
+              title={
+                archived
+                  ? "Arşivden çıkar, listeye geri koy"
+                  : "Listeden kaldır — silinmez, arşive taşınır"
+              }
+              className={`inline-flex min-h-[30px] items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-semibold text-white/80 transition ${
+                archived
+                  ? "hover:border-emerald-400/40 hover:bg-emerald-400/10 hover:text-emerald-300"
+                  : "hover:border-[#F5B700]/40 hover:bg-[#F5B700]/10 hover:text-[#F5B700]"
+              }`}
             >
-              Sil
+              {archived ? "Geri al" : "Arşivle"}
             </button>
           </form>
         </div>

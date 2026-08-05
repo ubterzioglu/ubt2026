@@ -43,6 +43,8 @@ export interface DetrbridgeTodoItem {
   attachments: DetrbridgeTodoAttachment[];
   createdAt: string;
   updatedAt: string;
+  /** Arşivlenme anı; null ise görev aktif listede. */
+  archivedAt: string | null;
 }
 
 export interface DetrbridgeTodosResult {
@@ -71,6 +73,7 @@ interface SupabaseTodoRow {
   status: string;
   created_at: string;
   updated_at: string;
+  archived_at: string | null;
 }
 
 interface SupabaseCommentRow {
@@ -90,7 +93,8 @@ interface SupabaseAttachmentRow {
   created_at: string;
 }
 
-const TODO_COLUMNS = "id, title, assignee, due_date, status, created_at, updated_at";
+const TODO_COLUMNS =
+  "id, title, assignee, due_date, status, created_at, updated_at, archived_at";
 const COMMENT_COLUMNS = "id, todo_id, body, author, created_at";
 const ATTACHMENT_COLUMNS = "id, todo_id, storage_path, file_name, size_bytes, created_at";
 
@@ -136,7 +140,8 @@ function toTodoItem(
     comments,
     attachments,
     createdAt: row.created_at,
-    updatedAt: row.updated_at
+    updatedAt: row.updated_at,
+    archivedAt: row.archived_at
   };
 }
 
@@ -256,6 +261,18 @@ export async function getAllTodosAdmin(): Promise<DetrbridgeTodosResult> {
       items: []
     };
   }
+}
+
+/** Arşivde olmayan görev sayısı — sekme rozetleri için. */
+export async function getActiveTodoCount(): Promise<number> {
+  const supabase = createServiceClient();
+  if (!supabase) return 0;
+  const { count, error } = await supabase
+    .from("detrbridge_todos")
+    .select("id", { count: "exact", head: true })
+    .is("archived_at", null);
+  if (error) return 0;
+  return count ?? 0;
 }
 
 export async function getTodoByIdAdmin(id: string): Promise<DetrbridgeTodoItem | null> {
@@ -464,29 +481,30 @@ export async function setTodoStatus(
   }
 }
 
-export async function deleteTodo(id: string): Promise<MutationResult> {
+/**
+ * Görevi arşive alır ya da arşivden çıkarır. Panoda kalıcı silme yok:
+ * arşivlenen görev yorumları, dosyaları ve iş durumuyla birlikte durur,
+ * sadece aktif listeden çıkıp sayfa sonundaki arşiv kartına taşınır.
+ */
+export async function setTodoArchived(
+  id: string,
+  archived: boolean
+): Promise<MutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
-    const { data: attachmentRows } = await supabase
-      .from("detrbridge_todo_attachments")
-      .select("storage_path")
-      .eq("todo_id", id);
-    const { error } = await supabase.from("detrbridge_todos").delete().eq("id", id);
+    const { error } = await supabase
+      .from("detrbridge_todos")
+      .update({ archived_at: archived ? new Date().toISOString() : null })
+      .eq("id", id);
     if (error) throw error;
-    await removeAttachmentObjects(
-      supabase,
-      ((attachmentRows ?? []) as { storage_path: string }[]).map(
-        (row) => row.storage_path
-      )
-    );
     return { ok: true };
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: error instanceof Error ? error.message : "Archive failed."
     };
   }
 }

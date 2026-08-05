@@ -1,6 +1,7 @@
 import { DETRBRIDGE_BRAND_GRADIENT } from "@/app/detrbridge/_components/theme";
 
 export type BridgeTabKey =
+  | "welcome"
   | "logos"
   | "logos-round2"
   | "domains"
@@ -13,6 +14,8 @@ export interface BridgeNavItem {
   key: BridgeTabKey;
   label: string;
   count?: number;
+  /** true ise sekme çubukta doğrudan görünür; değilse sağdaki "Diğer" menüsünde. */
+  primary?: boolean;
 }
 
 interface BridgeNavProps {
@@ -81,14 +84,16 @@ function countBadge(isActive: boolean): string {
 }
 
 /**
- * `/detrbridge` navigation. A single sticky top bar on every breakpoint: brand
- * block, the *active* tab as a pill, a dropdown holding every other tab, then
- * secure badge + sign-out.
+ * `/detrbridge` navigation. A single sticky top bar on every breakpoint:
+ * brand block, the günlük kullanılan sekmeler as inline pills, then — pushed
+ * to the right — a "Diğer" dropdown holding the rest, secure badge and
+ * sign-out.
  *
- * Only the current tab is shown inline because the strip had grown to seven
- * entries and overflowed on phones, pushing the sign-out button off screen. The
- * dropdown is a native <details>, so this stays a Server Component with no
- * client JS — same as the plain ?tab= links it wraps.
+ * Sadece `primary` sekmeler çubukta durur; oylama sekmeleri (logo turları,
+ * domain) menüye iner, çünkü yedi sekme telefonda taşıp çıkış düğmesini ekran
+ * dışına itiyordu. Menü native `<details>` — bu yüzden bileşen hâlâ client JS
+ * içermeyen bir Server Component ve sardığı düz `?tab=` linkleriyle aynı
+ * şekilde çalışır.
  */
 export function BridgeNav({
   activeTab,
@@ -97,8 +102,11 @@ export function BridgeNav({
   cardInnerClass,
   signOutAction
 }: BridgeNavProps) {
-  const active = items.find((item) => item.key === activeTab) ?? items[0];
-  const others = items.filter((item) => item.key !== active?.key);
+  const primary = items.filter((item) => item.primary);
+  const others = items.filter((item) => !item.primary);
+  // Aktif sekme menüdeyse, menü düğmesi onun adını ve aktif stilini alır —
+  // yoksa hangi sekmede olduğun çubukta hiç görünmezdi.
+  const activeInMenu = others.find((item) => item.key === activeTab) ?? null;
 
   // The dropdown panel is absolutely positioned and has to escape the header
   // box, so the shared card chrome is reused minus its overflow clip.
@@ -107,30 +115,53 @@ export function BridgeNav({
   return (
     <header className={`sticky top-0 z-20 ${headerClass}`}>
       <div
-        className={`${cardInnerClass} flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5`}
+        className={`${cardInnerClass} flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 sm:px-5`}
       >
         <BrandBlock compact />
 
-        <nav className="order-3 flex min-w-0 flex-1 items-center gap-2 sm:order-none">
-          {active ? (
-            <a
-              href={`/detrbridge?tab=${active.key}`}
-              aria-current="page"
-              className="flex min-w-0 shrink items-center gap-2 rounded-[1.1rem] px-4 py-2.5 text-xs font-semibold tracking-tight text-white shadow-[0_10px_30px_-10px_rgba(30,58,138,0.7)] ring-1 ring-inset ring-white/15"
-              style={{ backgroundImage: DETRBRIDGE_BRAND_GRADIENT }}
-            >
-              <span className="truncate">{active.label}</span>
-              {active.count !== undefined ? (
-                <span className={countBadge(true)}>{active.count}</span>
-              ) : null}
-            </a>
-          ) : null}
+        <nav className="order-3 flex min-w-0 w-full flex-1 items-center gap-1.5 overflow-x-auto [scrollbar-width:none] sm:order-none sm:w-auto [&::-webkit-scrollbar]:hidden">
+          {primary.map((item) => {
+            const isActive = item.key === activeTab;
+            return (
+              <a
+                key={item.key}
+                href={`/detrbridge?tab=${item.key}`}
+                aria-current={isActive ? "page" : undefined}
+                className={
+                  isActive
+                    ? "flex shrink-0 items-center gap-2 rounded-[1.1rem] px-4 py-2.5 text-xs font-semibold tracking-tight text-white shadow-[0_10px_30px_-10px_rgba(30,58,138,0.7)] ring-1 ring-inset ring-white/15"
+                    : "flex shrink-0 items-center gap-2 rounded-[1.1rem] border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-xs font-semibold tracking-tight text-white/60 transition hover:text-white"
+                }
+                style={isActive ? { backgroundImage: DETRBRIDGE_BRAND_GRADIENT } : undefined}
+              >
+                <span className="whitespace-nowrap">{item.label}</span>
+                {item.count !== undefined ? (
+                  <span className={countBadge(isActive)}>{item.count}</span>
+                ) : null}
+              </a>
+            );
+          })}
+        </nav>
 
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           {others.length > 0 ? (
             <details className="group relative shrink-0">
-              <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded-[1.1rem] border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs font-semibold tracking-tight text-white/70 transition hover:text-white [&::-webkit-details-marker]:hidden">
-                Diğer
-                <span className={countBadge(false)}>{others.length}</span>
+              <summary
+                className={
+                  activeInMenu
+                    ? "flex cursor-pointer list-none items-center gap-1.5 rounded-[1.1rem] px-4 py-2.5 text-xs font-semibold tracking-tight text-white ring-1 ring-inset ring-white/15 [&::-webkit-details-marker]:hidden"
+                    : "flex cursor-pointer list-none items-center gap-1.5 rounded-[1.1rem] border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs font-semibold tracking-tight text-white/70 transition hover:text-white [&::-webkit-details-marker]:hidden"
+                }
+                style={
+                  activeInMenu ? { backgroundImage: DETRBRIDGE_BRAND_GRADIENT } : undefined
+                }
+              >
+                <span className="whitespace-nowrap">
+                  {activeInMenu ? activeInMenu.label : "Diğer"}
+                </span>
+                <span className={countBadge(Boolean(activeInMenu))}>
+                  {activeInMenu?.count ?? others.length}
+                </span>
                 <svg
                   aria-hidden
                   width="14"
@@ -147,12 +178,15 @@ export function BridgeNav({
                 </svg>
               </summary>
 
-              <div className="absolute left-0 top-full z-30 mt-2 flex w-64 max-w-[calc(100vw-2rem)] flex-col gap-1 rounded-[1.25rem] border border-white/10 bg-[#0b1118]/95 p-2 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl">
+              <div className="absolute right-0 top-full z-30 mt-2 flex w-64 max-w-[calc(100vw-2rem)] flex-col gap-1 rounded-[1.25rem] border border-white/10 bg-[#0b1118]/95 p-2 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl">
                 {others.map((item) => (
                   <a
                     key={item.key}
                     href={`/detrbridge?tab=${item.key}`}
-                    className="flex items-center justify-between gap-2 rounded-[0.9rem] px-3 py-2.5 text-xs font-semibold tracking-tight text-white/65 transition hover:bg-white/[0.06] hover:text-white"
+                    aria-current={item.key === activeTab ? "page" : undefined}
+                    className={`flex items-center justify-between gap-2 rounded-[0.9rem] px-3 py-2.5 text-xs font-semibold tracking-tight transition hover:bg-white/[0.06] hover:text-white ${
+                      item.key === activeTab ? "bg-white/[0.06] text-white" : "text-white/65"
+                    }`}
                   >
                     <span className="truncate">{item.label}</span>
                     {item.count !== undefined ? (
@@ -163,10 +197,10 @@ export function BridgeNav({
               </div>
             </details>
           ) : null}
-        </nav>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <SecureBadge />
+          <span className="hidden sm:inline-flex">
+            <SecureBadge />
+          </span>
           <form action={signOutAction}>
             <button
               type="submit"

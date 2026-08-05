@@ -14,7 +14,6 @@ import {
 } from "@/app/detrbridge/_components/bridge-nav";
 import { LogosTab } from "@/app/detrbridge/_components/logos-tab";
 import { VisitsTab } from "@/app/detrbridge/_components/visits-tab";
-import { WelcomeCard } from "@/app/detrbridge/_components/welcome-card";
 import {
   DETRBRIDGE_AMBIENT_BACKGROUND,
   DETRBRIDGE_GRID_TEXTURE
@@ -47,10 +46,11 @@ import {
 } from "@/lib/detrbridge-brief-comments";
 import {
   getAllTodosAdmin,
+  getActiveTodoCount,
   createTodo,
   updateTodo,
   setTodoStatus,
-  deleteTodo,
+  setTodoArchived,
   addComment,
   deleteComment,
   addAttachment,
@@ -58,15 +58,17 @@ import {
 } from "@/lib/detrbridge-todos";
 import {
   getAllTodos2Admin,
+  getActiveTodo2Count,
   createTodo2,
   updateTodo2,
   setTodo2Status,
-  deleteTodo2,
+  setTodo2Archived,
   addComment2,
   deleteComment2,
   addAttachment2,
   deleteAttachment2
 } from "@/lib/detrbridge-todos2";
+import { WelcomeTab } from "@/app/detrbridge/_components/welcome-tab";
 
 export const metadata = {
   title: "detrbridge · Logo Seçimi",
@@ -119,20 +121,21 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
   }
 
   const requestedTab = readParam(params.tab);
+  const KNOWN_TABS: readonly BridgeTabKey[] = [
+    "welcome",
+    "todos2",
+    "meeting-brief",
+    "visits",
+    "todos",
+    "logos",
+    "logos-round2",
+    "domains"
+  ];
+  // ?tab= yoksa ya da tanınmıyorsa karşılama sekmesi açılır.
   const activeTab: BridgeTabKey =
-    requestedTab === "visits"
-      ? "visits"
-      : requestedTab === "todos"
-        ? "todos"
-        : requestedTab === "domains"
-          ? "domains"
-          : requestedTab === "logos-round2"
-            ? "logos-round2"
-            : requestedTab === "todos2"
-              ? "todos2"
-              : requestedTab === "meeting-brief"
-                ? "meeting-brief"
-                : "logos";
+    (KNOWN_TABS as readonly string[]).includes(requestedTab)
+      ? (requestedTab as BridgeTabKey)
+      : "welcome";
 
   const errorParam = readParam(params.error);
   const editTodoId = readParam(params.edit) || null;
@@ -150,11 +153,14 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
   const briefComments =
     activeTab === "meeting-brief" ? await getAllBriefComments() : null;
   const openBriefItemKey = readParam(params.open) || null;
-  const [logoCount, logoCountRound2, domainCount] = await Promise.all([
-    getLogoCount(1),
-    getLogoCount(2),
-    getDomainCount()
-  ]);
+  const [logoCount, logoCountRound2, domainCount, todoCount, todo2Count] =
+    await Promise.all([
+      getLogoCount(1),
+      getLogoCount(2),
+      getDomainCount(),
+      getActiveTodoCount(),
+      getActiveTodo2Count()
+    ]);
 
   const filteredLogos =
     result?.items.filter(
@@ -173,14 +179,17 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
         matchesRating(domain.averageRating, minRating)
     ) ?? [];
 
+  // Çubukta duran sekmeler (primary) günlük kullanılanlar; oylama sekmeleri
+  // sağdaki "Diğer" menüsüne iner.
   const NAV_ITEMS: BridgeNavItem[] = [
+    { key: "welcome", label: "Hoş Geldiniz", primary: true },
+    { key: "todos2", label: "Toplantı Konuları", count: todo2Count, primary: true },
+    { key: "meeting-brief", label: "Toplantı Özeti", primary: true },
+    { key: "visits", label: "Giriş Logları", primary: true },
+    { key: "todos", label: "Görevler", count: todoCount, primary: true },
     { key: "logos", label: "Logo Seçimi · 1. Tur", count: logoCount },
     { key: "logos-round2", label: "Logo Seçimi · 2. Tur", count: logoCountRound2 },
-    { key: "domains", label: "Domain Önerileri", count: domainCount },
-    { key: "todos", label: "Görevler" },
-    { key: "todos2", label: "Toplantı Konuları" },
-    { key: "meeting-brief", label: "Toplantı Özeti" },
-    { key: "visits", label: "Giriş Logları" }
+    { key: "domains", label: "Domain Önerileri", count: domainCount }
   ];
 
   async function createAction(formData: FormData) {
@@ -201,8 +210,8 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     revalidatePath("/detrbridge");
     redirect(
       (outcome.ok
-        ? "/detrbridge"
-        : `/detrbridge?error=${encodeURIComponent(outcome.errorMessage ?? "Logo eklenemedi.")}`) as Parameters<
+        ? "/detrbridge?tab=logos"
+        : `/detrbridge?tab=logos&error=${encodeURIComponent(outcome.errorMessage ?? "Logo eklenemedi.")}`) as Parameters<
         typeof redirect
       >[0]
     );
@@ -222,8 +231,8 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     revalidatePath("/detrbridge");
     redirect(
       (outcome.ok
-        ? "/detrbridge"
-        : `/detrbridge?error=${encodeURIComponent(outcome.errorMessage ?? "Oy kaydedilemedi.")}`) as Parameters<
+        ? "/detrbridge?tab=logos"
+        : `/detrbridge?tab=logos&error=${encodeURIComponent(outcome.errorMessage ?? "Oy kaydedilemedi.")}`) as Parameters<
         typeof redirect
       >[0]
     );
@@ -239,7 +248,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
       await selectLogo(id);
     }
     revalidatePath("/detrbridge");
-    redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    redirect("/detrbridge?tab=logos" as Parameters<typeof redirect>[0]);
   }
 
   async function deleteAction(formData: FormData) {
@@ -252,7 +261,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
       await deleteLogo(id);
     }
     revalidatePath("/detrbridge");
-    redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+    redirect("/detrbridge?tab=logos" as Parameters<typeof redirect>[0]);
   }
 
   async function createRound2Action(formData: FormData) {
@@ -480,14 +489,15 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     redirect("/detrbridge?tab=todos" as Parameters<typeof redirect>[0]);
   }
 
-  async function deleteTodoAction(formData: FormData) {
+  async function archiveTodoAction(formData: FormData) {
     "use server";
     if (!(await isDetrbridgeAuthenticated())) {
       redirect("/detrbridge" as Parameters<typeof redirect>[0]);
     }
     const id = (formData.get("id") as string | null) ?? "";
+    const archived = ((formData.get("archived") as string | null) ?? "1") === "1";
     if (id) {
-      await deleteTodo(id);
+      await setTodoArchived(id, archived);
     }
     revalidatePath("/detrbridge");
     redirect("/detrbridge?tab=todos" as Parameters<typeof redirect>[0]);
@@ -631,14 +641,15 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
   }
 
-  async function deleteTodo2Action(formData: FormData) {
+  async function archiveTodo2Action(formData: FormData) {
     "use server";
     if (!(await isDetrbridgeAuthenticated())) {
       redirect("/detrbridge" as Parameters<typeof redirect>[0]);
     }
     const id = (formData.get("id") as string | null) ?? "";
+    const archived = ((formData.get("archived") as string | null) ?? "1") === "1";
     if (id) {
-      await deleteTodo2(id);
+      await setTodo2Archived(id, archived);
     }
     revalidatePath("/detrbridge");
     redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
@@ -771,10 +782,14 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
         />
 
         <div className="space-y-4">
-          <WelcomeCard
-            isFirstVisit={firstVisit.isFirstVisit}
-            hoursAfterShare={firstVisit.hoursAfterShare}
-          />
+          {activeTab === "welcome" ? (
+            <WelcomeTab
+              sessionName={sessionName ?? ""}
+              isFirstVisit={firstVisit.isFirstVisit}
+              hoursAfterShare={firstVisit.hoursAfterShare}
+              items={NAV_ITEMS.filter((item) => item.key !== "welcome")}
+            />
+          ) : null}
 
           {errorParam && (
             <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
@@ -902,7 +917,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
                 createAction={createTodoAction}
                 updateAction={updateTodoAction}
                 toggleAction={toggleTodoAction}
-                deleteAction={deleteTodoAction}
+                archiveAction={archiveTodoAction}
                 commentAction={commentTodoAction}
                 deleteCommentAction={deleteCommentTodoAction}
                 attachAction={attachTodoAction}
@@ -931,7 +946,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
                 createAction={createTodo2Action}
                 updateAction={updateTodo2Action}
                 toggleAction={toggleTodo2Action}
-                deleteAction={deleteTodo2Action}
+                archiveAction={archiveTodo2Action}
                 commentAction={commentTodo2Action}
                 deleteCommentAction={deleteCommentTodo2Action}
                 attachAction={attachTodo2Action}

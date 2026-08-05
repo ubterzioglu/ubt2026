@@ -361,7 +361,7 @@ export function MeetingBriefTab({
             title="Açık Konular"
             note="Toplantıda konuşulan ama sonuca bağlanmayan başlıklar. Her biri ayrı bir kart — görüşünü doğrudan ilgili konunun altına yaz."
           />
-          <div className="grid gap-3 lg:grid-cols-2">
+          <div className="space-y-3">
             {visibleOpenItems.map((item) => (
               <article
                 key={item.key}
