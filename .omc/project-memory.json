@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1785845558382,
+  "lastScanned": 1785959564456,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -52,7 +52,8 @@
       "start": "next start",
       "lint": "eslint . --max-warnings=0",
       "typecheck": "tsc --noEmit",
-      "migrate": "node scripts/apply-migration.js"
+      "migrate": "pwsh scripts/db-migrations.ps1",
+      "migrate:apply": "pwsh scripts/db-migrations.ps1 -Apply"
     }
   },
   "conventions": {
@@ -83,7 +84,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1785845558332,
+      "lastAccessed": 1785959564377,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -96,7 +97,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1785845558333,
+      "lastAccessed": 1785959564378,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -105,34 +106,34 @@
     "components": {
       "path": "components",
       "purpose": "UI components",
-      "fileCount": 14,
-      "lastAccessed": 1785845558355,
+      "fileCount": 18,
+      "lastAccessed": 1785959564408,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
-        "cv-review-form.tsx",
-        "cv-review-queue-section.tsx",
-        "experience-section.tsx"
+        "contact-section.tsx",
+        "cv-links-section.tsx",
+        "cv-review-form.tsx"
       ]
     },
     "content": {
       "path": "content",
       "purpose": null,
-      "fileCount": 5,
-      "lastAccessed": 1785845558356,
+      "fileCount": 7,
+      "lastAccessed": 1785959564409,
       "keyFiles": [
+        "detrbridge-brief.ts",
         "featured.ts",
         "geo.ts",
         "news-updates.ts",
-        "profile.ts",
-        "site.ts"
+        "profile.ts"
       ]
     },
     "dmgorsel": {
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1785845558357,
+      "lastAccessed": 1785959564409,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -142,19 +143,20 @@
     "docs": {
       "path": "docs",
       "purpose": "Documentation",
-      "fileCount": 3,
-      "lastAccessed": 1785845558357,
+      "fileCount": 4,
+      "lastAccessed": 1785959564410,
       "keyFiles": [
         "desiremap-scraper-restructure-2026-07-21.md",
         "service-finder-devir-raporu-2026-07-25.md",
-        "service-finder-expansion-report-2026-07-25.html"
+        "service-finder-expansion-report-2026-07-25.html",
+        "super-admin-ve-deploy-notlari-2026-08-04.md"
       ]
     },
     "experience": {
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1785845558358,
+      "lastAccessed": 1785959564410,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -164,8 +166,8 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 25,
-      "lastAccessed": 1785845558358,
+      "fileCount": 29,
+      "lastAccessed": 1785959564411,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -178,7 +180,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1785845558358,
+      "lastAccessed": 1785959564411,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -191,7 +193,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 4,
-      "lastAccessed": 1785845558359,
+      "lastAccessed": 1785959564412,
       "keyFiles": [
         "1yeni.png",
         "logoubt.png",
@@ -201,35 +203,35 @@
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
-      "fileCount": 13,
-      "lastAccessed": 1785845558359,
+      "fileCount": 15,
+      "lastAccessed": 1785959564412,
       "keyFiles": [
+        "build-prod-env.ps1",
         "bulk-upload-logos.ts",
         "convert-cvopt-to-reviews.mjs",
-        "delete-detr-files-bucket.ts",
-        "dev-finder-bulk-continue.ts",
-        "dev-finder-bulk-extra10-remaining.ts"
+        "db-migrations.ps1",
+        "delete-detr-files-bucket.ts"
       ]
     },
     "skillubt": {
       "path": "skillubt",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1785845558359,
+      "lastAccessed": 1785959564413,
       "keyFiles": []
     },
     "standalone-tools": {
       "path": "standalone-tools",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1785845558360,
+      "lastAccessed": 1785959564413,
       "keyFiles": []
     },
     "supabase": {
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1785845558360,
+      "lastAccessed": 1785959564414,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -239,7 +241,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 3,
-      "lastAccessed": 1785845558361,
+      "lastAccessed": 1785959564414,
       "keyFiles": [
         "appointment.ts",
         "cv-review.ts",
@@ -250,14 +252,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1785845558362,
+      "lastAccessed": 1785959564415,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
-      "fileCount": 45,
-      "lastAccessed": 1785845558366,
+      "fileCount": 50,
+      "lastAccessed": 1785959564419,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",
@@ -265,307 +267,6 @@
       ]
     }
   },
-  "hotPaths": [
-    {
-      "path": "app\\detrbridge\\page.tsx",
-      "accessCount": 26,
-      "lastAccessed": 1785916334380,
-      "type": "file"
-    },
-    {
-      "path": "lib\\admin-auth.ts",
-      "accessCount": 21,
-      "lastAccessed": 1785854535522,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\page.tsx",
-      "accessCount": 14,
-      "lastAccessed": 1785855693152,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\meeting-brief-tab.tsx",
-      "accessCount": 13,
-      "lastAccessed": 1785916353589,
-      "type": "file"
-    },
-    {
-      "path": "content\\ubtsa-konsept.ts",
-      "accessCount": 11,
-      "lastAccessed": 1785851306261,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\page.tsx",
-      "accessCount": 10,
-      "lastAccessed": 1785854700277,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 9,
-      "lastAccessed": 1785915260774,
-      "type": "directory"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\board-header.tsx",
-      "accessCount": 8,
-      "lastAccessed": 1785851574943,
-      "type": "file"
-    },
-    {
-      "path": "middleware.ts",
-      "accessCount": 8,
-      "lastAccessed": 1785854562932,
-      "type": "file"
-    },
-    {
-      "path": "lib\\detrbridge-todos.ts",
-      "accessCount": 8,
-      "lastAccessed": 1785916246236,
-      "type": "file"
-    },
-    {
-      "path": "app",
-      "accessCount": 7,
-      "lastAccessed": 1785853399715,
-      "type": "directory"
-    },
-    {
-      "path": "app\\ubtsa\\_actions.ts",
-      "accessCount": 5,
-      "lastAccessed": 1785853088758,
-      "type": "file"
-    },
-    {
-      "path": "lib\\appointments.ts",
-      "accessCount": 4,
-      "lastAccessed": 1785854230332,
-      "type": "directory"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\madde-item.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1785851212051,
-      "type": "file"
-    },
-    {
-      "path": "content\\detrbridge-brief.ts",
-      "accessCount": 3,
-      "lastAccessed": 1785851346407,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\theme.ts",
-      "accessCount": 3,
-      "lastAccessed": 1785851356258,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\konsept-nav.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1785851504781,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\_components\\admin-gate.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1785853311013,
-      "type": "file"
-    },
-    {
-      "path": "lib\\secure-compare.ts",
-      "accessCount": 3,
-      "lastAccessed": 1785853364604,
-      "type": "file"
-    },
-    {
-      "path": "app\\admin\\_actions.ts",
-      "accessCount": 3,
-      "lastAccessed": 1785853364906,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260804140000_create_detrbridge_brief_comments.sql",
-      "accessCount": 3,
-      "lastAccessed": 1785861830948,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\comment-thread.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1785851171056,
-      "type": "file"
-    },
-    {
-      "path": "lib\\ubtsa-comments.ts",
-      "accessCount": 2,
-      "lastAccessed": 1785851178267,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260804090000_create_ubtsa_comments.sql",
-      "accessCount": 2,
-      "lastAccessed": 1785851211880,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_actions.ts",
-      "accessCount": 2,
-      "lastAccessed": 1785853088479,
-      "type": "file"
-    },
-    {
-      "path": "app\\sandbox\\page.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1785853134127,
-      "type": "file"
-    },
-    {
-      "path": "app\\api\\elif-auth\\route.ts",
-      "accessCount": 2,
-      "lastAccessed": 1785853378122,
-      "type": "file"
-    },
-    {
-      "path": "app\\api\\zelifs\\route.ts",
-      "accessCount": 2,
-      "lastAccessed": 1785854573342,
-      "type": "file"
-    },
-    {
-      "path": "lib\\detrbridge-brief-comments.ts",
-      "accessCount": 2,
-      "lastAccessed": 1785855957161,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260726100000_create_detrbridge_todos2.sql",
-      "accessCount": 2,
-      "lastAccessed": 1785915131916,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\theme.ts",
-      "accessCount": 2,
-      "lastAccessed": 1785915658071,
-      "type": "file"
-    },
-    {
-      "path": "weiterbildung_isbirligi.html",
-      "accessCount": 1,
-      "lastAccessed": 1785845610827,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\detrbridge-login.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785846301792,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\password-field.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785846309479,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\password-field.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785846561903,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\ubtsa-login.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785846590003,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\konsept-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785846636121,
-      "type": "file"
-    },
-    {
-      "path": "standalone-tools",
-      "accessCount": 1,
-      "lastAccessed": 1785848703754,
-      "type": "directory"
-    },
-    {
-      "path": "app\\skillubt\\page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785848759336,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\sorular-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785850625971,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\welcome-card.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785850692841,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\notes-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785851333494,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260804140000_create_ubtsa_visits.sql",
-      "accessCount": 1,
-      "lastAccessed": 1785851381934,
-      "type": "file"
-    },
-    {
-      "path": "lib\\ubtsa-visits.ts",
-      "accessCount": 1,
-      "lastAccessed": 1785851396346,
-      "type": "file"
-    },
-    {
-      "path": "app\\detrbridge\\_components\\brief-comment-thread.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785851403677,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\guide-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785851439981,
-      "type": "file"
-    },
-    {
-      "path": "app\\ubtsa\\_components\\visits-section.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785851462079,
-      "type": "file"
-    },
-    {
-      "path": "AGENTS.md",
-      "accessCount": 1,
-      "lastAccessed": 1785851657099,
-      "type": "directory"
-    },
-    {
-      "path": "app\\globals.css",
-      "accessCount": 1,
-      "lastAccessed": 1785853033809,
-      "type": "directory"
-    },
-    {
-      "path": "app\\layout.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1785853035352,
-      "type": "file"
-    }
-  ],
+  "hotPaths": [],
   "userDirectives": []
 }

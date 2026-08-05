@@ -1,7 +1,0 @@
-{
-  "tool_name": "PowerShell",
-  "tool_input_preview": "{\"command\":\"$envVars = @{}; foreach ($line in Get-Content .env.local) { if ($line -match '^\\\\s*([A-Za-z_][A-Za-z0-9_]*)\\\\s*=\\\\s*(.*)$') { $envVars[$Matches[1]] = $Matches[2].Trim().Trim('\\\"') } }; $en...",
-  "error": "Exit code 2\nfail aws-0-eu-central-1 : psql: error: connection to server at \"aws-0-eu-central-1.pooler.supabase.com\" (18.198.145.\r\nfail aws-1-eu-central-1 : psql: error: connection to server at \"aws-1-eu-central-1.pooler.supabase.com\" (3.65.151.22\r\nfail aws-0-eu-central-2 : psql: error: connection to server at \"aws-0-eu-central-2.pooler.supabase.com\" (51.96.34.18\r\nOK -> aws-1-eu-central-2\r\nfail aws-0-eu-west-1 : psql: error: connection to server at \"aws-0-eu-west-1.pooler.supabase.com\" (34.241.16...",
-  "timestamp": "2026-08-05T07:44:57.427Z",
-  "retry_count": 1
-}
