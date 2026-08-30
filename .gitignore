@@ -25,3 +25,6 @@ desiremap-candidates*.json
 docs/logoubt/
 docs/logoubt2/
 .local-archive/
+# Gemini sohbet exportlari - buyuk ve gereksiz, commitleme
+*Google Gemini.html
+*Google Gemini_files/

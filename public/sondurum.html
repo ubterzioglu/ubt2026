@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Almanya – Türkiye Gıda Fiyatları: Son Durum</title>
+<meta name="description" content="Almanya ve Türkiye gıda fiyatları karşılaştırma tablosu, Ağustos 2026.">
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --bg:#f6f4f0;
+    --surface:#ffffff;
+    --ink:#1c1b19;
+    --ink-soft:#57534e;
+    --ink-faint:#8a8580;
+    --line:#e5e0d8;
+    --line-soft:#efeae2;
+    --de:#1f6f5c;
+    --de-bg:#eaf4f0;
+    --tr:#b4472b;
+    --tr-bg:#fbeeea;
+    --accent:#2f5d8a;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px 80px}
+
+  /* ---- header ---- */
+  header{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+  .eyebrow{
+    display:inline-block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:600;margin-bottom:18px;
+  }
+  h1{
+    font-size:clamp(30px,5vw,46px);line-height:1.15;margin:0 0 16px;
+    letter-spacing:-.02em;font-weight:700;
+  }
+
+  /* ---- sections ---- */
+  section{padding-top:52px}
+  h2{
+    font-size:clamp(22px,3vw,28px);line-height:1.25;margin:0 0 8px;
+    letter-spacing:-.015em;font-weight:700;
+  }
+  h2 + .sub{color:var(--ink-faint);font-size:15px;margin:0 0 26px}
+  p{margin:0 0 18px}
+  a{color:var(--accent);text-underline-offset:3px}
+  a:hover{text-decoration-thickness:2px}
+  strong{font-weight:650}
+
+  /* ---- key numbers ---- */
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:28px 0 8px}
+  .fact{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px}
+  .fact .n{font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.1;display:block}
+  .fact .l{font-size:13.5px;color:var(--ink-soft);margin-top:8px;display:block;line-height:1.5}
+  .fact.de .n{color:var(--de)}
+  .fact.tr .n{color:var(--tr)}
+
+  /* ---- table ---- */
+  .tablecard{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;margin-bottom:16px;
+  }
+  .scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:15px;min-width:720px}
+  thead th{
+    background:#faf8f5;text-align:left;font-weight:650;font-size:12.5px;
+    letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);
+    padding:14px 16px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:bottom;
+  }
+  tbody td{padding:13px 16px;border-bottom:1px solid var(--line-soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#fbfaf8}
+  td.item{font-weight:600;white-space:normal;min-width:150px}
+  td.de{color:var(--de);background:var(--de-bg)}
+  td.tr{color:var(--tr);background:var(--tr-bg)}
+  td.pct{font-weight:650}
+  .tnote{font-size:13.5px;color:var(--ink-faint);margin:0 0 8px;line-height:1.6}
+
+  /* ---- sources ---- */
+  .sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:26px}
+  .sgroup{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px}
+  .sgroup h4{
+    margin:0 0 12px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:650;
+  }
+  .sgroup ul{list-style:none;margin:0;padding:0}
+  .sgroup li{margin-bottom:9px;font-size:15px;line-height:1.45}
+  .sgroup li:last-child{margin-bottom:0}
+
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    header{padding:44px 0 32px}
+    section{padding-top:42px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Veri Analizi · Son Durum</span>
+  <h1>Almanya – Türkiye gıda fiyatları: rakamlar gerçekten ne söylüyor?</h1>
+</header>
+
+<section>
+  <h2>Karşılaştırma tablosu</h2>
+  <div class="tablecard">
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>
+            <th>Ürün</th>
+            <th>Almanya</th>
+            <th>Türkiye</th>
+            <th>TÜİK</th>
+            <th>Hal &amp; Borsa</th>
+            <th>Yıllık artış</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="item">Domates · 1 kg</td><td class="de">€ 1,50 – 1,80</td><td class="tr">€ 2,38 – 3,08</td><td>€ 1,13 – 1,50</td><td>€ 1,00 – 1,75</td><td class="pct">%65</td></tr>
+          <tr><td class="item">Salatalık · 1 kg</td><td class="de">€ 0,99 – 1,20</td><td class="tr">€ 1,53 – 2,10</td><td>€ 0,75 – 1,00</td><td>€ 0,63 – 1,13</td><td class="pct">%70</td></tr>
+          <tr><td class="item">Muz · 1 kg</td><td class="de">€ 1,09 – 1,29</td><td class="tr">€ 2,53 – 3,23</td><td>€ 1,50 – 2,00</td><td>€ 1,75 – 2,25</td><td class="pct">%55</td></tr>
+          <tr><td class="item">Soğan · 1 kg</td><td class="de">€ 0,89 – 1,10</td><td class="tr">€ 1,05 – 1,53</td><td>€ 0,50 – 0,75</td><td>€ 0,38 – 0,63</td><td class="pct">%80</td></tr>
+          <tr><td class="item">Patates · 1 kg</td><td class="de">€ 0,79 – 1,00</td><td class="tr">€ 0,98 – 1,25</td><td>€ 0,38 – 0,63</td><td>€ 0,30 – 0,50</td><td class="pct">%75</td></tr>
+          <tr><td class="item">Dana kıyma · 1 kg</td><td class="de">€ 7,00 – 9,00</td><td class="tr">€ 13,75 – 17,50</td><td>€ 10,00 – 11,25</td><td>€ 8,75 – 10,00</td><td class="pct">%85</td></tr>
+          <tr><td class="item">Süt · 1 litre</td><td class="de">€ 0,95 – 1,05</td><td class="tr">€ 1,13 – 1,50</td><td>€ 0,75 – 0,88</td><td>€ 0,45 – 0,55</td><td class="pct">%60</td></tr>
+          <tr><td class="item">Yumurta · 10 adet</td><td class="de">€ 1,60 – 2,00</td><td class="tr">€ 1,50 – 2,25</td><td>€ 1,00 – 1,25</td><td>€ 0,75 – 1,00</td><td class="pct">%70</td></tr>
+          <tr><td class="item">Beyaz peynir · 1 kg</td><td class="de">€ 6,00 – 8,00</td><td class="tr">€ 8,75 – 12,50</td><td>€ 5,00 – 6,25</td><td>€ 3,75 – 4,50</td><td class="pct">%75</td></tr>
+          <tr><td class="item">Ayçiçek yağı · 1 litre</td><td class="de">€ 1,39 – 1,79</td><td class="tr">€ 1,75 – 2,25</td><td>€ 1,25 – 1,50</td><td>€ 1,00 – 1,13</td><td class="pct">%50</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="tnote">Dar ekranda tablo yana kaydırılabilir. Hayvansal ürünlerin toptan fiyatları için hal verileri yerine Ticaret Borsası ve Ulusal Süt Konseyi çıkış fiyatları kullanılmıştır.</p>
+
+  <div class="facts">
+    <div class="fact tr"><span class="n">%50–85</span><span class="l">Türkiye&rsquo;de ürün bazında yıllık fiyat artışı (2025 → 2026)</span></div>
+    <div class="fact de"><span class="n">2–3×</span><span class="l">Hal toptan çıkışı ile zincir market etiketi arasındaki fark</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Veri kaynakları</h2>
+  <p class="sub">Fiyatlar aşağıdaki platformların Ağustos 2026 dönemi katalog, reyon ve bülten verilerinden derlenmiştir</p>
+
+  <div class="sources">
+    <div class="sgroup">
+      <h4>Almanya · indirim marketleri</h4>
+      <ul>
+        <li><a href="https://www.aldi-sued.de" target="_blank" rel="noopener noreferrer">Aldi Süd</a></li>
+        <li><a href="https://www.lidl.de" target="_blank" rel="noopener noreferrer">Lidl Deutschland</a></li>
+        <li><a href="https://www.netto-online.de" target="_blank" rel="noopener noreferrer">Netto Marken-Discount</a></li>
+        <li><a href="https://www.kaufland.de" target="_blank" rel="noopener noreferrer">Kaufland</a></li>
+      </ul>
+    </div>
+    <div class="sgroup">
+      <h4>Türkiye · zincir marketler</h4>
+      <ul>
+        <li><a href="https://www.migros.com.tr" target="_blank" rel="noopener noreferrer">Migros Sanal Market</a></li>
+        <li><a href="https://www.macrocenter.com.tr" target="_blank" rel="noopener noreferrer">Macrocenter</a></li>
+        <li><a href="https://www.carrefoursa.com" target="_blank" rel="noopener noreferrer">CarrefourSA</a></li>
+      </ul>
+    </div>
+    <div class="sgroup">
+      <h4>Resmî kurum verileri</h4>
+      <ul>
+        <li><a href="https://data.tuik.gov.tr" target="_blank" rel="noopener noreferrer">TÜİK · Tüketici Fiyat Endeksi</a></li>
+        <li><a href="https://hal.ibb.istanbul" target="_blank" rel="noopener noreferrer">İBB Hal Müdürlüğü · günlük bülten</a></li>
+      </ul>
+    </div>
+    <div class="sgroup">
+      <h4>Toptan &amp; borsa verileri</h4>
+      <ul>
+        <li><a href="https://ulusalsutkonseyi.org.tr" target="_blank" rel="noopener noreferrer">Ulusal Süt Konseyi · çiğ süt</a></li>
+        <li><a href="https://www.utb.org.tr" target="_blank" rel="noopener noreferrer">Uzunköprü Ticaret Borsası · ayçiçek</a></li>
+        <li><a href="https://basmakcikoop.com" target="_blank" rel="noopener noreferrer">Başmakçı Tavukçuluk Kooperatifi · yumurta</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>
