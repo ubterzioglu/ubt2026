@@ -2,29 +2,37 @@ interface OtherRoute {
   href: string;
   label: string;
   /**
-   * Whether the page sits behind its own password gate. Gated pages open
-   * without a prompt for anyone holding an admin session (see isSuperAdmin in
-   * lib/admin-auth.ts); the badge says so, so the row also documents which
-   * pages are public.
+   * How the page is reached. "super-admin" pages sit behind their own password
+   * but open without a prompt for anyone holding an admin session (see
+   * isSuperAdmin in lib/admin-auth.ts); "password" pages ignore that session
+   * and always ask; "public" pages are ungated. The badge says which, so the
+   * row documents the gate as well as the path.
    */
-  gated: boolean;
+  access: "super-admin" | "password" | "public";
 }
 
+const ACCESS_LABEL: Record<OtherRoute["access"], string> = {
+  "super-admin": "Super admin",
+  password: "Password",
+  public: "Public"
+};
+
 const OTHER_ROUTES: OtherRoute[] = [
-  { href: "/bakcakanat", label: "Bakçakanat", gated: true },
-  { href: "/batubt", label: "Batu UBT", gated: true },
-  { href: "/buyorbye", label: "Buy or Bye", gated: false },
-  { href: "/buyorbyetr", label: "Buy or Bye (TR)", gated: false },
-  { href: "/detrbridge", label: "detrbridge", gated: true },
-  { href: "/dm", label: "DM board", gated: true },
-  { href: "/elif", label: "Elif", gated: true },
-  { href: "/holiday", label: "Holiday", gated: false },
-  { href: "/sandbox", label: "Sandbox", gated: false },
-  { href: "/skillubt", label: "Skill UBT", gated: false },
-  { href: "/smellable", label: "Smellable", gated: false },
-  { href: "/ubtsa", label: "UBT SA", gated: true },
-  { href: "/zats", label: "Zats", gated: false },
-  { href: "/zpath", label: "Zpath", gated: false }
+  { href: "/bakcakanat", label: "Bakçakanat", access: "super-admin" },
+  { href: "/batubt", label: "Batu UBT", access: "super-admin" },
+  { href: "/buyorbye", label: "Buy or Bye", access: "public" },
+  { href: "/buyorbyetr", label: "Buy or Bye (TR)", access: "public" },
+  { href: "/detrbridge", label: "detrbridge", access: "super-admin" },
+  { href: "/dm", label: "DM board", access: "super-admin" },
+  { href: "/elif", label: "Elif", access: "super-admin" },
+  { href: "/holiday", label: "Holiday", access: "public" },
+  { href: "/newdragoman", label: "New Dragoman", access: "password" },
+  { href: "/sandbox", label: "Sandbox", access: "public" },
+  { href: "/skillubt", label: "Skill UBT", access: "public" },
+  { href: "/smellable", label: "Smellable", access: "public" },
+  { href: "/ubtsa", label: "UBT SA", access: "super-admin" },
+  { href: "/zats", label: "Zats", access: "public" },
+  { href: "/zpath", label: "Zpath", access: "public" }
 ];
 
 /**
@@ -59,12 +67,12 @@ export function RouteList() {
               <span className="flex shrink-0 items-center gap-3">
                 <span
                   className={
-                    route.gated
-                      ? "rounded-full bg-accent/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent"
-                      : "rounded-full bg-paper px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/60"
+                    route.access === "public"
+                      ? "rounded-full bg-paper px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/60"
+                      : "rounded-full bg-accent/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent"
                   }
                 >
-                  {route.gated ? "Super admin" : "Public"}
+                  {ACCESS_LABEL[route.access]}
                 </span>
                 <svg
                   aria-hidden

@@ -635,26 +635,26 @@ export const NEWDRAGOMAN_ACCESS_COOKIE = "ubt_newdragoman_access";
 const NEWDRAGOMAN_LABEL = "newdragoman";
 
 /**
- * Reads the /newdragoman password. Falls back to the `ubt` ubtsa password so
- * the page is reachable with the credential already in use for the other
- * boards without provisioning a new env var on the host; set
- * NEWDRAGOMAN_PASSWORD to give this page its own, independently rotatable
- * secret.
+ * Deliberately a literal default, unlike every other gate in this file: the
+ * proposal is read-only marketing material handed to the Dragoman side, so the
+ * password is meant to be trivially shareable rather than secret. Set
+ * NEWDRAGOMAN_PASSWORD on the host to override it.
  */
+const NEWDRAGOMAN_DEFAULT_PASSWORD = "ubt";
+
+/** Reads the /newdragoman password (env override, else the shared default). */
 function getNewdragomanPassword(): string {
-  const ownPassword = process.env.NEWDRAGOMAN_PASSWORD?.trim();
-  if (ownPassword) return ownPassword;
-  return process.env.UBT_UBTSA_PASSWORD?.trim() ?? "";
+  return process.env.NEWDRAGOMAN_PASSWORD?.trim() || NEWDRAGOMAN_DEFAULT_PASSWORD;
 }
 
 /**
  * True when the current request carries a valid /newdragoman session cookie.
  *
- * Fails CLOSED: with neither password configured no cookie can verify, so a
- * forgotten env var never publishes the document.
+ * Unlike the other boards this does NOT honour the super-admin cookie: the
+ * point of the page is to show the gate the Dragoman side will see, and a
+ * signed-in admin walking straight in hides exactly that.
  */
 export async function isNewdragomanAuthenticated(): Promise<boolean> {
-  if (await isSuperAdmin()) return true;
   const password = getNewdragomanPassword();
   if (!password) return false;
   const cookieStore = await cookies();
@@ -693,8 +693,9 @@ export async function signInNewdragoman(candidate: string): Promise<boolean> {
 
 /**
  * Clears the /newdragoman session cookie (sign out). Expires it with the exact
- * attributes used at sign-in — see signOutBakcakanat for why. Also revokes the
- * super-admin session, for the reason given in signOutTasksAdmin.
+ * attributes used at sign-in — see signOutBakcakanat for why. The super-admin
+ * session is left alone here: this gate ignores it, so revoking it would sign
+ * the admin out of every other board for no reason.
  */
 export async function signOutNewdragoman(): Promise<void> {
   const cookieStore = await cookies();
@@ -705,5 +706,4 @@ export async function signOutNewdragoman(): Promise<void> {
     path: "/newdragoman",
     maxAge: 0
   });
-  await revokeSuperAdmin();
 }
