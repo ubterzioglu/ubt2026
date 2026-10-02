@@ -620,3 +620,90 @@ export async function signOutUbtsa(): Promise<void> {
   });
   await revokeSuperAdmin();
 }
+
+/**
+ * The `/newdragoman` redesign proposal (a self-contained HTML document shared
+ * with the Dragoman side) is gated by a single shared password, like
+ * /bakcakanat — nothing on the page is written, so there is no identity to
+ * stamp and no need for a name allowlist.
+ *
+ * The cookie stores an HMAC of a fixed label keyed by the current password
+ * rather than the password itself, so a leaked cookie never hands out the
+ * reusable literal secret and rotating the password revokes every session.
+ */
+export const NEWDRAGOMAN_ACCESS_COOKIE = "ubt_newdragoman_access";
+const NEWDRAGOMAN_LABEL = "newdragoman";
+
+/**
+ * Reads the /newdragoman password. Falls back to the `ubt` ubtsa password so
+ * the page is reachable with the credential already in use for the other
+ * boards without provisioning a new env var on the host; set
+ * NEWDRAGOMAN_PASSWORD to give this page its own, independently rotatable
+ * secret.
+ */
+function getNewdragomanPassword(): string {
+  const ownPassword = process.env.NEWDRAGOMAN_PASSWORD?.trim();
+  if (ownPassword) return ownPassword;
+  return process.env.UBT_UBTSA_PASSWORD?.trim() ?? "";
+}
+
+/**
+ * True when the current request carries a valid /newdragoman session cookie.
+ *
+ * Fails CLOSED: with neither password configured no cookie can verify, so a
+ * forgotten env var never publishes the document.
+ */
+export async function isNewdragomanAuthenticated(): Promise<boolean> {
+  if (await isSuperAdmin()) return true;
+  const password = getNewdragomanPassword();
+  if (!password) return false;
+  const cookieStore = await cookies();
+  const token = cookieStore.get(NEWDRAGOMAN_ACCESS_COOKIE)?.value ?? "";
+  if (!token) return false;
+  return verifySessionToken(token, password, NEWDRAGOMAN_LABEL);
+}
+
+/**
+ * Validates the supplied password and, when correct, persists an opaque
+ * session token in an HttpOnly cookie scoped to /newdragoman. Returns whether
+ * the sign-in was accepted.
+ */
+export async function signInNewdragoman(candidate: string): Promise<boolean> {
+  const password = getNewdragomanPassword();
+  // Fail closed: without a configured password no sign-in is possible.
+  if (!password) return false;
+  if (!checkRateLimit(`newdragoman:${await getClientIp()}`)) return false;
+  if (!secureCompare(candidate.trim(), password)) return false;
+
+  const cookieStore = await cookies();
+  cookieStore.set(
+    NEWDRAGOMAN_ACCESS_COOKIE,
+    deriveSessionToken(password, NEWDRAGOMAN_LABEL),
+    {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/newdragoman",
+      maxAge: ADMIN_COOKIE_MAX_AGE_SECONDS
+    }
+  );
+
+  return true;
+}
+
+/**
+ * Clears the /newdragoman session cookie (sign out). Expires it with the exact
+ * attributes used at sign-in — see signOutBakcakanat for why. Also revokes the
+ * super-admin session, for the reason given in signOutTasksAdmin.
+ */
+export async function signOutNewdragoman(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(NEWDRAGOMAN_ACCESS_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/newdragoman",
+    maxAge: 0
+  });
+  await revokeSuperAdmin();
+}

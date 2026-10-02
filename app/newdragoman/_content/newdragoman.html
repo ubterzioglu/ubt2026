@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dragoman-turkey.com yenileme önerisi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1F1A14;
+    --teal:#016D53;
+    --buoy:#FAC896;
+    --foam:#FDF3EA;
+    --sans:"Schibsted Grotesk", system-ui, sans-serif;
+    --serif:"Newsreader", Georgia, serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+  body{margin:0;font-family:var(--serif);font-size:19px;line-height:1.6;color:var(--ink);background:#073D31;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:var(--sans);line-height:1.1;margin:0}
+  a{color:var(--accent)}
+  :focus-visible{outline:3px solid var(--accent,#016D53);outline-offset:3px;border-radius:2px}
+
+  /* Sections: each one a few metres deeper */
+  .layer{--bg:#FDF3EA;--fg:var(--ink);--muted:#5E4F42;--line:rgba(31,26,20,.18);--accent:#016D53;--panel:rgba(255,255,255,.55);
+    background:var(--bg);color:var(--fg);padding:104px 0 112px;position:relative}
+  /* drago: orange, light to full */
+  .d1{--bg:#FBE2CB}
+  .d2{--bg:#F5C59A;--muted:#4F3A28;--accent:#064534;--panel:rgba(255,255,255,.4)}
+  .d3{--bg:#EE9A52;--fg:#1F1A14;--muted:#3D2A18;--line:rgba(31,26,20,.22);--accent:#064534;--panel:rgba(255,255,255,.3)}
+  .d4{--bg:#E36D09;--fg:#1F140A;--muted:#3A2210;--line:rgba(31,20,10,.25);--accent:#1F140A;--panel:rgba(255,255,255,.18)}
+  /* man: green, full to deep */
+  .d5{--bg:#016D53;--fg:#F3FAF7;--muted:#C4E2D7;--line:rgba(243,250,247,.24);--accent:#FAC896;--panel:rgba(255,255,255,.08)}
+  .d6{--bg:#0B5E4A;--fg:#F3FAF7;--muted:#B5D6CA;--line:rgba(243,250,247,.2);--accent:#FAC896;--panel:rgba(255,255,255,.07)}
+  .d7{--bg:#0A4E3E;--fg:#F3FAF7;--muted:#A8CABE;--line:rgba(243,250,247,.18);--accent:#FAC896;--panel:rgba(255,255,255,.06)}
+  .d8{--bg:#073D31;--fg:#F3FAF7;--muted:#9DBFB3;--line:rgba(243,250,247,.16);--accent:#FAC896;--panel:rgba(255,255,255,.05)}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px 0 32px}
+  @media (min-width:1240px){.wrap{padding-left:210px;max-width:1290px}}
+  .narrow{max-width:68ch}
+
+  .depth{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--accent);font-variant-numeric:tabular-nums;margin:0 0 14px;letter-spacing:.01em}
+  h2{font-size:clamp(28px,2.7vw,38px);font-weight:800;letter-spacing:-.02em;margin-bottom:16px}
+  .lead.one{font-size:20px;max-width:none}
+  @media (min-width:1100px){h2,.lead.one,.hero h1{white-space:nowrap}}
+  .hero .lead{max-width:none}
+  h3{font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+  p{margin:0 0 1em}
+  .lead{font-size:22px;line-height:1.5;color:var(--fg);max-width:60ch}
+  .muted{color:var(--muted)}
+  .small{font-size:16px}
+
+  /* placeholder for figures the owner still has to fill in */
+  .tbd{font-family:var(--sans);font-size:.85em;font-weight:600;border:1.5px dashed var(--accent);color:var(--accent);padding:1px 8px;border-radius:4px;white-space:nowrap;background:color-mix(in srgb, var(--accent) 10%, transparent)}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:72px 0 0;overflow:hidden}
+  .hero .meta{font-family:var(--sans);font-size:15px;color:var(--muted);margin-bottom:56px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .hero .meta strong{color:var(--ink);font-weight:700}
+  .hero h1{font-size:clamp(34px,4.6vw,72px);font-weight:800;letter-spacing:-.045em;line-height:.92;margin-bottom:36px}
+  .hero .lead{margin-bottom:28px}
+  .toc{margin-bottom:40px;font-family:var(--sans);font-size:17px}
+  .toc-label{display:block;color:var(--muted);margin-bottom:10px}
+  .toc ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+  .toc a{color:var(--fg);font-weight:600;text-decoration:none;border-bottom:1.5px solid var(--accent);padding-bottom:1px}
+  .toc a:hover{color:var(--accent)}
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink);margin:0}
+  .facts div{padding:18px 20px 22px 0}
+  .facts dt{font-family:var(--sans);font-size:15px;color:var(--muted);margin-bottom:4px}
+  .facts dd{margin:0;font-family:var(--sans);font-size:26px;font-weight:700;letter-spacing:-.01em}
+  @media (max-width:760px){.facts{grid-template-columns:1fr 1fr}}
+  .waterline{display:block;width:100%;height:56px;margin-top:64px}
+
+  /* ---------- depth rail ---------- */
+  .rail{position:fixed;left:28px;top:50%;transform:translateY(-50%);z-index:20;display:none;font-family:var(--sans)}
+  @media (min-width:1240px){.rail{display:block}}
+  .rail ol{list-style:none;margin:0;padding:0 0 0 18px;border-left:2px solid rgba(160,150,130,.5);position:relative}
+  .rail li{margin:0 0 14px;line-height:1}
+  .rail li:last-child{margin-bottom:0}
+  .rail a{display:flex;align-items:center;gap:8px;text-decoration:none;font-size:13px;font-weight:600;color:rgba(243,250,247,.7);font-variant-numeric:tabular-nums}
+  .rail a span{white-space:nowrap;font-weight:500}
+  .rail li.on a span{font-weight:700}
+  .rail li.on a{color:var(--buoy)}
+  .rail .diver{position:absolute;left:-7px;width:12px;height:12px;border-radius:50%;background:var(--buoy);box-shadow:0 0 0 3px rgba(250,200,150,.3);transition:top .15s linear}
+  .rail .readout{margin-top:18px;font-size:22px;font-weight:800;color:var(--buoy);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .rail.light a{color:rgba(31,26,20,.5)}
+  .rail.light li.on a{color:var(--teal)}
+  .rail.light .readout{color:var(--teal)}
+  .rail.light .diver{background:var(--teal);box-shadow:0 0 0 3px rgba(1,109,83,.2)}
+
+  /* ---------- today ---------- */
+  .two{display:grid;grid-template-columns:1fr;gap:48px;margin-top:40px;max-width:80ch}
+  @media (max-width:820px){.two{grid-template-columns:1fr;gap:32px}}
+  .plain{list-style:none;padding:0;margin:0}
+  .plain li{padding:12px 0;border-top:1px solid var(--line)}
+  .plain li:last-child{border-bottom:1px solid var(--line)}
+  .plain b{font-family:var(--sans);font-weight:700}
+
+  /* ---------- comparison ---------- */
+  .cmp{width:100%;border-collapse:collapse;margin-top:40px;font-size:17px}
+  .cmp th,.cmp td{text-align:left;vertical-align:top;padding:16px 18px 16px 0;border-top:1px solid var(--line)}
+  .cmp thead th{font-family:var(--sans);font-size:15px;font-weight:700;color:var(--muted);border-top:0;padding-bottom:10px}
+  .cmp thead th:last-child{color:var(--fg)}
+  .cmp tbody th{font-family:var(--sans);font-weight:700;font-size:16px;width:17%}
+  .cmp td.old{color:var(--muted);width:38%}
+  .cmp td.new{width:45%}
+  .cmp td.new::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:10px;vertical-align:2px}
+  @media (max-width:760px){
+    .cmp thead{display:none}
+    .cmp,.cmp tbody,.cmp tr,.cmp th,.cmp td{display:block;width:auto!important}
+    .cmp tr{border-top:1px solid var(--line);padding:14px 0}
+    .cmp th,.cmp td{border:0;padding:4px 0}
+    .cmp td.old::before{content:"Bugün: ";font-family:var(--sans);font-weight:600}
+    .cmp td.new::before{content:"Yeni: ";width:auto;height:auto;background:none;border-radius:0;margin:0;font-family:var(--sans);font-weight:600;color:var(--accent)}
+  }
+
+  /* ---------- stack ---------- */
+  .group{margin-top:48px}
+  .group > h3{font-size:15px;font-weight:600;color:var(--muted);margin-bottom:12px}
+  .stack{display:block}
+  .stack .tech:last-child{border-bottom:1px solid var(--line)}
+  .tech{border-top:1px solid var(--line);padding:18px 0 20px;display:grid;grid-template-columns:260px minmax(0,68ch);column-gap:40px}
+  .tech > :not(h4){grid-column:2}
+  .tech h4{font-size:21px;font-weight:700;letter-spacing:-.01em;grid-row:1 / span 2;padding-top:2px}
+  @media (max-width:760px){.tech{grid-template-columns:1fr}.tech > :not(h4){grid-column:1}.tech h4{grid-row:auto;margin-bottom:6px}}
+  .tech p{margin:0 0 8px}
+  .tech details{font-size:16px}
+  .tech summary{cursor:pointer;font-family:var(--sans);font-size:14px;font-weight:600;color:var(--accent);list-style:none;display:inline-flex;align-items:center;gap:6px}
+  .tech summary::-webkit-details-marker{display:none}
+  .tech summary::before{content:"+";font-size:17px;line-height:1;width:12px}
+  .tech details[open] summary::before{content:"–"}
+  .tech details p{margin:10px 0 0;color:var(--muted)}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;background:var(--panel);padding:1px 5px;border-radius:3px}
+
+  /* ---------- admin ---------- */
+  .admin{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-top:44px;align-items:start}
+  @media (max-width:880px){.admin{grid-template-columns:1fr}}
+  .tabs{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+  .tabs button{all:unset;cursor:pointer;display:block;width:100%;padding:11px 16px;font-family:var(--sans);font-size:17px;font-weight:600;color:var(--muted);border-left:3px solid transparent;margin-left:-2px;box-sizing:border-box}
+  .tabs button:hover{color:var(--fg)}
+  .tabs button[aria-selected="true"]{color:var(--fg);border-left-color:var(--fg)}
+  .tabs button:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
+  .tabs .new-tag{font-size:12px;font-weight:700;color:var(--accent);margin-left:8px}
+  .pane{display:none}
+  .pane.on{display:block}
+  .pane h3{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px}
+  .pane ul{padding-left:20px;margin:0 0 22px}
+  .pane li{margin-bottom:6px}
+  .shot{aspect-ratio:16/10;border:1.5px dashed var(--line);border-radius:10px;display:grid;place-items:center;text-align:center;font-family:var(--sans);font-size:15px;color:var(--muted);background:var(--panel);padding:20px}
+  .shot img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+  .note{font-size:16px;color:var(--muted);border-left:3px solid var(--buoy);padding:2px 0 2px 16px;margin-top:40px;max-width:70ch}
+
+  /* ---------- timeline ---------- */
+  .steps{list-style:none;padding:0;margin:44px 0 0;counter-reset:s}
+  .steps li{display:grid;grid-template-columns:150px 1fr;gap:32px;padding:22px 0;border-top:1px solid var(--line)}
+  .steps li:last-child{border-bottom:1px solid var(--line)}
+  .steps .when{font-family:var(--sans);font-weight:700;font-size:17px;color:var(--accent)}
+  .steps h3{font-size:22px;margin-bottom:6px}
+  .steps p{margin:0;color:var(--muted)}
+  @media (max-width:700px){.steps li{grid-template-columns:1fr;gap:6px}}
+  .bar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:36px;font-family:var(--sans);font-size:13px;font-weight:600}
+  .bar span{padding:8px 10px;background:var(--panel);border-top:3px solid var(--accent);color:var(--muted)}
+
+  /* ---------- costs ---------- */
+  .money{width:100%;border-collapse:collapse;margin-top:20px;font-size:17px}
+  .money th,.money td{padding:13px 16px 13px 0;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+  .money thead th{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--muted);border-top:0}
+  .money td.n{font-family:var(--sans);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .money tr.total td{border-top:2px solid var(--fg);font-family:var(--sans);font-weight:800;font-size:18px}
+  .money .why{font-size:15px;color:var(--muted);display:block;margin-top:2px}
+  .tablewrap{overflow-x:auto}
+  .cost-block{margin-top:56px}
+  .scen{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px}
+  @media (max-width:900px){.scen{grid-template-columns:1fr}}
+  .scen article{border:1px solid var(--line);border-radius:12px;padding:24px 24px 20px;background:var(--panel)}
+  .scen .price{font-family:var(--sans);font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 2px;color:var(--accent)}
+  .scen .per{font-family:var(--sans);font-size:14px;color:var(--muted);margin-bottom:14px}
+  .scen ul{padding-left:18px;margin:0;font-size:16px}
+  .scen li{margin-bottom:6px}
+  .scen .when{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--muted)}
+
+  /* ---------- risks ---------- */
+  .risks{margin-top:40px;display:grid;gap:0}
+  .risk{padding:22px 0;border-top:1px solid var(--line);max-width:80ch}
+  .risk:last-child{border-bottom:1px solid var(--line)}
+  .risk h3{font-size:20px;margin-bottom:8px}
+  .risk h3 .sub{font-family:var(--serif);font-weight:400;font-size:18px;letter-spacing:0;color:var(--muted);margin-left:10px}
+  .risk p{margin:0}
+
+  /* ---------- open questions ---------- */
+  .qs{list-style:none;padding:0;margin:40px 0 0}
+  .qs li:last-child{border-bottom:1px solid var(--line)}
+  .qs li{padding:16px 0;border-top:1px solid var(--line)}
+  .qs b{font-family:var(--sans);display:block;margin-bottom:6px}
+  footer{padding:48px 0 64px;font-family:var(--sans);font-size:14px;color:#9DBFB3;background:#073D31}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav class="rail light" aria-label="Bölümler">
+  <ol>
+    <li><a href="#yuzey">0 m <span>Özet</span></a></li>
+    <li><a href="#bugun">2 m <span>Bugün</span></a></li>
+    <li><a href="#karsilastirma">4 m <span>Karşılaştırma</span></a></li>
+    <li><a href="#teknoloji">6 m <span>Teknoloji</span></a></li>
+    <li><a href="#admin">8 m <span>Yönetim paneli</span></a></li>
+    <li><a href="#takvim">10 m <span>Takvim</span></a></li>
+    <li><a href="#maliyet">12 m <span>Maliyet</span></a></li>
+    <li><a href="#riskler">14 m <span>Riskler</span></a></li>
+    <li><a href="#sorular">15 m <span>Açık konular</span></a></li>
+    <div class="diver" aria-hidden="true"></div>
+  </ol>
+  <div class="readout" aria-hidden="true">0 m</div>
+</nav>
+
+<main>
+
+<!-- 0 m -->
+<header class="layer hero" id="yuzey" data-depth="0">
+  <div class="wrap">
+    <div class="meta"><span><strong>Dragoman Diving and Outdoors</strong>, Kaş</span><span>Yenileme önerisi, Ekim 2026</span></div>
+    <h1>Yeni dragoman&#8209;turkey.com</h1>
+    <p class="lead">Sitenizi WordPress'ten çıkarıp, dragomanseakayak.com için kurduğumuz altyapının üzerine yeniden inşa etmeyi öneriyoruz. Bu sayfa neyin değişeceğini, kullanılacak teknolojileri, içeriği nasıl yöneteceğinizi, ne kadar süreceğini ve ne tutacağını anlatıyor.</p>
+    <nav class="toc" aria-label="İçindekiler">
+      <span class="toc-label">İçindekiler</span>
+      <ul>
+        <li><a href="#bugun">Bugün site nasıl çalışıyor</a></li>
+        <li><a href="#karsilastirma">Eski ve yeni sistem</a></li>
+        <li><a href="#teknoloji">Teknolojiler</a></li>
+        <li><a href="#admin">Admin paneli</a></li>
+        <li><a href="#takvim">Takvim</a></li>
+        <li><a href="#maliyet">Maliyet</a></li>
+        <li><a href="#riskler">Riskler ve önlemler</a></li>
+        <li><a href="#sorular">Netleşmesi gerekenler</a></li>
+      </ul>
+    </nav>
+    <dl class="facts">
+      <div><dt>Süre</dt><dd>2–4 hafta</dd></div>
+      <div><dt>Diller</dt><dd>TR, EN, FR</dd></div>
+      <div><dt>İçerik yönetimi</dt><dd>Kendi paneliniz</dd></div>
+      <div><dt>Yıllık eklenti lisansı</dt><dd>€0</dd></div>
+    </dl>
+  </div>
+  <svg class="waterline" viewBox="0 0 1440 56" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 28 C 120 8, 240 8, 360 28 S 600 48, 720 28 S 960 8, 1080 28 S 1320 48, 1440 28 V56 H0Z" fill="#FBE2CB"/>
+  </svg>
+</header>
+
+<!-- 5 m -->
+<section class="layer d1" id="bugun" data-depth="2">
+  <div class="wrap">
+    <p class="depth">−2 m</p>
+    <h2>Bugün site nasıl çalışıyor</h2>
+    <p class="lead one">Mevcut site işini görüyor, ama dört kitap ve birkaç tur duyurusu için gereğinden ağır bir sistem.</p>
+    <div class="two">
+      <div>
+        <h3>Sitenin yaptıkları</h3>
+        <ul class="plain">
+          <li><b>Üç dil.</b> Türkçe, İngilizce ve Fransızca; ücretli WPML eklentisiyle yönetiliyor.</li>
+          <li><b>Mağaza.</b> WooCommerce ile 4 ürün: Tropical Mediterranean'ın üç dil baskısı (€39) ve The Diving Guide Kaş (€30).</li>
+          <li><b>Blog.</b> Sharm El Sheikh, Raja Ampat, Kekova gibi tur duyuruları.</li>
+          <li><b>Rezervasyon.</b> Telefon, WhatsApp ve e-posta bilgileri. Gelen talepler hiçbir yerde kayıt altına alınmıyor.</li>
+          <li><b>Hizmet sayfaları.</b> Dalış, deniz kanosu, outdoor aktiviteler, ulaşım ve konaklama.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Taşıdığı yük</h3>
+        <ul class="plain">
+          <li><b>Eklenti bağımlılığı.</b> Dil, mağaza ve ödeme ayrı eklentilerde; biri güncellenince diğeriyle uyumsuzluk çıkabiliyor.</li>
+          <li><b>Sürekli güncelleme.</b> WordPress çekirdeği, tema ve eklentiler düzenli güncellenmezse güvenlik açığı oluşuyor.</li>
+          <li><b>Yıllık lisans.</b> WPML her yıl yenileniyor.</li>
+          <li><b>Hız.</b> Her ziyarette sunucuda PHP çalışıyor ve veritabanı sorgulanıyor.</li>
+          <li><b>Karmaşık panel.</b> WordPress paneli, Dragoman'ın hiç kullanmadığı onlarca menü içeriyor.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 m -->
+<section class="layer d2" id="karsilastirma" data-depth="4">
+  <div class="wrap">
+    <p class="depth">−4 m</p>
+    <h2>Eski ve yeni sistem yan yana</h2>
+    <p class="lead one">Ziyaretçi için site aynı işleri yapacak; değişen, arkadaki altyapı ve içeriği yönetme biçiminiz.</p>
+    <div class="tablewrap">
+    <table class="cmp">
+      <thead><tr><th scope="col">Konu</th><th scope="col">Bugün (WordPress)</th><th scope="col">Yeni sistem</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Temel yapı</th><td class="old">WordPress, Storefront teması ve eklentiler</td><td class="new">Dragoman'a özel yazılmış site; eklenti yok</td></tr>
+        <tr><th scope="row">Diller</th><td class="old">WPML eklentisi, her dil ayrı sayfa olarak yönetiliyor</td><td class="new">Her içerik tek kayıtta TR/EN/FR alanlarıyla; DeepL ile otomatik çeviri önerisi</td></tr>
+        <tr><th scope="row">İçerik yönetimi</th><td class="old">Genel amaçlı WordPress paneli</td><td class="new">Sadece Dragoman'ın ihtiyacı olan sekmeler: turlar, blog, rezervasyonlar, yorumlar, ürünler</td></tr>
+        <tr><th scope="row">Rezervasyon</th><td class="old">İletişim bilgisi ve WhatsApp; talepler kayıt altına alınmıyor</td><td class="new">Form üzerinden gelen talepler panelde listeleniyor, durumları takip ediliyor, size e-posta bildirimi gidiyor</td></tr>
+        <tr><th scope="row">Mağaza</th><td class="old">4 ürün için tam kapsamlı WooCommerce</td><td class="new">Hafif sepet ve yerli ödeme sağlayıcısı; siparişler panelde</td></tr>
+        <tr><th scope="row">Hız</th><td class="old">Her ziyarette sayfa sunucuda yeniden üretiliyor</td><td class="new">Sayfalar önceden hazırlanıp doğrudan sunuluyor</td></tr>
+        <tr><th scope="row">Güvenlik</th><td class="old">WordPress ve eklentileri en yaygın saldırı hedefleri arasında</td><td class="new">Sunucuda PHP ya da eklenti yok; yönetici girişi Supabase üzerinden</td></tr>
+        <tr><th scope="row">Bakım</th><td class="old">Düzenli çekirdek, tema ve eklenti güncellemesi gerekiyor</td><td class="new">Güncelleme ihtiyacı nadir; her değişiklik önce test ediliyor, sonra yayınlanıyor</td></tr>
+        <tr><th scope="row">Barındırma</th><td class="old"><span class="tbd">mevcut hosting</span></td><td class="new">Halihazırda kiralanan VPS sunucu</td></tr>
+        <tr><th scope="row">Sahiplik</th><td class="old">Tasarım temaya, diller WPML'e bağlı</td><td class="new">Kodun tamamı GitHub'da; veriler standart Postgres veritabanında ve dışa aktarılabilir</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- 15 m -->
+<section class="layer d3" id="teknoloji" data-depth="6">
+  <div class="wrap">
+    <p class="depth">−6 m</p>
+    <h2>Kullanılacak teknolojiler</h2>
+    <p class="lead one">dragomanseakayak.com'da çalışan altyapı temel alınıyor; her kalemin altında teknik detay var.</p>
+
+    <div class="group">
+      <h3>Ziyaretçinin gördüğü site</h3>
+      <div class="stack">
+        <div class="tech"><h4>React ve TypeScript</h4><p>Sitenin kendisi. Sayfalar, menüler, galeri ve formlar bununla yazılıyor.</p>
+          <details><summary>Teknik detay</summary><p>React 18, Vite 5, TypeScript. Dil önekli rotalar için react-router 7 (<code>/tr/...</code>, <code>/en/...</code>, <code>/fr/...</code>). Form doğrulama react-hook-form ve zod ile yapılıyor.</p></details></div>
+        <div class="tech"><h4>Önceden hazırlanmış sayfalar</h4><p>Google'ın her sayfayı eksiksiz okuyabilmesi için sayfalar yayından önce hazır HTML'e çevriliyor. Bu hem arama sıralamasına hem hıza katkı sağlıyor.</p>
+          <details><summary>Teknik detay</summary><p>Build sırasında Playwright ile prerender. Sayfa başına başlık, açıklama, hreflang ve JSON-LD (LocalBusiness, TouristTrip, Product) react-helmet-async ile üretiliyor. Sitemap bir script ile otomatik oluşturuluyor.</p></details></div>
+        <div class="tech"><h4>Tailwind CSS</h4><p>Tasarım sistemi. Renkler, yazı tipleri ve boşluklar tek bir yerden yönetildiği için site baştan sona tutarlı görünüyor.</p>
+          <details><summary>Teknik detay</summary><p>Tailwind 3, Radix tabanlı erişilebilir bileşenler, lucide ikonları ve ölçülü animasyonlar için framer-motion.</p></details></div>
+        <div class="tech"><h4>Çok dillilik</h4><p>Türkçe, İngilizce ve Fransızca. Almanca ve Rusça dosyaları altyapıda hazır; istenirse eklenebilir.</p>
+          <details><summary>Teknik detay</summary><p>Arayüz metinleri için i18next. Turlar ve blog gibi içerikler veritabanında dil başına ayrı alanlarda tutuluyor. DeepL API ile ilk çeviri otomatik yapılıp elle düzeltilebiliyor.</p></details></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3>Veri ve yönetim</h3>
+      <div class="stack">
+        <div class="tech"><h4>Supabase</h4><p>Turlar, blog yazıları, rezervasyon talepleri ve siparişlerin tutulduğu veritabanı. Yönetici girişi ve yüklenen görseller de burada.</p>
+          <details><summary>Teknik detay</summary><p>Postgres veritabanı ve satır bazlı erişim kuralları (RLS): ziyaretçi yalnızca form gönderebilir, okuma ve düzenleme sadece giriş yapmış yöneticiye açık. Admin girişi için Supabase Auth, görseller için Storage. Yeni rezervasyonda tetiklenen bir Edge Function, Zoho Mail üzerinden bildirim e-postası gönderiyor.</p></details></div>
+        <div class="tech"><h4>Yönetim paneli</h4><p>Sitenin <code>/admin</code> adresinde, şifreyle girilen Türkçe panel. Aşağıdaki bölümde ayrıntılı olarak anlatılıyor.</p>
+          <details><summary>Teknik detay</summary><p>Sitenin içinde yer alan React sayfaları; Supabase'e doğrudan bağlanıyor. Blog için Quill zengin metin editörü kullanılıyor. Her bölümde yerleşik bir kullanım rehberi var.</p></details></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3>Sunucu ve yayın</h3>
+      <div class="stack">
+        <div class="tech"><h4>Coolify ve VPS</h4><p>Site, halihazırda kiralanan sunucuda çalışıyor. Coolify, kodda yapılan değişikliği otomatik olarak yayına alan ücretsiz bir yönetim aracı.</p>
+          <details><summary>Teknik detay</summary><p>İki aşamalı Docker imajı: <code>node:22-alpine</code> ile build, <code>nginx:1.27-alpine</code> ile sunum. GitHub'a gönderilen her değişiklik Coolify'da yeniden derlenip yayınlanıyor. Ortam değişkenleri Coolify panelinden yönetiliyor.</p></details></div>
+        <div class="tech"><h4>Cloudflare</h4><p>Alan adı yönlendirmesi, SSL sertifikası ve dünyanın her yerinden hızlı erişim. Şu an da kullanılıyor; değişmeyecek.</p>
+          <details><summary>Teknik detay</summary><p>DNS, CDN önbelleği ve temel saldırı koruması. Gerekirse görseller için Cloudflare R2 depolama da kullanılabilir.</p></details></div>
+        <div class="tech"><h4>GitHub</h4><p>Kodun tamamının ve her değişikliğin geçmişinin saklandığı yer. Bir şey bozulursa önceki sürüme dönmek dakikalar alır.</p>
+          <details><summary>Teknik detay</summary><p>Ana dal canlı siteye, ayrı bir dal test sitesine bağlı. Birim testleri vitest ile çalışıyor.</p></details></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3>Yardımcı servisler</h3>
+      <div class="stack">
+        <div class="tech"><h4>Online ödeme</h4><p>Kitap satışları için Türkiye'de çalışan bir ödeme sağlayıcısı (Stripe Türk şirketlerine hizmet vermiyor). Hangisinin kullanılacağı netleşecek: <span class="tbd">iyzico / PayTR</span></p>
+          <details><summary>Teknik detay</summary><p>Ödeme sayfası sağlayıcının kendi güvenli formunda açılıyor; kart bilgisi bizim sunucumuza hiç uğramıyor. Ödeme sonucu sunucu tarafında doğrulanıp sipariş kaydına işleniyor.</p></details></div>
+        <div class="tech"><h4>Ziyaretçi analizi</h4><p>Google Search Console ile arama performansı, Microsoft Clarity ile ziyaretçilerin sitede nasıl gezindiği. İkisi de ücretsiz ve panelden tek tıkla erişiliyor.</p>
+          <details><summary>Teknik detay</summary><p>Clarity çerez onayına bağlı yükleniyor. Search Console'a yeni sitemap yayın günü gönderiliyor.</p></details></div>
+        <div class="tech"><h4>Claude Code</h4><p>Geliştirme sırasında kullanılan yapay zekâ kodlama aracı. İşi hızlandırıyor ve maliyeti düşürüyor; site yayına girdikten sonra gerekmiyor.</p>
+          <details><summary>Teknik detay</summary><p>Anthropic'in terminal tabanlı kodlama ajanı. Ücretli Claude planlarına dahil; ayrı bir abonelik yok. WordPress'ten içerik aktarımı, sayfa üretimi ve testlerde kullanılacak.</p></details></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 m -->
+<section class="layer d4" id="admin" data-depth="8">
+  <div class="wrap">
+    <p class="depth">−8 m</p>
+    <h2>Admin Paneli İle İçeriği Kendiniz Yönetiyorsunuz</h2>
+    <p class="lead one">Tur, blog ve rezervasyonları geliştiriciye ihtiyaç duymadan, Türkçe bir panelden yönetirsiniz.</p>
+
+    <div class="admin">
+      <div class="tabs" role="tablist" aria-label="Panel bölümleri">
+        <button role="tab" aria-selected="true" aria-controls="p-rez" id="t-rez">Rezervasyonlar</button>
+        <button role="tab" aria-selected="false" aria-controls="p-tur" id="t-tur" tabindex="-1">Turlar</button>
+        <button role="tab" aria-selected="false" aria-controls="p-blog" id="t-blog" tabindex="-1">Blog</button>
+        <button role="tab" aria-selected="false" aria-controls="p-yor" id="t-yor" tabindex="-1">Yorumlar</button>
+        <button role="tab" aria-selected="false" aria-controls="p-rev" id="t-rev" tabindex="-1">Revizyonlar</button>
+        <button role="tab" aria-selected="false" aria-controls="p-gun" id="t-gun" tabindex="-1">Güncellemeler</button>
+        <button role="tab" aria-selected="false" aria-controls="p-reh" id="t-reh" tabindex="-1">Rehber</button>
+        <button role="tab" aria-selected="false" aria-controls="p-urun" id="t-urun" tabindex="-1">Ürünler ve siparişler<span class="new-tag">yeni</span></button>
+        <button role="tab" aria-selected="false" aria-controls="p-dalis" id="t-dalis" tabindex="-1">Dalış ve aktiviteler<span class="new-tag">yeni</span></button>
+      </div>
+
+      <div>
+        <div class="pane on" role="tabpanel" id="p-rez" aria-labelledby="t-rez">
+          <h3>Rezervasyonlar</h3>
+          <ul>
+            <li>Sitedeki formu dolduran müşterinin talebi otomatik olarak buraya düşer ve size e-posta bildirimi gider.</li>
+            <li>Her kartta ad, e-posta, telefon, tur, tarih, kişi sayısı ve mesaj yer alır. Telefona dokununca WhatsApp açılır.</li>
+            <li>Durum takibi: Yeni, İletişime geçildi, Onaylandı, Tamamlandı ya da İptal. Üstteki sayaçlar duruma göre filtreler.</li>
+          </ul>
+        </div>
+        <div class="pane" role="tabpanel" id="p-tur" aria-labelledby="t-tur" hidden>
+          <h3>Turlar</h3>
+          <ul>
+            <li>Yeni tur ekleme, düzenleme ve yayından kaldırma.</li>
+            <li>Başlık, açıklama ve günlük program her dil için yan yana alanlarda girilir.</li>
+            <li>Fotoğraflar doğrudan panelden yüklenir; site bunları otomatik küçültüp optimize eder.</li>
+            <li>Dragoman'da Sharm El Sheikh, Raja Ampat gibi tarihli turlar ve Kekova kano turları burada yönetilecek.</li>
+          </ul>
+        </div>
+        <div class="pane" role="tabpanel" id="p-blog" aria-labelledby="t-blog" hidden>
+          <h3>Blog</h3>
+          <ul>
+            <li>Kalın, başlık, liste ve bağlantı içeren yazılar Word'e benzer bir editörle yazılır.</li>
+            <li>Kapak görseli yükleme, taslak olarak kaydetme ve yayınlama.</li>
+            <li>Türkçe yazılan yazı için EN/FR çeviri önerisi otomatik oluşturulabilir.</li>
+          </ul>
+        </div>
+        <div class="pane" role="tabpanel" id="p-yor" aria-labelledby="t-yor" hidden>
+          <h3>Yorumlar</h3>
+          <ul>
+            <li>Google yorumları siteye aktarılır ve hangilerinin gösterileceği seçilir.</li>
+            <li>Yorumların çevirileri panelden düzenlenebilir.</li>
+          </ul>
+        </div>
+        <div class="pane" role="tabpanel" id="p-rev" aria-labelledby="t-rev" hidden>
+          <h3>Revizyonlar</h3>
+          <ul>
+            <li>"Şunu değiştirelim" istekleri için ekip içi görev listesi; ziyaretçiler görmez.</li>
+            <li>İsteğe aciliyet (1–10) ve durum (Açık, Devam ediyor, Tamamlandı) verilir, altına yorum yazılır.</li>
+            <li>Geliştirme ekibinin ne yapacağını gördüğü yer burası. E-posta ya da WhatsApp'ta kaybolan istek olmaz.</li>
+            <li>Genel durum raporu: geliştiricinin sizden beklediği içerik ve onayların canlı listesi.</li>
+          </ul>
+        </div>
+        <div class="pane" role="tabpanel" id="p-gun" aria-labelledby="t-gun" hidden>
+          <h3>Güncellemeler</h3>
+          <ul>
+            <li>Sitede yapılan değişikliklerin tarihli kaydı; neyin ne zaman değiştiği görülebilir.</li>
+            <li>Google Drive, Microsoft Clarity, WhatsApp grubu ve Search Console'a hızlı bağlantılar.</li>
+          </ul>
+        </div>
+        <div class="pane" role="tabpanel" id="p-reh" aria-labelledby="t-reh" hidden>
+          <h3>Rehber</h3>
+          <ul>
+            <li>Panelin her bölümü için adım adım kullanım talimatları ve ipuçları.</li>
+            <li>Aynı içerik her bölümün üstünde "Bu bölüm ne işe yarar?" başlığıyla da açılabiliyor.</li>
+          </ul>
+        </div>
+        <div class="pane" role="tabpanel" id="p-urun" aria-labelledby="t-urun" hidden>
+          <h3>Ürünler ve siparişler</h3>
+          <ul>
+            <li>Dragoman için yeni eklenecek bölüm. Kitaplar ve ileride eklenecek ürünler, fiyat, stok ve görselleriyle yönetilir.</li>
+            <li>Online ödemesi tamamlanan siparişler, teslimat adresiyle birlikte listelenir.</li>
+            <li>Sipariş durumları: Ödendi, Kargoya verildi, Teslim edildi.</li>
+          </ul>
+        </div>
+        <div class="pane" role="tabpanel" id="p-dalis" aria-labelledby="t-dalis" hidden>
+          <h3>Dalış ve aktiviteler</h3>
+          <ul>
+            <li>Dragoman için yeni eklenecek bölüm. Dalış kursları (SSI), günlük dalışlar, outdoor aktiviteler, ulaşım ve konaklama sayfalarının metin ve görselleri.</li>
+            <li>Fiyat, süre ve dahil olan hizmetler gibi alanlar düzenlenebilir.</li>
+            <li>Galeri yönetimi: fotoğraf yükleme, sıralama ve her dilde açıklama.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 25 m -->
+<section class="layer d5" id="takvim" data-depth="10">
+  <div class="wrap">
+    <p class="depth">−10 m</p>
+    <h2>Takvim</h2>
+    <p class="lead one">Altyapı hazır; süre büyük ölçüde içerik ve onayların zamanında gelmesine bağlı.</p>
+    <div class="bar" aria-hidden="true"><span>1. hafta</span><span>2. hafta</span><span>3. hafta</span><span>4. hafta</span></div>
+    <ol class="steps">
+      <li><div class="when">1. hafta</div><div><h3>Envanter ve kurulum</h3><p>Mevcut sitenin tüm adreslerinin listesi çıkarılır. Sayfalar, blog yazıları, ürünler ve görseller dışa aktarılır. Test sitesi (<code>yeni.dragoman-turkey.com</code>) sunucuda yayına alınır.</p></div></li>
+      <li><div class="when">1.–2. hafta</div><div><h3>İçerik taşıma</h3><p>Veritabanı yapısı Dragoman'a göre genişletilir. WordPress içeriği, dil eşleşmeleri korunarak bir script ile aktarılır ve görseller optimize edilir.</p></div></li>
+      <li><div class="when">2.–3. hafta</div><div><h3>Sayfalar ve tasarım</h3><p>Ana sayfa, dalış, deniz kanosu, outdoor aktiviteler, ulaşım ve konaklama, blog ve iletişim sayfaları hazırlanır.</p></div></li>
+      <li><div class="when">3. hafta</div><div><h3>Mağaza ve rezervasyon</h3><p>Sepet ve online ödeme entegrasyonu, rezervasyon formu ve e-posta bildirimleri tamamlanır.</p></div></li>
+      <li><div class="when">3.–4. hafta</div><div><h3>Kontrol ve arama motoru hazırlığı</h3><p>Eski adreslerden yenilere yönlendirmeler kurulur; mobil ve hız testleri yapılır. Dragoman ekibi test sitesini inceler ve isteklerini Revizyonlar paneline yazar.</p></div></li>
+      <li><div class="when">Yayın günü</div><div><h3>Geçiş</h3><p>Alan adı yeni sunucuya yönlendirilir. Bu işlem ziyaretçiler tarafından fark edilmez. Sonraki 2–3 hafta Google Search Console düzenli olarak takip edilir.</p></div></li>
+      <li><div class="when">Sonrası</div><div><h3>Veritabanı kararı</h3><p>Trafik ve ihtiyaca göre Supabase ücretsiz planda kalmak, ücretli plana geçmek ya da kendi sunucumuza taşımak arasında karar verilir (maliyet bölümüne bakınız).</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 30 m -->
+<section class="layer d6" id="maliyet" data-depth="12">
+  <div class="wrap">
+    <p class="depth">−12 m</p>
+    <h2>Maliyet</h2>
+    <p class="lead one">Fiyatlar Ekim 2026 liste fiyatlarıdır; kesikli çerçeveli alanlar henüz netleşmemiş kalemlerdir.</p>
+
+    <div class="cost-block">
+      <h3>Tek seferlik</h3>
+      <div class="tablewrap">
+      <table class="money">
+        <thead><tr><th scope="col">Kalem</th><th scope="col">Tutar</th></tr></thead>
+        <tbody>
+          <tr><td>Geliştirme ve işçilik<span class="why">Tasarım, içerik taşıma, yeni bölümler, ödeme entegrasyonu, yayın</span></td><td class="n"><span class="tbd">belirlenecek</span></td></tr>
+          <tr><td>Claude Code (yapay zekâ kodlama aracı)<span class="why">Geliştirme süresince; kullanım yoğunluğuna göre Pro ($20) ile Max ($100) planları arasında</span></td><td class="n">aylık $50–100</td></tr>
+          <tr><td>Ödeme sağlayıcı başvurusu<span class="why">Sağlayıcıya ve sözleşmeye göre değişir</span></td><td class="n"><span class="tbd">netleşecek</span></td></tr>
+          <tr><td>Alan adı ve sunucu<span class="why">Halihazırda mevcut</span></td><td class="n">$0</td></tr>
+          <tr class="total"><td>Toplam</td><td class="n"><span class="tbd">işçilik + aylık $50–100</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="cost-block">
+      <h3>Yıllık giderler</h3>
+      <div class="tablewrap">
+      <table class="money">
+        <thead><tr><th scope="col">Kalem</th><th scope="col">Bugün</th><th scope="col">Yeni sistem</th></tr></thead>
+        <tbody>
+          <tr><td>Alan adı (Namecheap, .com)</td><td class="n">~$15–18</td><td class="n">~$15–18</td></tr>
+          <tr><td>WordPress hosting</td><td class="n"><span class="tbd">doldurulacak</span></td><td class="n">$0<span class="why">kaldırılıyor</span></td></tr>
+          <tr><td>WPML lisansı<span class="why">Kullanılan plana göre; WooCommerce destekli plan için tahmini tutar</span></td><td class="n">~€99</td><td class="n">€0</td></tr>
+          <tr><td>VPS sunucu<span class="why">Mevcut VPS aylık €20 ve birçok siteyi sorunsuz barındırıyor; bu sitenin payı</span></td><td class="n">—</td><td class="n">aylık €5–10<span class="why">yıllık €60–120</span></td></tr>
+          <tr><td>Supabase veritabanı</td><td class="n">—</td><td class="n">$0<span class="why">ücretsiz planla başlangıç</span></td></tr>
+          <tr><td>Coolify, Cloudflare, GitHub, Clarity, Search Console</td><td class="n">$0</td><td class="n">$0</td></tr>
+          <tr><td>DeepL çeviri<span class="why">Ücretsiz API katmanı bu boyuttaki bir site için yeterli</span></td><td class="n">—</td><td class="n">$0</td></tr>
+          <tr><td>Ödeme sağlayıcı komisyonu</td><td class="n">işlem başına</td><td class="n">işlem başına</td></tr>
+          <tr class="total"><td>Toplam</td><td class="n"><span class="tbd">hosting + ~$115</span></td><td class="n">~$18 + €60–120</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="cost-block">
+      <h3>Veritabanı için üç senaryo</h3>
+      <p class="muted narrow">Ücretsiz planla başlanır; gerekirse diğer iki seçenekten birine geçilir.</p>
+      <div class="scen">
+        <article>
+          <p class="when">Başlangıç</p>
+          <h3>Supabase ücretsiz</h3>
+          <p class="price">$0</p><p class="per">aylık</p>
+          <ul>
+            <li>500 MB veritabanı, bu site için yeterli.</li>
+            <li>7 gün kullanılmazsa duraklar; günlük kontrol ve gece yedeği ile önlem alınır.</li>
+          </ul>
+        </article>
+        <article>
+          <p class="when">Büyüme</p>
+          <h3>Supabase Pro</h3>
+          <p class="price">$25</p><p class="per">aylık, yaklaşık $300 yıllık</p>
+          <ul>
+            <li>8 GB veritabanı, duraklama yok, günlük yedek.</li>
+            <li>dragomanseakayak.com ile aynı plan paylaşılabilir.</li>
+          </ul>
+        </article>
+        <article>
+          <p class="when">Bağımsızlık</p>
+          <h3>Kendi sunucumuzda</h3>
+          <p class="price">$0</p><p class="per">lisans; olası sunucu yükseltmesi hariç</p>
+          <ul>
+            <li>Supabase, Coolify ile kendi VPS'imizde çalışır.</li>
+            <li>Daha fazla bellek gerekir: <span class="tbd">yükseltme maliyeti</span></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 35 m -->
+<section class="layer d7" id="riskler" data-depth="14">
+  <div class="wrap">
+    <p class="depth">−14 m</p>
+    <h2>Riskler ve önlemler</h2>
+    <div class="risks">
+      <div class="risk"><h3>E-postanın kesilmesi <span class="sub">info@ adresi eski hosting'deyse, hosting kapanınca e-posta da gider.</span></h3><p class="fix">Geçişten önce e-postanın nerede barındırıldığı tespit edilir ve gerekirse önce e-posta taşınır. Alan adı yönlendirilirken e-posta kayıtlarına dokunulmaz.</p></div>
+      <div class="risk"><h3>Ücretsiz planın sınırları <span class="sub">Duraklama ve otomatik yedeğin olmaması.</span></h3><p class="fix">Günlük otomatik kontrol isteği ve gece alınan yedekler sunucuda ayrıca saklanır. Gerekirse Pro'ya geçiş tek tıkla yapılır.</p></div>
+      <div class="risk"><h3>Supabase'e bağımlılık <span class="sub">Giriş, görseller ve bildirimler Supabase özelliklerini kullanıyor.</span></h3><p class="fix">Veriler standart Postgres'te tutulduğu için dışa aktarılabilir. Kendi sunucuya taşınma ihtiyaç halinde planlı bir iş olarak yapılır; acil bir zorunluluk yok.</p></div>
+      <div class="risk"><h3>Eski sipariş ve müşteri kayıtları <span class="sub">WooCommerce'teki geçmiş siparişler.</span></h3><p class="fix">KVKK kapsamında saklanması gereken kayıtlar dışa aktarılıp güvenli şekilde arşivlenir; yeni sisteme yalnızca gerekenler aktarılır.</p></div>
+      <div class="risk"><h3>Takvimin uzaması <span class="sub">Metin, fotoğraf ve onayların gecikmesi.</span></h3><p class="fix">Beklenen her içerik paneldeki genel durum raporunda listelenir; neyin eksik olduğu herkes tarafından görülür.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 40 m -->
+<section class="layer d8" id="sorular" data-depth="15">
+  <div class="wrap">
+    <p class="depth">−15 m</p>
+    <h2>Netleşmesi gerekenler</h2>
+    <p class="lead one">Takvimi ve maliyetleri kesinleştirmek için aşağıdaki bilgilere ihtiyacımız var.</p>
+    <ul class="qs">
+      <li><b>Mevcut hosting</b>WordPress şu an hangi firmada barındırılıyor ve yıllık ücreti ne kadar?</li>
+      <li><b>E-posta</b>info@dragoman-turkey.com hangi serviste barındırılıyor (hosting, Zoho, Google)?</li>
+      <li><b>Ödeme</b>Kartlı ödemeler iyzico'dan mı yoksa PayTR'den mi alınıyor? Mevcut bir sözleşme var mı?</li>
+      <li><b>WPML</b>Hangi lisans planı kullanılıyor ve ne zaman yenileniyor? (Yenilemeden önce geçiş yapılması tasarruf sağlar.)</li>
+      <li><b>Ek diller</b>Almanca ve Rusça bu aşamada eklensin mi?</li>
+      <li><b>Online rezervasyon</b>İlk aşamada talep formu yeterli mi, yoksa ön ödemeli rezervasyon da istenir mi?</li>
+      <li><b>Ek özellikler</b>Mevcut sitede olmayan, admin paneli dışında istenen başka ek özellikler var mı? Varsa nelerdir?</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap"><span>dragoman-turkey.com yenileme önerisi</span><span>Hazırlayan: UBT</span><span>Ekim 2026</span></div>
+</footer>
+
+<script>
+  // admin panel tabs
+  (function(){
+    const tabs=[...document.querySelectorAll('.tabs [role="tab"]')];
+    function select(t,focus){
+      tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+        const p=document.getElementById(x.getAttribute('aria-controls'));p.hidden=!on;p.classList.toggle('on',on);});
+      if(focus)t.focus();
+    }
+    tabs.forEach((t,i)=>{
+      t.addEventListener('click',()=>select(t));
+      t.addEventListener('keydown',e=>{
+        if(e.key==='ArrowDown'||e.key==='ArrowRight'){e.preventDefault();select(tabs[(i+1)%tabs.length],true)}
+        if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();select(tabs[(i-1+tabs.length)%tabs.length],true)}
+      });
+    });
+  })();
+
+  // depth rail: reading position shown as metres below the surface
+  (function(){
+    const rail=document.querySelector('.rail'); if(!rail) return;
+    const secs=[...document.querySelectorAll('main [data-depth]')];
+    const items=[...rail.querySelectorAll('li')];
+    const diver=rail.querySelector('.diver'); const readout=rail.querySelector('.readout');
+    function update(){
+      const mid=window.scrollY+window.innerHeight*0.4;
+      let idx=0;
+      secs.forEach((s,i)=>{if(s.offsetTop<=mid) idx=i;});
+      const s=secs[idx], next=secs[idx+1];
+      const d0=+s.dataset.depth, d1=next?+next.dataset.depth:d0;
+      const span=next?next.offsetTop-s.offsetTop:s.offsetHeight;
+      const f=Math.min(1,Math.max(0,(mid-s.offsetTop)/span));
+      const m=Math.round(d0+(d1-d0)*f);
+      readout.textContent=m+' m';
+      items.forEach((li,i)=>li.classList.toggle('on',i===idx));
+      const a=items[idx], b=items[idx+1]||a;
+      diver.style.top=(a.offsetTop+(b.offsetTop-a.offsetTop)*f+2)+'px';
+      rail.classList.toggle('light', +s.dataset.depth<10);
+    }
+    addEventListener('scroll',update,{passive:true}); addEventListener('resize',update); update();
+  })();
+</script>
+</body>
+</html>
