@@ -24,7 +24,7 @@ export default function HolidayPage() {
   return (
     <div className="tool-holiday">
       <link rel="stylesheet" href="/tools/holiday/style.css" />
-      <main className="wrap">
+      <main id="main-content" className="wrap">
         <section className="card card--blue">
 
           <header className="card__head">
@@ -35,11 +35,11 @@ export default function HolidayPage() {
               </div>
 
               <div className="headRight">
-                <Link href="/">
-                  <img className="ubtLogo" src="/img/logoubt.png" alt="UBT logo" />
+                <Link href="/" aria-label="UBT home (logo)">
+                  <img className="ubtLogo" src="/img/logoubt.png" alt="" width={48} height={48} />
                 </Link>
-                <Link href="/">
-                  <img className="ubtPic" src="/img/picprofile.png" alt="UBT profile" />
+                <Link href="/" aria-label="UBT home (profile)">
+                  <img className="ubtPic" src="/img/picprofile.png" alt="" width={48} height={48} />
                 </Link>
               </div>
             </div>

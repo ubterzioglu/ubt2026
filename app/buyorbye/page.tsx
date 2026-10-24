@@ -76,7 +76,7 @@ export default function BuyOrByePage() {
           <header className="hero">
             <div className="hero-left">
               <div className="brand-row">
-                <img src="/img/logobuyorbye.png" alt="BuyOrBye logo" className="brand-logo" />
+                <img src="/img/logobuyorbye.png" alt="BuyOrBye logo" width={240} height={240} className="brand-logo" />
                 <h1 className="title" id="pageTitle">BuyOrBye</h1>
               </div>
 
@@ -89,10 +89,10 @@ export default function BuyOrByePage() {
               <div className="hero-toprow" aria-label="Header controls">
                 <div className="mini-avatars" aria-label="UBT links">
                   <Link href="/" aria-label="UBT home (logo)">
-                    <img src="/img/logoubt.png" alt="UBT logo" className="mini-avatar" />
+                    <img src="/img/logoubt.png" alt="" width={48} height={48} className="mini-avatar" />
                   </Link>
                   <Link href="/" aria-label="UBT home (profile)">
-                    <img src="/img/picprofile.png" alt="UBT profile" className="mini-avatar" />
+                    <img src="/img/picprofile.png" alt="" width={48} height={48} className="mini-avatar" />
                   </Link>
                 </div>
 
@@ -109,7 +109,7 @@ export default function BuyOrByePage() {
             </div>
           </header>
 
-          <main className="grid">
+          <main id="main-content" className="grid">
             <div id="appRoot"></div>
           </main>
 

@@ -20,6 +20,7 @@ export function buildPersonSchema() {
       "Senior Software QA Engineer with 18+ years of experience in test strategy, automation, CI/CD, and enterprise delivery. Based in Dortmund, Germany.",
     worksFor: {
       "@type": "Organization",
+      "@id": "https://www.swisslog.com/#organization",
       name: "Swisslog GmbH",
       url: "https://www.swisslog.com"
     },
@@ -269,6 +270,7 @@ interface LocalServiceInput {
   region: string;
   countryCode: string;
   countryName: string;
+  postalCode: string;
   latitude: number;
   longitude: number;
   pageUrl: string;
@@ -290,6 +292,7 @@ export function buildLocalServiceSchema(input: LocalServiceInput) {
       "@type": "PostalAddress",
       addressLocality: input.city,
       addressRegion: input.region,
+      postalCode: input.postalCode,
       addressCountry: input.countryCode
     },
     geo: {

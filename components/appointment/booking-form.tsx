@@ -54,6 +54,8 @@ export function BookingForm({
               name="fullName"
               required
               minLength={2}
+              autoComplete="name"
+              enterKeyHint="next"
               className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
             />
           </label>
@@ -63,6 +65,8 @@ export function BookingForm({
               type="email"
               name="email"
               required
+              autoComplete="email"
+              enterKeyHint="next"
               className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
             />
           </label>
@@ -71,6 +75,8 @@ export function BookingForm({
             <input
               type="text"
               name="company"
+              autoComplete="organization"
+              enterKeyHint="next"
               className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
             />
           </label>
@@ -79,6 +85,7 @@ export function BookingForm({
             <textarea
               name="notes"
               rows={5}
+              enterKeyHint="send"
               className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm leading-6 text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
             />
           </label>

@@ -44,6 +44,7 @@ export function SiteHeader() {
             alt={siteMeta.name}
             width={40}
             height={40}
+            priority
             className="h-10 w-10 rounded-full object-cover shadow-[0_10px_22px_rgba(20,31,39,0.22)]"
           />
         </a>
@@ -87,12 +88,13 @@ export function SiteHeader() {
         </button>
       </div>
 
-      {isOpen ? (
-        <nav
-          id="site-navigation"
-          className="border-t border-line/70 bg-white/90 px-4 py-3 md:hidden"
-          aria-label="Mobile"
-        >
+      <nav
+        id="site-navigation"
+        className={`border-t border-line/70 bg-white/90 px-4 py-3 md:hidden ${
+          isOpen ? "" : "hidden"
+        }`}
+        aria-label="Mobile"
+      >
           <ul className="grid max-h-[calc(100dvh-4rem)] gap-2 overflow-y-auto pb-2">
             <li>
               <a
@@ -115,8 +117,7 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
-        </nav>
-      ) : null}
+      </nav>
     </header>
   );
 }

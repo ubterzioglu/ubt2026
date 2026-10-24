@@ -33,7 +33,7 @@ export default function SmellablePage() {
           </button>
         </header>
 
-        <main className="main">
+        <main id="main-content" className="main">
           <section className="smell-card" aria-live="polite">
             <div className="smell-media">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -65,7 +65,7 @@ export default function SmellablePage() {
                       id="vote-up"
                       type="button"
                       data-vote="up"
-                      aria-label="Yes"
+                      aria-label="Yes! I can smell it"
                     >
                       Yes! <span className="count" id="count-up">0</span>
                     </button>
@@ -75,7 +75,7 @@ export default function SmellablePage() {
                       id="vote-down"
                       type="button"
                       data-vote="down"
-                      aria-label="No"
+                      aria-label="No! I cannot smell it"
                     >
                       No! <span className="count" id="count-down">0</span>
                     </button>
@@ -93,7 +93,9 @@ export default function SmellablePage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/tools/smellable/img/whatsappshare.jpg"
-                    alt="Share via WhatsApp"
+                    alt=""
+                    width={64}
+                    height={64}
                     className="wa-ico"
                     loading="lazy"
                   />
@@ -180,6 +182,7 @@ export default function SmellablePage() {
                     id="comment-input"
                     type="text"
                     maxLength={160}
+                    aria-label="Write an anonymous comment"
                     placeholder="Write an anonymous comment (max 160, no links)"
                     required
                   />

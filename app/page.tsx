@@ -245,7 +245,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         : null;
 
   return (
-    <main className="page-shell pb-16">
+    <main id="main-content" className="page-shell pb-16">
       <JsonLd
         id="json-ld-homepage"
         schema={[

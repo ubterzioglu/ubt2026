@@ -74,6 +74,8 @@ export function CvReviewForm({
               name="fullName"
               required
               minLength={2}
+              autoComplete="name"
+              enterKeyHint="next"
               className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
             />
           </label>
@@ -84,6 +86,8 @@ export function CvReviewForm({
               name="whatsappNumber"
               required
               placeholder="+49 ..."
+              autoComplete="tel"
+              enterKeyHint="next"
               className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
             />
           </label>
@@ -94,6 +98,8 @@ export function CvReviewForm({
               name="linkedinUrl"
               required
               placeholder="https://www.linkedin.com/in/..."
+              autoComplete="url"
+              enterKeyHint="done"
               className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
             />
           </label>

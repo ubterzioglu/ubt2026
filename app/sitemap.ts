@@ -18,12 +18,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0
     },
     {
-      url: `${BASE_URL}/book-appointment`,
-      lastModified: LAST_MODIFIED,
-      changeFrequency: "monthly",
-      priority: 0.7
-    },
-    {
       url: `${BASE_URL}/blog`,
       lastModified: LAST_MODIFIED,
       changeFrequency: "weekly",
@@ -34,6 +28,48 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.8
+    },
+    {
+      url: `${BASE_URL}/buyorbye`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: "monthly",
+      priority: 0.6
+    },
+    {
+      url: `${BASE_URL}/buyorbyetr`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: "monthly",
+      priority: 0.6
+    },
+    {
+      url: `${BASE_URL}/holiday`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: "monthly",
+      priority: 0.6
+    },
+    {
+      url: `${BASE_URL}/smellable`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: "monthly",
+      priority: 0.5
+    },
+    {
+      url: `${BASE_URL}/zats`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: "monthly",
+      priority: 0.6
+    },
+    {
+      url: `${BASE_URL}/zpath`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: "monthly",
+      priority: 0.5
+    },
+    {
+      url: `${BASE_URL}/privacy`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: "yearly",
+      priority: 0.3
     }
   ];
 

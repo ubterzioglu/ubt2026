@@ -50,7 +50,7 @@ export default function GeoIndexPage() {
         ]}
       />
 
-      <main className="page-shell min-h-screen px-4 py-12 sm:px-6 lg:px-8">
+      <main id="main-content" className="page-shell min-h-screen px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <nav aria-label="Breadcrumb" className="mb-8">
             <ol className="flex flex-wrap items-center gap-2 text-sm text-ink/50">

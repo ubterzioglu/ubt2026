@@ -5,9 +5,9 @@ import { buildMetadata } from "@/lib/seo";
 import { getBlogPosts } from "@/lib/blog-posts";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Blog",
+  title: "Software QA & Testing Blog — Articles and Field Notes",
   description:
-    "Articles and notes on software quality assurance, test automation, and engineering practice by Umut Barış Terzioğlu.",
+    "Articles and field notes on software quality assurance, test automation, CI/CD, and engineering practice by Umut Barış Terzioğlu, Senior QA Engineer in Dortmund, Germany.",
   canonical: "/blog",
   ogType: "website"
 });
@@ -27,7 +27,7 @@ export default async function BlogIndexPage() {
   const { items } = await getBlogPosts();
 
   return (
-    <main className="page-shell min-h-screen px-4 py-10 sm:px-6 lg:px-8">
+    <main id="main-content" className="page-shell min-h-screen px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-5xl flex-col gap-8">
         <section className="section-panel px-6 py-8 sm:px-10">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -64,6 +64,8 @@ export default async function BlogIndexPage() {
                   <img
                     src={post.coverImageUrl}
                     alt={post.title}
+                    width={640}
+                    height={288}
                     className="h-44 w-full object-cover"
                     loading="lazy"
                   />

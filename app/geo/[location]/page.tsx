@@ -58,6 +58,7 @@ export default async function GeoPage({ params }: Props) {
       region: loc.region,
       countryCode: loc.countryCode,
       countryName: loc.country,
+      postalCode: loc.postalCode,
       latitude: loc.latitude,
       longitude: loc.longitude,
       pageUrl,
@@ -70,7 +71,7 @@ export default async function GeoPage({ params }: Props) {
     <>
       <JsonLd schema={schemas} id={`json-ld-geo-${loc.slug}`} />
 
-      <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
+      <main id="main-content" className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
         <nav aria-label="Breadcrumb" className="mb-8">
           <ol className="flex flex-wrap items-center gap-2 text-sm text-ink/50">
             <li>

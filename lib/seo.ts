@@ -63,11 +63,11 @@ export function buildMetadata(input: PageSeoInput = {}): Metadata {
   const canonical = buildCanonical(input.canonical);
   const ogType = input.ogType ?? "website";
 
-  // When no explicit ogImage is passed, omit the images field so Next.js applies
-  // the file-based opengraph-image.tsx / twitter convention automatically.
-  const ogImages = input.ogImage
-    ? [{ url: input.ogImage, width: 1200, height: 630, alt: title }]
-    : undefined;
+  // When no explicit ogImage is passed, fall back to the file-based
+  // opengraph-image route so every page ships an og:image and twitter:image —
+  // the file convention alone only covers the route segment it lives in.
+  const ogImageUrl = input.ogImage ?? `${BASE_URL}/opengraph-image`;
+  const ogImages = [{ url: ogImageUrl, width: 1200, height: 630, alt: title }];
 
   return {
     title: {
@@ -114,13 +114,13 @@ export function buildMetadata(input: PageSeoInput = {}): Metadata {
       siteName: SITE_NAME,
       type: ogType,
       locale: "en_US",
-      ...(ogImages ? { images: ogImages } : {})
+      images: ogImages
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      ...(input.ogImage ? { images: [input.ogImage] } : {})
+      images: [ogImageUrl]
     }
   };
 }

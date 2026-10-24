@@ -31,7 +31,7 @@ export default function BuyOrByeTrPage() {
           <header className="hero">
             <div className="hero-left">
               <div className="brand-row">
-                <img src="/img/logobuyorbye.png" alt="oparayaben logo" className="brand-logo" />
+                <img src="/img/logobuyorbye.png" alt="oparayaben logo" width={240} height={240} className="brand-logo" />
                 <h1 className="title" id="pageTitle">oparayaben</h1>
               </div>
 
@@ -44,10 +44,10 @@ export default function BuyOrByeTrPage() {
               <div className="hero-toprow" aria-label="Üst alan kontrolleri">
                 <div className="mini-avatars" aria-label="UBT bağlantıları">
                   <Link href="/" aria-label="UBT ana sayfa (logo)">
-                    <img src="/img/logoubt.png" alt="UBT logo" className="mini-avatar" />
+                    <img src="/img/logoubt.png" alt="" width={48} height={48} className="mini-avatar" />
                   </Link>
                   <Link href="/" aria-label="UBT ana sayfa (profil)">
-                    <img src="/img/picprofile.png" alt="UBT profil" className="mini-avatar" />
+                    <img src="/img/picprofile.png" alt="" width={48} height={48} className="mini-avatar" />
                   </Link>
                 </div>
 
@@ -64,7 +64,7 @@ export default function BuyOrByeTrPage() {
             </div>
           </header>
 
-          <main className="grid">
+          <main id="main-content" className="grid">
             <div id="appRoot"></div>
           </main>
 

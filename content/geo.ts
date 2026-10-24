@@ -4,6 +4,7 @@ export interface GeoLocation {
   region: string;
   country: string;
   countryCode: string;
+  postalCode: string;
   latitude: number;
   longitude: number;
   title: string;
@@ -25,9 +26,10 @@ export const geoLocations: GeoLocation[] = [
     region: "North Rhine-Westphalia",
     country: "Germany",
     countryCode: "DE",
+    postalCode: "44135",
     latitude: 51.5136,
     longitude: 7.4653,
-    title: "QA Engineer in Dortmund, Germany — Umut Barış Terzioğlu",
+    title: "QA Engineer in Dortmund, Germany",
     description:
       "Senior QA Engineer based in Dortmund. Test strategy, automation, and quality leadership for software teams across NRW and Germany. 18+ years of enterprise testing experience.",
     keywords: [
@@ -83,9 +85,10 @@ export const geoLocations: GeoLocation[] = [
     region: "Germany",
     country: "Germany",
     countryCode: "DE",
+    postalCode: "44135",
     latitude: 51.1657,
     longitude: 10.4515,
-    title: "QA Engineer in Germany — Umut Barış Terzioğlu",
+    title: "QA Engineering Services in Germany",
     description:
       "Senior Software QA Engineer operating in Germany. 18+ years delivering test strategy, automation, and quality engineering for enterprise clients. Available for consulting, remote, and on-site engagements.",
     keywords: [
@@ -141,9 +144,10 @@ export const geoLocations: GeoLocation[] = [
     region: "Hesse",
     country: "Germany",
     countryCode: "DE",
+    postalCode: "60311",
     latitude: 50.1109,
     longitude: 8.6821,
-    title: "QA Engineer in Frankfurt, Germany — Umut Barış Terzioğlu",
+    title: "QA Engineer in Frankfurt, Germany",
     description:
       "Senior QA Engineer available for Frankfurt and Hesse region. Test automation, quality strategy, and enterprise delivery across fintech, logistics, and software sectors.",
     keywords: [
@@ -198,9 +202,10 @@ export const geoLocations: GeoLocation[] = [
     region: "Berlin",
     country: "Germany",
     countryCode: "DE",
+    postalCode: "10115",
     latitude: 52.52,
     longitude: 13.405,
-    title: "QA Engineer in Berlin, Germany — Umut Barış Terzioğlu",
+    title: "QA Engineer in Berlin, Germany",
     description:
       "Senior QA Engineer available for Berlin startups and enterprise clients. Selenium, CI/CD, agile testing, and test strategy consulting for modern software teams.",
     keywords: [
@@ -256,9 +261,10 @@ export const geoLocations: GeoLocation[] = [
     region: "Hamburg",
     country: "Germany",
     countryCode: "DE",
+    postalCode: "20095",
     latitude: 53.5753,
     longitude: 10.0153,
-    title: "QA Engineer in Hamburg, Germany — Umut Barış Terzioğlu",
+    title: "QA Engineer in Hamburg, Germany",
     description:
       "Senior QA Engineer serving Hamburg and the logistics-strong northern Germany region. Test automation, warehouse management system testing, and enterprise quality delivery.",
     keywords: [
@@ -313,9 +319,10 @@ export const geoLocations: GeoLocation[] = [
     region: "Istanbul",
     country: "Turkey",
     countryCode: "TR",
+    postalCode: "34010",
     latitude: 41.0082,
     longitude: 28.9784,
-    title: "QA Engineer Istanbul — Umut Barış Terzioğlu",
+    title: "QA Engineer in Istanbul, Turkey",
     description:
       "Senior Software QA Engineer with deep roots in Istanbul and Turkey. 10+ years of Daimler/Mercedes-Benz QA experience in Istanbul. Remote consulting and test strategy services available.",
     keywords: [

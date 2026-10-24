@@ -46,7 +46,7 @@ export default function ZpathPage() {
             </div>
           </header>
 
-          <main className="content">
+          <main id="main-content" className="content">
             <p className="q" id="qText">
               Loading…
             </p>
@@ -87,11 +87,11 @@ export default function ZpathPage() {
             </div>
 
             <div className="corner-widget">
-              <Link href="/">
-                <img src="/img/logoubt.png" alt="UBT" className="widget-avatar" />
+              <Link href="/" aria-label="Go to UBT home (logo)">
+                <img src="/img/logoubt.png" alt="" width={64} height={64} className="widget-avatar" />
               </Link>
-              <Link href="/">
-                <img src="/img/picprofile.png" alt="Profile" className="widget-avatar logo" />
+              <Link href="/" aria-label="Go to UBT home (profile)">
+                <img src="/img/picprofile.png" alt="" width={64} height={64} className="widget-avatar logo" />
               </Link>
             </div>
           </main>

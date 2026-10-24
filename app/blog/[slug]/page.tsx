@@ -64,7 +64,7 @@ export default async function BlogPostPage({ params }: Props) {
   ];
 
   return (
-    <main className="page-shell min-h-screen px-4 py-10 sm:px-6 lg:px-8">
+    <main id="main-content" className="page-shell min-h-screen px-4 py-10 sm:px-6 lg:px-8">
       <JsonLd id="json-ld-blog-post" schema={schemas} />
       <article className="mx-auto flex max-w-3xl flex-col gap-6">
         <div className="flex items-center gap-3 text-sm">
@@ -90,6 +90,8 @@ export default async function BlogPostPage({ params }: Props) {
           <img
             src={post.coverImageUrl}
             alt={post.title}
+            width={1200}
+            height={630}
             className="w-full rounded-[1.5rem] border border-line/70 object-cover"
             loading="lazy"
           />

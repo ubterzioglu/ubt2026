@@ -45,14 +45,19 @@ export default function ZatsPage() {
             </div>
           </header>
 
-          <main className="content">
+          <main id="main-content" className="content">
             <div className="grid">
               {/* INPUT + RESULT */}
               <section className="panel">
                 <h2 className="panel-title">Upload CV PDF or paste text</h2>
 
                 <div className="fileRow">
-                  <input type="file" id="pdfUpload" accept="application/pdf" />
+                  <input
+                    type="file"
+                    id="pdfUpload"
+                    accept="application/pdf"
+                    aria-label="Upload CV PDF file"
+                  />
                 </div>
 
                 <div className="btnRow">
@@ -90,6 +95,7 @@ export default function ZatsPage() {
                   <h2 className="panel-title">CV Text</h2>
                   <textarea
                     id="cvText"
+                    aria-label="CV Text"
                     placeholder="Paste CV text here (or extract from PDF)..."
                     rows={8}
                   ></textarea>
@@ -99,6 +105,7 @@ export default function ZatsPage() {
                   <h2 className="panel-title">Job Description (optional)</h2>
                   <textarea
                     id="jdText"
+                    aria-label="Job Description (optional)"
                     placeholder="Paste job description to get keyword match-based scoring..."
                     rows={6}
                   ></textarea>
@@ -116,7 +123,7 @@ export default function ZatsPage() {
                   <p>Your feedback keeps this alive and pushes me to build more.</p>
                   <p>
                     Looking for more tools?{" "}
-                    <Link href="/#tools-developed-by-ubt">Click!</Link>
+                    <Link href="/#tools-developed-by-ubt">Browse tools built by UBT</Link>
                   </p>
                   <p>
                     Thanks. <strong>UBT</strong>.
@@ -138,10 +145,10 @@ export default function ZatsPage() {
             {/* Corner Widget */}
             <div className="corner-widget">
               <Link href="/" aria-label="Go to Home">
-                <img src="/img/picprofile.png" alt="Profile" className="widget-avatar" />
+                <img src="/img/picprofile.png" alt="" width={64} height={64} className="widget-avatar" />
               </Link>
               <Link href="/" aria-label="Go to Home">
-                <img src="/img/logoubt.png" alt="Logo" className="widget-avatar logo" />
+                <img src="/img/logoubt.png" alt="" width={64} height={64} className="widget-avatar logo" />
               </Link>
             </div>
             {/* /Corner Widget */}
