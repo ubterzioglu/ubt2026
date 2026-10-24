@@ -3,7 +3,12 @@ import Script from "next/script";
 
 import { JsonLd } from "@/components/json-ld";
 import { buildMetadata } from "@/lib/seo";
-import { buildPersonSchema, buildWebSiteSchema, buildProfilePageSchema } from "@/lib/structured-data";
+import {
+  buildOrganizationSchema,
+  buildPersonSchema,
+  buildWebSiteSchema,
+  buildProfilePageSchema
+} from "@/lib/structured-data";
 
 import "./globals.css";
 
@@ -27,7 +32,12 @@ export default function RootLayout({
       <body className="text-sm leading-6 text-ink/68 sm:text-base">
         <JsonLd
           id="json-ld-global"
-          schema={[buildPersonSchema(), buildWebSiteSchema(), buildProfilePageSchema()]}
+          schema={[
+            buildPersonSchema(),
+            buildOrganizationSchema(),
+            buildWebSiteSchema(),
+            buildProfilePageSchema()
+          ]}
         />
         {children}
       </body>

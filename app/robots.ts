@@ -16,20 +16,35 @@ export default function robots(): MetadataRoute.Robots {
     disallow: [...SEARCH_INDEX_DISALLOW_PATHS]
   };
 
+  const aiCrawlers = [
+    "Googlebot",
+    "Google-Extended",
+    "OAI-SearchBot",
+    "GPTBot",
+    "ChatGPT-User",
+    "ClaudeBot",
+    "Claude-Web",
+    "anthropic-ai",
+    "PerplexityBot",
+    "Perplexity-User",
+    "CCBot",
+    "Applebot-Extended",
+    "Bytespider",
+    "Amazonbot",
+    "cohere-ai",
+    "Meta-ExternalAgent"
+  ];
+
   return {
     rules: [
       {
         userAgent: "*",
         ...publicContentRules
       },
-      {
-        userAgent: "Googlebot",
+      ...aiCrawlers.map((userAgent) => ({
+        userAgent,
         ...publicContentRules
-      },
-      {
-        userAgent: "OAI-SearchBot",
-        ...publicContentRules
-      }
+      }))
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
     host: BASE_URL

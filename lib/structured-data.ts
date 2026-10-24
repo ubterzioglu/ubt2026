@@ -1,4 +1,10 @@
-import { BASE_URL, SITE_NAME } from "@/lib/seo";
+import { BASE_URL, SITE_LAST_UPDATED, SITE_NAME, SITE_PUBLISHED_AT } from "@/lib/seo";
+
+const SOCIAL_PROFILE_LINKS = [
+  "https://www.linkedin.com/in/ubterzioglu/",
+  "https://www.instagram.com/ubterzioglu/",
+  "https://medium.com/@ubterzioglu"
+] as const;
 
 export function buildPersonSchema() {
   return {
@@ -23,10 +29,7 @@ export function buildPersonSchema() {
       addressRegion: "North Rhine-Westphalia",
       addressCountry: "DE"
     },
-    sameAs: [
-      "https://www.linkedin.com/in/ubterzioglu/",
-      "https://www.instagram.com/ubterzioglu/"
-    ],
+    sameAs: [...SOCIAL_PROFILE_LINKS],
     email: "ubterzioglu@gmail.com",
     telephone: "+491739569429",
     knowsAbout: [
@@ -65,6 +68,35 @@ export function buildPersonSchema() {
   };
 }
 
+export function buildOrganizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${BASE_URL}/#organization`,
+    name: SITE_NAME,
+    alternateName: ["UBT", "UBT Testing"],
+    url: BASE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: `${BASE_URL}/logoubt.png`
+    },
+    image: `${BASE_URL}/logoubt.png`,
+    description:
+      "Personal brand and portfolio of Umut Barış Terzioğlu — Senior Software QA Engineer offering test strategy, automation, and QA consulting from Dortmund, Germany.",
+    founder: {
+      "@id": `${BASE_URL}/#person`
+    },
+    email: "ubterzioglu@gmail.com",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Dortmund",
+      addressRegion: "North Rhine-Westphalia",
+      addressCountry: "DE"
+    },
+    sameAs: [...SOCIAL_PROFILE_LINKS]
+  };
+}
+
 export function buildWebSiteSchema() {
   return {
     "@context": "https://schema.org",
@@ -75,6 +107,11 @@ export function buildWebSiteSchema() {
     description:
       "Professional portfolio of Umut Barış Terzioğlu — Senior QA Engineer based in Dortmund, Germany.",
     inLanguage: "en",
+    datePublished: SITE_PUBLISHED_AT,
+    dateModified: SITE_LAST_UPDATED,
+    publisher: {
+      "@id": `${BASE_URL}/#organization`
+    },
     author: {
       "@id": `${BASE_URL}/#person`
     },
@@ -98,8 +135,13 @@ export function buildProfilePageSchema() {
     name: `${SITE_NAME} — Senior QA Engineer Portfolio`,
     description:
       "Portfolio and professional profile of Umut Barış Terzioğlu — Senior Software QA Engineer with 18+ years in test strategy, automation, and enterprise delivery.",
+    datePublished: SITE_PUBLISHED_AT,
+    dateModified: SITE_LAST_UPDATED,
     mainEntity: {
       "@id": `${BASE_URL}/#person`
+    },
+    publisher: {
+      "@id": `${BASE_URL}/#organization`
     }
   };
 }

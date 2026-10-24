@@ -1,13 +1,13 @@
 import type { MetadataRoute } from "next";
 
-import { BASE_URL } from "@/lib/seo";
+import { BASE_URL, SITE_LAST_UPDATED } from "@/lib/seo";
 import { geoLocations } from "@/content/geo";
 import { getBlogPosts } from "@/lib/blog-posts";
 
 // Pinned to the site's last content update so lastmod stays stable across
 // builds for static/geo routes instead of churning on every deploy. Blog posts
 // keep their own per-post updatedAt below.
-const LAST_MODIFIED = "2026-07-25";
+const LAST_MODIFIED = SITE_LAST_UPDATED;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [

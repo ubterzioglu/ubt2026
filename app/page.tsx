@@ -22,7 +22,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { TechStack } from "@/components/tech-stack";
 
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, SITE_LAST_UPDATED, SITE_PUBLISHED_AT } from "@/lib/seo";
 import { buildBreadcrumbSchema, buildFaqSchema, buildSpeakableSchema } from "@/lib/structured-data";
 import { fallbackArticles, fallbackBookmarks, fallbackTools } from "@/content/featured";
 import { fallbackNewsUpdates } from "@/content/news-updates";
@@ -82,6 +82,15 @@ export const metadata: Metadata = buildMetadata({
   ],
   canonical: "/"
 });
+
+function formatLongDate(isoDate: string): string {
+  return new Date(`${isoDate}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC"
+  });
+}
 
 function mapFallbackItems(items: Array<{
   category: FeaturedItem["category"];
@@ -251,7 +260,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="text-xs text-ink/40">
-          Published <time dateTime="2026-04-06">April 6, 2026</time> · Last updated <time dateTime="2026-06-17">June 17, 2026</time>
+          Published <time dateTime={SITE_PUBLISHED_AT}>{formatLongDate(SITE_PUBLISHED_AT)}</time> · Last updated <time dateTime={SITE_LAST_UPDATED}>{formatLongDate(SITE_LAST_UPDATED)}</time>
         </p>
       </div>
 

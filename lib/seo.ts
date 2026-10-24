@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 export const BASE_URL = "https://ubterzioglu.de";
 export const SITE_NAME = "Umut Barış Terzioğlu";
 export const BRAND_SUFFIX = "Senior QA Engineer";
+export const SITE_PUBLISHED_AT = "2026-04-06";
+export const SITE_LAST_UPDATED = "2026-10-24";
 export const SEARCH_INDEX_DISALLOW_PATHS = [
   "/admin",
   "/admin/",
@@ -44,6 +46,7 @@ interface PageSeoInput {
   noIndex?: boolean;
   ogImage?: string;
   ogType?: "website" | "article" | "profile";
+  alternateTypes?: Record<string, string | URL>;
 }
 
 function buildCanonical(path?: string): string {
@@ -81,6 +84,10 @@ export function buildMetadata(input: PageSeoInput = {}): Metadata {
       languages: {
         en: canonical,
         "x-default": canonical
+      },
+      types: {
+        "application/rss+xml": `${BASE_URL}/rss.xml`,
+        ...input.alternateTypes
       }
     },
     icons: {

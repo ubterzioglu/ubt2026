@@ -37,13 +37,14 @@ function QueueCard({ entry }: QueueCardProps) {
           CV
         </span>
         <span
+          title={entry.linkedinReviewed ? "LinkedIn profile reviewed" : "LinkedIn profile pending"}
           className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-semibold ${
             entry.linkedinReviewed
               ? "bg-emerald-100 text-emerald-800"
               : "bg-amber-100 text-amber-800"
           }`}
         >
-          LinkedIn
+          Li
         </span>
       </div>
     </article>
