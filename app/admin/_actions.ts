@@ -9,7 +9,6 @@ const ADMIN_PATHS = [
   "/admin",
   "/admin/slots",
   "/admin/appointments",
-  "/admin/cv-reviews",
   "/admin/news",
   "/admin/blog",
   "/admin/bookmarks"

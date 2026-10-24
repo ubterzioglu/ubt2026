@@ -6,7 +6,7 @@ import { buildMetadata, SITE_LAST_UPDATED } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Privacy Policy",
   description:
-    "Privacy policy for ubterzioglu.de — what personal data is collected through appointments, CV reviews, and analytics, how it is processed, and your GDPR rights.",
+    "Privacy policy for ubterzioglu.de — what personal data is collected through appointments and analytics, how it is processed, and your GDPR rights.",
   canonical: "/privacy",
   ogType: "website"
 });
@@ -52,12 +52,6 @@ export default function PrivacyPage() {
             (Art. 6(1)(b) GDPR) and is stored in a Supabase database hosted in the EU.
           </p>
           <p>
-            <strong>CV review requests:</strong> we store your name, WhatsApp number, and
-            LinkedIn profile URL to run the free CV review service you asked for
-            (Art. 6(1)(b) GDPR). Only your initials and process status are shown publicly in
-            the queue overview; contact details are never displayed.
-          </p>
-          <p>
             <strong>Email notifications:</strong> booking alerts are sent via Resend. Your
             email address is transmitted to Resend for this purpose only.
           </p>
@@ -83,7 +77,7 @@ export default function PrivacyPage() {
 
         <Section title="Data retention">
           <p>
-            Appointment and CV review data is kept until the purpose is fulfilled and legal
+            Appointment data is kept until the purpose is fulfilled and legal
             retention periods no longer apply, then deleted on request or during routine
             cleanup.
           </p>

@@ -69,7 +69,7 @@ export function ContactSection({ contactItems, geoLinks }: ContactSectionProps) 
                 {i < geoLinks.length - 2 ? ", " : i === geoLinks.length - 2 ? ", and " : ""}
               </span>
             ))}
-            . All appointments and CV reviews are free of charge.
+            . All appointments are free of charge.
           </p>
           <div className="mt-8 flex min-h-[5rem] items-center justify-center px-4 py-5 sm:px-8 sm:py-6">
             <div className="flex flex-nowrap items-center justify-center gap-2 sm:gap-5">

@@ -368,7 +368,7 @@ export const geoLocations: GeoLocation[] = [
       {
         question: "Can you help Turkish developers transition to Germany?",
         answer:
-          "Yes. I regularly support professionals seeking QA roles in Germany — from CV review to career strategy and market insights."
+          "Yes. I regularly support professionals seeking QA roles in Germany — from career strategy to market insights."
       }
     ]
   }

@@ -358,10 +358,6 @@ export const faqItems = [
   {
     question: "Can I book an appointment with Umut Barış Terzioğlu?",
     answer: "Yes. You can book a free appointment directly through the booking section on this portfolio page."
-  },
-  {
-    question: "Does Umut Barış Terzioğlu offer CV reviews?",
-    answer: "Yes. He offers free CV reviews for software testers and QA professionals looking to improve their resumes for the German job market."
   }
 ] as const;
 

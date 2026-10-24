@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Personal portfolio site for UBT (Umut Barış Terzioglu), built with **Next.js 15** (App Router), **React 19**, **TypeScript**, **Tailwind CSS 3**, and **Supabase** as the data backend. Features an appointment booking system, CV review request intake, email notifications via Resend, and a key-gated admin dashboard. Deployed via Docker (standalone output).
+Personal portfolio site for UBT (Umut Barış Terzioglu), built with **Next.js 15** (App Router), **React 19**, **TypeScript**, **Tailwind CSS 3**, and **Supabase** as the data backend. Features an appointment booking system, email notifications via Resend, and a key-gated admin dashboard. Deployed via Docker (standalone output).
 
 ## Build / Lint / Typecheck Commands
 
@@ -22,7 +22,7 @@ There is no test framework configured. No test runner, no test files, and no tes
 
 ```
 app/              # Next.js App Router pages, layouts, globals.css
-  admin/          # Admin dashboard (appointments, slots, cv-reviews) — key-gated
+  admin/          # Admin dashboard (appointments, slots, news, blog, bookmarks) — key-gated
   book-appointment/ # Redirect-only page → /#book-appointment
 components/       # Reusable React components (PascalCase .tsx)
   appointment/    # BookingForm, SlotSelector
@@ -92,14 +92,14 @@ Paths alias: `@/*` maps to project root.
 
 ### Data Layer
 
-- Supabase is the primary data source for all dynamic data (featured items, appointment slots, appointments, CV review requests).
+- Supabase is the primary data source for all dynamic data (featured items, appointment slots, appointments, news updates, blog posts).
 - Fallback data lives in `content/featured.ts` (featured items only).
 - **Two Supabase client patterns:**
   - Anon/public key (`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`): used only for public reads like featured items.
-  - Service role key (`SUPABASE_SERVICE_ROLE_KEY`): used for all mutations and admin reads in `lib/appointments.ts` and `lib/cv-reviews.ts`. Bypasses RLS — validation must happen at the lib layer.
+  - Service role key (`SUPABASE_SERVICE_ROLE_KEY`): used for all mutations and admin reads in `lib/appointments.ts`. Bypasses RLS — validation must happen at the lib layer.
 - Environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (or legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY`), `SUPABASE_SERVICE_ROLE_KEY`. See `.env.local.example`.
 - Service role clients use `persistSession: false, autoRefreshToken: false`.
-- Database rows use `snake_case`; map to `camelCase` in TypeScript via transform functions (e.g., `toAppointmentSlot`, `toCvReviewRequest`). Canonical pattern: one transform function per table in the lib file.
+- Database rows use `snake_case`; map to `camelCase` in TypeScript via transform functions (e.g., `toAppointmentSlot`). Canonical pattern: one transform function per table in the lib file.
 - If env vars are absent, `getSupabaseEnv()` returns `null` and callers return `source: "env-missing"` — never throw.
 
 ### Server Actions
@@ -126,7 +126,7 @@ Paths alias: `@/*` maps to project root.
 
 ### Admin Dashboard
 
-- Route: `/admin` with sub-routes `/admin/appointments`, `/admin/slots`, `/admin/cv-reviews`.
+- Route: `/admin` with sub-routes `/admin/appointments`, `/admin/slots`, `/admin/news`, `/admin/blog`, `/admin/bookmarks`.
 - Access gated by `?access=<key>` query param checked against `APPOINTMENT_ADMIN_ACCESS_KEY` env var.
 - **If `APPOINTMENT_ADMIN_ACCESS_KEY` is unset, admin is open to all requests.** Always set this in production.
 - No sessions, cookies, or middleware involved.
@@ -134,7 +134,6 @@ Paths alias: `@/*` maps to project root.
 ### URL Utilities
 
 - `lib/appointment-url.ts`: builds `/?status=...&message=...&slot=...#book-appointment` feedback URLs.
-- `lib/cv-review-url.ts`: builds CV review feedback URLs and WhatsApp deep links.
 - `/book-appointment` route is a redirect-only page — it forwards all query params to `/#book-appointment`. Do not add content there.
 
 ### Next.js Configuration
@@ -171,7 +170,7 @@ Paths alias: `@/*` maps to project root.
 |---|---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | All Supabase clients | Yes | |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Public/anon reads | Yes | Legacy alias: `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
-| `SUPABASE_SERVICE_ROLE_KEY` | `lib/appointments.ts`, `lib/cv-reviews.ts` | For mutations | Server-only. Bypasses RLS. Never expose client-side. |
+| `SUPABASE_SERVICE_ROLE_KEY` | `lib/appointments.ts` | For mutations | Server-only. Bypasses RLS. Never expose client-side. |
 | `RESEND_API_KEY` | `lib/email.ts` | Optional | If absent, email silently skipped |
 | `APPOINTMENT_NOTIFICATION_TO` | `lib/email.ts` | Optional | Recipient address for booking alerts |
 | `APPOINTMENT_NOTIFICATION_FROM` | `lib/email.ts` | Optional | Defaults to `onboarding@resend.dev` |

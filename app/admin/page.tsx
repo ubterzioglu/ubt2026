@@ -1,6 +1,5 @@
 import { getAllAppointments, getAllAppointmentSlots } from "@/lib/appointments";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { getAllCvReviewRequests } from "@/lib/cv-reviews";
 import { getAllNewsUpdatesAdmin } from "@/lib/news-updates";
 import { getAllBlogPostsAdmin } from "@/lib/blog-posts";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
@@ -47,13 +46,11 @@ export default async function AdminPage() {
   const [
     slotsResult,
     appointmentsResult,
-    cvReviewsResult,
     newsResult,
     blogResult
   ] = await Promise.all([
     getAllAppointmentSlots(),
     getAllAppointments(),
-    getAllCvReviewRequests(),
     getAllNewsUpdatesAdmin(),
     getAllBlogPostsAdmin()
   ]);
@@ -68,7 +65,6 @@ export default async function AdminPage() {
     (appointment) => appointment.status === "confirmed"
   );
   const recentAppointments = appointmentsResult.appointments.slice(0, 5);
-  const recentCvReviews = cvReviewsResult.requests.slice(0, 5);
   const nextSlots = slotsResult.slots
     .filter((slot) => new Date(slot.startsAt) > now)
     .slice(0, 5);
@@ -100,12 +96,6 @@ export default async function AdminPage() {
                 Review appointments
               </a>
               <a
-                href="/admin/cv-reviews"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-              >
-                CV review queue
-              </a>
-              <a
                 href="/admin/news"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
               >
@@ -135,7 +125,7 @@ export default async function AdminPage() {
           </div>
         </section>
 
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           <article className="section-panel px-6 py-6">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               Open slots
@@ -160,15 +150,6 @@ export default async function AdminPage() {
               {confirmedAppointments.length}
             </p>
             <p className="mt-2 text-sm text-ink/68">Appointments currently marked as confirmed.</p>
-          </article>
-          <article className="section-panel px-6 py-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-              CV reviews
-            </p>
-            <p className="mt-3 font-body text-4xl font-semibold text-ink">
-              {cvReviewsResult.requests.length}
-            </p>
-            <p className="mt-2 text-sm text-ink/68">Requests waiting in the CV review queue.</p>
           </article>
           <article className="section-panel px-6 py-6">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
@@ -264,38 +245,6 @@ export default async function AdminPage() {
             )}
           </OverviewAccordion>
 
-          <OverviewAccordion
-            eyebrow="CV queue"
-            title="Latest CV reviews"
-            count={recentCvReviews.length}
-            viewAllHref="/admin/cv-reviews"
-          >
-            {recentCvReviews.length > 0 ? (
-              recentCvReviews.map((request) => (
-                <article
-                  key={request.id}
-                  className="rounded-[1.35rem] border border-line/80 bg-white/85 px-4 py-4"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-base font-semibold text-ink">{request.fullName}</h3>
-                      <p className="mt-1 text-sm text-ink/70">{request.whatsappNumber}</p>
-                      <p className="mt-2 line-clamp-2 break-all text-sm text-ink/68">
-                        {request.linkedinUrl}
-                      </p>
-                    </div>
-                    <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
-                      {request.status}
-                    </span>
-                  </div>
-                </article>
-              ))
-            ) : (
-              <p className="rounded-[1.35rem] border border-dashed border-line/80 px-4 py-5 text-sm text-ink/68">
-                No CV review requests have been submitted yet.
-              </p>
-            )}
-          </OverviewAccordion>
         </section>
       </div>
     </main>

@@ -9,8 +9,6 @@ import { BookmarksList } from "@/components/bookmarks-list";
 import { BookingForm } from "@/components/appointment/booking-form";
 import { ContactSection } from "@/components/contact-section";
 import { CvLinksSection } from "@/components/cv-links-section";
-import { CvReviewForm } from "@/components/cv-review-form";
-import { CvReviewQueueSection } from "@/components/cv-review-queue-section";
 import { ExperienceSection } from "@/components/experience-section";
 import { FaqSection } from "@/components/faq-section";
 import { FeaturedGrid } from "@/components/featured-grid";
@@ -53,12 +51,6 @@ import {
   type SearchParamsRecord
 } from "@/lib/appointment-url";
 import { createAppointment, getAvailableAppointmentSlots } from "@/lib/appointments";
-import {
-  buildCvReviewSectionUrl,
-  buildCvReviewWhatsappLink,
-  readCvReviewFeedbackTone
-} from "@/lib/cv-review-url";
-import { createCvReviewRequest, getCvReviewRequestById, getPublicCvReviewQueue } from "@/lib/cv-reviews";
 import { sendNewBookingNotification } from "@/lib/email";
 import { getFeaturedCollections } from "@/lib/featured-items";
 import { getNewsUpdates } from "@/lib/news-updates";
@@ -124,11 +116,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const feedbackTone = readAppointmentFeedbackTone(params.status);
   const feedbackMessage = readSearchParam(params.message);
   const selectedSlotId = readSearchParam(params.slot);
-  const cvFeedbackTone = readCvReviewFeedbackTone(params.cv_status);
-  const cvFeedbackMessage = readSearchParam(params.cv_message);
-  const cvRequestId = readSearchParam(params.cv_request);
-  const [featuredCollections, slotsResult, newsUpdatesResult, cvReviewRequestResult, queueResult] =
-    await Promise.all([
+  const [featuredCollections, slotsResult, newsUpdatesResult] = await Promise.all([
     getFeaturedCollections([
       "tools",
       "articles",
@@ -136,9 +124,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       "private-projects"
     ]),
     getAvailableAppointmentSlots(),
-    getNewsUpdates(),
-    cvRequestId ? getCvReviewRequestById(cvRequestId) : Promise.resolve(null),
-    getPublicCvReviewQueue()
+    getNewsUpdates()
   ]);
 
   async function submitBookingRequest(formData: FormData) {
@@ -178,37 +164,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     );
   }
 
-  async function submitCvReviewRequest(formData: FormData) {
-    "use server";
-
-    const result = await createCvReviewRequest({
-      fullName: String(formData.get("fullName") ?? ""),
-      whatsappNumber: String(formData.get("whatsappNumber") ?? ""),
-      linkedinUrl: String(formData.get("linkedinUrl") ?? "")
-    });
-
-    if (!result.ok || !result.data) {
-      redirect(
-        buildCvReviewSectionUrl({
-          status: "error",
-          message: result.errorMessage ?? "Unable to submit your CV review request."
-        }) as Route
-      );
-    }
-
-    revalidatePath("/");
-    revalidatePath("/admin");
-    revalidatePath("/admin/cv-reviews");
-
-    redirect(
-      buildCvReviewSectionUrl({
-        status: "success",
-        message: "Your CV review request is saved. Use WhatsApp below to send your CV file.",
-        requestId: result.data.id
-      }) as Route
-    );
-  }
-
   const tools = featuredCollections.itemsByCategory.tools.length
     ? featuredCollections.itemsByCategory.tools
     : mapFallbackItems(fallbackTools);
@@ -220,12 +175,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     : mapFallbackItems(fallbackBookmarks);
   const newsUpdates: NewsUpdateItem[] =
     newsUpdatesResult.items.length > 0 ? newsUpdatesResult.items : fallbackNewsUpdates;
-  const submittedCvReview = cvReviewRequestResult?.request ?? null;
-  const cvWhatsappHref =
-    cvFeedbackTone === "success" && submittedCvReview
-      ? buildCvReviewWhatsappLink(submittedCvReview)
-      : undefined;
-
   const fallbackSource =
     featuredCollections.source === "remote" ? undefined : featuredCollections.source;
   const fallbackFeedback =
@@ -501,27 +450,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 feedbackTone={feedbackTone || fallbackFeedback?.tone}
                 feedbackMessage={feedbackMessage || fallbackFeedback?.message}
               />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="cv-review" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
-              How Does the Free CV Review Work?
-            </h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8">
-              <CvReviewForm
-                action={submitCvReviewRequest}
-                feedbackTone={cvFeedbackTone}
-                feedbackMessage={cvFeedbackMessage}
-                whatsappHref={cvWhatsappHref}
-                submittedRequest={submittedCvReview}
-              />
-              <CvReviewQueueSection result={queueResult} />
             </div>
           </div>
         </div>

@@ -34,7 +34,7 @@ interface AdminGateProps {
 }
 
 const DEFAULT_DESCRIPTION =
-  "This lightweight gate protects the appointment and CV review admin pages until a fuller authentication flow is added.";
+  "This lightweight gate protects the appointment admin pages until a fuller authentication flow is added.";
 
 /**
  * Lightweight admin access gate. Posts the access key to a server action that
