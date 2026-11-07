@@ -2,12 +2,11 @@
 
 import type { FinderCostSummaryRow } from "@/lib/service-finder";
 import { formatUsd } from "@/app/dm/_components/scraper/format";
+import { DM_CARD_CLASS, DM_CARD_INNER_CLASS } from "@/app/dm/_components/theme";
 
 interface CostsSectionProps {
   last30Days: FinderCostSummaryRow[];
   allTime: FinderCostSummaryRow[];
-  cardClass: string;
-  cardInnerClass: string;
 }
 
 const EVENT_LABEL: Record<string, string> = {
@@ -57,15 +56,10 @@ function CostTable({ rows, title }: { rows: FinderCostSummaryRow[]; title: strin
   );
 }
 
-export function CostsSection({
-  last30Days,
-  allTime,
-  cardClass,
-  cardInnerClass
-}: CostsSectionProps) {
+export function CostsSection({ last30Days, allTime }: CostsSectionProps) {
   return (
-    <section className={cardClass}>
-      <div className={`${cardInnerClass} space-y-5 px-4 py-4 sm:px-5`}>
+    <section className={DM_CARD_CLASS}>
+      <div className={`${DM_CARD_INNER_CLASS} space-y-5 px-4 py-4 sm:px-5`}>
         <h2 className="font-body text-sm font-semibold text-white">Maliyetler</h2>
         <CostTable rows={last30Days} title="Son 30 gün" />
         <CostTable rows={allTime} title="Tüm zamanlar" />

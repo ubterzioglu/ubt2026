@@ -2,55 +2,23 @@ import type { Route } from "next";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { buildAdminFeedbackUrl } from "@/lib/appointment-url";
 import { readSearchParam } from "@/lib/search-params";
 import { readFormString } from "@/lib/form-data";
 import { getAllAppointments, updateAppointmentStatus } from "@/lib/appointments";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { formatSlotTime } from "@/lib/slot-time";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
-import { adminSignOutAction } from "@/app/admin/_actions";
+import { AdminPageHeader } from "@/app/admin/_components/admin-page-header";
+import { FlashBanner } from "@/app/admin/_components/flash-banner";
+import { adminInputClass } from "@/app/admin/_components/form-classes";
 import { APPOINTMENT_STATUSES } from "@/types/appointment";
 
 interface AdminAppointmentsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-function buildAppointmentsUrl(
-  status?: "success" | "error",
-  message?: string
-): string {
-  const params = new URLSearchParams();
-
-  if (status) {
-    params.set("status", status);
-  }
-
-  if (message) {
-    params.set("message", message);
-  }
-
-  const query = params.toString();
-  return query ? `/admin/appointments?${query}` : "/admin/appointments";
-}
-
-function formatSlotTime(startsAt: string, endsAt: string, timezone: string): string {
-  const startFormatter = new Intl.DateTimeFormat("en-GB", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: timezone
-  });
-  const endFormatter = new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: timezone
-  });
-
-  return `${startFormatter.format(new Date(startsAt))} to ${endFormatter.format(
-    new Date(endsAt)
-  )}`;
-}
+const APPOINTMENTS_PATH = "/admin/appointments";
 
 const statusClasses = {
   pending: "bg-amber-100 text-amber-900",
@@ -89,7 +57,8 @@ export default async function AdminAppointmentsPage({
     revalidatePath("/");
 
     redirect(
-      buildAppointmentsUrl(
+      buildAdminFeedbackUrl(
+        APPOINTMENTS_PATH,
         result.ok ? "success" : "error",
         result.ok
           ? "Appointment status updated."
@@ -103,51 +72,12 @@ export default async function AdminAppointmentsPage({
   return (
     <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
-        <section className="section-panel px-6 py-6 sm:px-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-                Appointment review
-              </p>
-              <h1 className="mt-2 font-body text-[clamp(2rem,5vw,2.7rem)] font-semibold tracking-[-0.03em] text-ink">
-                Manage booked appointments
-              </h1>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={buildAppointmentsUrl()}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-              >
-                Refresh
-              </a>
-              <a
-                href="/admin"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ink/92"
-              >
-                Back to dashboard
-              </a>
-              <form action={adminSignOutAction}>
-                <button
-                  type="submit"
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-rose-300 hover:text-rose-700"
-                >
-                  Sign out
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
+        <AdminPageHeader eyebrow="Appointment review" title="Manage booked appointments" refreshHref={buildAdminFeedbackUrl(APPOINTMENTS_PATH)} />
 
         {message ? (
-          <section
-            className={`rounded-[1.5rem] border px-5 py-4 text-sm leading-6 ${
-              status === "error"
-                ? "border-rose-200 bg-rose-50/95 text-rose-900"
-                : "border-emerald-200 bg-emerald-50/95 text-emerald-900"
-            }`}
-          >
+          <FlashBanner tone={status === "error" ? "error" : "success"} variant="panel">
             {message}
-          </section>
+          </FlashBanner>
         ) : null}
 
         <section className="space-y-4">
@@ -200,7 +130,7 @@ export default async function AdminAppointmentsPage({
                       <select
                         name="status"
                         defaultValue={appointment.status}
-                        className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
+                        className={adminInputClass}
                       >
                         {APPOINTMENT_STATUSES.map((value) => (
                           <option key={value} value={value}>

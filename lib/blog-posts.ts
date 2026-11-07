@@ -1,10 +1,10 @@
 import "server-only";
 
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
 import { validateContentFields } from "@/lib/content-validation";
-import { createAnonClient, createServiceClient } from "@/lib/supabase-server";
+import { createAnonClient, createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import type { BlogPostItem } from "@/types/site";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 interface SupabaseBlogPostRow {
   id: string;
@@ -102,7 +102,7 @@ export async function getBlogPosts(): Promise<BlogPostsResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown blog error",
+      errorMessage: toErrorMessage(error, "Unknown blog error"),
       items: []
     };
   }
@@ -142,7 +142,7 @@ export async function getAllBlogPostsAdmin(): Promise<BlogPostsResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -202,7 +202,7 @@ export async function createBlogPost(
   if (invalid) return { ok: false, errorMessage: invalid };
 
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
 
   try {
     const desired = slugify(input.slug?.trim() || title) || "post";
@@ -219,7 +219,7 @@ export async function createBlogPost(
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    return { ok: false, errorMessage: error instanceof Error ? error.message : "Create failed." };
+    return { ok: false, errorMessage: toErrorMessage(error, "Create failed.") };
   }
 }
 
@@ -231,7 +231,7 @@ export async function updateBlogPost(
   if (invalid) return { ok: false, errorMessage: invalid };
 
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
 
   const patch: Record<string, unknown> = {};
   try {
@@ -258,18 +258,18 @@ export async function updateBlogPost(
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    return { ok: false, errorMessage: error instanceof Error ? error.message : "Update failed." };
+    return { ok: false, errorMessage: toErrorMessage(error, "Update failed.") };
   }
 }
 
 export async function deleteBlogPost(id: string): Promise<BlogPostMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const { error } = await supabase.from("blog_posts").delete().eq("id", id);
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    return { ok: false, errorMessage: error instanceof Error ? error.message : "Delete failed." };
+    return { ok: false, errorMessage: toErrorMessage(error, "Delete failed.") };
   }
 }

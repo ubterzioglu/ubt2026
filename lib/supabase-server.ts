@@ -2,6 +2,8 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
+export const SERVICE_CREDENTIALS_MISSING = "Service credentials missing.";
+
 const SERVER_CLIENT_OPTIONS = {
   auth: { persistSession: false, autoRefreshToken: false }
 };

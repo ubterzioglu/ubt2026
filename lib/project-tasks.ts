@@ -1,13 +1,13 @@
 import "server-only";
 
-import { createServiceClient } from "@/lib/supabase-server";
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import type {
   ProjectTaskItem,
   ProjectTaskPriority,
   ProjectTaskStatus
 } from "@/types/site";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 const TASK_STATUSES: readonly ProjectTaskStatus[] = [
   "todo",
@@ -111,7 +111,7 @@ export async function getAllProjectTasksAdmin(): Promise<ProjectTasksResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -146,7 +146,7 @@ export async function createProjectTask(
 
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
 
   try {
@@ -165,7 +165,7 @@ export async function createProjectTask(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Create failed."
+      errorMessage: toErrorMessage(error, "Create failed.")
     };
   }
 }
@@ -176,7 +176,7 @@ export async function updateProjectTask(
 ): Promise<ProjectTaskMutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
 
   const patch: Record<string, unknown> = {};
@@ -211,7 +211,7 @@ export async function updateProjectTask(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Update failed."
+      errorMessage: toErrorMessage(error, "Update failed.")
     };
   }
 }
@@ -221,7 +221,7 @@ export async function deleteProjectTask(
 ): Promise<ProjectTaskMutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase.from("project_tasks").delete().eq("id", id);
@@ -230,7 +230,7 @@ export async function deleteProjectTask(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }

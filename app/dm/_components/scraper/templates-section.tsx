@@ -2,34 +2,32 @@
 // dışlama terimleri düzenlenebilir, şablon aç/kapat yapılabilir.
 // "Aranacak şeyler" burada yönetilir (desiremap.de kategorileri seed'lidir).
 
-import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
+import {
+  DM_ACTION_BUTTON,
+  DM_BRAND_GRADIENT,
+  DM_CARD_CLASS,
+  DM_CARD_INNER_CLASS,
+  DM_INPUT_CLASS,
+  DM_LABEL_CLASS
+} from "@/app/dm/_components/theme";
 import type { FinderTemplateItem } from "@/lib/service-finder";
 
 interface TemplatesSectionProps {
   templates: FinderTemplateItem[];
   editId: string;
-  cardClass: string;
-  cardInnerClass: string;
-  inputClass: string;
   toggleAction: (formData: FormData) => void | Promise<void>;
   updateAction: (formData: FormData) => void | Promise<void>;
 }
 
-const actionButton =
-  "inline-flex min-h-[28px] items-center justify-center rounded-full border px-2.5 py-1 text-[11px] font-semibold transition";
-
 export function TemplatesSection({
   templates,
   editId,
-  cardClass,
-  cardInnerClass,
-  inputClass,
   toggleAction,
   updateAction
 }: TemplatesSectionProps) {
   return (
-    <section className={cardClass}>
-      <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+    <section className={DM_CARD_CLASS}>
+      <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
         <h2 className="font-body text-sm font-semibold text-white">Kategori şablonları</h2>
         <p className="mt-1 text-xs leading-5 text-white/50">
           Her şablon bir desiremap.de kategorisini tarar. Sorgu kalıplarında{" "}
@@ -80,7 +78,7 @@ export function TemplatesSection({
                             ? "/dm?tab=scraper&sec=sablonlar"
                             : `/dm?tab=scraper&sec=sablonlar&edit=${template.id}`
                         }
-                        className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:border-[#67e8f9]/40 hover:text-[#67e8f9]`}
+                        className={`${DM_ACTION_BUTTON} border-white/10 bg-white/[0.05] text-white/60 hover:border-[#67e8f9]/40 hover:text-[#67e8f9]`}
                       >
                         {isEditing ? "Vazgeç" : "Düzenle"}
                       </a>
@@ -93,7 +91,7 @@ export function TemplatesSection({
                         />
                         <button
                           type="submit"
-                          className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
+                          className={`${DM_ACTION_BUTTON} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
                         >
                           {template.isActive ? "Kapat" : "Aç"}
                         </button>
@@ -108,7 +106,7 @@ export function TemplatesSection({
                     >
                       <input type="hidden" name="id" value={template.id} />
                       <label className="block">
-                        <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                        <span className={DM_LABEL_CLASS}>
                           Etiket
                         </span>
                         <input
@@ -117,29 +115,29 @@ export function TemplatesSection({
                           defaultValue={template.label}
                           minLength={2}
                           maxLength={80}
-                          className={inputClass}
+                          className={DM_INPUT_CLASS}
                         />
                       </label>
                       <label className="block">
-                        <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                        <span className={DM_LABEL_CLASS}>
                           Sorgu kalıpları (her satıra bir tane)
                         </span>
                         <textarea
                           name="queryTemplates"
                           rows={5}
                           defaultValue={template.queryTemplates.join("\n")}
-                          className={inputClass}
+                          className={DM_INPUT_CLASS}
                         />
                       </label>
                       <label className="block">
-                        <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                        <span className={DM_LABEL_CLASS}>
                           Dışlama terimleri (virgülle)
                         </span>
                         <input
                           type="text"
                           name="mustExcludeTerms"
                           defaultValue={template.mustExcludeTerms.join(", ")}
-                          className={inputClass}
+                          className={DM_INPUT_CLASS}
                         />
                       </label>
                       <button

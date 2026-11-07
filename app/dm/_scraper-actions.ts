@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { readFormString } from "@/lib/form-data";
-import { isTasksAdminAuthenticated } from "@/lib/admin-auth";
+import { requireDmAccess } from "@/app/dm/_auth";
 import {
   cancelFinderJobAdmin,
   createFinderJobAdmin,
@@ -43,12 +43,6 @@ function parseCommaList(value: string): string[] {
 function parseOptionalNumber(value: string): number | undefined {
   const trimmed = value.trim();
   return trimmed ? Number(trimmed) : undefined;
-}
-
-async function requireDmAccess(): Promise<void> {
-  if (!(await isTasksAdminAuthenticated())) {
-    redirect("/dm" as Parameters<typeof redirect>[0]);
-  }
 }
 
 export async function scraperJobCreateAction(formData: FormData): Promise<void> {

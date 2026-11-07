@@ -5,36 +5,8 @@ import { getAllBlogPostsAdmin } from "@/lib/blog-posts";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
 import { OverviewAccordion } from "@/app/admin/_components/overview-accordion";
 import { RouteList } from "@/app/admin/_components/route-list";
-import { adminSignOutAction } from "@/app/admin/_actions";
-
-function formatSlotTime(
-  startsAt: string,
-  timezone: string,
-  endsAt?: string
-): string {
-  const startFormatter = new Intl.DateTimeFormat("en-GB", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: timezone
-  });
-
-  if (!endsAt) {
-    return startFormatter.format(new Date(startsAt));
-  }
-
-  const endFormatter = new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: timezone
-  });
-
-  return `${startFormatter.format(new Date(startsAt))} to ${endFormatter.format(
-    new Date(endsAt)
-  )}`;
-}
+import { AdminPageHeader } from "@/app/admin/_components/admin-page-header";
+import { formatSlotTime } from "@/lib/slot-time";
 
 export default async function AdminPage() {
   const hasAccess = await isAdminAuthenticated();
@@ -72,58 +44,38 @@ export default async function AdminPage() {
   return (
     <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
-        <section className="section-panel px-6 py-6 sm:px-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-                Request admin
-              </p>
-              <h1 className="mt-2 font-body text-[clamp(2rem,5vw,2.7rem)] font-semibold tracking-[-0.03em] text-ink">
-                UBT
-              </h1>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="/admin/slots"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent/95"
-              >
-                Manage slots
-              </a>
-              <a
-                href="/admin/appointments"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-              >
-                Review appointments
-              </a>
-              <a
-                href="/admin/news"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-              >
-                Manage news
-              </a>
-              <a
-                href="/admin/blog"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-              >
-                Manage blog
-              </a>
-              <a
-                href="/admin/bookmarks"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-              >
-                Manage bookmarks
-              </a>
-              <form action={adminSignOutAction}>
-                <button
-                  type="submit"
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-rose-300 hover:text-rose-700"
-                >
-                  Sign out
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
+        <AdminPageHeader eyebrow="Request admin" title="UBT" showBackLink={false}>
+          <a
+            href="/admin/slots"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent/95"
+          >
+            Manage slots
+          </a>
+          <a
+            href="/admin/appointments"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+          >
+            Review appointments
+          </a>
+          <a
+            href="/admin/news"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+          >
+            Manage news
+          </a>
+          <a
+            href="/admin/blog"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+          >
+            Manage blog
+          </a>
+          <a
+            href="/admin/bookmarks"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+          >
+            Manage bookmarks
+          </a>
+        </AdminPageHeader>
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           <article className="section-panel px-6 py-6">
@@ -190,7 +142,7 @@ export default async function AdminPage() {
                     <div>
                       <h3 className="text-base font-semibold text-ink">{slot.title}</h3>
                       <p className="mt-1 text-sm text-ink/70">
-                        {formatSlotTime(slot.startsAt, slot.timezone, slot.endsAt)}
+                        {formatSlotTime(slot.startsAt, slot.endsAt, slot.timezone)}
                       </p>
                     </div>
                     <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
@@ -226,8 +178,8 @@ export default async function AdminPage() {
                         <p className="mt-2 text-sm text-ink/68">
                           {formatSlotTime(
                             appointment.slot.startsAt,
-                            appointment.slot.timezone,
-                            appointment.slot.endsAt
+                            appointment.slot.endsAt,
+                            appointment.slot.timezone
                           )}
                         </p>
                       ) : null}

@@ -21,7 +21,9 @@ import {
   deleteAkcakanatDomain,
   clampAkcakanatPriority
 } from "@/lib/akcakanat-domains";
-import type { AkcakanatDomainItem } from "@/lib/akcakanat-domains";
+import type { AkcakanatDomainInput, AkcakanatDomainItem } from "@/lib/akcakanat-domains";
+import { normalizeExternalHref } from "@/lib/href";
+import { SourceStateBanner } from "@/components/source-state-banner";
 
 export const metadata = {
   title: "Akçakanat · Domain Yönetimi",
@@ -30,13 +32,6 @@ export const metadata = {
 
 interface BakcakanatPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function normalizeSiteHref(site: string): string | null {
-  const trimmed = site.trim();
-  if (!trimmed) return null;
-  if (/^https?:\/\//i.test(trimmed)) return trimmed;
-  return `https://${trimmed}`;
 }
 
 // Shared dark input styling so every cell reads as one premium glass surface.
@@ -62,6 +57,22 @@ const PRIORITY_OPTIONS = Array.from({ length: 10 }, (_, index) => {
 
 function parsePriority(value: string): number {
   return clampAkcakanatPriority(Number.parseInt(value, 10));
+}
+
+function readDomainInput(formData: FormData): AkcakanatDomainInput {
+  return {
+    site: readFormString(formData, "site"),
+    domainInfo: readFormString(formData, "domainInfo"),
+    hosting: readFormString(formData, "hosting"),
+    email: readFormString(formData, "email"),
+    hasEmail: readFormString(formData, "hasEmail", "0") === "1",
+    redirectTo: readFormString(formData, "redirectTo"),
+    paymentDays: readFormString(formData, "paymentDays"),
+    paymentMethod: readFormString(formData, "paymentMethod"),
+    comment: readFormString(formData, "comment"),
+    priority: parsePriority(readFormString(formData, "priority", "5")),
+    sortOrder: Number.parseInt(readFormString(formData, "sortOrder", "0"), 10)
+  };
 }
 
 type FilterKey = "priority" | "email" | "redirect" | "hosting" | "payment";
@@ -108,22 +119,7 @@ export default async function BakcakanatPage({
     if (!(await isBakcakanatAuthenticated())) {
       redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
-    const outcome = await createAkcakanatDomain({
-      site: readFormString(formData, "site"),
-      domainInfo: readFormString(formData, "domainInfo"),
-      hosting: readFormString(formData, "hosting"),
-      email: readFormString(formData, "email"),
-      hasEmail: (readFormString(formData, "hasEmail", "0")) === "1",
-      redirectTo: readFormString(formData, "redirectTo"),
-      paymentDays: readFormString(formData, "paymentDays"),
-      paymentMethod: readFormString(formData, "paymentMethod"),
-      comment: readFormString(formData, "comment"),
-      priority: parsePriority(readFormString(formData, "priority", "5")),
-      sortOrder: Number.parseInt(
-        readFormString(formData, "sortOrder", "0"),
-        10
-      )
-    });
+    const outcome = await createAkcakanatDomain(readDomainInput(formData));
 
     revalidatePath("/bakcakanat");
     redirect(
@@ -144,22 +140,7 @@ export default async function BakcakanatPage({
     if (!id) {
       redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
-    const outcome = await updateAkcakanatDomain(id, {
-      site: readFormString(formData, "site"),
-      domainInfo: readFormString(formData, "domainInfo"),
-      hosting: readFormString(formData, "hosting"),
-      email: readFormString(formData, "email"),
-      hasEmail: (readFormString(formData, "hasEmail", "0")) === "1",
-      redirectTo: readFormString(formData, "redirectTo"),
-      paymentDays: readFormString(formData, "paymentDays"),
-      paymentMethod: readFormString(formData, "paymentMethod"),
-      comment: readFormString(formData, "comment"),
-      priority: parsePriority(readFormString(formData, "priority", "5")),
-      sortOrder: Number.parseInt(
-        readFormString(formData, "sortOrder", "0"),
-        10
-      )
-    });
+    const outcome = await updateAkcakanatDomain(id, readDomainInput(formData));
 
     revalidatePath("/bakcakanat");
     redirect(
@@ -314,17 +295,11 @@ export default async function BakcakanatPage({
             Hata: {errorParam}
           </div>
         )}
-        {result.source === "env-missing" && (
-          <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
-            Supabase bağlantısı yapılandırılmamış (SUPABASE_SERVICE_ROLE_KEY
-            eksik). Kayıtlar yüklenemiyor.
-          </div>
-        )}
-        {result.source === "error" && (
-          <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
-            Kayıtlar yüklenirken hata oluştu: {result.errorMessage}
-          </div>
-        )}
+        <SourceStateBanner
+          source={result.source}
+          errorMessage={result.errorMessage}
+          subject="Kayıtlar"
+        />
 
         {/* Stats */}
         <section className="grid gap-3 sm:grid-cols-3">
@@ -689,7 +664,7 @@ interface DomainRowProps {
  * "Düzenle" link (?edit=id); only deletion stays inline.
  */
 function DomainRow({ item, deleteAction }: DomainRowProps) {
-  const siteHref = normalizeSiteHref(item.site);
+  const siteHref = normalizeExternalHref(item.site);
   const detailLine = [
     item.domainInfo,
     item.email ? `E-posta: ${item.email}` : "",

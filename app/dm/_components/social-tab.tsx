@@ -5,12 +5,12 @@ import { useMemo, useState } from "react";
 import type { SocialPlatform, SocialPostItem } from "@/types/site";
 import { SOCIAL_PLATFORMS } from "@/types/site";
 import { BoardGuide } from "@/app/dm/_components/board-guide";
+import { StatGrid } from "@/app/dm/_components/stat-grid";
+import { DM_CARD_CLASS, DM_CARD_INNER_CLASS } from "@/app/dm/_components/theme";
 import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 
 interface SocialTabProps {
   posts: SocialPostItem[];
-  cardClass: string;
-  cardInnerClass: string;
   /** Server action: toggles a post's shared flag for one platform. */
   toggleShareAction: (formData: FormData) => void | Promise<void>;
 }
@@ -198,13 +198,9 @@ function ShareToggle({
 
 function PostCard({
   post,
-  cardClass,
-  cardInnerClass,
   toggleShareAction
 }: {
   post: SocialPostItem;
-  cardClass: string;
-  cardInnerClass: string;
   toggleShareAction: (formData: FormData) => void | Promise<void>;
 }) {
   const sharedCount = SOCIAL_PLATFORMS.filter((p) => post.shared[p]).length;
@@ -214,8 +210,8 @@ function PostCard({
     "min-h-[190px] w-full resize-y whitespace-pre-wrap rounded-xl border border-white/10 bg-[#050409] px-3 py-2.5 text-[12.5px] leading-[1.5] text-white/85 outline-none transition focus:border-[#67e8f9]/45";
 
   return (
-    <article className={cardClass}>
-      <div className={`${cardInnerClass} p-4 sm:p-5`}>
+    <article className={DM_CARD_CLASS}>
+      <div className={`${DM_CARD_INNER_CLASS} p-4 sm:p-5`}>
         {/* Header: pill + number + title */}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -292,12 +288,7 @@ function PostCard({
   );
 }
 
-export function SocialTab({
-  posts,
-  cardClass,
-  cardInnerClass,
-  toggleShareAction
-}: SocialTabProps) {
+export function SocialTab({ posts, toggleShareAction }: SocialTabProps) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>(ALL);
   const [shareFilter, setShareFilter] = useState<string>(ALL);
@@ -338,36 +329,20 @@ export function SocialTab({
 
   return (
     <>
-      <BoardGuide
-        guide={SOCIAL_GUIDE}
-        cardClass={cardClass}
-        cardInnerClass={cardInnerClass}
-      />
-      {/* Stats */}
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {[
+      <BoardGuide guide={SOCIAL_GUIDE} />
+      <StatGrid
+        stats={[
           { label: "Toplam post", value: posts.length },
           { label: "Paylaşımı başladı", value: anyShared },
           { label: "Tümü paylaşıldı", value: fullyShared },
           { label: "Kategori", value: categories.length }
-        ].map((stat) => (
-          <article key={stat.label} className={cardClass}>
-            <div className={`${cardInnerClass} px-4 py-3`}>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#f0abfc]/90">
-                {stat.label}
-              </p>
-              <p className="mt-1 font-body text-xl font-bold text-white">
-                {stat.value}
-              </p>
-            </div>
-          </article>
-        ))}
-      </section>
+        ]}
+      />
 
       {/* Search + filters */}
-      <section className={cardClass}>
+      <section className={DM_CARD_CLASS}>
         <div
-          className={`${cardInnerClass} flex flex-col gap-3 px-4 py-3 sm:px-5 lg:flex-row lg:items-center lg:justify-between`}
+          className={`${DM_CARD_INNER_CLASS} flex flex-col gap-3 px-4 py-3 sm:px-5 lg:flex-row lg:items-center lg:justify-between`}
         >
           <div className="relative w-full lg:max-w-sm">
             <span
@@ -455,8 +430,8 @@ export function SocialTab({
 
       {/* Post cards */}
       {visible.length === 0 ? (
-        <section className={cardClass}>
-          <p className={`${cardInnerClass} px-4 py-6 text-xs text-white/55`}>
+        <section className={DM_CARD_CLASS}>
+          <p className={`${DM_CARD_INNER_CLASS} px-4 py-6 text-xs text-white/55`}>
             Bu filtreyle eşleşen içerik yok.
           </p>
         </section>
@@ -466,8 +441,6 @@ export function SocialTab({
             <PostCard
               key={post.id}
               post={post}
-              cardClass={cardClass}
-              cardInnerClass={cardInnerClass}
               toggleShareAction={toggleShareAction}
             />
           ))}

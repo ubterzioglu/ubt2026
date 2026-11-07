@@ -1,9 +1,9 @@
 import "server-only";
 
-import { createServiceClient } from "@/lib/supabase-server";
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import { DETRBRIDGE_BRIEF_ITEM_KEYS } from "@/content/detrbridge-brief";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 /** "Toplantı Özeti" sekmesindeki bir maddeye bırakılmış tek yorum. */
 export interface BriefComment {
@@ -90,7 +90,7 @@ export async function getAllBriefComments(): Promise<BriefCommentsResult> {
   } catch (error) {
     return emptyResult(
       "error",
-      error instanceof Error ? error.message : "Unknown error"
+      toErrorMessage(error, "Unknown error")
     );
   }
 }
@@ -122,7 +122,7 @@ export async function addBriefComment(
 
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase.from("detrbridge_brief_comments").insert({
@@ -135,7 +135,7 @@ export async function addBriefComment(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Comment failed."
+      errorMessage: toErrorMessage(error, "Comment failed.")
     };
   }
 }
@@ -153,7 +153,7 @@ export async function deleteBriefComment(
 
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { data, error } = await supabase
@@ -170,7 +170,7 @@ export async function deleteBriefComment(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }

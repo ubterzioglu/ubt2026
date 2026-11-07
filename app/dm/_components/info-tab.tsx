@@ -1,4 +1,8 @@
-import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
+import {
+  DM_BRAND_GRADIENT,
+  DM_CARD_CLASS,
+  DM_CARD_INNER_CLASS
+} from "@/app/dm/_components/theme";
 import { BoardGuide } from "@/app/dm/_components/board-guide";
 import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 
@@ -31,11 +35,6 @@ const INFO_GUIDE: BoardGuideContent = {
   ]
 };
 
-interface InfoTabProps {
-  cardClass: string;
-  cardInnerClass: string;
-}
-
 interface ProfileLink {
   label: string;
   handle: string;
@@ -51,7 +50,7 @@ const iconProps = {
 } as const;
 
 /** Official DesireMap social profiles. Static reference — rarely changes. */
-const PROFILES: ProfileLink[] = [
+export const PROFILES: ProfileLink[] = [
   {
     label: "Instagram",
     handle: "@desiremapde",
@@ -116,17 +115,13 @@ const PROFILES: ProfileLink[] = [
   }
 ];
 
-export function InfoTab({ cardClass, cardInnerClass }: InfoTabProps) {
+export function InfoTab() {
   return (
     <>
-      <BoardGuide
-        guide={INFO_GUIDE}
-        cardClass={cardClass}
-        cardInnerClass={cardInnerClass}
-      />
+      <BoardGuide guide={INFO_GUIDE} />
       {/* Social profiles card */}
-      <section className={cardClass}>
-        <div className={`${cardInnerClass} p-4 sm:p-5`}>
+      <section className={DM_CARD_CLASS}>
+        <div className={`${DM_CARD_INNER_CLASS} p-4 sm:p-5`}>
           <div className="flex items-center gap-2.5">
             <span
               className="flex h-7 w-7 items-center justify-center rounded-lg text-white shadow-sm ring-1 ring-white/15"
@@ -200,8 +195,8 @@ export function InfoTab({ cardClass, cardInnerClass }: InfoTabProps) {
       </section>
 
       {/* Todo / open items card */}
-      <section className={cardClass}>
-        <div className={`${cardInnerClass} p-4 sm:p-5`}>
+      <section className={DM_CARD_CLASS}>
+        <div className={`${DM_CARD_INNER_CLASS} p-4 sm:p-5`}>
           <div className="flex items-center gap-2.5">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-amber-400/30 bg-amber-400/10 text-amber-300">
               <svg

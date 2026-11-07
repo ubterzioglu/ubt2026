@@ -1,5 +1,6 @@
 import "server-only";
 
+import { toErrorMessage } from "@/lib/error-message";
 import { createServiceClient } from "@/lib/supabase-server";
 import { secureCompare } from "@/lib/secure-compare";
 import { APPOINTMENT_STATUSES } from "@/types/appointment";
@@ -270,7 +271,7 @@ export async function getAvailableAppointmentSlots(): Promise<AppointmentSlotsRe
     return {
       source: "error",
       errorMessage:
-        error instanceof Error ? error.message : "Unknown appointment slot error",
+        toErrorMessage(error, "Unknown appointment slot error"),
       slots: []
     };
   }
@@ -305,7 +306,7 @@ export async function getAllAppointmentSlots(): Promise<AppointmentSlotsResult> 
     return {
       source: "error",
       errorMessage:
-        error instanceof Error ? error.message : "Unknown appointment slot error",
+        toErrorMessage(error, "Unknown appointment slot error"),
       slots: []
     };
   }
@@ -340,7 +341,7 @@ export async function getAllAppointments(): Promise<AppointmentsResult> {
     return {
       source: "error",
       errorMessage:
-        error instanceof Error ? error.message : "Unknown appointment error",
+        toErrorMessage(error, "Unknown appointment error"),
       appointments: []
     };
   }
@@ -396,7 +397,7 @@ export async function createAppointmentSlot(
     return {
       ok: false,
       errorMessage:
-        error instanceof Error ? error.message : "Unable to create appointment slot."
+        toErrorMessage(error, "Unable to create appointment slot.")
     };
   }
 }
@@ -453,7 +454,7 @@ export async function updateAppointmentSlot(
     return {
       ok: false,
       errorMessage:
-        error instanceof Error ? error.message : "Unable to update appointment slot."
+        toErrorMessage(error, "Unable to update appointment slot.")
     };
   }
 }
@@ -490,7 +491,7 @@ export async function deleteAppointmentSlot(
     return {
       ok: false,
       errorMessage:
-        error instanceof Error ? error.message : "Unable to delete appointment slot."
+        toErrorMessage(error, "Unable to delete appointment slot.")
     };
   }
 }
@@ -618,7 +619,7 @@ export async function updateAppointmentStatus(
     return {
       ok: false,
       errorMessage:
-        error instanceof Error ? error.message : "Unable to update appointment status."
+        toErrorMessage(error, "Unable to update appointment status.")
     };
   }
 }

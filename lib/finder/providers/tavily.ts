@@ -17,6 +17,7 @@ import type {
   SearchOutput,
   SearchProvider
 } from "@/lib/finder/providers/types";
+import { sleep } from "@/lib/finder/sleep";
 
 const TAVILY_BASE_URL = "https://api.tavily.com";
 const REQUEST_TIMEOUT_MS = 30_000;
@@ -56,10 +57,6 @@ function releaseRequestSlot(apiKey: string): void {
   const next = waiters?.shift();
   if (waiters?.length === 0) requestWaiters.delete(apiKey);
   next?.();
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function tavilyPost<T>(

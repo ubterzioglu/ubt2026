@@ -1,8 +1,8 @@
 import "server-only";
 
-import { createServiceClient } from "@/lib/supabase-server";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 
 export interface DetrbridgeVoteEntry {
   voterName: string;
@@ -121,7 +121,7 @@ export async function getAllDomainsAdmin(): Promise<DetrbridgeDomainsResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -162,7 +162,7 @@ export async function createDomain(
   }
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase.from("detrbridge_domains").insert({
@@ -178,7 +178,7 @@ export async function createDomain(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Create failed."
+      errorMessage: toErrorMessage(error, "Create failed.")
     };
   }
 }
@@ -199,7 +199,7 @@ export async function castDomainVote(
   }
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase
@@ -213,7 +213,7 @@ export async function castDomainVote(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Oy kaydedilemedi."
+      errorMessage: toErrorMessage(error, "Oy kaydedilemedi.")
     };
   }
 }
@@ -225,7 +225,7 @@ export async function castDomainVote(
 export async function selectDomain(id: string): Promise<MutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error: clearError } = await supabase
@@ -242,7 +242,7 @@ export async function selectDomain(id: string): Promise<MutationResult> {
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Select failed."
+      errorMessage: toErrorMessage(error, "Select failed.")
     };
   }
 }
@@ -250,7 +250,7 @@ export async function selectDomain(id: string): Promise<MutationResult> {
 export async function deleteDomain(id: string): Promise<MutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase.from("detrbridge_domains").delete().eq("id", id);
@@ -259,7 +259,7 @@ export async function deleteDomain(id: string): Promise<MutationResult> {
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }

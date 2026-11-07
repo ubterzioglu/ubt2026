@@ -1,10 +1,10 @@
 import "server-only";
 
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
 import { validateContentFields } from "@/lib/content-validation";
-import { createAnonClient, createServiceClient } from "@/lib/supabase-server";
+import { createAnonClient, createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import type { NewsUpdateItem } from "@/types/site";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 interface SupabaseNewsUpdateRow {
   id: string;
@@ -69,7 +69,7 @@ export async function getNewsUpdates(): Promise<NewsUpdatesResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown news update error",
+      errorMessage: toErrorMessage(error, "Unknown news update error"),
       items: []
     };
   }
@@ -104,7 +104,7 @@ export async function getAllNewsUpdatesAdmin(): Promise<NewsUpdatesResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -117,7 +117,7 @@ export async function createNewsUpdate(input: NewsUpdateInput): Promise<NewsUpda
   if (invalid) return { ok: false, errorMessage: invalid };
 
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const { error } = await supabase.from("news_updates").insert({
       title,
@@ -130,7 +130,7 @@ export async function createNewsUpdate(input: NewsUpdateInput): Promise<NewsUpda
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    return { ok: false, errorMessage: error instanceof Error ? error.message : "Create failed." };
+    return { ok: false, errorMessage: toErrorMessage(error, "Create failed.") };
   }
 }
 
@@ -142,7 +142,7 @@ export async function updateNewsUpdate(
   if (invalid) return { ok: false, errorMessage: invalid };
 
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   const patch: Record<string, unknown> = {};
   if (input.title !== undefined) patch.title = input.title.trim();
   if (input.summary !== undefined) patch.summary = input.summary.trim();
@@ -155,18 +155,18 @@ export async function updateNewsUpdate(
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    return { ok: false, errorMessage: error instanceof Error ? error.message : "Update failed." };
+    return { ok: false, errorMessage: toErrorMessage(error, "Update failed.") };
   }
 }
 
 export async function deleteNewsUpdate(id: string): Promise<NewsUpdateMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const { error } = await supabase.from("news_updates").delete().eq("id", id);
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    return { ok: false, errorMessage: error instanceof Error ? error.message : "Delete failed." };
+    return { ok: false, errorMessage: toErrorMessage(error, "Delete failed.") };
   }
 }

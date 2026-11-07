@@ -2,15 +2,15 @@ import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { createServiceClient } from "@/lib/supabase-server";
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import type {
   FindingComment,
   TestFindingItem,
   TestFindingSeverity,
   TestFindingStatus
 } from "@/types/site";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 const FINDING_STATUSES: readonly TestFindingStatus[] = [
   "open",
@@ -159,7 +159,7 @@ export async function getAllFindingsAdmin(): Promise<TestFindingsResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -235,7 +235,7 @@ async function uploadScreenshot(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Yükleme başarısız."
+      errorMessage: toErrorMessage(error, "Yükleme başarısız.")
     };
   }
 }
@@ -263,7 +263,7 @@ export async function createFinding(
 
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
 
   try {
@@ -295,7 +295,7 @@ export async function createFinding(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Create failed."
+      errorMessage: toErrorMessage(error, "Create failed.")
     };
   }
 }
@@ -307,7 +307,7 @@ export async function updateFinding(
 ): Promise<MutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
 
   const patch: Record<string, unknown> = {};
@@ -362,7 +362,7 @@ export async function updateFinding(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Update failed."
+      errorMessage: toErrorMessage(error, "Update failed.")
     };
   }
 }
@@ -370,7 +370,7 @@ export async function updateFinding(
 export async function deleteFinding(id: string): Promise<MutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     // Read the path first so the Storage object can be removed after the row.
@@ -393,7 +393,7 @@ export async function deleteFinding(id: string): Promise<MutationResult> {
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }
@@ -409,7 +409,7 @@ export async function addComment(
   }
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase.from("finding_comments").insert({
@@ -422,7 +422,7 @@ export async function addComment(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Comment failed."
+      errorMessage: toErrorMessage(error, "Comment failed.")
     };
   }
 }
@@ -430,7 +430,7 @@ export async function addComment(
 export async function deleteComment(commentId: string): Promise<MutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase
@@ -442,7 +442,7 @@ export async function deleteComment(commentId: string): Promise<MutationResult> 
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }

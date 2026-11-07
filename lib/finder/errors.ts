@@ -34,6 +34,12 @@ export class AuthOrConfigError extends Error {
   }
 }
 
+export function isFatalRunError(
+  error: unknown
+): error is AuthOrConfigError | BudgetExceededError {
+  return error instanceof AuthOrConfigError || error instanceof BudgetExceededError;
+}
+
 export function errorCode(error: unknown): string {
   if (
     error instanceof BudgetExceededError ||

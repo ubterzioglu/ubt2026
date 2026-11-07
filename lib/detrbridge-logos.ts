@@ -2,9 +2,9 @@ import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { createServiceClient } from "@/lib/supabase-server";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 
 export interface DetrbridgeVoteEntry {
   voterName: string;
@@ -111,7 +111,7 @@ async function uploadLogoFile(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Yükleme başarısız."
+      errorMessage: toErrorMessage(error, "Yükleme başarısız.")
     };
   }
 }
@@ -196,7 +196,7 @@ export async function getAllLogosAdmin(round: number): Promise<DetrbridgeLogosRe
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -228,7 +228,7 @@ export async function createLogo(
   }
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   const uploaded = await uploadLogoFile(supabase, file);
   if (!uploaded.ok) return uploaded;
@@ -247,7 +247,7 @@ export async function createLogo(
     await removeLogoObjects(supabase, [uploaded.path]);
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Create failed."
+      errorMessage: toErrorMessage(error, "Create failed.")
     };
   }
 }
@@ -272,7 +272,7 @@ export async function castVote(
   }
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { data: logoRow, error: logoError } = await supabase
@@ -295,7 +295,7 @@ export async function castVote(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Oy kaydedilemedi."
+      errorMessage: toErrorMessage(error, "Oy kaydedilemedi.")
     };
   }
 }
@@ -310,7 +310,7 @@ export async function castVote(
 export async function promoteTopLogosToRound2(count: number = 5): Promise<MutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { data: round1Rows, error: round1Error } = await supabase
@@ -390,7 +390,7 @@ export async function promoteTopLogosToRound2(count: number = 5): Promise<Mutati
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Tura taşınamadı."
+      errorMessage: toErrorMessage(error, "Tura taşınamadı.")
     };
   }
 }
@@ -402,7 +402,7 @@ export async function promoteTopLogosToRound2(count: number = 5): Promise<Mutati
 export async function selectLogo(id: string): Promise<MutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { data: target, error: targetError } = await supabase
@@ -427,7 +427,7 @@ export async function selectLogo(id: string): Promise<MutationResult> {
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Select failed."
+      errorMessage: toErrorMessage(error, "Select failed.")
     };
   }
 }
@@ -435,7 +435,7 @@ export async function selectLogo(id: string): Promise<MutationResult> {
 export async function deleteLogo(id: string): Promise<MutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { data: existing } = await supabase
@@ -454,7 +454,7 @@ export async function deleteLogo(id: string): Promise<MutationResult> {
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }

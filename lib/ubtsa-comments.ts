@@ -1,9 +1,9 @@
 import "server-only";
 
-import { createServiceClient } from "@/lib/supabase-server";
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import { UBTSA_ITEM_KEYS } from "@/content/ubtsa-konsept";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 /** Bir maddeye bırakılmış tek yorum. */
 export interface UbtsaComment {
@@ -87,7 +87,7 @@ export async function getAllUbtsaComments(): Promise<UbtsaCommentsResult> {
   } catch (error) {
     return emptyResult(
       "error",
-      error instanceof Error ? error.message : "Unknown error"
+      toErrorMessage(error, "Unknown error")
     );
   }
 }
@@ -119,7 +119,7 @@ export async function addUbtsaComment(
 
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase.from("ubtsa_comments").insert({
@@ -132,7 +132,7 @@ export async function addUbtsaComment(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Comment failed."
+      errorMessage: toErrorMessage(error, "Comment failed.")
     };
   }
 }
@@ -150,7 +150,7 @@ export async function deleteUbtsaComment(
 
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { data, error } = await supabase
@@ -167,7 +167,7 @@ export async function deleteUbtsaComment(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }

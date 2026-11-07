@@ -1,5 +1,6 @@
 import { readSearchParam } from "@/lib/search-params";
 import { BoardGuide } from "@/app/dm/_components/board-guide";
+import { DM_CARD_CLASS, DM_CARD_INNER_CLASS } from "@/app/dm/_components/theme";
 import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 import { JobsSection } from "@/app/dm/_components/scraper/jobs-section";
 import { JobDetailSection } from "@/app/dm/_components/scraper/job-detail-section";
@@ -97,9 +98,6 @@ const FINDER_GUIDE: BoardGuideContent = {
 
 interface ScraperTabProps {
   params: Record<string, string | string[] | undefined>;
-  cardClass: string;
-  cardInnerClass: string;
-  inputClass: string;
 }
 
 /**
@@ -107,12 +105,7 @@ interface ScraperTabProps {
  * (?tab=scraper&sec=…&job=…), fetches per-section data and wires the
  * module-level scraper actions into the section components.
  */
-export async function ScraperTab({
-  params,
-  cardClass,
-  cardInnerClass,
-  inputClass
-}: ScraperTabProps) {
+export async function ScraperTab({ params }: ScraperTabProps) {
   const secParam = readSearchParam(params.sec);
   const activeSection: FinderSectionKey =
     secParam === "sablonlar"
@@ -181,16 +174,12 @@ export async function ScraperTab({
 
   return (
     <>
-      <BoardGuide
-        guide={FINDER_GUIDE}
-        cardClass={cardClass}
-        cardInnerClass={cardInnerClass}
-      />
+      <BoardGuide guide={FINDER_GUIDE} />
 
       {/* Section chip strip (replaces the old standalone FinderNav sidebar) */}
-      <section className={cardClass}>
+      <section className={DM_CARD_CLASS}>
         <div
-          className={`${cardInnerClass} flex gap-1.5 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
+          className={`${DM_CARD_INNER_CLASS} flex gap-1.5 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
         >
           {sections.map((section) => {
             const isActive = activeSection === section.key;
@@ -232,9 +221,6 @@ export async function ScraperTab({
         <JobDetailSection
           detail={jobDetail}
           candidateFilter={candidateFilter}
-          cardClass={cardClass}
-          cardInnerClass={cardInnerClass}
-          inputClass={inputClass}
           runAction={scraperJobRunAction}
           requeueAction={scraperJobRequeueAction}
           releaseAction={scraperJobReleaseAction}
@@ -252,9 +238,6 @@ export async function ScraperTab({
             counts={jobCounts}
             templates={templates}
             statusFilter={jobStatusFilter}
-            cardClass={cardClass}
-            cardInnerClass={cardInnerClass}
-            inputClass={inputClass}
             createAction={scraperJobCreateAction}
             runAction={scraperJobRunAction}
             cancelAction={scraperJobCancelAction}
@@ -266,25 +249,18 @@ export async function ScraperTab({
         <TemplatesSection
           templates={templates}
           editId={editId}
-          cardClass={cardClass}
-          cardInnerClass={cardInnerClass}
-          inputClass={inputClass}
           toggleAction={scraperTemplateToggleAction}
           updateAction={scraperTemplateUpdateAction}
         />
       ) : activeSection === "saglayicilar" ? (
         <ProvidersSection
           providers={providers}
-          cardClass={cardClass}
-          cardInnerClass={cardInnerClass}
           toggleAction={scraperProviderToggleAction}
         />
       ) : (
         <CostsSection
           last30Days={costs30d}
           allTime={costsAllTime}
-          cardClass={cardClass}
-          cardInnerClass={cardInnerClass}
         />
       )}
     </>

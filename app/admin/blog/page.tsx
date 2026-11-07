@@ -5,7 +5,10 @@ import { readSearchParam } from "@/lib/search-params";
 import { readFormString } from "@/lib/form-data";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
-import { adminSignOutAction } from "@/app/admin/_actions";
+import { AdminPageHeader } from "@/app/admin/_components/admin-page-header";
+import { FlashBanner } from "@/app/admin/_components/flash-banner";
+import { PublishableRow } from "@/app/admin/_components/publishable-row";
+import { adminInputClass } from "@/app/admin/_components/form-classes";
 import {
   getAllBlogPostsAdmin,
   getBlogPostByIdAdmin,
@@ -17,9 +20,6 @@ import {
 interface AdminBlogPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
-
-const inputClass =
-  "w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15";
 
 function buildBlogErrorUrl(message?: string, editId?: string): string {
   const params = new URLSearchParams({ error: message || "Action failed." });
@@ -146,50 +146,15 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
   return (
     <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-4xl flex-col gap-6">
-        <section className="section-panel px-6 py-6 sm:px-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-                Content management
-              </p>
-              <h1 className="mt-2 font-body text-[clamp(2rem,5vw,2.7rem)] font-semibold tracking-[-0.03em] text-ink">
-                Blog
-              </h1>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="/admin"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ink/92"
-              >
-                Back to dashboard
-              </a>
-              <form action={adminSignOutAction}>
-                <button
-                  type="submit"
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-rose-300 hover:text-rose-700"
-                >
-                  Sign out
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
+        <AdminPageHeader eyebrow="Content management" title="Blog" />
 
         {createdParam === "1" && (
-          <div className="rounded-[1.35rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800">
-            Blog post created successfully.
-          </div>
+          <FlashBanner tone="success">Blog post created successfully.</FlashBanner>
         )}
         {updatedParam === "1" && (
-          <div className="rounded-[1.35rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800">
-            Blog post updated successfully.
-          </div>
+          <FlashBanner tone="success">Blog post updated successfully.</FlashBanner>
         )}
-        {errorParam && (
-          <div className="rounded-[1.35rem] border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-900">
-            {errorParam}
-          </div>
-        )}
+        {errorParam && <FlashBanner tone="error">{errorParam}</FlashBanner>}
 
         <section className="section-panel px-6 py-6 sm:px-8">
           <div className="flex items-center justify-between gap-4">
@@ -220,7 +185,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
                   maxLength={200}
                   defaultValue={editing?.title ?? ""}
                   placeholder="e.g. How I test flaky end-to-end flows"
-                  className={inputClass}
+                  className={adminInputClass}
                 />
               </label>
               <label className="block">
@@ -233,7 +198,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
                   maxLength={120}
                   defaultValue={editing?.slug ?? ""}
                   placeholder="auto-generated from title"
-                  className={inputClass}
+                  className={adminInputClass}
                 />
               </label>
               <label className="block">
@@ -243,7 +208,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
                   name="coverImageUrl"
                   defaultValue={editing?.coverImageUrl ?? ""}
                   placeholder="https://..."
-                  className={inputClass}
+                  className={adminInputClass}
                 />
               </label>
               <label className="block sm:col-span-2">
@@ -258,7 +223,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
                   rows={2}
                   defaultValue={editing?.summary ?? ""}
                   placeholder="Short description shown in the blog list card."
-                  className={inputClass}
+                  className={adminInputClass}
                 />
               </label>
               <label className="block sm:col-span-2">
@@ -272,7 +237,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
                   rows={14}
                   defaultValue={editing?.content ?? ""}
                   placeholder={"# Heading\n\nWrite the post body in **Markdown**. Lists, links, tables and code blocks are supported."}
-                  className={`${inputClass} font-mono`}
+                  className={`${adminInputClass} font-mono`}
                 />
               </label>
               <div className="flex items-center gap-3 self-end pb-3">
@@ -309,79 +274,41 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
 
           {blogResult.items.length > 0 ? (
             blogResult.items.map((item) => (
-              <article
+              <PublishableRow
                 key={item.id}
-                className={`section-panel px-6 py-5 sm:px-8 ${
-                  item.isPublished ? "" : "opacity-60"
-                }`}
-              >
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-body text-lg font-semibold text-ink">{item.title}</h3>
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] ${
-                          item.isPublished
-                            ? "bg-emerald-100 text-emerald-800"
-                            : "bg-amber-100 text-amber-800"
-                        }`}
-                      >
-                        {item.isPublished ? "Published" : "Draft"}
-                      </span>
-                      <span className="rounded-full bg-paper px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/55">
-                        /{item.slug}
-                      </span>
-                    </div>
-                    <p className="mt-1.5 text-sm leading-6 text-ink/68">{item.summary}</p>
-                    <p className="mt-1 text-xs text-ink/50">
-                      View:{" "}
-                      <a
-                        href={`/blog/${item.slug}`}
-                        className="text-accent hover:underline"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        /blog/{item.slug}
-                      </a>
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2 sm:flex-col sm:items-end">
+                id={item.id}
+                title={item.title}
+                summary={item.summary}
+                isPublished={item.isPublished}
+                badges={
+                  <span className="rounded-full bg-paper px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/55">
+                    /{item.slug}
+                  </span>
+                }
+                details={
+                  <p className="mt-1 text-xs text-ink/50">
+                    View:{" "}
                     <a
-                      href={`/admin/blog?edit=${item.id}`}
-                      className="inline-flex min-h-[38px] items-center justify-center rounded-full border border-line/80 bg-white px-4 py-2 text-xs font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+                      href={`/blog/${item.slug}`}
+                      className="text-accent hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
                     >
-                      Edit
+                      /blog/{item.slug}
                     </a>
-                    <form action={togglePublishAction}>
-                      <input type="hidden" name="id" value={item.id} />
-                      <input
-                        type="hidden"
-                        name="isPublished"
-                        value={String(item.isPublished)}
-                      />
-                      <button
-                        type="submit"
-                        className={`inline-flex min-h-[38px] items-center justify-center rounded-full px-4 py-2 text-xs font-semibold transition ${
-                          item.isPublished
-                            ? "border border-line/80 bg-white text-ink hover:border-amber-300 hover:bg-amber-50 hover:text-amber-800"
-                            : "border border-line/80 bg-white text-ink hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
-                        }`}
-                      >
-                        {item.isPublished ? "Unpublish" : "Publish"}
-                      </button>
-                    </form>
-                    <form action={deleteAction}>
-                      <input type="hidden" name="id" value={item.id} />
-                      <button
-                        type="submit"
-                        className="inline-flex min-h-[38px] items-center justify-center rounded-full border border-line/80 bg-white px-4 py-2 text-xs font-semibold text-ink transition hover:border-red-200 hover:bg-red-50 hover:text-red-700"
-                      >
-                        Delete
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </article>
+                  </p>
+                }
+                leadingActions={
+                  <a
+                    href={`/admin/blog?edit=${item.id}`}
+                    className="inline-flex min-h-[38px] items-center justify-center rounded-full border border-line/80 bg-white px-4 py-2 text-xs font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
+                  >
+                    Edit
+                  </a>
+                }
+                togglePublishAction={togglePublishAction}
+                deleteAction={deleteAction}
+              />
             ))
           ) : (
             <p className="rounded-[1.35rem] border border-dashed border-line/80 px-5 py-6 text-sm text-ink/68">

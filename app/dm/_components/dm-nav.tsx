@@ -1,7 +1,10 @@
-import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
+import {
+  DM_BRAND_GRADIENT,
+  DM_CARD_CLASS,
+  DM_CARD_INNER_CLASS
+} from "@/app/dm/_components/theme";
 
 export type DmTabKey = "tasks" | "findings" | "social" | "info" | "scraper" | "rapor";
-type DmDesktopLayout = "sidebar" | "topbar";
 
 export interface DmNavItem {
   key: DmTabKey;
@@ -13,26 +16,26 @@ export interface DmNavItem {
 interface DmNavProps {
   activeTab: DmTabKey;
   items: DmNavItem[];
-  cardClass: string;
-  cardInnerClass: string;
   signOutAction: () => Promise<void>;
-  desktopLayout?: DmDesktopLayout;
 }
 
-function BrandBlock({ compact = false }: { compact?: boolean }) {
+export const DM_NAV_ITEMS: readonly DmNavItem[] = [
+  { key: "tasks", label: "Görevler" },
+  { key: "findings", label: "Test bulguları" },
+  { key: "social", label: "İçerik" },
+  { key: "info", label: "Önemli bilgiler" },
+  { key: "scraper", label: "Scraper" },
+  { key: "rapor", label: "Rapor", href: "/dm/rapor" }
+];
+
+function BrandBlock() {
   return (
     <div className="flex items-center gap-3">
       <span
-        className={`relative flex items-center justify-center rounded-xl shadow-lg shadow-[#ff2d95]/30 ring-1 ring-white/15 ${
-          compact ? "h-8 w-8" : "h-10 w-10"
-        }`}
+        className="relative flex items-center justify-center rounded-xl shadow-lg shadow-[#ff2d95]/30 ring-1 ring-white/15 h-8 w-8"
         style={{ backgroundImage: DM_BRAND_GRADIENT }}
       >
-        <span
-          className={`font-body font-extrabold tracking-tight text-white ${
-            compact ? "text-sm" : "text-base"
-          }`}
-        >
+        <span className="font-body font-extrabold tracking-tight text-white text-sm">
           D
         </span>
         <span className="absolute -inset-px rounded-xl ring-1 ring-inset ring-white/10" />
@@ -44,11 +47,7 @@ function BrandBlock({ compact = false }: { compact?: boolean }) {
         >
           Proje yönetimi
         </p>
-        <p
-          className={`mt-0.5 font-body font-bold tracking-[-0.03em] text-white ${
-            compact ? "text-sm" : "text-lg"
-          }`}
-        >
+        <p className="mt-0.5 font-body font-bold tracking-[-0.03em] text-white text-sm">
           DesireMap
         </p>
       </div>
@@ -74,20 +73,14 @@ function countBadge(isActive: boolean): string {
   }`;
 }
 
-function DesktopTopbar({
-  activeTab,
-  items,
-  cardClass,
-  cardInnerClass,
-  signOutAction
-}: Omit<DmNavProps, "desktopLayout">) {
+function DesktopTopbar({ activeTab, items, signOutAction }: DmNavProps) {
   return (
-    <div className={`hidden lg:block ${cardClass}`}>
+    <div className={`hidden lg:block ${DM_CARD_CLASS}`}>
       <div
-        className={`${cardInnerClass} flex items-center gap-4 px-4 py-3 xl:px-5`}
+        className={`${DM_CARD_INNER_CLASS} flex items-center gap-4 px-4 py-3 xl:px-5`}
       >
         <div className="shrink-0 border-r border-white/[0.06] pr-4 xl:pr-5">
-          <BrandBlock compact />
+          <BrandBlock />
         </div>
 
         <nav className="flex min-w-0 flex-1 gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -131,93 +124,14 @@ function DesktopTopbar({
   );
 }
 
-function DesktopSidebar({
-  activeTab,
-  items,
-  cardClass,
-  cardInnerClass,
-  signOutAction
-}: Omit<DmNavProps, "desktopLayout">) {
+export function DmNav({ activeTab, items, signOutAction }: DmNavProps) {
   return (
-    <div className={`hidden lg:block ${cardClass}`}>
-      <div className={`${cardInnerClass} flex flex-col p-4`}>
-        <div className="px-1 pb-4">
-          <BrandBlock />
-        </div>
-        <div className="border-t border-white/[0.06]" />
-
-        <nav className="flex flex-col gap-1 py-3">
-          {items.map((item) => {
-            const isActive = activeTab === item.key;
-            return (
-              <a
-                key={item.key}
-                href={item.href ?? `/dm?tab=${item.key}`}
-                className={`relative flex items-center justify-between gap-2 rounded-[1rem] px-3.5 py-2.5 text-[13px] font-semibold tracking-tight transition ${
-                  isActive
-                    ? "text-white shadow-[0_10px_30px_-10px_rgba(255,45,149,0.7)] ring-1 ring-inset ring-white/15"
-                    : "text-white/55 hover:bg-white/[0.04] hover:text-white"
-                }`}
-                style={
-                  isActive ? { backgroundImage: DM_BRAND_GRADIENT } : undefined
-                }
-              >
-                {isActive ? (
-                  <span
-                    aria-hidden
-                    className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-white/85 shadow-[0_0_8px_rgba(255,255,255,0.7)]"
-                  />
-                ) : null}
-                <span className={isActive ? "pl-2" : undefined}>
-                  {item.label}
-                </span>
-                {item.count !== undefined ? (
-                  <span className={countBadge(isActive)}>{item.count}</span>
-                ) : null}
-              </a>
-            );
-          })}
-        </nav>
-
-        <div className="mt-auto border-t border-white/[0.06] pt-3">
-          <div className="flex items-center justify-between gap-2 px-1">
-            <SecureBadge />
-          </div>
-          <form action={signOutAction} className="mt-3">
-            <button
-              type="submit"
-              className="inline-flex w-full items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white/80 transition hover:border-rose-400/40 hover:text-rose-300"
-            >
-              Çıkış yap
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function DmNav({
-  activeTab,
-  items,
-  cardClass,
-  cardInnerClass,
-  signOutAction,
-  desktopLayout = "topbar"
-}: DmNavProps) {
-  return (
-    <div
-      className={`flex flex-col gap-3 ${
-        desktopLayout === "topbar"
-          ? "lg:sticky lg:top-4 lg:z-20"
-          : "lg:sticky lg:top-8 lg:self-start"
-      }`}
-    >
-      <div className={`lg:hidden ${cardClass}`}>
+    <div className="flex flex-col gap-3 lg:sticky lg:top-4 lg:z-20">
+      <div className={`lg:hidden ${DM_CARD_CLASS}`}>
         <div
-          className={`${cardInnerClass} flex items-center justify-between gap-3 px-4 py-3`}
+          className={`${DM_CARD_INNER_CLASS} flex items-center justify-between gap-3 px-4 py-3`}
         >
-          <BrandBlock compact />
+          <BrandBlock />
           <div className="flex items-center gap-2">
             <SecureBadge />
             <form action={signOutAction}>
@@ -232,9 +146,9 @@ export function DmNav({
         </div>
       </div>
 
-      <nav className={`lg:hidden ${cardClass}`}>
+      <nav className={`lg:hidden ${DM_CARD_CLASS}`}>
         <div
-          className={`${cardInnerClass} flex gap-1.5 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
+          className={`${DM_CARD_INNER_CLASS} flex gap-1.5 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
         >
           {items.map((item) => {
             const isActive = activeTab === item.key;
@@ -261,23 +175,11 @@ export function DmNav({
         </div>
       </nav>
 
-      {desktopLayout === "topbar" ? (
-        <DesktopTopbar
-          activeTab={activeTab}
-          items={items}
-          cardClass={cardClass}
-          cardInnerClass={cardInnerClass}
-          signOutAction={signOutAction}
-        />
-      ) : (
-        <DesktopSidebar
-          activeTab={activeTab}
-          items={items}
-          cardClass={cardClass}
-          cardInnerClass={cardInnerClass}
-          signOutAction={signOutAction}
-        />
-      )}
+      <DesktopTopbar
+        activeTab={activeTab}
+        items={items}
+        signOutAction={signOutAction}
+      />
     </div>
   );
 }

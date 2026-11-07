@@ -13,8 +13,11 @@ import {
   getFooterClientByIdAdmin,
   createFooterClient,
   updateFooterClient,
-  deleteFooterClient
+  deleteFooterClient,
+  type FooterClientInput
 } from "@/lib/footer-clients";
+import { normalizeExternalHref } from "@/lib/href";
+import { SourceStateBanner } from "@/components/source-state-banner";
 import type { FooterClientItem, FooterClientStatus } from "@/types/site";
 
 export const metadata = {
@@ -53,11 +56,17 @@ function parseSortOrder(value: string): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function normalizeDomainHref(domain: string): string | null {
-  const trimmed = domain.trim();
-  if (!trimmed) return null;
-  if (/^https?:\/\//i.test(trimmed)) return trimmed;
-  return `https://${trimmed}`;
+function readClientInput(formData: FormData): FooterClientInput {
+  return {
+    clientName: readFormString(formData, "clientName"),
+    domain: readFormString(formData, "domain"),
+    owner: readFormString(formData, "owner"),
+    responsible: readFormString(formData, "responsible"),
+    footerCode: readFormString(formData, "footerCode"),
+    status: parseStatus(readFormString(formData, "status", "pending")),
+    notes: readFormString(formData, "notes"),
+    sortOrder: parseSortOrder(readFormString(formData, "sortOrder", "0"))
+  };
 }
 
 // Shared dark input styling so the form reads as one premium glass surface.
@@ -99,16 +108,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
     if (!(await isBatubtAuthenticated())) {
       redirect("/batubt" as Parameters<typeof redirect>[0]);
     }
-    await createFooterClient({
-      clientName: readFormString(formData, "clientName"),
-      domain: readFormString(formData, "domain"),
-      owner: readFormString(formData, "owner"),
-      responsible: readFormString(formData, "responsible"),
-      footerCode: readFormString(formData, "footerCode"),
-      status: parseStatus(readFormString(formData, "status", "pending")),
-      notes: readFormString(formData, "notes"),
-      sortOrder: parseSortOrder(readFormString(formData, "sortOrder", "0"))
-    });
+    await createFooterClient(readClientInput(formData));
 
     revalidatePath("/batubt");
     redirect("/batubt?created=1" as Parameters<typeof redirect>[0]);
@@ -123,16 +123,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
     if (!id) {
       redirect("/batubt" as Parameters<typeof redirect>[0]);
     }
-    await updateFooterClient(id, {
-      clientName: readFormString(formData, "clientName"),
-      domain: readFormString(formData, "domain"),
-      owner: readFormString(formData, "owner"),
-      responsible: readFormString(formData, "responsible"),
-      footerCode: readFormString(formData, "footerCode"),
-      status: parseStatus(readFormString(formData, "status", "pending")),
-      notes: readFormString(formData, "notes"),
-      sortOrder: parseSortOrder(readFormString(formData, "sortOrder", "0"))
-    });
+    await updateFooterClient(id, readClientInput(formData));
 
     revalidatePath("/batubt");
     redirect("/batubt?updated=1" as Parameters<typeof redirect>[0]);
@@ -305,17 +296,11 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
             Kayıt silindi.
           </div>
         )}
-        {result.source === "env-missing" && (
-          <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
-            Supabase bağlantısı yapılandırılmamış (SUPABASE_SERVICE_ROLE_KEY
-            eksik). Kayıtlar yüklenemiyor.
-          </div>
-        )}
-        {result.source === "error" && (
-          <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
-            Kayıtlar yüklenirken hata oluştu: {result.errorMessage}
-          </div>
-        )}
+        <SourceStateBanner
+          source={result.source}
+          errorMessage={result.errorMessage}
+          subject="Kayıtlar"
+        />
 
         {/* Stats */}
         <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -583,7 +568,7 @@ function FooterClientCard({
   inlineStatusAction,
   deleteAction
 }: FooterClientCardProps) {
-  const domainHref = normalizeDomainHref(client.domain);
+  const domainHref = normalizeExternalHref(client.domain);
   const ownerLine = [client.owner, client.responsible].filter(Boolean).join(" · ");
 
   return (

@@ -2,11 +2,14 @@
 // aç/kapat. Anahtarlar env'de tutulur — burada yalnızca "tanımlı mı" görünür.
 
 import type { FinderProviderItem } from "@/lib/service-finder";
+import {
+  DM_ACTION_BUTTON,
+  DM_CARD_CLASS,
+  DM_CARD_INNER_CLASS
+} from "@/app/dm/_components/theme";
 
 interface ProvidersSectionProps {
   providers: FinderProviderItem[];
-  cardClass: string;
-  cardInnerClass: string;
   toggleAction: (formData: FormData) => void | Promise<void>;
 }
 
@@ -16,18 +19,13 @@ const KIND_LABEL: Record<string, string> = {
   classify: "Sınıflandırma"
 };
 
-const actionButton =
-  "inline-flex min-h-[28px] items-center justify-center rounded-full border px-2.5 py-1 text-[11px] font-semibold transition";
-
 export function ProvidersSection({
   providers,
-  cardClass,
-  cardInnerClass,
   toggleAction
 }: ProvidersSectionProps) {
   return (
-    <section className={cardClass}>
-      <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+    <section className={DM_CARD_CLASS}>
+      <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
         <h2 className="font-body text-sm font-semibold text-white">Sağlayıcılar</h2>
         <p className="mt-1 text-xs leading-5 text-white/50">
           API anahtarları yalnızca sunucu ortam değişkenlerinde tutulur (secret_ref =
@@ -80,7 +78,7 @@ export function ProvidersSection({
                   />
                   <button
                     type="submit"
-                    className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:border-[#67e8f9]/40 hover:text-[#67e8f9]`}
+                    className={`${DM_ACTION_BUTTON} border-white/10 bg-white/[0.05] text-white/60 hover:border-[#67e8f9]/40 hover:text-[#67e8f9]`}
                   >
                     {provider.isEnabled ? "Kapat" : "Aç"}
                   </button>

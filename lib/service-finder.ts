@@ -1,6 +1,7 @@
 import "server-only";
 
-import { createServiceClient } from "@/lib/supabase-server";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import { JobNotClaimableError, executeFinderJob } from "@/lib/finder/run-job";
 import type {
   FinderContact,
@@ -607,7 +608,7 @@ export async function createFinderJobAdmin(
   input: FinderJobCreateInput
 ): Promise<FinderMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
 
   const title = input.title.trim();
   if (title.length < 3) {
@@ -698,7 +699,7 @@ export async function createFinderJobAdmin(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "İş oluşturulamadı."
+      errorMessage: toErrorMessage(error, "İş oluşturulamadı.")
     };
   }
 }
@@ -706,7 +707,7 @@ export async function createFinderJobAdmin(
 /** Kuyruktaki işi çalıştırır (senkron; page.tsx maxDuration=300 gerektirir). */
 export async function runFinderJobAdmin(jobId: string): Promise<FinderRunResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const summary = await executeFinderJob(supabase, jobId);
     if (summary.status === "failed") {
@@ -719,7 +720,7 @@ export async function runFinderJobAdmin(jobId: string): Promise<FinderRunResult>
     }
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "İş çalıştırılamadı."
+      errorMessage: toErrorMessage(error, "İş çalıştırılamadı.")
     };
   }
 }
@@ -730,7 +731,7 @@ export async function requeueFinderJobAdmin(
   patch?: { softCapUsd?: number; hardCapUsd?: number }
 ): Promise<FinderMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const update: Record<string, unknown> = {
       status: "queued",
@@ -758,7 +759,7 @@ export async function requeueFinderJobAdmin(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "İş kuyruğa alınamadı."
+      errorMessage: toErrorMessage(error, "İş kuyruğa alınamadı.")
     };
   }
 }
@@ -766,7 +767,7 @@ export async function requeueFinderJobAdmin(
 /** Kuyruktaki işi iptal eder (yalnızca queued). */
 export async function cancelFinderJobAdmin(jobId: string): Promise<FinderMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const { data, error } = await supabase
       .from("service_finder_jobs")
@@ -783,7 +784,7 @@ export async function cancelFinderJobAdmin(jobId: string): Promise<FinderMutatio
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "İş iptal edilemedi."
+      errorMessage: toErrorMessage(error, "İş iptal edilemedi.")
     };
   }
 }
@@ -796,7 +797,7 @@ export async function releaseStuckFinderJobAdmin(
   jobId: string
 ): Promise<FinderMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const { data, error } = await supabase
       .from("service_finder_jobs")
@@ -819,7 +820,7 @@ export async function releaseStuckFinderJobAdmin(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "İş serbest bırakılamadı."
+      errorMessage: toErrorMessage(error, "İş serbest bırakılamadı.")
     };
   }
 }
@@ -831,7 +832,7 @@ export async function reviewFinderCandidateAdmin(
   note?: string
 ): Promise<FinderMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   if (status === "published") {
     // Katalog yok — publish akışı bilinçli olarak devre dışı.
     return { ok: false, errorMessage: "Yayınlama bu panoda desteklenmiyor." };
@@ -850,7 +851,7 @@ export async function reviewFinderCandidateAdmin(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Aday güncellenemedi."
+      errorMessage: toErrorMessage(error, "Aday güncellenemedi.")
     };
   }
 }
@@ -861,7 +862,7 @@ export async function setFinderTemplateActiveAdmin(
   isActive: boolean
 ): Promise<FinderMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const { error } = await supabase
       .from("service_finder_profession_templates")
@@ -872,7 +873,7 @@ export async function setFinderTemplateActiveAdmin(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Şablon güncellenemedi."
+      errorMessage: toErrorMessage(error, "Şablon güncellenemedi.")
     };
   }
 }
@@ -883,7 +884,7 @@ export async function updateFinderTemplateAdmin(
   patch: { label?: string; queryTemplates?: string[]; mustExcludeTerms?: string[] }
 ): Promise<FinderMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const update: Record<string, unknown> = {};
     if (patch.label && patch.label.trim().length >= 2) update.label = patch.label.trim();
@@ -915,7 +916,7 @@ export async function updateFinderTemplateAdmin(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Şablon güncellenemedi."
+      errorMessage: toErrorMessage(error, "Şablon güncellenemedi.")
     };
   }
 }
@@ -926,7 +927,7 @@ export async function setFinderProviderEnabledAdmin(
   isEnabled: boolean
 ): Promise<FinderMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const { error } = await supabase
       .from("service_finder_provider_configs")
@@ -937,7 +938,7 @@ export async function setFinderProviderEnabledAdmin(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Sağlayıcı güncellenemedi."
+      errorMessage: toErrorMessage(error, "Sağlayıcı güncellenemedi.")
     };
   }
 }

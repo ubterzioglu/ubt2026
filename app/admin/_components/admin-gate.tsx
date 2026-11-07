@@ -1,4 +1,5 @@
 import { adminSignInAction } from "@/app/admin/_actions";
+import { adminInputClass } from "@/app/admin/_components/form-classes";
 
 interface AdminGateProps {
   /** Admin path to reload after a successful sign-in (e.g. "/admin/slots"). */
@@ -49,7 +50,7 @@ export function AdminGate({
                 type="password"
                 name="access"
                 autoComplete="current-password"
-                className="w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15"
+                className={adminInputClass}
               />
             </label>
             <button

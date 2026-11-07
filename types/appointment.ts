@@ -1,3 +1,5 @@
+import type { SourceState } from "@/types/source-state";
+
 export const APPOINTMENT_STATUSES = [
   "pending",
   "confirmed",
@@ -7,7 +9,7 @@ export const APPOINTMENT_STATUSES = [
 
 export type AppointmentStatus = (typeof APPOINTMENT_STATUSES)[number];
 
-export type AppointmentSourceState = "remote" | "env-missing" | "empty" | "error";
+export type AppointmentSourceState = SourceState;
 
 export interface AppointmentSlot {
   id: string;

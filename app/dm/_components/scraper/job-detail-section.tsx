@@ -1,7 +1,16 @@
 // İş detayı: durum kartı + aday inceleme kuyruğu + sorgu/kaynak/olay dökümleri.
 // Aday kartı başına TEK form — çoklu submit butonu (name="status") ile karar verilir.
 
-import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
+import {
+  DM_ACTION_BUTTON,
+  DM_BRAND_GRADIENT,
+  DM_CARD_CLASS,
+  DM_CARD_INNER_CLASS,
+  DM_CHIP_BASE,
+  DM_CHIP_IDLE,
+  DM_INPUT_CLASS,
+  confidenceBadgeClass
+} from "@/app/dm/_components/theme";
 import type {
   FinderJobDetail,
   FinderReviewStatus
@@ -15,9 +24,6 @@ import {
 interface JobDetailSectionProps {
   detail: FinderJobDetail;
   candidateFilter: FinderReviewStatus | "all";
-  cardClass: string;
-  cardInnerClass: string;
-  inputClass: string;
   runAction: (formData: FormData) => void | Promise<void>;
   requeueAction: (formData: FormData) => void | Promise<void>;
   releaseAction: (formData: FormData) => void | Promise<void>;
@@ -50,24 +56,9 @@ const FETCH_STATUS_LABEL: Record<string, string> = {
   irrelevant: "Alakasız"
 };
 
-const chipBase = "rounded-full px-3 py-1 text-[11px] font-semibold transition";
-const chipIdle =
-  "border border-white/10 bg-white/[0.04] text-white/60 hover:bg-white/[0.07] hover:text-white";
-const actionButton =
-  "inline-flex min-h-[28px] items-center justify-center rounded-full border px-2.5 py-1 text-[11px] font-semibold transition";
-
-function confidenceBadgeClass(score: number): string {
-  if (score >= 70) return "border border-emerald-400/40 bg-emerald-400/12 text-emerald-200";
-  if (score >= 50) return "border border-violet-400/40 bg-violet-400/12 text-violet-100";
-  return "border border-white/[0.14] bg-white/[0.06] text-white/60";
-}
-
 export function JobDetailSection({
   detail,
   candidateFilter,
-  cardClass,
-  cardInnerClass,
-  inputClass,
   runAction,
   requeueAction,
   releaseAction,
@@ -80,8 +71,8 @@ export function JobDetailSection({
   return (
     <>
       {/* Durum kartı */}
-      <section className={cardClass}>
-        <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+      <section className={DM_CARD_CLASS}>
+        <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
@@ -116,7 +107,7 @@ export function JobDetailSection({
             <div className="flex shrink-0 items-center gap-1.5">
               <a
                 href="/dm?tab=scraper&sec=isler"
-                className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
+                className={`${DM_ACTION_BUTTON} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
               >
                 ← İş listesi
               </a>
@@ -139,7 +130,7 @@ export function JobDetailSection({
                   <input type="hidden" name="id" value={job.id} />
                   <button
                     type="submit"
-                    className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
+                    className={`${DM_ACTION_BUTTON} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
                   >
                     Tekrar kuyruğa al
                   </button>
@@ -150,7 +141,7 @@ export function JobDetailSection({
                   <input type="hidden" name="id" value={job.id} />
                   <button
                     type="submit"
-                    className={`${actionButton} border-amber-400/30 bg-amber-400/10 text-amber-200 hover:bg-amber-400/20`}
+                    className={`${DM_ACTION_BUTTON} border-amber-400/30 bg-amber-400/10 text-amber-200 hover:bg-amber-400/20`}
                   >
                     Serbest bırak
                   </button>
@@ -162,8 +153,8 @@ export function JobDetailSection({
       </section>
 
       {/* Aday kuyruğu */}
-      <section className={cardClass}>
-        <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+      <section className={DM_CARD_CLASS}>
+        <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-body text-sm font-semibold text-white">
               Adaylar <span className="text-white/40">({candidates.length})</span>
@@ -175,8 +166,8 @@ export function JobDetailSection({
                   <a
                     key={option.value}
                     href={`/dm?tab=scraper&sec=isler&job=${job.id}&cstatus=${option.value}`}
-                    className={`${chipBase} ${
-                      isActive ? "text-white ring-1 ring-inset ring-white/15" : chipIdle
+                    className={`${DM_CHIP_BASE} ${
+                      isActive ? "text-white ring-1 ring-inset ring-white/15" : DM_CHIP_IDLE
                     }`}
                     style={isActive ? { backgroundImage: DM_BRAND_GRADIENT } : undefined}
                   >
@@ -316,7 +307,7 @@ export function JobDetailSection({
                           maxLength={500}
                           placeholder="İnceleme notu (ops.)"
                           defaultValue={candidate.reviewNotes}
-                          className={`${inputClass} min-w-[180px]`}
+                          className={`${DM_INPUT_CLASS} min-w-[180px]`}
                         />
                         <div className="flex flex-wrap items-center gap-1.5">
                           {candidate.reviewStatus === "pending" ? (
@@ -325,7 +316,7 @@ export function JobDetailSection({
                                 type="submit"
                                 name="status"
                                 value="approved"
-                                className={`${actionButton} border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20`}
+                                className={`${DM_ACTION_BUTTON} border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20`}
                               >
                                 Onayla
                               </button>
@@ -333,7 +324,7 @@ export function JobDetailSection({
                                 type="submit"
                                 name="status"
                                 value="rejected"
-                                className={`${actionButton} border-rose-400/30 bg-rose-400/10 text-rose-300 hover:bg-rose-400/20`}
+                                className={`${DM_ACTION_BUTTON} border-rose-400/30 bg-rose-400/10 text-rose-300 hover:bg-rose-400/20`}
                               >
                                 Reddet
                               </button>
@@ -341,7 +332,7 @@ export function JobDetailSection({
                                 type="submit"
                                 name="status"
                                 value="needs_edit"
-                                className={`${actionButton} border-amber-400/30 bg-amber-400/10 text-amber-200 hover:bg-amber-400/20`}
+                                className={`${DM_ACTION_BUTTON} border-amber-400/30 bg-amber-400/10 text-amber-200 hover:bg-amber-400/20`}
                               >
                                 Düzenleme ister
                               </button>
@@ -351,7 +342,7 @@ export function JobDetailSection({
                               type="submit"
                               name="status"
                               value="pending"
-                              className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
+                              className={`${DM_ACTION_BUTTON} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
                             >
                               Kuyruğa geri al
                             </button>
@@ -368,8 +359,8 @@ export function JobDetailSection({
       </section>
 
       {/* Sorgular */}
-      <section className={cardClass}>
-        <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+      <section className={DM_CARD_CLASS}>
+        <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
           <h2 className="font-body text-sm font-semibold text-white">
             Sorgular <span className="text-white/40">({queries.length})</span>
           </h2>
@@ -406,8 +397,8 @@ export function JobDetailSection({
       </section>
 
       {/* Kaynaklar */}
-      <section className={cardClass}>
-        <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+      <section className={DM_CARD_CLASS}>
+        <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
           <h2 className="font-body text-sm font-semibold text-white">
             Kaynak URL&apos;leri <span className="text-white/40">({sources.length})</span>
           </h2>
@@ -444,8 +435,8 @@ export function JobDetailSection({
       </section>
 
       {/* Olay günlüğü */}
-      <section className={cardClass}>
-        <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+      <section className={DM_CARD_CLASS}>
+        <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
           <h2 className="font-body text-sm font-semibold text-white">Olay günlüğü</h2>
           <div className="mt-3 space-y-1.5">
             {events.length === 0 ? (

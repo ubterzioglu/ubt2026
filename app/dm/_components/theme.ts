@@ -26,3 +26,30 @@ export const DM_GRID_TEXTURE = {
   maskImage: "radial-gradient(120% 80% at 50% 10%, black, transparent 76%)",
   WebkitMaskImage: "radial-gradient(120% 80% at 50% 10%, black, transparent 76%)"
 } as const;
+
+export const DM_CARD_CLASS =
+  "rounded-[1.6rem] bg-gradient-to-b from-white/12 via-white/[0.04] to-transparent p-[1.3px] shadow-[0_30px_90px_-30px_rgba(0,0,0,0.85)]";
+
+export const DM_CARD_INNER_CLASS =
+  "rounded-[1.55rem] bg-[#0a0712]/85 backdrop-blur-2xl";
+
+export const DM_INPUT_CLASS =
+  "w-full rounded-[0.85rem] border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#ff2d95]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#ff2d95]/15";
+
+export const DM_LABEL_CLASS =
+  "mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50";
+
+export const DM_CHIP_BASE =
+  "rounded-full px-3 py-1 text-[11px] font-semibold transition";
+
+export const DM_CHIP_IDLE =
+  "border border-white/10 bg-white/[0.04] text-white/60 hover:bg-white/[0.07] hover:text-white";
+
+export const DM_ACTION_BUTTON =
+  "inline-flex min-h-[28px] items-center justify-center rounded-full border px-2.5 py-1 text-[11px] font-semibold transition";
+
+export function confidenceBadgeClass(score: number): string {
+  if (score >= 70) return "border border-emerald-400/40 bg-emerald-400/12 text-emerald-200";
+  if (score >= 50) return "border border-violet-400/40 bg-violet-400/12 text-violet-100";
+  return "border border-white/[0.14] bg-white/[0.06] text-white/60";
+}

@@ -1,3 +1,5 @@
+import { DM_CARD_CLASS, DM_CARD_INNER_CLASS } from "@/app/dm/_components/theme";
+
 interface BoardGuideSection {
   heading: string;
   /** Short summary shown above the steps (or standalone if steps is omitted). */
@@ -15,21 +17,17 @@ export interface BoardGuideContent {
 
 interface BoardGuideProps {
   guide: BoardGuideContent;
-  /** Outer gradient-border shell class shared by the board's cards. */
-  cardClass: string;
-  /** Inner glass surface class shared by the board's cards. */
-  cardInnerClass: string;
 }
 
 /**
  * Collapsed-by-default usage guide card, rendered as the first card of a
  * board's content column (post-login). Styling mirrors the board's other
- * cards via the shared cardClass/cardInnerClass tokens.
+ * cards via the shared DM_CARD_CLASS/DM_CARD_INNER_CLASS tokens.
  */
-export function BoardGuide({ guide, cardClass, cardInnerClass }: BoardGuideProps) {
+export function BoardGuide({ guide }: BoardGuideProps) {
   return (
-    <section className={cardClass}>
-      <div className={cardInnerClass}>
+    <section className={DM_CARD_CLASS}>
+      <div className={DM_CARD_INNER_CLASS}>
         <details className="group/guide">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 sm:px-6 [&::-webkit-details-marker]:hidden">
             <span className="flex items-center gap-2.5 text-sm font-semibold text-white">

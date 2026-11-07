@@ -1,8 +1,8 @@
 import "server-only";
 
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
 import { createServiceClient } from "@/lib/supabase-server";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 /** Bir başarılı giriş kaydı. */
 export interface UbtsaVisit {
@@ -66,7 +66,7 @@ export async function getUbtsaVisits(): Promise<UbtsaVisitsResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }

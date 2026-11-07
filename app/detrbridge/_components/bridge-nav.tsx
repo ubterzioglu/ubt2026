@@ -1,14 +1,17 @@
 import { DETRBRIDGE_BRAND_GRADIENT } from "@/app/detrbridge/_components/theme";
 
-export type BridgeTabKey =
-  | "welcome"
-  | "logos"
-  | "logos-round2"
-  | "domains"
-  | "todos"
-  | "todos2"
-  | "meeting-brief"
-  | "visits";
+export const BRIDGE_TAB_KEYS = [
+  "welcome",
+  "logos",
+  "logos-round2",
+  "domains",
+  "todos",
+  "todos2",
+  "meeting-brief",
+  "visits"
+] as const;
+
+export type BridgeTabKey = (typeof BRIDGE_TAB_KEYS)[number];
 
 export interface BridgeNavItem {
   key: BridgeTabKey;

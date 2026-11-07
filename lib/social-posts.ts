@@ -1,10 +1,10 @@
 import "server-only";
 
-import { createServiceClient } from "@/lib/supabase-server";
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import type { SocialPlatform, SocialPostItem } from "@/types/site";
 import { SOCIAL_PLATFORMS } from "@/types/site";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 /** Column that stores the shared flag for each platform. */
 const SHARED_COLUMN: Record<SocialPlatform, string> = {
@@ -96,7 +96,7 @@ export async function getAllSocialPostsAdmin(): Promise<SocialPostsResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -118,7 +118,7 @@ export async function setPostShared(
   }
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase
@@ -130,7 +130,7 @@ export async function setPostShared(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Update failed."
+      errorMessage: toErrorMessage(error, "Update failed.")
     };
   }
 }

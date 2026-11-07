@@ -1,9 +1,9 @@
 import "server-only";
 
-import { createServiceClient } from "@/lib/supabase-server";
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import type { FooterClientItem, FooterClientStatus } from "@/types/site";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 const FOOTER_CLIENT_STATUSES: readonly FooterClientStatus[] = [
   "pending",
@@ -94,7 +94,7 @@ export async function getAllFooterClientsAdmin(): Promise<FooterClientsResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -132,7 +132,7 @@ export async function createFooterClient(
 
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
 
   try {
@@ -151,7 +151,7 @@ export async function createFooterClient(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Create failed."
+      errorMessage: toErrorMessage(error, "Create failed.")
     };
   }
 }
@@ -162,7 +162,7 @@ export async function updateFooterClient(
 ): Promise<FooterClientMutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
 
   const patch: Record<string, unknown> = {};
@@ -200,7 +200,7 @@ export async function updateFooterClient(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Update failed."
+      errorMessage: toErrorMessage(error, "Update failed.")
     };
   }
 }
@@ -210,7 +210,7 @@ export async function deleteFooterClient(
 ): Promise<FooterClientMutationResult> {
   const supabase = createServiceClient();
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase
@@ -222,7 +222,7 @@ export async function deleteFooterClient(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }

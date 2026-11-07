@@ -3,10 +3,14 @@ import type { Metadata } from "next";
 import { isTasksAdminAuthenticated } from "@/lib/admin-auth";
 import { tasksSignInAction, tasksSignOutAction } from "@/app/dm/_actions";
 import { DmLogin } from "@/app/dm/_components/dm-login";
-import { DmNav } from "@/app/dm/_components/dm-nav";
+import { DM_NAV_ITEMS, DmNav } from "@/app/dm/_components/dm-nav";
+import { StatGrid } from "@/app/dm/_components/stat-grid";
 import {
   DM_AMBIENT_BACKGROUND,
-  DM_GRID_TEXTURE
+  DM_CARD_CLASS,
+  DM_CARD_INNER_CLASS,
+  DM_GRID_TEXTURE,
+  confidenceBadgeClass
 } from "@/app/dm/_components/theme";
 import { getAllFinderCandidatesAdmin } from "@/lib/service-finder";
 
@@ -20,12 +24,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   studio: "Erotik Studio",
   privat: "Privat"
 };
-
-function confidenceBadgeClass(score: number): string {
-  if (score >= 70) return "border border-emerald-400/40 bg-emerald-400/12 text-emerald-200";
-  if (score >= 50) return "border border-violet-400/40 bg-violet-400/12 text-violet-100";
-  return "border border-white/[0.14] bg-white/[0.06] text-white/60";
-}
 
 /**
  * `/dm/rapor` — bağımsız, tam genişlik scraper sonuç raporu. `/dm`'nin
@@ -61,10 +59,6 @@ export default async function DmRaporPage() {
   const categoryStats = Array.from(byCategory.entries()).sort((a, b) => b[1] - a[1]);
   const cityCount = byCity.size;
 
-  const cardClass =
-    "rounded-[1.6rem] bg-gradient-to-b from-white/12 via-white/[0.04] to-transparent p-[1.3px] shadow-[0_30px_90px_-30px_rgba(0,0,0,0.85)]";
-  const cardInnerClass = "rounded-[1.55rem] bg-[#0a0712]/85 backdrop-blur-2xl";
-
   return (
     <main
       className="relative isolate min-h-screen overflow-x-clip px-4 py-8 sm:px-6 lg:px-8"
@@ -89,24 +83,19 @@ export default async function DmRaporPage() {
       <div className="animate-reveal mx-auto flex w-full max-w-[88rem] flex-col gap-5">
         <DmNav
           activeTab="rapor"
-          items={[
-            { key: "tasks", label: "Görevler", href: "/dm" },
-            { key: "findings", label: "Test bulguları", href: "/dm?tab=findings" },
-            { key: "social", label: "İçerik", href: "/dm?tab=social" },
-            { key: "info", label: "Önemli bilgiler", href: "/dm?tab=info" },
-            { key: "scraper", label: "Scraper", href: "/dm?tab=scraper" },
-            { key: "rapor", label: "Rapor", href: "/dm/rapor" }
-          ]}
-          cardClass={cardClass}
-          cardInnerClass={cardInnerClass}
+          items={DM_NAV_ITEMS.map((item) => ({
+            ...item,
+            href:
+              item.href ??
+              (item.key === "tasks" ? "/dm" : `/dm?tab=${item.key}`)
+          }))}
           signOutAction={tasksSignOutAction}
-          desktopLayout="topbar"
         />
 
         <div className="flex min-w-0 flex-col gap-5">
           {/* Başlık */}
-          <section className={cardClass}>
-            <div className={`${cardInnerClass} px-5 py-4 sm:px-6`}>
+          <section className={DM_CARD_CLASS}>
+            <div className={`${DM_CARD_INNER_CLASS} px-5 py-4 sm:px-6`}>
               <p
                 className="text-[9px] font-semibold uppercase tracking-[0.28em]"
                 style={{ color: "#f0abfc" }}
@@ -124,34 +113,21 @@ export default async function DmRaporPage() {
           </section>
 
           {/* Özet istatistikler */}
-          <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {[
+          <StatGrid
+            lift
+            stats={[
               { label: "Toplam kayıt", value: candidates.length },
               { label: "Şehir sayısı", value: cityCount },
               ...categoryStats.slice(0, 2).map(([slug, count]) => ({
                 label: CATEGORY_LABELS[slug] ?? slug,
                 value: count
               }))
-            ].map((stat) => (
-              <article
-                key={stat.label}
-                className={`${cardClass} transition duration-300 hover:-translate-y-0.5`}
-              >
-                <div className={`${cardInnerClass} px-4 py-3`}>
-                  <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#f0abfc]/90">
-                    {stat.label}
-                  </p>
-                  <p className="mt-1 font-body text-xl font-bold text-white">
-                    {stat.value}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </section>
+            ]}
+          />
 
           {/* Tam genişlik satır satır liste */}
-          <section className={cardClass}>
-            <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+          <section className={DM_CARD_CLASS}>
+            <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
               <h2 className="font-body text-sm font-semibold text-white">
                 Tüm mekanlar <span className="text-white/40">({candidates.length})</span>
               </h2>

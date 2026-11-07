@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { buildMetadata } from "@/lib/seo";
 import { getBlogPosts } from "@/lib/blog-posts";
+import { formatLongDate } from "@/lib/format-long-date";
 
 export const metadata: Metadata = buildMetadata({
   title: "Software QA & Testing Blog — Articles and Field Notes",
@@ -11,17 +12,6 @@ export const metadata: Metadata = buildMetadata({
   canonical: "/blog",
   ogType: "website"
 });
-
-function formatDate(value: string | null): string {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  }).format(date);
-}
 
 export default async function BlogIndexPage() {
   const { items } = await getBlogPosts();
@@ -73,7 +63,7 @@ export default async function BlogIndexPage() {
                 <div className="flex flex-1 flex-col px-6 py-5">
                   {post.publishedAt ? (
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink/45">
-                      {formatDate(post.publishedAt)}
+                      {formatLongDate(post.publishedAt)}
                     </p>
                   ) : null}
                   <h2 className="mt-2 font-body text-xl font-semibold tracking-[-0.01em] text-ink transition group-hover:text-accent">

@@ -8,20 +8,10 @@ import { JsonLd } from "@/components/json-ld";
 import { buildMetadata } from "@/lib/seo";
 import { buildBlogPostingSchema, buildBreadcrumbSchema } from "@/lib/structured-data";
 import { getBlogPostBySlug } from "@/lib/blog-posts";
+import { formatLongDate } from "@/lib/format-long-date";
 
 interface Props {
   params: Promise<{ slug: string }>;
-}
-
-function formatDate(value: string | null): string {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  }).format(date);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -76,7 +66,7 @@ export default async function BlogPostPage({ params }: Props) {
         <header className="section-panel px-6 py-8 sm:px-10">
           {post.publishedAt ? (
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink/45">
-              {formatDate(post.publishedAt)}
+              {formatLongDate(post.publishedAt)}
             </p>
           ) : null}
           <h1 className="mt-2 font-body text-[clamp(2rem,5vw,2.9rem)] font-semibold tracking-[-0.03em] text-ink">

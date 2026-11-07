@@ -2,9 +2,9 @@ import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { createServiceClient } from "@/lib/supabase-server";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
+import { createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 
 export type DetrbridgeTodoStatus = "open" | "done";
 
@@ -271,7 +271,7 @@ export async function getAllTodosAdmin(
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -337,7 +337,7 @@ async function uploadAttachment(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Yükleme başarısız."
+      errorMessage: toErrorMessage(error, "Yükleme başarısız.")
     };
   }
 }
@@ -366,7 +366,7 @@ export async function addAttachment(
   const supabase = createServiceClient();
   const storage = BOARD_STORAGE[board];
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   const uploaded = await uploadAttachment(supabase, storage.bucket, todoId, file);
   if (!uploaded.ok) return uploaded;
@@ -383,7 +383,7 @@ export async function addAttachment(
     await removeAttachmentObjects(supabase, storage.bucket, [uploaded.path]);
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Attach failed."
+      errorMessage: toErrorMessage(error, "Attach failed.")
     };
   }
 }
@@ -395,7 +395,7 @@ export async function deleteAttachment(
   const supabase = createServiceClient();
   const storage = BOARD_STORAGE[board];
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { data: existing } = await supabase
@@ -415,7 +415,7 @@ export async function deleteAttachment(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }
@@ -431,7 +431,7 @@ export async function createTodo(
   const supabase = createServiceClient();
   const storage = BOARD_STORAGE[board];
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { data, error } = await supabase
@@ -449,7 +449,7 @@ export async function createTodo(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Create failed."
+      errorMessage: toErrorMessage(error, "Create failed.")
     };
   }
 }
@@ -466,7 +466,7 @@ export async function updateTodo(
   const supabase = createServiceClient();
   const storage = BOARD_STORAGE[board];
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase
@@ -482,7 +482,7 @@ export async function updateTodo(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Update failed."
+      errorMessage: toErrorMessage(error, "Update failed.")
     };
   }
 }
@@ -495,7 +495,7 @@ export async function setTodoStatus(
   const supabase = createServiceClient();
   const storage = BOARD_STORAGE[board];
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase
@@ -507,7 +507,7 @@ export async function setTodoStatus(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Update failed."
+      errorMessage: toErrorMessage(error, "Update failed.")
     };
   }
 }
@@ -525,7 +525,7 @@ export async function setTodoArchived(
   const supabase = createServiceClient();
   const storage = BOARD_STORAGE[board];
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase
@@ -537,7 +537,7 @@ export async function setTodoArchived(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Archive failed."
+      errorMessage: toErrorMessage(error, "Archive failed.")
     };
   }
 }
@@ -555,7 +555,7 @@ export async function addComment(
   const supabase = createServiceClient();
   const storage = BOARD_STORAGE[board];
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase.from(storage.comments).insert({
@@ -568,7 +568,7 @@ export async function addComment(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Comment failed."
+      errorMessage: toErrorMessage(error, "Comment failed.")
     };
   }
 }
@@ -580,7 +580,7 @@ export async function deleteComment(
   const supabase = createServiceClient();
   const storage = BOARD_STORAGE[board];
   if (!supabase) {
-    return { ok: false, errorMessage: "Service credentials missing." };
+    return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   }
   try {
     const { error } = await supabase
@@ -592,7 +592,7 @@ export async function deleteComment(
   } catch (error) {
     return {
       ok: false,
-      errorMessage: error instanceof Error ? error.message : "Delete failed."
+      errorMessage: toErrorMessage(error, "Delete failed.")
     };
   }
 }

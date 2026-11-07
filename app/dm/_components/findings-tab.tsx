@@ -1,7 +1,14 @@
-import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
+import {
+  DM_BRAND_GRADIENT,
+  DM_CARD_CLASS,
+  DM_CARD_INNER_CLASS,
+  DM_INPUT_CLASS,
+  DM_LABEL_CLASS
+} from "@/app/dm/_components/theme";
 import { BoardGuide } from "@/app/dm/_components/board-guide";
 import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 import { FindingTable } from "@/app/dm/_components/finding-table";
+import { StatGrid } from "@/app/dm/_components/stat-grid";
 import type {
   FindingComment,
   TestFindingItem,
@@ -25,9 +32,6 @@ interface FindingsTabProps {
   editing: TestFindingItem | null;
   selected: TestFindingItem | null;
   comments: FindingComment[];
-  cardClass: string;
-  cardInnerClass: string;
-  inputClass: string;
   createAction: (formData: FormData) => void | Promise<void>;
   updateAction: (formData: FormData) => void | Promise<void>;
   deleteAction: (formData: FormData) => void | Promise<void>;
@@ -35,9 +39,6 @@ interface FindingsTabProps {
   addCommentAction: (formData: FormData) => void | Promise<void>;
   deleteCommentAction: (formData: FormData) => void | Promise<void>;
 }
-
-const labelClass =
-  "mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50";
 
 // Collapsed how-to card shown at the top of the Findings tab.
 const FINDINGS_GUIDE: BoardGuideContent = {
@@ -112,9 +113,6 @@ export function FindingsTab({
   editing,
   selected,
   comments,
-  cardClass,
-  cardInnerClass,
-  inputClass,
   createAction,
   updateAction,
   deleteAction,
@@ -128,37 +126,21 @@ export function FindingsTab({
 
   return (
     <>
-      <BoardGuide
-        guide={FINDINGS_GUIDE}
-        cardClass={cardClass}
-        cardInnerClass={cardInnerClass}
-      />
-      {/* Stats */}
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {[
+      <BoardGuide guide={FINDINGS_GUIDE} />
+      <StatGrid
+        stats={[
           { label: "Toplam bulgu", value: findings.length },
           { label: "Açık", value: openCount },
           { label: "Kritik", value: criticalCount },
           { label: "Çözüldü", value: resolvedCount }
-        ].map((stat) => (
-          <article key={stat.label} className={cardClass}>
-            <div className={`${cardInnerClass} px-4 py-3`}>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#f0abfc]/90">
-                {stat.label}
-              </p>
-              <p className="mt-1 font-body text-xl font-bold text-white">
-                {stat.value}
-              </p>
-            </div>
-          </article>
-        ))}
-      </section>
+        ]}
+      />
 
       {/* Add / edit finding — accordion (auto-opens when editing) */}
-      <section className={cardClass}>
+      <section className={DM_CARD_CLASS}>
         <details
           open={Boolean(editing)}
-          className={`group/acc overflow-hidden rounded-[1.55rem] ${cardInnerClass}`}
+          className={`group/acc overflow-hidden rounded-[1.55rem] ${DM_CARD_INNER_CLASS}`}
         >
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 transition hover:bg-white/[0.02] sm:px-5 [&::-webkit-details-marker]:hidden">
             <h2 className="flex items-center gap-2 font-body text-sm font-semibold text-white">
@@ -219,7 +201,7 @@ export function FindingsTab({
               ) : null}
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="block sm:col-span-2">
-                  <span className={labelClass}>
+                  <span className={DM_LABEL_CLASS}>
                     Bulgu <span className="text-[#ff2d95]">*</span>
                   </span>
                   <input
@@ -230,18 +212,18 @@ export function FindingsTab({
                     maxLength={400}
                     defaultValue={editing?.title ?? ""}
                     placeholder="ör. Rezervasyon butonu mobilde tıklanmıyor"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className={labelClass}>Sorumlu</span>
+                  <span className={DM_LABEL_CLASS}>Sorumlu</span>
                   <input
                     type="text"
                     name="owner"
                     list="finding-owners"
                     defaultValue={editing?.owner ?? "Ortak"}
                     placeholder="Umut / Baran / Şahin / Ortak"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                   <datalist id="finding-owners">
                     {ownerOptions.map((owner) => (
@@ -250,22 +232,22 @@ export function FindingsTab({
                   </datalist>
                 </label>
                 <label className="block">
-                  <span className={labelClass}>Alan / sayfa</span>
+                  <span className={DM_LABEL_CLASS}>Alan / sayfa</span>
                   <input
                     type="text"
                     name="area"
                     maxLength={120}
                     defaultValue={editing?.area ?? ""}
                     placeholder="ör. Login / Rezervasyon / Mobil"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className={labelClass}>Durum</span>
+                  <span className={DM_LABEL_CLASS}>Durum</span>
                   <select
                     name="status"
                     defaultValue={editing?.status ?? "open"}
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   >
                     {statusOptions.map((option) => (
                       <option
@@ -279,11 +261,11 @@ export function FindingsTab({
                   </select>
                 </label>
                 <label className="block">
-                  <span className={labelClass}>Önem</span>
+                  <span className={DM_LABEL_CLASS}>Önem</span>
                   <select
                     name="severity"
                     defaultValue={editing?.severity ?? "normal"}
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   >
                     {severityOptions.map((option) => (
                       <option
@@ -297,7 +279,7 @@ export function FindingsTab({
                   </select>
                 </label>
                 <label className="block sm:col-span-2">
-                  <span className={labelClass}>
+                  <span className={DM_LABEL_CLASS}>
                     Screenshot{" "}
                     <span className="font-normal normal-case tracking-normal text-white/30">
                       (opsiyonel · max 5MB)
@@ -341,8 +323,8 @@ export function FindingsTab({
       </section>
 
       {/* Finding list */}
-      <section className={cardClass}>
-        <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+      <section className={DM_CARD_CLASS}>
+        <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
           <FindingTable
             findings={findings}
             statusOptions={statusOptions}
@@ -358,8 +340,8 @@ export function FindingsTab({
 
       {/* Comments panel for the selected finding */}
       {selected ? (
-        <section id="yorumlar" className={cardClass}>
-          <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+        <section id="yorumlar" className={DM_CARD_CLASS}>
+          <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#f0abfc]/90">
@@ -441,7 +423,7 @@ export function FindingsTab({
                   list="finding-owners"
                   defaultValue="Ortak"
                   placeholder="Yazan"
-                  className={inputClass}
+                  className={DM_INPUT_CLASS}
                 />
                 <input
                   type="text"
@@ -450,7 +432,7 @@ export function FindingsTab({
                   minLength={1}
                   maxLength={1000}
                   placeholder="Yorum ekle…"
-                  className={inputClass}
+                  className={DM_INPUT_CLASS}
                 />
               </div>
               <button

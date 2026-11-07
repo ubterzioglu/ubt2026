@@ -11,7 +11,8 @@ import {
   BudgetExceededError,
   ProviderRateLimitError,
   errorCode,
-  errorMessage
+  errorMessage,
+  isFatalRunError
 } from "@/lib/finder/errors";
 import { parseClassifierBatchOutput } from "@/lib/finder/batch";
 import { extractDomain, makeDuplicateKey, normalizeUrl } from "@/lib/finder/dedupe";
@@ -27,9 +28,18 @@ import {
   createTavilyExtractProvider,
   createTavilySearchProvider
 } from "@/lib/finder/providers/tavily";
-import type { ClassifyUsage, SearchProvider } from "@/lib/finder/providers/types";
+import type {
+  ClassifyUsage,
+  ExtractOutput,
+  ExtractProvider,
+  SearchInput,
+  SearchOutput,
+  SearchProvider,
+  SearchResultItem
+} from "@/lib/finder/providers/types";
 import { buildQueries } from "@/lib/finder/queries";
 import { isRobotsAllowed } from "@/lib/finder/robots";
+import { sleep } from "@/lib/finder/sleep";
 import { parseCandidateResult } from "@/lib/finder/validate";
 import type {
   CandidateResult,
@@ -341,31 +351,243 @@ async function loadTemplate(
   return (data as FinderTemplateRow | null) ?? null;
 }
 
+interface SearchFailoverState {
+  provider: SearchProvider;
+  config: FinderProviderConfigRow;
+  switchedToTavily2: boolean;
+}
+
+function resolveSearchParams(
+  runtime: JobRuntime,
+  config: FinderProviderConfigRow
+): { depth: "basic" | "advanced"; maxResults: number } {
+  const requestDefaults = config.request_defaults ?? {};
+  const baseDepth =
+    typeof requestDefaults["search_depth"] === "string"
+      ? (requestDefaults["search_depth"] as "basic" | "advanced")
+      : "basic";
+  const depth: "basic" | "advanced" = runtime.softCapHit ? "basic" : baseDepth;
+  const configuredMaxResults = Number(
+    requestDefaults["max_results"] ?? (config.provider_key === "serpapi" ? 100 : 8)
+  );
+  const maxResults = runtime.softCapHit
+    ? Math.min(5, configuredMaxResults)
+    : configuredMaxResults;
+  return { depth, maxResults };
+}
+
+async function recordFailedSearch(
+  runtime: JobRuntime,
+  providerKey: SearchProvider["key"],
+  queryText: string,
+  error: unknown
+): Promise<void> {
+  await insertQuery(runtime, {
+    stage: "seed",
+    provider_key: providerKey,
+    query_text: queryText,
+    usage_units: 0,
+    estimated_cost_usd: 0,
+    result_count: 0,
+    status: "failed"
+  });
+  if (isFatalRunError(error)) throw error;
+  await appendEvent(runtime, "search_failed", errorMessage(error), { level: "warn" });
+}
+
+/** null → sorgu başarısız kaydedildi, çağıran sıradaki sorguya geçmeli. */
+async function searchWithTavilyFailover(
+  runtime: JobRuntime,
+  state: SearchFailoverState,
+  tavily2Config: FinderProviderConfigRow | null,
+  input: SearchInput
+): Promise<SearchOutput | null> {
+  try {
+    return await state.provider.search(input);
+  } catch (error: unknown) {
+    const isTavilyQuotaIssue =
+      state.provider.key === "tavily" &&
+      (error instanceof ProviderRateLimitError || error instanceof AuthOrConfigError);
+
+    if (isTavilyQuotaIssue && !state.switchedToTavily2 && tavily2Config?.is_enabled) {
+      state.switchedToTavily2 = true;
+      await appendEvent(
+        runtime,
+        "tavily_key_switch",
+        `Birincil Tavily anahtarı kota/limit hatası verdi, tavily2'ye geçiliyor: ${errorMessage(error)}`,
+        { level: "warn" }
+      );
+      state.provider = createTavilySearchProvider(resolveSecret(tavily2Config.secret_ref));
+      state.config = tavily2Config;
+      try {
+        return await state.provider.search(input);
+      } catch (retryError: unknown) {
+        await recordFailedSearch(runtime, state.provider.key, input.query, retryError);
+        return null;
+      }
+    }
+    await recordFailedSearch(runtime, state.provider.key, input.query, error);
+    return null;
+  }
+}
+
+async function recordPrimarySearch(
+  runtime: JobRuntime,
+  state: SearchFailoverState,
+  searchOutput: SearchOutput,
+  queryText: string,
+  depth: "basic" | "advanced"
+): Promise<string | null> {
+  const queryId = await insertQuery(runtime, {
+    stage: "seed",
+    provider_key: state.provider.key,
+    query_text: queryText,
+    external_request_id: searchOutput.requestId ?? null,
+    usage_units: searchOutput.usage.units,
+    estimated_cost_usd: searchOutput.usage.estimatedCostUsd,
+    result_count: searchOutput.results.length,
+    status: "succeeded"
+  });
+
+  await recordCost(runtime, {
+    provider_key: state.provider.key,
+    provider_config_id: state.config.id,
+    event_type: "search",
+    billing_unit: searchOutput.usage.billingUnit,
+    quantity: searchOutput.usage.units,
+    unit_cost_usd:
+      searchOutput.usage.units > 0
+        ? searchOutput.usage.estimatedCostUsd / searchOutput.usage.units
+        : 0,
+    amount_usd: searchOutput.usage.estimatedCostUsd,
+    query_id: queryId,
+    request_meta: { query: queryText, depth }
+  });
+  return queryId;
+}
+
+/** Hard cap dışındaki hatalar yutulur; null → fallback sonuç vermedi. */
+async function runSerpApiFallback(
+  runtime: JobRuntime,
+  serpapiConfig: FinderProviderConfigRow,
+  queryText: string,
+  maxResults: number
+): Promise<{ provider: SearchProvider; results: SearchResultItem[] } | null> {
+  const { job } = runtime;
+  try {
+    const serpProvider = createSerpApiSearchProvider(
+      resolveSecret(serpapiConfig.secret_ref),
+      serpapiConfig.request_defaults
+    );
+    const serpOutput = await serpProvider.search({
+      query: queryText,
+      locationLabel: job.location_label,
+      languageCode: job.language_code,
+      maxResults
+    });
+    const serpQueryId = await insertQuery(runtime, {
+      stage: "expansion",
+      provider_key: "serpapi",
+      query_text: queryText,
+      external_request_id: serpOutput.requestId ?? null,
+      usage_units: serpOutput.usage.units,
+      estimated_cost_usd: serpOutput.usage.estimatedCostUsd,
+      result_count: serpOutput.results.length,
+      status: "succeeded"
+    });
+    await recordCost(runtime, {
+      provider_key: "serpapi",
+      provider_config_id: serpapiConfig.id,
+      event_type: "search",
+      billing_unit: serpOutput.usage.billingUnit,
+      quantity: serpOutput.usage.units,
+      unit_cost_usd: serpOutput.usage.estimatedCostUsd,
+      amount_usd: serpOutput.usage.estimatedCostUsd,
+      query_id: serpQueryId,
+      request_meta: { query: queryText, fallback: true }
+    });
+    return { provider: serpProvider, results: serpOutput.results };
+  } catch (error: unknown) {
+    if (error instanceof BudgetExceededError) throw error;
+    await appendEvent(runtime, "serpapi_fallback_failed", errorMessage(error), {
+      level: "warn"
+    });
+    return null;
+  }
+}
+
+async function persistSearchResults(
+  runtime: JobRuntime,
+  results: SearchResultItem[],
+  queryId: string | null,
+  providerKey: SearchProvider["key"],
+  limit: number
+): Promise<number> {
+  const sources = results
+    .filter((result) => /^https?:\/\//i.test(result.url))
+    .slice(0, limit)
+    .map((result) => ({
+      discovery_query_id: queryId,
+      provider_key: providerKey,
+      source_url: result.url,
+      normalized_url: normalizeUrl(result.url),
+      source_domain: result.domain || extractDomain(result.url),
+      source_title: result.title ?? null,
+      source_snippet: result.snippet ?? null
+    }));
+  return insertDiscoveredSources(runtime, sources);
+}
+
+async function injectSeedUrls(runtime: JobRuntime): Promise<void> {
+  const { job } = runtime;
+  if (!job.seed_urls?.length) return;
+  const validSeedUrls = job.seed_urls.filter((url) => /^https?:\/\//i.test(url));
+  if (validSeedUrls.length === 0) return;
+  await insertDiscoveredSources(
+    runtime,
+    validSeedUrls.map((url) => ({
+      discovery_query_id: null,
+      provider_key: "manual",
+      source_url: url,
+      normalized_url: normalizeUrl(url),
+      source_domain: extractDomain(url),
+      source_title: null,
+      source_snippet: null
+    }))
+  );
+  await appendEvent(
+    runtime,
+    "seed_urls_injected",
+    `${validSeedUrls.length} ön adres ekstraksiyon kuyruğuna eklendi.`
+  );
+}
+
 async function runSearchStage(runtime: JobRuntime): Promise<void> {
   const { job } = runtime;
   const template = await loadTemplate(runtime);
   const queries = buildQueries(job, template);
 
-  let searchConfig =
+  const searchConfig =
     providerById(runtime, job.search_provider_id) ?? providerByKey(runtime, "tavily");
   if (!searchConfig || !searchConfig.is_enabled) {
     throw new AuthOrConfigError("Etkin arama sağlayıcısı yok");
   }
 
-  let provider: SearchProvider;
-  if (searchConfig.provider_key === "serpapi") {
-    provider = createSerpApiSearchProvider(
-      resolveSecret(searchConfig.secret_ref),
-      searchConfig.request_defaults
-    );
-  } else {
-    provider = createTavilySearchProvider(resolveSecret(searchConfig.secret_ref));
-  }
+  const state: SearchFailoverState = {
+    provider:
+      searchConfig.provider_key === "serpapi"
+        ? createSerpApiSearchProvider(
+            resolveSecret(searchConfig.secret_ref),
+            searchConfig.request_defaults
+          )
+        : createTavilySearchProvider(resolveSecret(searchConfig.secret_ref)),
+    config: searchConfig,
+    switchedToTavily2: false
+  };
 
   // Tavily ikincil anahtar — birincil kota/rate-limit hatası verirse kalıcı olarak
   // bu sağlayıcıya geçilir (job boyunca bir kez, tekrar tekrar denenmez).
   const tavily2Config = providerByKey(runtime, "tavily2");
-  let switchedToTavily2 = false;
 
   // SerpAPI fallback — az sonuçta geo hassasiyeti için (soft cap'te kapalı).
   const serpapiConfig = providerByKey(runtime, "serpapi");
@@ -379,174 +601,38 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
     queryIndex += 1;
     await updateProgress(runtime, { stage: "search", query: queryIndex, of: queries.length });
 
-    const requestDefaults = searchConfig.request_defaults ?? {};
-    const baseDepth =
-      typeof requestDefaults["search_depth"] === "string"
-        ? (requestDefaults["search_depth"] as "basic" | "advanced")
-        : "basic";
-    const depth: "basic" | "advanced" = runtime.softCapHit ? "basic" : baseDepth;
-    const configuredMaxResults = Number(
-      requestDefaults["max_results"] ?? (searchConfig.provider_key === "serpapi" ? 100 : 8)
-    );
-    const maxResults = runtime.softCapHit
-      ? Math.min(5, configuredMaxResults)
-      : configuredMaxResults;
-
-    let searchOutput;
-    let usedProvider = provider;
-    try {
-      searchOutput = await usedProvider.search({
-        query: queryText,
-        locationLabel: job.location_label,
-        countryCode: job.country_code ?? undefined,
-        languageCode: job.language_code,
-        maxResults,
-        searchDepth: depth
-      });
-    } catch (error: unknown) {
-      const isTavilyQuotaIssue =
-        usedProvider.key === "tavily" &&
-        (error instanceof ProviderRateLimitError || error instanceof AuthOrConfigError);
-
-      if (isTavilyQuotaIssue && !switchedToTavily2 && tavily2Config?.is_enabled) {
-        switchedToTavily2 = true;
-        await appendEvent(
-          runtime,
-          "tavily_key_switch",
-          `Birincil Tavily anahtarı kota/limit hatası verdi, tavily2'ye geçiliyor: ${errorMessage(error)}`,
-          { level: "warn" }
-        );
-        provider = createTavilySearchProvider(resolveSecret(tavily2Config.secret_ref));
-        usedProvider = provider;
-        searchConfig = tavily2Config;
-        try {
-          searchOutput = await usedProvider.search({
-            query: queryText,
-            locationLabel: job.location_label,
-            countryCode: job.country_code ?? undefined,
-            languageCode: job.language_code,
-            maxResults,
-            searchDepth: depth
-          });
-        } catch (retryError: unknown) {
-          await insertQuery(runtime, {
-            stage: "seed",
-            provider_key: usedProvider.key,
-            query_text: queryText,
-            usage_units: 0,
-            estimated_cost_usd: 0,
-            result_count: 0,
-            status: "failed"
-          });
-          if (retryError instanceof AuthOrConfigError || retryError instanceof BudgetExceededError) {
-            throw retryError;
-          }
-          await appendEvent(runtime, "search_failed", errorMessage(retryError), { level: "warn" });
-          continue;
-        }
-      } else {
-        await insertQuery(runtime, {
-          stage: "seed",
-          provider_key: usedProvider.key,
-          query_text: queryText,
-          usage_units: 0,
-          estimated_cost_usd: 0,
-          result_count: 0,
-          status: "failed"
-        });
-        if (error instanceof AuthOrConfigError || error instanceof BudgetExceededError) {
-          throw error;
-        }
-        await appendEvent(runtime, "search_failed", errorMessage(error), { level: "warn" });
-        continue;
-      }
-    }
-
-    const queryId = await insertQuery(runtime, {
-      stage: "seed",
-      provider_key: usedProvider.key,
-      query_text: queryText,
-      external_request_id: searchOutput.requestId ?? null,
-      usage_units: searchOutput.usage.units,
-      estimated_cost_usd: searchOutput.usage.estimatedCostUsd,
-      result_count: searchOutput.results.length,
-      status: "succeeded"
+    const { depth, maxResults } = resolveSearchParams(runtime, state.config);
+    const searchOutput = await searchWithTavilyFailover(runtime, state, tavily2Config, {
+      query: queryText,
+      locationLabel: job.location_label,
+      countryCode: job.country_code ?? undefined,
+      languageCode: job.language_code,
+      maxResults,
+      searchDepth: depth
     });
+    if (!searchOutput) continue;
 
-    await recordCost(runtime, {
-      provider_key: usedProvider.key,
-      provider_config_id: searchConfig.id,
-      event_type: "search",
-      billing_unit: searchOutput.usage.billingUnit,
-      quantity: searchOutput.usage.units,
-      unit_cost_usd:
-        searchOutput.usage.units > 0
-          ? searchOutput.usage.estimatedCostUsd / searchOutput.usage.units
-          : 0,
-      amount_usd: searchOutput.usage.estimatedCostUsd,
-      query_id: queryId,
-      request_meta: { query: queryText, depth }
-    });
+    let usedProvider = state.provider;
+    const queryId = await recordPrimarySearch(runtime, state, searchOutput, queryText, depth);
 
     if (fallbackEnabled && !runtime.softCapHit && searchOutput.results.length < 3 && serpapiConfig) {
-      try {
-        const serpProvider = createSerpApiSearchProvider(
-          resolveSecret(serpapiConfig.secret_ref),
-          serpapiConfig.request_defaults
-        );
-        const serpOutput = await serpProvider.search({
-          query: queryText,
-          locationLabel: job.location_label,
-          languageCode: job.language_code,
-          maxResults
-        });
-        const serpQueryId = await insertQuery(runtime, {
-          stage: "expansion",
-          provider_key: "serpapi",
-          query_text: queryText,
-          external_request_id: serpOutput.requestId ?? null,
-          usage_units: serpOutput.usage.units,
-          estimated_cost_usd: serpOutput.usage.estimatedCostUsd,
-          result_count: serpOutput.results.length,
-          status: "succeeded"
-        });
-        await recordCost(runtime, {
-          provider_key: "serpapi",
-          provider_config_id: serpapiConfig.id,
-          event_type: "search",
-          billing_unit: serpOutput.usage.billingUnit,
-          quantity: serpOutput.usage.units,
-          unit_cost_usd: serpOutput.usage.estimatedCostUsd,
-          amount_usd: serpOutput.usage.estimatedCostUsd,
-          query_id: serpQueryId,
-          request_meta: { query: queryText, fallback: true }
-        });
-        searchOutput.results.push(...serpOutput.results);
-        usedProvider = serpProvider;
-      } catch (error: unknown) {
-        if (error instanceof BudgetExceededError) throw error;
-        await appendEvent(runtime, "serpapi_fallback_failed", errorMessage(error), {
-          level: "warn"
-        });
+      const fallback = await runSerpApiFallback(runtime, serpapiConfig, queryText, maxResults);
+      if (fallback) {
+        searchOutput.results.push(...fallback.results);
+        usedProvider = fallback.provider;
       }
     }
 
     // Keşfedilen URL'leri normalize edip persist et (job başına tekil).
     const remainingBudget = job.max_source_urls - discoveredTotal;
     if (remainingBudget <= 0) break;
-    const sources = searchOutput.results
-      .filter((result) => /^https?:\/\//i.test(result.url))
-      .slice(0, remainingBudget)
-      .map((result) => ({
-        discovery_query_id: queryId,
-        provider_key: usedProvider.key,
-        source_url: result.url,
-        normalized_url: normalizeUrl(result.url),
-        source_domain: result.domain || extractDomain(result.url),
-        source_title: result.title ?? null,
-        source_snippet: result.snippet ?? null
-      }));
-    discoveredTotal += await insertDiscoveredSources(runtime, sources);
+    discoveredTotal += await persistSearchResults(
+      runtime,
+      searchOutput.results,
+      queryId,
+      usedProvider.key,
+      remainingBudget
+    );
   }
 
   await appendEvent(
@@ -556,58 +642,23 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
   );
 
   // Seed URL'leri arama aşamasından bağımsız olarak doğrudan kaynak kuyruğuna ekle.
-  if (job.seed_urls?.length) {
-    const validSeedUrls = job.seed_urls.filter((url) => /^https?:\/\//i.test(url));
-    if (validSeedUrls.length > 0) {
-      await insertDiscoveredSources(
-        runtime,
-        validSeedUrls.map((url) => ({
-          discovery_query_id: null,
-          provider_key: "manual",
-          source_url: url,
-          normalized_url: normalizeUrl(url),
-          source_domain: extractDomain(url),
-          source_title: null,
-          source_snippet: null
-        }))
-      );
-      await appendEvent(
-        runtime,
-        "seed_urls_injected",
-        `${validSeedUrls.length} ön adres ekstraksiyon kuyruğuna eklendi.`
-      );
-    }
-  }
+  await injectSeedUrls(runtime);
 }
 
 // ─── Aşama 2: Ekstraksiyon (robots kontrolü zorunlu) ─────────────────────────
 
-async function runExtractStage(runtime: JobRuntime): Promise<void> {
-  const { job } = runtime;
-  let extractConfig =
-    providerById(runtime, job.extract_provider_id) ?? providerByKey(runtime, "tavily");
-  if (!extractConfig || !extractConfig.is_enabled) {
-    throw new AuthOrConfigError("Etkin ekstraksiyon sağlayıcısı yok");
-  }
-  let extractProvider =
-    extractConfig.provider_key === "serpapi"
-      ? createDirectExtractProvider()
-      : createTavilyExtractProvider(resolveSecret(extractConfig.secret_ref));
+interface ExtractFailoverState {
+  config: FinderProviderConfigRow;
+  provider: ExtractProvider;
+  switchedToTavily2: boolean;
+}
 
-  const tavily2ConfigForExtract = providerByKey(runtime, "tavily2");
-  let switchedExtractToTavily2 = false;
-
-  const requestDefaults = extractConfig.request_defaults ?? {};
-  const baseDepth =
-    typeof requestDefaults["extract_depth"] === "string"
-      ? (requestDefaults["extract_depth"] as "basic" | "advanced")
-      : "basic";
-
-  const sources = await loadSourcesByStatus(runtime, "discovered", job.max_extract_urls);
-  let fetchedCount = 0;
-
-  // Önce robots değerlendirmesi — engellenenler hiç sağlayıcıya gitmez.
-  const allowed: typeof sources = [];
+/** Robots değerlendirmesi — engellenenler hiç sağlayıcıya gitmez. */
+async function filterRobotsAllowed(
+  runtime: JobRuntime,
+  sources: FinderJobSourceRow[]
+): Promise<FinderJobSourceRow[]> {
+  const allowed: FinderJobSourceRow[] = [];
   for (const source of sources) {
     const robotsAllowed = await isRobotsAllowed(source.source_url);
     await updateSource(runtime, source.id, {
@@ -624,6 +675,113 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
       `${sources.length - allowed.length} kaynak robots.txt nedeniyle atlandı.`
     );
   }
+  return allowed;
+}
+
+async function failExtractBatch(
+  runtime: JobRuntime,
+  batch: FinderJobSourceRow[],
+  error: unknown
+): Promise<void> {
+  if (isFatalRunError(error)) throw error;
+  for (const source of batch) {
+    await updateSource(runtime, source.id, { fetch_status: "failed" });
+  }
+  await appendEvent(runtime, "extract_failed", errorMessage(error), { level: "warn" });
+}
+
+/** null → batch failed işaretlendi, çağıran sıradaki batch'e geçmeli. */
+async function extractWithTavilyFailover(
+  runtime: JobRuntime,
+  state: ExtractFailoverState,
+  tavily2Config: FinderProviderConfigRow | null,
+  batch: FinderJobSourceRow[],
+  depth: "basic" | "advanced"
+): Promise<ExtractOutput | null> {
+  const input = {
+    urls: batch.map((source) => source.source_url),
+    query: runtime.job.freeform_topic ?? runtime.job.title,
+    depth
+  };
+  try {
+    return await state.provider.extract(input);
+  } catch (error: unknown) {
+    const isTavilyQuotaIssue = error instanceof ProviderRateLimitError;
+
+    if (isTavilyQuotaIssue && !state.switchedToTavily2 && tavily2Config?.is_enabled) {
+      state.switchedToTavily2 = true;
+      state.config = tavily2Config;
+      state.provider = createTavilyExtractProvider(resolveSecret(tavily2Config.secret_ref));
+      await appendEvent(
+        runtime,
+        "tavily_key_switch",
+        `Extract aşamasında birincil Tavily anahtarı kota/limit hatası verdi, tavily2'ye geçiliyor: ${errorMessage(error)}`,
+        { level: "warn" }
+      );
+      try {
+        return await state.provider.extract(input);
+      } catch (retryError: unknown) {
+        await failExtractBatch(runtime, batch, retryError);
+        return null;
+      }
+    }
+    await failExtractBatch(runtime, batch, error);
+    return null;
+  }
+}
+
+async function applyExtractedDocs(
+  runtime: JobRuntime,
+  batch: FinderJobSourceRow[],
+  output: ExtractOutput
+): Promise<number> {
+  let fetched = 0;
+  const docsByUrl = new Map(output.docs.map((doc) => [normalizeUrl(doc.url), doc]));
+  for (const source of batch) {
+    const doc =
+      docsByUrl.get(source.normalized_url) ?? docsByUrl.get(normalizeUrl(source.source_url));
+    if (doc?.text) {
+      await updateSource(runtime, source.id, {
+        fetch_status: "fetched",
+        extracted_text: doc.text.slice(0, 60_000),
+        fetched_at: new Date().toISOString()
+      });
+      fetched += 1;
+    } else {
+      await updateSource(runtime, source.id, { fetch_status: "failed" });
+    }
+  }
+  return fetched;
+}
+
+async function runExtractStage(runtime: JobRuntime): Promise<void> {
+  const { job } = runtime;
+  const extractConfig =
+    providerById(runtime, job.extract_provider_id) ?? providerByKey(runtime, "tavily");
+  if (!extractConfig || !extractConfig.is_enabled) {
+    throw new AuthOrConfigError("Etkin ekstraksiyon sağlayıcısı yok");
+  }
+  const state: ExtractFailoverState = {
+    config: extractConfig,
+    provider:
+      extractConfig.provider_key === "serpapi"
+        ? createDirectExtractProvider()
+        : createTavilyExtractProvider(resolveSecret(extractConfig.secret_ref)),
+    switchedToTavily2: false
+  };
+
+  const tavily2Config = providerByKey(runtime, "tavily2");
+
+  const requestDefaults = extractConfig.request_defaults ?? {};
+  const baseDepth =
+    typeof requestDefaults["extract_depth"] === "string"
+      ? (requestDefaults["extract_depth"] as "basic" | "advanced")
+      : "basic";
+
+  const sources = await loadSourcesByStatus(runtime, "discovered", job.max_extract_urls);
+  let fetchedCount = 0;
+
+  const allowed = await filterRobotsAllowed(runtime, sources);
 
   for (let offset = 0; offset < allowed.length; offset += EXTRACT_BATCH_SIZE) {
     await updateProgress(runtime, {
@@ -634,78 +792,15 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
     const depth: "basic" | "advanced" = runtime.softCapHit ? "basic" : baseDepth;
     const batch = allowed.slice(offset, offset + EXTRACT_BATCH_SIZE);
 
-    let output;
-    try {
-      output = await extractProvider.extract({
-        urls: batch.map((source) => source.source_url),
-        query: job.freeform_topic ?? job.title,
-        depth
-      });
-    } catch (error: unknown) {
-      const isTavilyQuotaIssue = error instanceof ProviderRateLimitError;
+    const output = await extractWithTavilyFailover(runtime, state, tavily2Config, batch, depth);
+    if (!output) continue;
 
-      if (
-        isTavilyQuotaIssue &&
-        !switchedExtractToTavily2 &&
-        tavily2ConfigForExtract?.is_enabled
-      ) {
-        switchedExtractToTavily2 = true;
-        extractConfig = tavily2ConfigForExtract;
-        extractProvider = createTavilyExtractProvider(resolveSecret(tavily2ConfigForExtract.secret_ref));
-        await appendEvent(
-          runtime,
-          "tavily_key_switch",
-          `Extract aşamasında birincil Tavily anahtarı kota/limit hatası verdi, tavily2'ye geçiliyor: ${errorMessage(error)}`,
-          { level: "warn" }
-        );
-        try {
-          output = await extractProvider.extract({
-            urls: batch.map((source) => source.source_url),
-            query: job.freeform_topic ?? job.title,
-            depth
-          });
-        } catch (retryError: unknown) {
-          if (retryError instanceof AuthOrConfigError || retryError instanceof BudgetExceededError) {
-            throw retryError;
-          }
-          for (const source of batch) {
-            await updateSource(runtime, source.id, { fetch_status: "failed" });
-          }
-          await appendEvent(runtime, "extract_failed", errorMessage(retryError), { level: "warn" });
-          continue;
-        }
-      } else {
-        if (error instanceof AuthOrConfigError || error instanceof BudgetExceededError) {
-          throw error;
-        }
-        for (const source of batch) {
-          await updateSource(runtime, source.id, { fetch_status: "failed" });
-        }
-        await appendEvent(runtime, "extract_failed", errorMessage(error), { level: "warn" });
-        continue;
-      }
-    }
-
-    const docsByUrl = new Map(output.docs.map((doc) => [normalizeUrl(doc.url), doc]));
-    for (const source of batch) {
-      const doc =
-        docsByUrl.get(source.normalized_url) ?? docsByUrl.get(normalizeUrl(source.source_url));
-      if (doc?.text) {
-        await updateSource(runtime, source.id, {
-          fetch_status: "fetched",
-          extracted_text: doc.text.slice(0, 60_000),
-          fetched_at: new Date().toISOString()
-        });
-        fetchedCount += 1;
-      } else {
-        await updateSource(runtime, source.id, { fetch_status: "failed" });
-      }
-    }
+    fetchedCount += await applyExtractedDocs(runtime, batch, output);
 
     if (output.usage.estimatedCostUsd > 0) {
       await recordCost(runtime, {
         provider_key: "tavily",
-        provider_config_id: extractConfig.id,
+        provider_config_id: state.config.id,
         event_type: "extract",
         billing_unit: output.usage.billingUnit,
         quantity: output.usage.units,
@@ -728,11 +823,8 @@ const CLASSIFY_RATE_LIMIT_BACKOFF_MS = 20_000;
 const classifierQueues = new Map<string, Promise<void>>();
 const classifierNextCallAt = new Map<string, number>();
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 interface ClassifierSwitcher {
+  config: FinderProviderConfigRow;
   current: ReturnType<typeof createGeminiClassifier>;
   rateLimitKey: string;
   switchToSecondary: (() => void) | null;
@@ -777,6 +869,115 @@ async function classifyWithRetry(
   }
 }
 
+function createClassifierSwitcher(
+  runtime: JobRuntime,
+  classifierConfig: FinderProviderConfigRow,
+  baseModel: string
+): ClassifierSwitcher {
+  const secondaryClassifierConfig =
+    classifierConfig.provider_key === "gemini2"
+      ? providerByKey(runtime, "gemini")
+      : providerByKey(runtime, "gemini2");
+  const switcher: ClassifierSwitcher = {
+    config: classifierConfig,
+    current: createGeminiClassifier(resolveSecret(classifierConfig.secret_ref)),
+    rateLimitKey: `${classifierConfig.secret_ref}:${baseModel}`,
+    switchToSecondary:
+      secondaryClassifierConfig?.is_enabled === true
+        ? () => {
+            switcher.config = secondaryClassifierConfig;
+            switcher.current = createGeminiClassifier(
+              resolveSecret(secondaryClassifierConfig.secret_ref)
+            );
+            switcher.rateLimitKey = `${secondaryClassifierConfig.secret_ref}:${baseModel}`;
+          }
+        : null
+  };
+  return switcher;
+}
+
+/** null → batch failed işaretlendi, çağıran sıradaki batch'e geçmeli. */
+async function classifySourceBatch(
+  runtime: JobRuntime,
+  switcher: ClassifierSwitcher,
+  batch: FinderJobSourceRow[],
+  model: string
+): Promise<{ parsed: unknown; usage: ClassifyUsage } | null> {
+  try {
+    return await classifyWithRetry(switcher, {
+      systemPrompt: CLASSIFIER_SYSTEM_PROMPT,
+      userPrompt: buildClassifierBatchUserPrompt(runtime.job, batch),
+      model,
+      responseSchema: CLASSIFIER_BATCH_RESPONSE_SCHEMA
+    });
+  } catch (error: unknown) {
+    if (isFatalRunError(error)) throw error;
+    await Promise.all(
+      batch.map((source) => updateSource(runtime, source.id, { fetch_status: "failed" }))
+    );
+    await appendEvent(runtime, "classify_failed", errorMessage(error), { level: "warn" });
+    return null;
+  }
+}
+
+async function persistClassifiedBatch(
+  runtime: JobRuntime,
+  batch: FinderJobSourceRow[],
+  rawCandidates: Array<unknown | null>,
+  classifierModel: string
+): Promise<{ classified: number; candidates: number }> {
+  let classified = 0;
+  let candidates = 0;
+
+  for (let index = 0; index < batch.length; index += 1) {
+    const source = batch[index];
+    const rawCandidate = rawCandidates[index];
+    if (!source || rawCandidate === null) {
+      if (source) await updateSource(runtime, source.id, { fetch_status: "failed" });
+      continue;
+    }
+
+    const validation = parseCandidateResult(rawCandidate);
+    if (!validation.result) {
+      await updateSource(runtime, source.id, { fetch_status: "failed" });
+      await appendEvent(
+        runtime,
+        "classifier_validation_failed",
+        validation.errorMessage ?? "Doğrulama başarısız",
+        { level: "warn", payload: { source_id: source.id } }
+      );
+      continue;
+    }
+
+    const parsed = validation.result;
+    classified += 1;
+
+    if (
+      !parsed.is_match ||
+      !parsed.canonical_name ||
+      parsed.confidence_score < MIN_CONFIDENCE_TO_KEEP
+    ) {
+      await updateSource(runtime, source.id, { fetch_status: "irrelevant" });
+      continue;
+    }
+
+    const candidateId = await upsertCandidate(
+      runtime,
+      source.id,
+      parsed,
+      classifierModel,
+      source.source_url
+    );
+    if (candidateId) {
+      candidates += 1;
+    } else {
+      await updateSource(runtime, source.id, { fetch_status: "duplicate" });
+    }
+  }
+
+  return { classified, candidates };
+}
+
 async function runClassifyStage(runtime: JobRuntime): Promise<void> {
   const { job } = runtime;
   const classifierConfig =
@@ -789,25 +990,7 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
     typeof requestedModel === "string" && requestedModel.length > 0
       ? requestedModel
       : classifierConfig.default_model ?? SOFT_DEGRADE_MODEL;
-  const secondaryClassifierConfig =
-    classifierConfig.provider_key === "gemini2"
-      ? providerByKey(runtime, "gemini")
-      : providerByKey(runtime, "gemini2");
-  let activeClassifierConfig = classifierConfig;
-  const switcher: ClassifierSwitcher = {
-    current: createGeminiClassifier(resolveSecret(classifierConfig.secret_ref)),
-    rateLimitKey: `${classifierConfig.secret_ref}:${baseModel}`,
-    switchToSecondary:
-      secondaryClassifierConfig?.is_enabled === true
-        ? () => {
-            activeClassifierConfig = secondaryClassifierConfig;
-            switcher.current = createGeminiClassifier(
-              resolveSecret(secondaryClassifierConfig.secret_ref)
-            );
-            switcher.rateLimitKey = `${secondaryClassifierConfig.secret_ref}:${baseModel}`;
-          }
-        : null
-  };
+  const switcher = createClassifierSwitcher(runtime, classifierConfig, baseModel);
 
   const sources = await loadSourcesByStatus(runtime, "fetched", job.max_extract_urls);
   let candidateCount = await countCandidates(runtime);
@@ -819,28 +1002,12 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
 
     const batch = sources.slice(offset, offset + CLASSIFY_BATCH_SIZE);
     const model = runtime.softCapHit ? SOFT_DEGRADE_MODEL : baseModel;
-    let classification;
-    try {
-      classification = await classifyWithRetry(switcher, {
-        systemPrompt: CLASSIFIER_SYSTEM_PROMPT,
-        userPrompt: buildClassifierBatchUserPrompt(job, batch),
-        model,
-        responseSchema: CLASSIFIER_BATCH_RESPONSE_SCHEMA
-      });
-    } catch (error: unknown) {
-      if (error instanceof AuthOrConfigError || error instanceof BudgetExceededError) {
-        throw error;
-      }
-      await Promise.all(
-        batch.map((source) => updateSource(runtime, source.id, { fetch_status: "failed" }))
-      );
-      await appendEvent(runtime, "classify_failed", errorMessage(error), { level: "warn" });
-      continue;
-    }
+    const classification = await classifySourceBatch(runtime, switcher, batch, model);
+    if (!classification) continue;
 
     await recordCost(runtime, {
-      provider_key: activeClassifierConfig.provider_key,
-      provider_config_id: activeClassifierConfig.id,
+      provider_key: switcher.config.provider_key,
+      provider_config_id: switcher.config.id,
       event_type: "classify",
       billing_unit: "tokens",
       quantity: classification.usage.inputTokens + classification.usage.outputTokens,
@@ -864,51 +1031,14 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
       );
     }
 
-    for (let index = 0; index < batch.length; index += 1) {
-      const source = batch[index];
-      const rawCandidate = batchOutput.candidates[index];
-      if (!source || rawCandidate === null) {
-        if (source) await updateSource(runtime, source.id, { fetch_status: "failed" });
-        continue;
-      }
-
-      const validation = parseCandidateResult(rawCandidate);
-      if (!validation.result) {
-        await updateSource(runtime, source.id, { fetch_status: "failed" });
-        await appendEvent(
-          runtime,
-          "classifier_validation_failed",
-          validation.errorMessage ?? "Doğrulama başarısız",
-          { level: "warn", payload: { source_id: source.id } }
-        );
-        continue;
-      }
-
-      const parsed = validation.result;
-      classified += 1;
-
-      if (
-        !parsed.is_match ||
-        !parsed.canonical_name ||
-        parsed.confidence_score < MIN_CONFIDENCE_TO_KEEP
-      ) {
-        await updateSource(runtime, source.id, { fetch_status: "irrelevant" });
-        continue;
-      }
-
-      const candidateId = await upsertCandidate(
-        runtime,
-        source.id,
-        parsed,
-        classification.usage.model,
-        source.source_url
-      );
-      if (candidateId) {
-        candidateCount += 1;
-      } else {
-        await updateSource(runtime, source.id, { fetch_status: "duplicate" });
-      }
-    }
+    const persisted = await persistClassifiedBatch(
+      runtime,
+      batch,
+      batchOutput.candidates,
+      classification.usage.model
+    );
+    classified += persisted.classified;
+    candidateCount += persisted.candidates;
   }
 
   await appendEvent(
@@ -924,6 +1054,22 @@ export interface RunJobSummary {
   status: "review" | "budget_stopped" | "failed";
   candidates: number;
   errorMessage?: string;
+}
+
+async function finishJob(
+  runtime: JobRuntime,
+  status: RunJobSummary["status"],
+  patch: Record<string, unknown>
+): Promise<void> {
+  await runtime.db
+    .from("service_finder_jobs")
+    .update({
+      status,
+      finished_at: new Date().toISOString(),
+      locked_by: null,
+      ...patch
+    })
+    .eq("id", runtime.job.id);
 }
 
 /**
@@ -979,46 +1125,25 @@ export async function executeFinderJob(
     await runClassifyStage(runtime);
 
     const candidates = await countCandidates(runtime);
-    await db
-      .from("service_finder_jobs")
-      .update({
-        status: "review",
-        finished_at: new Date().toISOString(),
-        locked_by: null,
-        result_summary: { candidates },
-        progress: {}
-      })
-      .eq("id", jobId);
+    await finishJob(runtime, "review", { result_summary: { candidates }, progress: {} });
     await appendEvent(runtime, "job_review_ready", `İş incelemeye hazır: ${candidates} aday.`);
     return { status: "review", candidates };
   } catch (error: unknown) {
     if (error instanceof BudgetExceededError) {
       const candidates = await countCandidates(runtime);
-      await db
-        .from("service_finder_jobs")
-        .update({
-          status: "budget_stopped",
-          finished_at: new Date().toISOString(),
-          locked_by: null,
-          result_summary: { candidates, reason: error.message }
-        })
-        .eq("id", jobId);
+      await finishJob(runtime, "budget_stopped", {
+        result_summary: { candidates, reason: error.message }
+      });
       await appendEvent(runtime, "budget_stopped", error.message, { level: "warn" });
       return { status: "budget_stopped", candidates, errorMessage: error.message };
     }
 
     const code = errorCode(error);
     const message = errorMessage(error);
-    await db
-      .from("service_finder_jobs")
-      .update({
-        status: "failed",
-        finished_at: new Date().toISOString(),
-        locked_by: null,
-        last_error_code: code,
-        last_error_message: message.slice(0, 1000)
-      })
-      .eq("id", jobId);
+    await finishJob(runtime, "failed", {
+      last_error_code: code,
+      last_error_message: message.slice(0, 1000)
+    });
     await appendEvent(runtime, "job_failed", message, { level: "error" });
     return { status: "failed", candidates: 0, errorMessage: message };
   }

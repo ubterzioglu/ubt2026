@@ -6,20 +6,32 @@ import { readSearchParam } from "@/lib/search-params";
 import { readFormString } from "@/lib/form-data";
 import { isTasksAdminAuthenticated } from "@/lib/admin-auth";
 import { tasksSignInAction, tasksSignOutAction } from "@/app/dm/_actions";
+import { requireDmAccess } from "@/app/dm/_auth";
 import { DmLogin } from "@/app/dm/_components/dm-login";
 import { TaskTable } from "@/app/dm/_components/task-table";
 import { FindingsTab } from "@/app/dm/_components/findings-tab";
 import { SocialTab } from "@/app/dm/_components/social-tab";
-import { InfoTab } from "@/app/dm/_components/info-tab";
+import { InfoTab, PROFILES } from "@/app/dm/_components/info-tab";
+import { StatGrid } from "@/app/dm/_components/stat-grid";
 import { ScraperTab } from "@/app/dm/_components/scraper/scraper-tab";
-import { DmNav } from "@/app/dm/_components/dm-nav";
+import { DM_NAV_ITEMS, DmNav } from "@/app/dm/_components/dm-nav";
 import type { DmTabKey } from "@/app/dm/_components/dm-nav";
 import { BoardGuide } from "@/app/dm/_components/board-guide";
 import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 import {
+  FINDING_SEVERITY_BADGE,
+  FINDING_STATUS_BADGE,
+  PRIORITY_BADGE,
+  STATUS_BADGE
+} from "@/app/dm/_components/badge-styles";
+import {
   DM_AMBIENT_BACKGROUND,
   DM_BRAND_GRADIENT,
-  DM_GRID_TEXTURE
+  DM_CARD_CLASS,
+  DM_CARD_INNER_CLASS,
+  DM_GRID_TEXTURE,
+  DM_INPUT_CLASS,
+  DM_LABEL_CLASS
 } from "@/app/dm/_components/theme";
 import {
   getAllProjectTasksAdmin,
@@ -59,9 +71,6 @@ export const maxDuration = 300;
 interface DmPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
-
-const inputClass =
-  "w-full rounded-[0.85rem] border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] outline-none transition focus:border-[#ff2d95]/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-[#ff2d95]/15";
 
 const STATUS_OPTIONS: { value: ProjectTaskStatus; label: string }[] = [
   { value: "todo", label: "Yapılacak" },
@@ -172,23 +181,6 @@ const SECTION_META: Record<DmTabKey, { title: string; description: string }> = {
   }
 };
 
-const STATUS_BADGE: Record<ProjectTaskStatus, string> = {
-  todo: "border border-white/[0.14] bg-gradient-to-b from-white/[0.10] to-white/[0.02] text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
-  in_progress:
-    "border border-cyan-400/35 bg-gradient-to-b from-cyan-400/[0.18] to-cyan-400/[0.04] text-cyan-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_10px_-2px_rgba(34,211,238,0.45)]",
-  done: "border border-emerald-400/35 bg-gradient-to-b from-emerald-400/[0.16] to-emerald-400/[0.04] text-emerald-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_2px_10px_-2px_rgba(16,185,129,0.4)]",
-  blocked:
-    "border border-[#ff2247]/40 bg-gradient-to-b from-[#ff2247]/[0.20] to-[#ff2247]/[0.04] text-[#ff9fb0] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_2px_10px_-2px_rgba(255,34,71,0.45)]"
-};
-
-const PRIORITY_BADGE: Record<ProjectTaskPriority, string> = {
-  low: "border border-white/10 bg-gradient-to-b from-white/[0.06] to-transparent text-white/50",
-  normal:
-    "border border-white/[0.14] bg-gradient-to-b from-white/[0.10] to-white/[0.02] text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
-  high: "border border-violet-400/40 bg-gradient-to-b from-violet-400/[0.20] to-violet-400/[0.05] text-violet-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_10px_-2px_rgba(168,85,247,0.5)]",
-  top5: "border border-[#ff2d95]/50 bg-gradient-to-b from-[#ff2d95]/[0.28] to-[#ff2d95]/[0.06] text-[#ffd0e6] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_3px_14px_-3px_rgba(255,45,149,0.6)]"
-};
-
 const FINDING_STATUS_OPTIONS: { value: TestFindingStatus; label: string }[] = [
   { value: "open", label: "Açık" },
   { value: "investigating", label: "İnceleniyor" },
@@ -205,25 +197,6 @@ const FINDING_SEVERITY_OPTIONS: {
   { value: "high", label: "Yüksek" },
   { value: "critical", label: "Kritik" }
 ];
-
-const FINDING_STATUS_BADGE: Record<TestFindingStatus, string> = {
-  open: "border border-[#ff2247]/40 bg-gradient-to-b from-[#ff2247]/[0.20] to-[#ff2247]/[0.04] text-[#ff9fb0] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_2px_10px_-2px_rgba(255,34,71,0.45)]",
-  investigating:
-    "border border-amber-400/40 bg-gradient-to-b from-amber-400/[0.20] to-amber-400/[0.04] text-amber-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_10px_-2px_rgba(251,191,36,0.5)]",
-  resolved:
-    "border border-emerald-400/35 bg-gradient-to-b from-emerald-400/[0.16] to-emerald-400/[0.04] text-emerald-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_2px_10px_-2px_rgba(16,185,129,0.4)]",
-  wontfix:
-    "border border-white/[0.14] bg-gradient-to-b from-white/[0.10] to-white/[0.02] text-white/65 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
-};
-
-const FINDING_SEVERITY_BADGE: Record<TestFindingSeverity, string> = {
-  low: "border border-white/10 bg-gradient-to-b from-white/[0.06] to-transparent text-white/50",
-  normal:
-    "border border-white/[0.14] bg-gradient-to-b from-white/[0.10] to-white/[0.02] text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
-  high: "border border-violet-400/40 bg-gradient-to-b from-violet-400/[0.20] to-violet-400/[0.05] text-violet-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_10px_-2px_rgba(168,85,247,0.5)]",
-  critical:
-    "border border-[#ff2d95]/50 bg-gradient-to-b from-[#ff2d95]/[0.28] to-[#ff2d95]/[0.06] text-[#ffd0e6] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_3px_14px_-3px_rgba(255,45,149,0.6)]"
-};
 
 function parseStatus(value: string): ProjectTaskStatus {
   return STATUS_OPTIONS.some((option) => option.value === value)
@@ -302,9 +275,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function createAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const result = await createProjectTask({
       title: readFormString(formData, "title"),
       owner: readFormString(formData, "owner", "Ortak"),
@@ -327,9 +298,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function updateAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const id = readFormString(formData, "id");
     if (!id) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
@@ -356,9 +325,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function inlineStatusAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const id = readFormString(formData, "id");
     const status = parseStatus(readFormString(formData, "status", "todo"));
     const result = id ? await updateProjectTask(id, { status }) : null;
@@ -372,9 +339,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function deleteAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const id = readFormString(formData, "id");
     const result = id ? await deleteProjectTask(id) : null;
     revalidatePath("/dm");
@@ -394,9 +359,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function createFindingAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const result = await createFinding(
       {
         title: readFormString(formData, "title"),
@@ -421,9 +384,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function updateFindingAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const id = readFormString(formData, "id");
     if (!id) {
       redirect("/dm?tab=findings" as Parameters<typeof redirect>[0]);
@@ -452,9 +413,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function deleteFindingAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const id = readFormString(formData, "id");
     const result = id ? await deleteFinding(id) : null;
     revalidatePath("/dm");
@@ -467,9 +426,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function resolveFindingAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const id = readFormString(formData, "id");
     const result = id ? await updateFinding(id, { status: "resolved" }) : null;
     revalidatePath("/dm");
@@ -482,9 +439,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function addCommentAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const findingId = readFormString(formData, "finding");
     const body = readFormString(formData, "body");
     const author = readFormString(formData, "author", "Ortak");
@@ -503,9 +458,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function deleteCommentAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const id = readFormString(formData, "id");
     const findingId = readFormString(formData, "finding");
     const result = id ? await deleteComment(id) : null;
@@ -525,9 +478,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   async function toggleShareAction(formData: FormData) {
     "use server";
-    if (!(await isTasksAdminAuthenticated())) {
-      redirect("/dm" as Parameters<typeof redirect>[0]);
-    }
+    await requireDmAccess();
     const id = readFormString(formData, "id");
     const platform = readFormString(formData, "platform");
     const shared = (formData.get("shared") as string | null) === "1";
@@ -551,13 +502,15 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
   const allSocialPosts = socialResult.items;
 
+  const navCounts: Partial<Record<DmTabKey, number>> = {
+    tasks: allTasks.length,
+    findings: allFindings.length,
+    social: allSocialPosts.length,
+    info: PROFILES.length
+  };
+
   const doneCount = allTasks.filter((task) => task.status === "done").length;
   const top5Count = allTasks.filter((task) => task.priority === "top5").length;
-
-  const cardClass =
-    "rounded-[1.6rem] bg-gradient-to-b from-white/12 via-white/[0.04] to-transparent p-[1.3px] shadow-[0_30px_90px_-30px_rgba(0,0,0,0.85)]";
-  const cardInnerClass =
-    "rounded-[1.55rem] bg-[#0a0712]/85 backdrop-blur-2xl";
 
   return (
     <main
@@ -592,27 +545,17 @@ export default async function DmPage({ searchParams }: DmPageProps) {
       <div className="animate-reveal mx-auto flex w-full max-w-[88rem] flex-col gap-5">
         <DmNav
           activeTab={activeTab}
-          items={[
-            { key: "tasks", label: "Görevler", count: allTasks.length },
-            {
-              key: "findings",
-              label: "Test bulguları",
-              count: allFindings.length
-            },
-            { key: "social", label: "İçerik", count: allSocialPosts.length },
-            { key: "info", label: "Önemli bilgiler", count: 6 },
-            { key: "scraper", label: "Scraper" },
-            { key: "rapor", label: "Rapor", href: "/dm/rapor" }
-          ]}
-          cardClass={cardClass}
-          cardInnerClass={cardInnerClass}
+          items={DM_NAV_ITEMS.map((item) => ({
+            ...item,
+            count: navCounts[item.key]
+          }))}
           signOutAction={tasksSignOutAction}
         />
 
         <div className="flex min-w-0 flex-col gap-5">
           {/* Active section header */}
-          <section className={cardClass}>
-            <div className={`${cardInnerClass} px-5 py-4 sm:px-6`}>
+          <section className={DM_CARD_CLASS}>
+            <div className={`${DM_CARD_INNER_CLASS} px-5 py-4 sm:px-6`}>
               <p
                 className="text-[9px] font-semibold uppercase tracking-[0.28em]"
                 style={{ color: "#f0abfc" }}
@@ -646,40 +589,23 @@ export default async function DmPage({ searchParams }: DmPageProps) {
 
         {activeTab === "tasks" ? (
         <>
-        <BoardGuide
-          guide={TASKS_GUIDE}
-          cardClass={cardClass}
-          cardInnerClass={cardInnerClass}
-        />
+        <BoardGuide guide={TASKS_GUIDE} />
         {/* Stats */}
-        <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {[
+        <StatGrid
+          lift
+          stats={[
             { label: "Toplam görev", value: allTasks.length },
             { label: "Bitti", value: doneCount },
             { label: "İlk 5", value: top5Count },
             { label: "Sorumlu", value: owners.length }
-          ].map((stat) => (
-            <article
-              key={stat.label}
-              className={`${cardClass} transition duration-300 hover:-translate-y-0.5`}
-            >
-              <div className={`${cardInnerClass} px-4 py-3`}>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#f0abfc]/90">
-                  {stat.label}
-                </p>
-                <p className="mt-1 font-body text-xl font-bold text-white">
-                  {stat.value}
-                </p>
-              </div>
-            </article>
-          ))}
-        </section>
+          ]}
+        />
 
         {/* Add / edit form — collapsed accordion (auto-opens when editing) */}
-        <section className={cardClass}>
+        <section className={DM_CARD_CLASS}>
           <details
             open={Boolean(editing)}
-            className={`group/acc overflow-hidden rounded-[1.55rem] ${cardInnerClass}`}
+            className={`group/acc overflow-hidden rounded-[1.55rem] ${DM_CARD_INNER_CLASS}`}
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 transition hover:bg-white/[0.02] sm:px-5 [&::-webkit-details-marker]:hidden">
               <h2 className="flex items-center gap-2 font-body text-sm font-semibold text-white">
@@ -737,7 +663,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
               {editing ? <input type="hidden" name="id" value={editing.id} /> : null}
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="block sm:col-span-2">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Görev <span className="text-[#ff2d95]">*</span>
                   </span>
                   <input
@@ -748,11 +674,11 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                     maxLength={400}
                     defaultValue={editing?.title ?? ""}
                     placeholder="ör. Umut'a mekan datası için JSON formatını ver"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Sorumlu
                   </span>
                   <input
@@ -761,7 +687,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                     list="task-owners"
                     defaultValue={editing?.owner ?? "Ortak"}
                     placeholder="Umut / Baran / Şahin / Ortak"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                   <datalist id="task-owners">
                     {OWNER_OPTIONS.map((owner) => (
@@ -770,7 +696,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                   </datalist>
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Kategori
                   </span>
                   <input
@@ -779,17 +705,17 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                     maxLength={120}
                     defaultValue={editing?.category ?? ""}
                     placeholder="ör. Veri / mekan datası"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Durum
                   </span>
                   <select
                     name="status"
                     defaultValue={editing?.status ?? "todo"}
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   >
                     {STATUS_OPTIONS.map((option) => (
                       <option
@@ -803,13 +729,13 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                   </select>
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Öncelik
                   </span>
                   <select
                     name="priority"
                     defaultValue={editing?.priority ?? "normal"}
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   >
                     {PRIORITY_OPTIONS.map((option) => (
                       <option
@@ -823,7 +749,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                   </select>
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Hedef tarih
                   </span>
                   <input
@@ -832,22 +758,22 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                     maxLength={80}
                     defaultValue={editing?.dueTarget ?? ""}
                     placeholder="ör. Temmuz ortası / Eylül-Ekim"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Sıra
                   </span>
                   <input
                     type="number"
                     name="sortOrder"
                     defaultValue={editing?.sortOrder ?? 0}
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block sm:col-span-2">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Not
                   </span>
                   <textarea
@@ -856,7 +782,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
                     maxLength={1000}
                     defaultValue={editing?.notes ?? ""}
                     placeholder="Opsiyonel detay / bağımlılık"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
               </div>
@@ -877,8 +803,8 @@ export default async function DmPage({ searchParams }: DmPageProps) {
         </section>
 
         {/* Task list — search, filter, single flat list */}
-        <section className={cardClass}>
-          <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+        <section className={DM_CARD_CLASS}>
+          <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
             <TaskTable
               tasks={allTasks}
               statusOptions={STATUS_OPTIONS}
@@ -904,9 +830,6 @@ export default async function DmPage({ searchParams }: DmPageProps) {
             editing={editingFinding}
             selected={selectedFinding}
             comments={selectedComments}
-            cardClass={cardClass}
-            cardInnerClass={cardInnerClass}
-            inputClass={inputClass}
             createAction={createFindingAction}
             updateAction={updateFindingAction}
             deleteAction={deleteFindingAction}
@@ -917,19 +840,12 @@ export default async function DmPage({ searchParams }: DmPageProps) {
         ) : activeTab === "social" ? (
           <SocialTab
             posts={allSocialPosts}
-            cardClass={cardClass}
-            cardInnerClass={cardInnerClass}
             toggleShareAction={toggleShareAction}
           />
         ) : activeTab === "info" ? (
-          <InfoTab cardClass={cardClass} cardInnerClass={cardInnerClass} />
+          <InfoTab />
         ) : (
-          <ScraperTab
-            params={params}
-            cardClass={cardClass}
-            cardInnerClass={cardInnerClass}
-            inputClass={inputClass}
-          />
+          <ScraperTab params={params} />
         )}
         </div>
       </div>

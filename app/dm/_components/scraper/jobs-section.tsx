@@ -1,13 +1,23 @@
 // İşler bölümü: yeni iş formu (accordion) + durum filtresi + iş listesi.
 // Tüm mutasyonlar page.tsx'teki server action'lar üzerinden yürür.
 
-import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
+import {
+  DM_ACTION_BUTTON,
+  DM_BRAND_GRADIENT,
+  DM_CARD_CLASS,
+  DM_CARD_INNER_CLASS,
+  DM_CHIP_BASE,
+  DM_CHIP_IDLE,
+  DM_INPUT_CLASS,
+  DM_LABEL_CLASS
+} from "@/app/dm/_components/theme";
 import type {
   FinderJobCounts,
   FinderJobListItem,
   FinderJobStatus,
   FinderTemplateItem
 } from "@/lib/service-finder";
+import { StatGrid } from "@/app/dm/_components/stat-grid";
 import { formatDate, formatUsd } from "@/app/dm/_components/scraper/format";
 
 interface JobsSectionProps {
@@ -15,9 +25,6 @@ interface JobsSectionProps {
   counts: FinderJobCounts;
   templates: FinderTemplateItem[];
   statusFilter: FinderJobStatus | "all";
-  cardClass: string;
-  cardInnerClass: string;
-  inputClass: string;
   createAction: (formData: FormData) => void | Promise<void>;
   runAction: (formData: FormData) => void | Promise<void>;
   cancelAction: (formData: FormData) => void | Promise<void>;
@@ -55,20 +62,11 @@ export const JOB_STATUS_LABEL: Record<string, string> = {
   budget_stopped: "Bütçe durdu"
 };
 
-const chipBase = "rounded-full px-3 py-1 text-[11px] font-semibold transition";
-const chipIdle =
-  "border border-white/10 bg-white/[0.04] text-white/60 hover:bg-white/[0.07] hover:text-white";
-const actionButton =
-  "inline-flex min-h-[28px] items-center justify-center rounded-full border px-2.5 py-1 text-[11px] font-semibold transition";
-
 export function JobsSection({
   jobs,
   counts,
   templates,
   statusFilter,
-  cardClass,
-  cardInnerClass,
-  inputClass,
   createAction,
   runAction,
   cancelAction,
@@ -87,31 +85,19 @@ export function JobsSection({
 
   return (
     <>
-      {/* Stats */}
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {[
+      <StatGrid
+        lift
+        stats={[
           { label: "Toplam iş", value: String(totalJobs) },
           { label: "İncelemede", value: String(counts.review) },
           { label: "Kuyrukta", value: String(counts.queued) },
           { label: "Başarısız", value: String(counts.failed + counts.budget_stopped) }
-        ].map((stat) => (
-          <article
-            key={stat.label}
-            className={`${cardClass} transition duration-300 hover:-translate-y-0.5`}
-          >
-            <div className={`${cardInnerClass} px-4 py-3`}>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#f0abfc]/90">
-                {stat.label}
-              </p>
-              <p className="mt-1 font-body text-xl font-bold text-white">{stat.value}</p>
-            </div>
-          </article>
-        ))}
-      </section>
+        ]}
+      />
 
       {/* Yeni iş formu */}
-      <section className={cardClass}>
-        <details className={`group/acc overflow-hidden rounded-[1.55rem] ${cardInnerClass}`}>
+      <section className={DM_CARD_CLASS}>
+        <details className={`group/acc overflow-hidden rounded-[1.55rem] ${DM_CARD_INNER_CLASS}`}>
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 transition hover:bg-white/[0.02] sm:px-5 [&::-webkit-details-marker]:hidden">
             <h2 className="flex items-center gap-2 font-body text-sm font-semibold text-white">
               <span
@@ -154,7 +140,7 @@ export function JobsSection({
             <form action={createAction} className="space-y-3">
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="block sm:col-span-2">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Başlık <span className="text-[#ff2d95]">*</span>
                   </span>
                   <input
@@ -164,14 +150,14 @@ export function JobsSection({
                     minLength={3}
                     maxLength={200}
                     placeholder="ör. FKK Club taraması — Köln"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Kategori şablonu
                   </span>
-                  <select name="template" defaultValue="" className={inputClass}>
+                  <select name="template" defaultValue="" className={DM_INPUT_CLASS}>
                     <option value="" className="bg-[#0a0712] text-white">
                       Şablonsuz (serbest konu)
                     </option>
@@ -187,7 +173,7 @@ export function JobsSection({
                   </select>
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Şehir <span className="text-[#ff2d95]">*</span>
                   </span>
                   <input
@@ -196,11 +182,11 @@ export function JobsSection({
                     required
                     maxLength={80}
                     placeholder="ör. Köln"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Lokasyon etiketi
                   </span>
                   <input
@@ -208,11 +194,11 @@ export function JobsSection({
                     name="location"
                     maxLength={120}
                     placeholder="boşsa şehir kullanılır — ör. Köln, Deutschland"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Serbest konu (şablonsuzsa zorunlu)
                   </span>
                   <input
@@ -220,11 +206,11 @@ export function JobsSection({
                     name="topic"
                     maxLength={160}
                     placeholder="ör. Swingerclub"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Soft cap (USD)
                   </span>
                   <input
@@ -233,11 +219,11 @@ export function JobsSection({
                     step="0.1"
                     min="0.1"
                     defaultValue="1.5"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Hard cap (USD)
                   </span>
                   <input
@@ -246,11 +232,11 @@ export function JobsSection({
                     step="0.1"
                     min="0.1"
                     defaultValue="3"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Maks. sorgu
                   </span>
                   <input
@@ -259,18 +245,18 @@ export function JobsSection({
                     min="1"
                     max="50"
                     placeholder="şablon varsayılanı"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
                 <label className="block sm:col-span-2">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  <span className={DM_LABEL_CLASS}>
                     Ön adresler (seed URL — her satıra bir tane)
                   </span>
                   <textarea
                     name="seedUrls"
                     rows={2}
                     placeholder="https://…"
-                    className={inputClass}
+                    className={DM_INPUT_CLASS}
                   />
                 </label>
               </div>
@@ -291,8 +277,8 @@ export function JobsSection({
       </section>
 
       {/* İş listesi */}
-      <section className={cardClass}>
-        <div className={`${cardInnerClass} px-4 py-4 sm:px-5`}>
+      <section className={DM_CARD_CLASS}>
+        <div className={`${DM_CARD_INNER_CLASS} px-4 py-4 sm:px-5`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-body text-sm font-semibold text-white">İş kuyruğu</h2>
             <div className="flex flex-wrap items-center gap-1.5">
@@ -304,8 +290,8 @@ export function JobsSection({
                   <a
                     key={option.value}
                     href={`/dm?tab=scraper&sec=isler&jstatus=${option.value}`}
-                    className={`${chipBase} ${
-                      isActive ? "text-white ring-1 ring-inset ring-white/15" : chipIdle
+                    className={`${DM_CHIP_BASE} ${
+                      isActive ? "text-white ring-1 ring-inset ring-white/15" : DM_CHIP_IDLE
                     }`}
                     style={isActive ? { backgroundImage: DM_BRAND_GRADIENT } : undefined}
                   >
@@ -365,7 +351,7 @@ export function JobsSection({
                     <div className="flex shrink-0 items-center gap-1.5">
                       <a
                         href={`/dm?tab=scraper&sec=isler&job=${job.id}`}
-                        className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:border-[#67e8f9]/40 hover:text-[#67e8f9]`}
+                        className={`${DM_ACTION_BUTTON} border-white/10 bg-white/[0.05] text-white/60 hover:border-[#67e8f9]/40 hover:text-[#67e8f9]`}
                       >
                         Detay
                       </a>
@@ -375,7 +361,7 @@ export function JobsSection({
                             <input type="hidden" name="id" value={job.id} />
                             <button
                               type="submit"
-                              className={`${actionButton} border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20`}
+                              className={`${DM_ACTION_BUTTON} border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20`}
                             >
                               Çalıştır
                             </button>
@@ -384,7 +370,7 @@ export function JobsSection({
                             <input type="hidden" name="id" value={job.id} />
                             <button
                               type="submit"
-                              className={`${actionButton} border-rose-400/30 bg-rose-400/10 text-rose-300 hover:bg-rose-400/20`}
+                              className={`${DM_ACTION_BUTTON} border-rose-400/30 bg-rose-400/10 text-rose-300 hover:bg-rose-400/20`}
                             >
                               İptal
                             </button>
@@ -398,7 +384,7 @@ export function JobsSection({
                           <input type="hidden" name="id" value={job.id} />
                           <button
                             type="submit"
-                            className={`${actionButton} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
+                            className={`${DM_ACTION_BUTTON} border-white/10 bg-white/[0.05] text-white/60 hover:text-white`}
                           >
                             Tekrar kuyruğa al
                           </button>
@@ -409,7 +395,7 @@ export function JobsSection({
                           <input type="hidden" name="id" value={job.id} />
                           <button
                             type="submit"
-                            className={`${actionButton} border-amber-400/30 bg-amber-400/10 text-amber-200 hover:bg-amber-400/20`}
+                            className={`${DM_ACTION_BUTTON} border-amber-400/30 bg-amber-400/10 text-amber-200 hover:bg-amber-400/20`}
                             title="Koşu yarıda kaldıysa işi failed'e çekip kilidi açar"
                           >
                             Serbest bırak

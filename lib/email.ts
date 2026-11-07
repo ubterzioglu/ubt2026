@@ -1,5 +1,6 @@
 import "server-only";
 
+import { toErrorMessage } from "@/lib/error-message";
 import type { Appointment } from "@/types/appointment";
 
 export type EmailDeliveryState = "sent" | "skipped" | "error";
@@ -126,7 +127,7 @@ export async function sendNewBookingNotification(
   } catch (error) {
     return {
       state: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown email error"
+      errorMessage: toErrorMessage(error, "Unknown email error")
     };
   }
 }

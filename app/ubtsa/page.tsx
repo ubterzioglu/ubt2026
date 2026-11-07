@@ -26,6 +26,7 @@ import {
   UBTSA_SUMMARY_TITLE,
   UBTSA_TITLE
 } from "@/content/ubtsa-konsept";
+import { SourceStateBanner } from "@/components/source-state-banner";
 import { ubtsaSignInAction, ubtsaSignOutAction } from "@/app/ubtsa/_actions";
 import { BoardHeader } from "@/app/ubtsa/_components/board-header";
 import { GuideSection } from "@/app/ubtsa/_components/guide-section";
@@ -145,17 +146,13 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
           signOutAction={ubtsaSignOutAction}
         />
 
-        {comments.source === "env-missing" && (
-          <p className="rounded-[1rem] border border-amber-300/60 bg-amber-50 px-5 py-3 text-[13px] font-medium text-amber-800">
-            Supabase bağlantısı yapılandırılmamış (SUPABASE_SERVICE_ROLE_KEY
-            eksik). Konsept okunabilir ama yorumlar yüklenemiyor.
-          </p>
-        )}
-        {comments.source === "error" && (
-          <p className="rounded-[1rem] border border-rose-300/60 bg-rose-50 px-5 py-3 text-[13px] font-medium text-rose-700">
-            Yorumlar yüklenirken hata oluştu: {comments.errorMessage}
-          </p>
-        )}
+        <SourceStateBanner
+          variant="light"
+          source={comments.source}
+          errorMessage={comments.errorMessage}
+          subject="Yorumlar"
+          unavailableText="Konsept okunabilir ama yorumlar yüklenemiyor."
+        />
         {errorParam && (
           <p
             role="alert"

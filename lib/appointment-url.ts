@@ -23,6 +23,25 @@ export function readAppointmentFeedbackTone(
   return undefined;
 }
 
+export function buildAdminFeedbackUrl(
+  path: string,
+  status?: "success" | "error",
+  message?: string
+): string {
+  const params = new URLSearchParams();
+
+  if (status) {
+    params.set("status", status);
+  }
+
+  if (message) {
+    params.set("message", message);
+  }
+
+  const query = params.toString();
+  return query ? `${path}?${query}` : path;
+}
+
 export function buildAppointmentSectionUrl({
   params,
   status,

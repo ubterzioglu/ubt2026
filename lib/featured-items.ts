@@ -1,10 +1,10 @@
 import "server-only";
 
+import type { SourceState } from "@/types/source-state";
+import { toErrorMessage } from "@/lib/error-message";
 import { validateContentFields } from "@/lib/content-validation";
-import { createAnonClient, createServiceClient } from "@/lib/supabase-server";
+import { createAnonClient, createServiceClient, SERVICE_CREDENTIALS_MISSING } from "@/lib/supabase-server";
 import type { FeaturedCategory, FeaturedItem } from "@/types/site";
-
-type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 interface SupabaseFeaturedRow {
   id: string;
@@ -92,7 +92,7 @@ export async function getFeaturedCollections<TCategory extends FeaturedCategory>
       itemsByCategory: mapped
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown Supabase error";
+    const message = toErrorMessage(error, "Unknown Supabase error");
     return {
       source: "error",
       errorMessage: message,
@@ -139,7 +139,7 @@ export async function getAllBookmarksAdmin(): Promise<BookmarksAdminResult> {
   } catch (error) {
     return {
       source: "error",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorMessage: toErrorMessage(error, "Unknown error"),
       items: []
     };
   }
@@ -152,7 +152,7 @@ export async function createBookmark(input: BookmarkInput): Promise<BookmarkMuta
   if (invalid) return { ok: false, errorMessage: invalid };
 
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
 
   const slug = title
     .toLowerCase()
@@ -175,7 +175,7 @@ export async function createBookmark(input: BookmarkInput): Promise<BookmarkMuta
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    return { ok: false, errorMessage: error instanceof Error ? error.message : "Create failed." };
+    return { ok: false, errorMessage: toErrorMessage(error, "Create failed.") };
   }
 }
 
@@ -187,7 +187,7 @@ export async function updateBookmark(
   if (invalid) return { ok: false, errorMessage: invalid };
 
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   const patch: Record<string, unknown> = {};
   if (input.title !== undefined) patch.title = input.title.trim();
   if (input.summary !== undefined) patch.summary = input.summary.trim();
@@ -200,18 +200,18 @@ export async function updateBookmark(
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    return { ok: false, errorMessage: error instanceof Error ? error.message : "Update failed." };
+    return { ok: false, errorMessage: toErrorMessage(error, "Update failed.") };
   }
 }
 
 export async function deleteBookmark(id: string): Promise<BookmarkMutationResult> {
   const supabase = createServiceClient();
-  if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
+  if (!supabase) return { ok: false, errorMessage: SERVICE_CREDENTIALS_MISSING };
   try {
     const { error } = await supabase.from("featured_items").delete().eq("id", id);
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    return { ok: false, errorMessage: error instanceof Error ? error.message : "Delete failed." };
+    return { ok: false, errorMessage: toErrorMessage(error, "Delete failed.") };
   }
 }
