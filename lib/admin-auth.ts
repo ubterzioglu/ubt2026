@@ -2,7 +2,7 @@ import "server-only";
 
 import { cookies } from "next/headers";
 
-import { getAdminAccessKey, hasAdminAccess } from "@/lib/appointments";
+import { getAdminAccessKey } from "@/lib/appointments";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { deriveSessionToken, secureCompare, verifySessionToken } from "@/lib/secure-compare";
 
@@ -11,10 +11,12 @@ import { deriveSessionToken, secureCompare, verifySessionToken } from "@/lib/sec
  *
  * The access key is NEVER carried in the URL/query string (which leaks into
  * browser history, server access logs and the Referer header). Instead the
- * gate form posts the key to a server action that validates it and stores it
- * in an HttpOnly cookie. Admin pages then read the key from that cookie.
+ * gate form posts the key to a server action that validates it and stores an
+ * HMAC session token derived from it (never the key itself) in an HttpOnly
+ * cookie. Admin pages then verify that token against the configured key.
  */
 const ADMIN_ACCESS_COOKIE = "ubt_admin_access";
+const ADMIN_LABEL = "board:admin";
 
 /**
  * The task board has its own access key/cookie so it can be shared with the
@@ -132,25 +134,24 @@ export async function isSuperAdmin(): Promise<boolean> {
 }
 
 /**
- * Reads the access key from the admin session cookie (empty string if absent).
- */
-async function getAdminAccessFromCookie(): Promise<string> {
-  const cookieStore = await cookies();
-  return cookieStore.get(ADMIN_ACCESS_COOKIE)?.value ?? "";
-}
-
-/**
  * True when the current request already carries a valid admin session cookie.
+ *
+ * Fails CLOSED: without a configured APPOINTMENT_ADMIN_ACCESS_KEY no cookie can
+ * verify.
  */
 export async function isAdminAuthenticated(): Promise<boolean> {
   if (await isSuperAdmin()) return true;
-  const accessKey = await getAdminAccessFromCookie();
-  return hasAdminAccess(accessKey);
+  const accessKey = getAdminAccessKey();
+  if (!accessKey) return false;
+  const cookieStore = await cookies();
+  const token = cookieStore.get(ADMIN_ACCESS_COOKIE)?.value ?? "";
+  if (!token) return false;
+  return verifySessionToken(token, accessKey, ADMIN_LABEL);
 }
 
 /**
- * Validates the supplied key and, when correct, persists it in an HttpOnly
- * cookie. Returns whether the sign-in was accepted.
+ * Validates the supplied key and, when correct, persists an HMAC session token
+ * in an HttpOnly cookie. Returns whether the sign-in was accepted.
  */
 export async function signInAdmin(candidate: string): Promise<boolean> {
   const accessKey = getAdminAccessKey();
@@ -168,7 +169,7 @@ export async function signInAdmin(candidate: string): Promise<boolean> {
     return false;
   }
 
-  await setBoardCookie(ADMIN_ACCESS_COOKIE, accessKey, "/admin");
+  await setBoardCookie(ADMIN_ACCESS_COOKIE, deriveSessionToken(accessKey, ADMIN_LABEL), "/admin");
 
   // Signing into the admin panel is what makes someone a super admin.
   await grantSuperAdmin(accessKey);
@@ -189,7 +190,7 @@ interface PasswordGateConfig {
   getSecret: () => string;
   cookieName: string;
   path: string;
-  rateLimitPrefix: string;
+  boardKey: string;
 }
 
 interface PasswordGate {
@@ -199,17 +200,20 @@ interface PasswordGate {
 }
 
 /**
- * Shared-secret board gate: the cookie stores the raw secret and is compared
- * with secureCompare. Fails CLOSED: without a configured secret nobody gets in
- * and no sign-in is possible. Sign-out also revokes the super-admin session,
- * otherwise a super admin's "sign out" would appear to do nothing because the
- * gate would keep letting them back in through the site-wide cookie.
+ * Shared-secret board gate: the cookie stores an HMAC token derived from the
+ * secret and the board key (never the secret itself), so a leaked cookie does
+ * not reveal the password and a token from one board never opens another, even
+ * where two boards share a secret. Fails CLOSED: without a configured secret
+ * nobody gets in and no sign-in is possible. Sign-out also revokes the
+ * super-admin session, otherwise a super admin's "sign out" would appear to do
+ * nothing because the gate would keep letting them back in through the
+ * site-wide cookie.
  */
 function createPasswordGate({
   getSecret,
   cookieName,
   path,
-  rateLimitPrefix
+  boardKey
 }: PasswordGateConfig): PasswordGate {
   return {
     async isAuthenticated() {
@@ -217,16 +221,17 @@ function createPasswordGate({
       const secret = getSecret();
       if (!secret) return false;
       const cookieStore = await cookies();
-      const candidate = cookieStore.get(cookieName)?.value ?? "";
-      return secureCompare(candidate.trim(), secret);
+      const token = cookieStore.get(cookieName)?.value ?? "";
+      if (!token) return false;
+      return verifySessionToken(token, secret, `board:${boardKey}`);
     },
     async signIn(candidate) {
       const secret = getSecret();
       if (!secret) return false;
-      if (!checkRateLimit(`${rateLimitPrefix}:${await getClientIp()}`)) return false;
+      if (!checkRateLimit(`${boardKey}:${await getClientIp()}`)) return false;
       if (!secureCompare(candidate.trim(), secret)) return false;
 
-      await setBoardCookie(cookieName, secret, path);
+      await setBoardCookie(cookieName, deriveSessionToken(secret, `board:${boardKey}`), path);
 
       return true;
     },
@@ -252,7 +257,7 @@ const tasksGate = createPasswordGate({
   getSecret: getTasksAdminAccessKey,
   cookieName: TASKS_ADMIN_ACCESS_COOKIE,
   path: "/dm",
-  rateLimitPrefix: "dm"
+  boardKey: "dm"
 });
 
 export const isTasksAdminAuthenticated = tasksGate.isAuthenticated;
@@ -271,7 +276,7 @@ const batubtGate = createPasswordGate({
   getSecret: getBatubtAdminAccessKey,
   cookieName: BATUBT_ADMIN_ACCESS_COOKIE,
   path: "/batubt",
-  rateLimitPrefix: "batubt"
+  boardKey: "batubt"
 });
 
 export const isBatubtAuthenticated = batubtGate.isAuthenticated;
@@ -290,7 +295,7 @@ const bakcakanatGate = createPasswordGate({
   getSecret: getBakcakanatPassword,
   cookieName: BAKCAKANAT_ACCESS_COOKIE,
   path: "/bakcakanat",
-  rateLimitPrefix: "bakcakanat"
+  boardKey: "bakcakanat"
 });
 
 export const isBakcakanatAuthenticated = bakcakanatGate.isAuthenticated;

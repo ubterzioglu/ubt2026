@@ -2,7 +2,6 @@ import "server-only";
 
 import { toErrorMessage } from "@/lib/error-message";
 import { createServiceClient } from "@/lib/supabase-server";
-import { secureCompare } from "@/lib/secure-compare";
 import { APPOINTMENT_STATUSES } from "@/types/appointment";
 
 import type {
@@ -224,18 +223,6 @@ function validateBookingInput(
 export function getAdminAccessKey(): string | null {
   const accessKey = process.env.APPOINTMENT_ADMIN_ACCESS_KEY?.trim();
   return accessKey ? accessKey : null;
-}
-
-export function hasAdminAccess(candidate: string | null | undefined): boolean {
-  const accessKey = getAdminAccessKey();
-
-  // Fail closed: a missing APPOINTMENT_ADMIN_ACCESS_KEY (e.g. forgotten on the
-  // production host) must never leave the admin panel publicly reachable.
-  if (!accessKey) {
-    return false;
-  }
-
-  return secureCompare(candidate?.trim() ?? "", accessKey);
 }
 
 export async function getAvailableAppointmentSlots(): Promise<AppointmentSlotsResult> {

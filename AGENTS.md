@@ -127,9 +127,9 @@ Paths alias: `@/*` maps to project root.
 ### Admin Dashboard
 
 - Route: `/admin` with sub-routes `/admin/appointments`, `/admin/slots`, `/admin/news`, `/admin/blog`, `/admin/bookmarks`.
-- Access gated by `?access=<key>` query param checked against `APPOINTMENT_ADMIN_ACCESS_KEY` env var.
-- **If `APPOINTMENT_ADMIN_ACCESS_KEY` is unset, admin is open to all requests.** Always set this in production.
-- No sessions, cookies, or middleware involved.
+- Access gated by a sign-in form (`AdminGate`) that posts the key to a server action; the key is checked against `APPOINTMENT_ADMIN_ACCESS_KEY` and never appears in the URL.
+- On success an HttpOnly cookie stores an HMAC session token derived from the key and a per-board label (`deriveSessionToken` in `lib/secure-compare.ts`), never the key itself. All board gates live in `lib/admin-auth.ts`.
+- **Fails closed:** if `APPOINTMENT_ADMIN_ACCESS_KEY` is unset, nobody can sign in.
 
 ### URL Utilities
 
@@ -175,7 +175,7 @@ Paths alias: `@/*` maps to project root.
 | `APPOINTMENT_NOTIFICATION_TO` | `lib/email.ts` | Optional | Recipient address for booking alerts |
 | `APPOINTMENT_NOTIFICATION_FROM` | `lib/email.ts` | Optional | Defaults to `onboarding@resend.dev` |
 | `APPOINTMENT_NOTIFICATION_REPLY_TO` | `lib/email.ts` | Optional | Defaults to booker's email |
-| `APPOINTMENT_ADMIN_ACCESS_KEY` | `lib/appointments.ts` | **Required in prod** | If unset, admin is open to all |
+| `APPOINTMENT_ADMIN_ACCESS_KEY` | `lib/appointments.ts`, `lib/admin-auth.ts` | **Required in prod** | If unset, nobody can sign in to /admin (fails closed) |
 
 ## Key Exemplar Files
 
