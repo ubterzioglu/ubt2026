@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { getAdminAccessKey } from "@/lib/appointments";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { deriveSessionToken, secureCompare, verifySessionToken } from "@/lib/secure-compare";
+import { SUPER_ADMIN_COOKIE, SUPER_ADMIN_LABEL } from "@/lib/session-constants";
 
 /**
  * Cookie-based admin session.
@@ -77,6 +78,13 @@ function parseNamedToken(value: string): { name: string; token: string } | null 
 }
 
 /**
+ * Identity a super admin assumes on the name-based boards. Both
+ * DETRBRIDGE_ALLOWED_NAMES and UBTSA_ALLOWED_NAMES already contain it, and it
+ * is what gets stamped on comments written through a super-admin session.
+ */
+const SUPER_ADMIN_BOARD_NAME = "ubt";
+
+/**
  * Site-wide super-admin session.
  *
  * Every board cookie above is path-scoped (`/admin`, `/dm`, `/batubt`, …), so
@@ -91,20 +99,8 @@ function parseNamedToken(value: string): { name: string; token: string } | null 
  * cookie never exposes the reusable literal key, and rotating
  * APPOINTMENT_ADMIN_ACCESS_KEY revokes every super-admin session at once
  * because verification re-derives from the *current* value.
- */
-const SUPER_ADMIN_COOKIE = "ubt_super_admin";
-const SUPER_ADMIN_LABEL = "super";
-
-/**
- * Identity a super admin assumes on the name-based boards. Both
- * DETRBRIDGE_ALLOWED_NAMES and UBTSA_ALLOWED_NAMES already contain it, and it
- * is what gets stamped on comments written through a super-admin session.
- */
-const SUPER_ADMIN_BOARD_NAME = "ubt";
-
-/**
- * Grants the site-wide super-admin session. Only ever called after the admin
- * key has been verified.
+ *
+ * Only ever called after the admin key has been verified.
  */
 async function grantSuperAdmin(accessKey: string): Promise<void> {
   await setBoardCookie(SUPER_ADMIN_COOKIE, deriveSessionToken(accessKey, SUPER_ADMIN_LABEL), "/");

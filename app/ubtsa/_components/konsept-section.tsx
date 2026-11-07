@@ -6,7 +6,7 @@ import { UBTSA_CARD_CLASS } from "@/app/ubtsa/_components/theme";
 interface KonseptSectionProps {
   section: UbtsaSection;
   /** All comments, keyed by madde key. */
-  commentsByItemKey: Map<string, UbtsaComment[]>;
+  commentsByItemKey: Record<string, UbtsaComment[]>;
   sessionName: string;
   /** Madde key whose thread should render expanded (null when none). */
   openItemKey: string | null;
@@ -24,7 +24,7 @@ export function KonseptSection({
   deleteCommentAction
 }: KonseptSectionProps) {
   const sectionCommentCount = section.items.reduce(
-    (total, item) => total + (commentsByItemKey.get(item.key)?.length ?? 0),
+    (total, item) => total + (commentsByItemKey[item.key]?.length ?? 0),
     0
   );
 
@@ -55,7 +55,7 @@ export function KonseptSection({
           <MaddeItem
             key={item.key}
             item={item}
-            comments={commentsByItemKey.get(item.key) ?? []}
+            comments={commentsByItemKey[item.key] ?? []}
             sessionName={sessionName}
             open={openItemKey === item.key}
             addCommentAction={addCommentAction}

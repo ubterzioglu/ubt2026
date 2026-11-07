@@ -14,7 +14,7 @@ interface NotesSectionProps {
   itemNoun: string;
   items: readonly UbtsaNote[];
   tone: NoteTone;
-  commentsByItemKey: Map<string, UbtsaComment[]>;
+  commentsByItemKey: Record<string, UbtsaComment[]>;
   sessionName: string;
   /** Key whose thread should render expanded (null when none). */
   openItemKey: string | null;
@@ -51,7 +51,7 @@ export function NotesSection({
 }: NotesSectionProps) {
   const palette = NOTE_TONES[tone];
   const totalComments = items.reduce(
-    (total, item) => total + (commentsByItemKey.get(item.key)?.length ?? 0),
+    (total, item) => total + (commentsByItemKey[item.key]?.length ?? 0),
     0
   );
 
@@ -94,7 +94,7 @@ export function NotesSection({
 
       <ol className="space-y-2">
         {items.map((item, index) => {
-          const comments = commentsByItemKey.get(item.key) ?? [];
+          const comments = commentsByItemKey[item.key] ?? [];
           const count = comments.length;
 
           return (

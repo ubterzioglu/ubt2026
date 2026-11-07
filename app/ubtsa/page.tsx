@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { readSearchParam } from "@/lib/search-params";
+import { UBTSA_FIRST_VISIT_HEADER } from "@/lib/session-constants";
 import { readFormString } from "@/lib/form-data";
 import { getUbtsaSessionName, UBTSA_NAMES } from "@/lib/admin-auth";
 import {
@@ -86,7 +87,7 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
   ]);
 
   // Set by middleware on the very first request from this browser.
-  const isFirstVisit = (await headers()).get("x-ubtsa-first-visit") === "1";
+  const isFirstVisit = (await headers()).get(UBTSA_FIRST_VISIT_HEADER) === "1";
 
   async function addCommentAction(formData: FormData) {
     "use server";

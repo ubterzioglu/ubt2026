@@ -2,16 +2,22 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { verifyEdgeSessionToken } from "@/lib/edge-session-token";
+import {
+  DETRBRIDGE_FIRST_VISIT_HEADER,
+  ELIF_SESSION_COOKIE,
+  ELIF_SESSION_LABEL,
+  SUPER_ADMIN_COOKIE,
+  SUPER_ADMIN_LABEL,
+  UBTSA_FIRST_VISIT_HEADER
+} from "@/lib/session-constants";
 
 const DETRBRIDGE_VISITOR_COOKIE = "ubt_detrbridge_visitor";
 const VISITOR_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365 * 5; // 5 years
-const FIRST_VISIT_HEADER = "x-detrbridge-first-visit";
-const VISITOR_TOKEN_HEADER = "x-detrbridge-visitor-token";
 
 /**
  * Mints the /detrbridge visitor cookie here, since Server Components can't
  * call cookies().set() during a render (Next.js throws in production). The
- * page reads the two request headers below to decide whether to log a
+ * page reads the first-visit request header to decide whether to log a
  * first-visit row — no cookie mutation happens there.
  */
 function withDetrbridgeVisitorCookie(request: NextRequest): NextResponse {
@@ -19,13 +25,11 @@ function withDetrbridgeVisitorCookie(request: NextRequest): NextResponse {
   const requestHeaders = new Headers(request.headers);
 
   if (existing) {
-    requestHeaders.set(VISITOR_TOKEN_HEADER, existing);
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
   const token = crypto.randomUUID();
-  requestHeaders.set(FIRST_VISIT_HEADER, "1");
-  requestHeaders.set(VISITOR_TOKEN_HEADER, token);
+  requestHeaders.set(DETRBRIDGE_FIRST_VISIT_HEADER, "1");
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.cookies.set(DETRBRIDGE_VISITOR_COOKIE, token, {
@@ -39,7 +43,6 @@ function withDetrbridgeVisitorCookie(request: NextRequest): NextResponse {
 }
 
 const UBTSA_VISITOR_COOKIE = "ubt_ubtsa_visitor";
-const UBTSA_FIRST_VISIT_HEADER = "x-ubtsa-first-visit";
 
 /**
  * Mints the /ubtsa visitor cookie, for the same reason as /detrbridge above:
@@ -65,12 +68,6 @@ function withUbtsaVisitorCookie(request: NextRequest): NextResponse {
   });
   return response;
 }
-
-const ELIF_SESSION_COOKIE = "elif_auth";
-const ELIF_SESSION_LABEL = "elif";
-
-const SUPER_ADMIN_COOKIE = "ubt_super_admin";
-const SUPER_ADMIN_LABEL = "super";
 
 /**
  * Edge-side twin of `isSuperAdmin()` in lib/admin-auth.ts. That module is
@@ -108,7 +105,7 @@ export async function middleware(request: NextRequest) {
     return withUbtsaVisitorCookie(request);
   }
 
-  if (!(await isElifAuthed(request))) {
+  if (request.nextUrl.pathname.startsWith("/zelifs") && !(await isElifAuthed(request))) {
     return NextResponse.redirect(new URL("/elif", request.url));
   }
 

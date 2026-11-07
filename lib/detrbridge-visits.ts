@@ -2,18 +2,11 @@ import "server-only";
 
 import { headers } from "next/headers";
 
+import { DETRBRIDGE_FIRST_VISIT_HEADER } from "@/lib/session-constants";
 import { createServiceClient } from "@/lib/supabase-server";
 
 /** UBT'nin /detrbridge linkini paylaştığı an (TR saatiyle 23 Temmuz 2026, 12:29 — yeniden paylaşım). */
 export const DETRBRIDGE_SHARE_MOMENT = new Date("2026-07-23T12:29:00+03:00");
-
-/**
- * Set by middleware.ts, NOT here: Server Components can't call
- * cookies().set() during a render (Next.js throws in production), so the
- * visitor cookie is minted in middleware and its result is threaded through
- * this request header instead.
- */
-const FIRST_VISIT_HEADER = "x-detrbridge-first-visit";
 
 /** One row per successful sign-in — always carries the allowlisted name. */
 export interface DetrbridgeVisit {
@@ -50,7 +43,7 @@ function hoursSinceShare(now: Date): number {
  */
 export async function recordDetrbridgeVisit(): Promise<FirstVisit> {
   const headerStore = await headers();
-  const isFirstVisit = headerStore.get(FIRST_VISIT_HEADER) === "1";
+  const isFirstVisit = headerStore.get(DETRBRIDGE_FIRST_VISIT_HEADER) === "1";
   const hoursAfterShare = hoursSinceShare(new Date());
   return { isFirstVisit, hoursAfterShare };
 }

@@ -21,7 +21,7 @@ import {
 
 interface KonseptNavProps {
   /** All comments, keyed by madde/not key — drives the counters. */
-  commentsByItemKey: Map<string, UbtsaComment[]>;
+  commentsByItemKey: Record<string, UbtsaComment[]>;
   /** Key of the thread currently expanded, so its group starts open. */
   openItemKey: string | null;
   /** Most recent sign-ins, newest first. */
@@ -113,10 +113,10 @@ function NavGroup({
 /** Sums the comments across a set of note keys. */
 function countComments(
   keys: readonly string[],
-  commentsByItemKey: Map<string, UbtsaComment[]>
+  commentsByItemKey: Record<string, UbtsaComment[]>
 ): number {
   return keys.reduce(
-    (total, key) => total + (commentsByItemKey.get(key)?.length ?? 0),
+    (total, key) => total + (commentsByItemKey[key]?.length ?? 0),
     0
   );
 }
@@ -124,7 +124,7 @@ function countComments(
 interface NoteListProps {
   items: readonly UbtsaNote[];
   tone: NoteTone;
-  commentsByItemKey: Map<string, UbtsaComment[]>;
+  commentsByItemKey: Record<string, UbtsaComment[]>;
 }
 
 /** Numbered list of note titles, each linking to its anchor. */
@@ -133,7 +133,7 @@ function NoteList({ items, tone, commentsByItemKey }: NoteListProps) {
   return (
     <ol className="space-y-0.5">
       {items.map((item, index) => {
-        const count = commentsByItemKey.get(item.key)?.length ?? 0;
+        const count = commentsByItemKey[item.key]?.length ?? 0;
         return (
           <li key={item.key}>
             <a

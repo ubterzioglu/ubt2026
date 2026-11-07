@@ -3,9 +3,8 @@ import { NextResponse } from "next/server";
 
 import { isSuperAdmin } from "@/lib/admin-auth";
 import { verifySessionToken } from "@/lib/secure-compare";
+import { ELIF_SESSION_COOKIE, ELIF_SESSION_LABEL } from "@/lib/session-constants";
 import { getZelifsState, saveZelifsState } from "@/lib/zelifs";
-
-const SESSION_LABEL = "elif";
 
 async function isAuthed(): Promise<boolean> {
   // A super admin reaches the /zelifs page through middleware, so this endpoint
@@ -15,8 +14,8 @@ async function isAuthed(): Promise<boolean> {
   // Fail closed: without a configured password no session can be valid.
   if (!password) return false;
   const cookieStore = await cookies();
-  const token = cookieStore.get("elif_auth")?.value ?? "";
-  return verifySessionToken(token, password, SESSION_LABEL);
+  const token = cookieStore.get(ELIF_SESSION_COOKIE)?.value ?? "";
+  return verifySessionToken(token, password, ELIF_SESSION_LABEL);
 }
 
 export async function GET() {

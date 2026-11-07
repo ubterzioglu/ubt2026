@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { deriveSessionToken, secureCompare } from "@/lib/secure-compare";
-
-const SESSION_LABEL = "elif";
+import { ELIF_SESSION_COOKIE, ELIF_SESSION_LABEL } from "@/lib/session-constants";
 
 function getPassword(): string | null {
   const password = process.env.ZELIFS_PASSWORD?.trim();
@@ -34,9 +33,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
-  const token = deriveSessionToken(password, SESSION_LABEL);
+  const token = deriveSessionToken(password, ELIF_SESSION_LABEL);
   const response = NextResponse.json({ ok: true });
-  response.cookies.set("elif_auth", token, {
+  response.cookies.set(ELIF_SESSION_COOKIE, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
