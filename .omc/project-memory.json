@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1785959564456,
+  "lastScanned": 1794068749880,
   "projectRoot": "c:\\temp_private\\ubt2026",
   "techStack": {
     "languages": [
@@ -84,7 +84,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 10,
-      "lastAccessed": 1785959564377,
+      "lastAccessed": 1794068749724,
       "keyFiles": [
         "apple-icon.tsx",
         "globals.css",
@@ -97,7 +97,7 @@
       "path": "batubtgorsel",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1785959564378,
+      "lastAccessed": 1794068749725,
       "keyFiles": [
         "loginhero.png",
         "loginsol.png"
@@ -106,21 +106,21 @@
     "components": {
       "path": "components",
       "purpose": "UI components",
-      "fileCount": 18,
-      "lastAccessed": 1785959564408,
+      "fileCount": 16,
+      "lastAccessed": 1794068749749,
       "keyFiles": [
         "about-accordion.tsx",
         "bookmarks-list.tsx",
         "contact-section.tsx",
         "cv-links-section.tsx",
-        "cv-review-form.tsx"
+        "experience-section.tsx"
       ]
     },
     "content": {
       "path": "content",
       "purpose": null,
       "fileCount": 7,
-      "lastAccessed": 1785959564409,
+      "lastAccessed": 1794068749862,
       "keyFiles": [
         "detrbridge-brief.ts",
         "featured.ts",
@@ -133,7 +133,7 @@
       "path": "dmgorsel",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1785959564409,
+      "lastAccessed": 1794068749862,
       "keyFiles": [
         "hero.png",
         "listehero.png",
@@ -144,7 +144,7 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 4,
-      "lastAccessed": 1785959564410,
+      "lastAccessed": 1794068749864,
       "keyFiles": [
         "desiremap-scraper-restructure-2026-07-21.md",
         "service-finder-devir-raporu-2026-07-25.md",
@@ -156,7 +156,7 @@
       "path": "experience",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1785959564410,
+      "lastAccessed": 1794068749865,
       "keyFiles": [
         "adesso.png",
         "logodaimler.png",
@@ -166,8 +166,8 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 29,
-      "lastAccessed": 1785959564411,
+      "fileCount": 27,
+      "lastAccessed": 1794068749866,
       "keyFiles": [
         "admin-auth.ts",
         "akcakanat-domains.ts",
@@ -180,7 +180,7 @@
       "path": "ppimage",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1785959564411,
+      "lastAccessed": 1794068749867,
       "keyFiles": [
         "logoallin2min.png",
         "logofactovium.png",
@@ -192,46 +192,48 @@
     "public": {
       "path": "public",
       "purpose": "Public files",
-      "fileCount": 4,
-      "lastAccessed": 1785959564412,
+      "fileCount": 6,
+      "lastAccessed": 1794068749868,
       "keyFiles": [
         "1yeni.png",
+        "good",
         "logoubt.png",
+        "sondurum.html",
         "yeni.png"
       ]
     },
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
-      "fileCount": 15,
-      "lastAccessed": 1785959564412,
+      "fileCount": 13,
+      "lastAccessed": 1794068749868,
       "keyFiles": [
         "build-prod-env.ps1",
         "bulk-upload-logos.ts",
-        "convert-cvopt-to-reviews.mjs",
         "db-migrations.ps1",
-        "delete-detr-files-bucket.ts"
+        "delete-detr-files-bucket.ts",
+        "dev-finder-bulk-continue.ts"
       ]
     },
     "skillubt": {
       "path": "skillubt",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1785959564413,
+      "lastAccessed": 1794068749869,
       "keyFiles": []
     },
     "standalone-tools": {
       "path": "standalone-tools",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1785959564413,
+      "lastAccessed": 1794068749870,
       "keyFiles": []
     },
     "supabase": {
       "path": "supabase",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1785959564414,
+      "lastAccessed": 1794068749871,
       "keyFiles": [
         "config.toml",
         "seed.sql"
@@ -240,11 +242,10 @@
     "types": {
       "path": "types",
       "purpose": "Type definitions",
-      "fileCount": 3,
-      "lastAccessed": 1785959564414,
+      "fileCount": 2,
+      "lastAccessed": 1794068749871,
       "keyFiles": [
         "appointment.ts",
-        "cv-review.ts",
         "site.ts"
       ]
     },
@@ -252,14 +253,14 @@
       "path": "app\\api",
       "purpose": "API routes",
       "fileCount": 0,
-      "lastAccessed": 1785959564415,
+      "lastAccessed": 1794068749872,
       "keyFiles": []
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
       "fileCount": 50,
-      "lastAccessed": 1785959564419,
+      "lastAccessed": 1794068749880,
       "keyFiles": [
         "001_appointment_slots.sql",
         "002_appointments.sql",

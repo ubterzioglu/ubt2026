@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "entries": {
+    "79a93d4a2f8f50b95f852280616242fee1855dc99a3c75211917f55e72e95fae": {
+      "last_emitted_at_ms": 1794087472844,
+      "message": "Use parallel execution for independent tasks. Use run_in_background for long operations (npm install, builds, tests)."
+    },
+    "445ed27a3872b681d98190bae61ccb84954e1bc4e140df5370be958dee776b3a": {
+      "last_emitted_at_ms": 1794085690328,
+      "message": "Verify changes work after editing. Test functionality before marking complete."
+    },
+    "466399dafa2d20f60587180bad0a07358eb7f2bce724df0ff682f038ad33f5ad": {
+      "last_emitted_at_ms": 1794085671054,
+      "message": "Read multiple files in parallel when possible for faster analysis."
+    },
+    "7860ac02b99786826ed54aaa5480825ac102975a6ed412bc193038da2a127a48": {
+      "last_emitted_at_ms": 1794085491123,
+      "message": "Spawning agent: oh-my-claudecode:code-reviewer (inherit) | Task: Review edge constants change | Active agents: 1"
+    },
+    "459c54e5f35d6a58dcd90d2aecc21fa6d1f35d241bc5b134c506f87dc7b6d67b": {
+      "last_emitted_at_ms": 1794085397191,
+      "message": "Combine searches in parallel when investigating multiple patterns."
+    },
+    "f2e48b5a4480be795dab8f4c9fcd0b64bc6917beaff82d0de58ff9f60b8372c7": {
+      "last_emitted_at_ms": 1794085353880,
+      "message": "Spawning agent: oh-my-claudecode:code-reviewer (inherit) | Task: Review comment system merge"
+    },
+    "ed6765f8e909a8632f5a08b5497bc6dcdfd75ef563ab5fc7b68ef50f75b6c70d": {
+      "last_emitted_at_ms": 1794085050991,
+      "message": "Spawning agent: oh-my-claudecode:executor (inherit) | Task: Merge comment stores and threads"
+    },
+    "2e43e7e0c7c4d9f6ac3e66355a7d66e76b31b121549edcf77378ebbb9d64f35e": {
+      "last_emitted_at_ms": 1794084452958,
+      "message": "Spawning agent: oh-my-claudecode:security-reviewer (inherit) | Task: Security review cookie migration"
+    },
+    "ca5e28993ddda4f133a3075faa8fb87a054f3deb45c804e354e8545937841abd": {
+      "last_emitted_at_ms": 1794084027340,
+      "message": "Spawning agent: oh-my-claudecode:code-reviewer (inherit) | Task: Review admin UI refactor | Active agents: 3"
+    },
+    "b62dede5577632257afef3d766c944fcd834dfbcecea2eb02a6b821930be9c21": {
+      "last_emitted_at_ms": 1794083956365,
+      "message": "Spawning agent: oh-my-claudecode:code-reviewer (inherit) | Task: Review DM UI refactor | Active agents: 2"
+    }
+  },
+  "updated_at": "2026-11-07T21:37:52.844Z"
+}
