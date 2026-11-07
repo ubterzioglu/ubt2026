@@ -1,7 +1,6 @@
 import "server-only";
 
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-
+import { createServiceClient } from "@/lib/supabase-server";
 import { DETRBRIDGE_BRIEF_ITEM_KEYS } from "@/content/detrbridge-brief";
 
 type SourceState = "remote" | "env-missing" | "empty" | "error";
@@ -42,21 +41,6 @@ const COMMENT_COLUMNS = "id, item_key, body, author, created_at";
 
 /** Tek bir yorumun kabul edilen en uzun hali. */
 const MAX_COMMENT_LENGTH = 4000;
-
-function getServiceEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) return null;
-  return { url, serviceRoleKey };
-}
-
-function createServiceClient(): SupabaseClient | null {
-  const env = getServiceEnv();
-  if (!env) return null;
-  return createClient(env.url, env.serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
-}
 
 function toComment(row: SupabaseBriefCommentRow): BriefComment {
   return {

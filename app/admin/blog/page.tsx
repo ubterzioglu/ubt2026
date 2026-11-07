@@ -1,6 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { readSearchParam } from "@/lib/search-params";
+import { readFormString } from "@/lib/form-data";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
 import { adminSignOutAction } from "@/app/admin/_actions";
@@ -16,12 +18,6 @@ interface AdminBlogPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return value[0] ?? "";
-  return "";
-}
-
 const inputClass =
   "w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15";
 
@@ -34,9 +30,9 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
   }
 
   const blogResult = await getAllBlogPostsAdmin();
-  const createdParam = readParam(params.created);
-  const updatedParam = readParam(params.updated);
-  const editId = readParam(params.edit);
+  const createdParam = readSearchParam(params.created);
+  const updatedParam = readSearchParam(params.updated);
+  const editId = readSearchParam(params.edit);
   const editing = editId ? await getBlogPostByIdAdmin(editId) : null;
 
   async function createAction(formData: FormData) {
@@ -44,11 +40,11 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
     if (!(await isAdminAuthenticated())) {
       redirect("/admin/blog" as Parameters<typeof redirect>[0]);
     }
-    const title = (formData.get("title") as string | null) ?? "";
-    const slug = (formData.get("slug") as string | null) ?? "";
-    const summary = (formData.get("summary") as string | null) ?? "";
-    const content = (formData.get("content") as string | null) ?? "";
-    const coverImageUrl = (formData.get("coverImageUrl") as string | null) ?? "";
+    const title = readFormString(formData, "title");
+    const slug = readFormString(formData, "slug");
+    const summary = readFormString(formData, "summary");
+    const content = readFormString(formData, "content");
+    const coverImageUrl = readFormString(formData, "coverImageUrl");
     const isPublished = formData.get("isPublished") === "on";
 
     await createBlogPost({
@@ -70,15 +66,15 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
     if (!(await isAdminAuthenticated())) {
       redirect("/admin/blog" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (!id) {
       redirect("/admin/blog" as Parameters<typeof redirect>[0]);
     }
-    const title = (formData.get("title") as string | null) ?? "";
-    const slug = (formData.get("slug") as string | null) ?? "";
-    const summary = (formData.get("summary") as string | null) ?? "";
-    const content = (formData.get("content") as string | null) ?? "";
-    const coverImageUrl = (formData.get("coverImageUrl") as string | null) ?? "";
+    const title = readFormString(formData, "title");
+    const slug = readFormString(formData, "slug");
+    const summary = readFormString(formData, "summary");
+    const content = readFormString(formData, "content");
+    const coverImageUrl = readFormString(formData, "coverImageUrl");
     const isPublished = formData.get("isPublished") === "on";
 
     await updateBlogPost(id, {
@@ -100,7 +96,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
     if (!(await isAdminAuthenticated())) {
       redirect("/admin/blog" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     const current = formData.get("isPublished") === "true";
     if (id) {
       await updateBlogPost(id, { isPublished: !current });
@@ -115,7 +111,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
     if (!(await isAdminAuthenticated())) {
       redirect("/admin/blog" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (id) {
       await deleteBlogPost(id);
     }

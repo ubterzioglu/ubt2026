@@ -72,16 +72,6 @@ export const fallbackBookmarks: BookmarkItem[] = [
   }
 ];
 
-export const fallbackApps: AppToolItem[] = [
-  {
-    category: "apps",
-    title: "Ghost Mouse",
-    summary: "A small utility that keeps your system active by moving the mouse automatically.",
-    href: "https://drive.google.com/file/d/1jkWZcovcBWqn08p585dpsN2Rpv7HBOGW/view?usp=drive_link",
-    badge: "Desktop Utility"
-  }
-];
-
 export const fallbackTools: AppToolItem[] = [
   {
     category: "tools",

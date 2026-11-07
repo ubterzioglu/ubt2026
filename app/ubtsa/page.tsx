@@ -2,6 +2,8 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { readSearchParam } from "@/lib/search-params";
+import { readFormString } from "@/lib/form-data";
 import { getUbtsaSessionName, UBTSA_NAMES } from "@/lib/admin-auth";
 import {
   addUbtsaComment,
@@ -47,12 +49,6 @@ interface UbtsaPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return value[0] ?? "";
-  return "";
-}
-
 /**
  * Builds the post-action target: back to the madde that was just acted on,
  * expanded (?open) and scrolled into view (#anchor), with an optional error.
@@ -73,7 +69,7 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
         signIn={ubtsaSignInAction}
         names={UBTSA_NAMES}
         errorMessage={
-          readParam(params.error)
+          readSearchParam(params.error)
             ? "İsim veya şifre hatalı. Tekrar dene."
             : undefined
         }
@@ -81,8 +77,8 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
     );
   }
 
-  const openItemKey = readParam(params.open) || null;
-  const errorParam = readParam(params.error);
+  const openItemKey = readSearchParam(params.open) || null;
+  const errorParam = readSearchParam(params.error);
   const [comments, visits] = await Promise.all([
     getAllUbtsaComments(),
     getUbtsaVisits()
@@ -97,8 +93,8 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
     if (!author) {
       redirect("/ubtsa" as Parameters<typeof redirect>[0]);
     }
-    const itemKey = String(formData.get("itemKey") ?? "");
-    const body = String(formData.get("body") ?? "");
+    const itemKey = readFormString(formData, "itemKey");
+    const body = readFormString(formData, "body");
     const outcome = await addUbtsaComment(itemKey, body, author);
     revalidatePath("/ubtsa");
     redirect(
@@ -115,8 +111,8 @@ export default async function UbtsaPage({ searchParams }: UbtsaPageProps) {
     if (!author) {
       redirect("/ubtsa" as Parameters<typeof redirect>[0]);
     }
-    const commentId = String(formData.get("commentId") ?? "");
-    const itemKey = String(formData.get("itemKey") ?? "");
+    const commentId = readFormString(formData, "commentId");
+    const itemKey = readFormString(formData, "itemKey");
     const outcome = await deleteUbtsaComment(commentId, author);
     revalidatePath("/ubtsa");
     redirect(

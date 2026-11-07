@@ -10,11 +10,6 @@
  * touches the global site theme.
  */
 
-/** Core accent hexes (named so JSX can reference them inline). */
-export const UBTSA_TEAL = "#0f766e";
-export const UBTSA_DEEP = "#155e75";
-export const UBTSA_SOFT = "#ccfbf1";
-
 /** Brand gradient used by the hero, the gate card border and the CTA. */
 export const UBTSA_BRAND_GRADIENT =
   "linear-gradient(135deg, #0f766e 0%, #0e7490 55%, #155e75 100%)";

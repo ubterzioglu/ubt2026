@@ -1,6 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { readSearchParam } from "@/lib/search-params";
+import { readFormString } from "@/lib/form-data";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
 import { adminSignOutAction } from "@/app/admin/_actions";
@@ -15,12 +17,6 @@ interface AdminNewsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return value[0] ?? "";
-  return "";
-}
-
 export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps) {
   const params = searchParams ? await searchParams : {};
   const hasAccess = await isAdminAuthenticated();
@@ -30,18 +26,18 @@ export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps
   }
 
   const newsResult = await getAllNewsUpdatesAdmin();
-  const createdParam = readParam(params.created);
+  const createdParam = readSearchParam(params.created);
 
   async function createAction(formData: FormData) {
     "use server";
     if (!(await isAdminAuthenticated())) {
       redirect("/admin/news" as Parameters<typeof redirect>[0]);
     }
-    const title = (formData.get("title") as string | null) ?? "";
-    const summary = (formData.get("summary") as string | null) ?? "";
-    const imageUrl = (formData.get("imageUrl") as string | null) ?? "";
-    const detailHref = (formData.get("detailHref") as string | null) ?? "";
-    const rawOrder = (formData.get("sortOrder") as string | null) ?? "0";
+    const title = readFormString(formData, "title");
+    const summary = readFormString(formData, "summary");
+    const imageUrl = readFormString(formData, "imageUrl");
+    const detailHref = readFormString(formData, "detailHref");
+    const rawOrder = readFormString(formData, "sortOrder", "0");
     const sortOrder = parseInt(rawOrder, 10);
     const isPublished = formData.get("isPublished") === "on";
 
@@ -63,7 +59,7 @@ export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps
     if (!(await isAdminAuthenticated())) {
       redirect("/admin/news" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     const current = formData.get("isPublished") === "true";
     if (id) {
       await updateNewsUpdate(id, { isPublished: !current });
@@ -77,7 +73,7 @@ export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps
     if (!(await isAdminAuthenticated())) {
       redirect("/admin/news" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (id) {
       await deleteNewsUpdate(id);
     }

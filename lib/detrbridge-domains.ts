@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase-server";
 
 type SourceState = "remote" | "env-missing" | "empty" | "error";
 
@@ -59,21 +59,6 @@ interface SupabaseVoteRow {
 
 const DOMAIN_COLUMNS =
   "id, domain_name, uploader_name, is_selected, created_at, price_yearly, retail_price_yearly, renewal_price_yearly, price_currency";
-
-function getServiceEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) return null;
-  return { url, serviceRoleKey };
-}
-
-function createServiceClient(): SupabaseClient | null {
-  const env = getServiceEnv();
-  if (!env) return null;
-  return createClient(env.url, env.serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
-}
 
 function toDomain(row: SupabaseDomainRow, votes: DetrbridgeVoteEntry[]): DetrbridgeDomain {
   const voteCount = votes.length;

@@ -558,17 +558,6 @@ export async function getUbtsaSessionName(): Promise<string | null> {
 }
 
 /**
- * True when the current request carries a valid ubtsa session cookie.
- *
- * Fails CLOSED: if UBTSA_PASSWORD is not configured (e.g. forgotten on the
- * production host), nobody gets in — the board must never become publicly
- * readable just because an env var is missing.
- */
-export async function isUbtsaAuthenticated(): Promise<boolean> {
-  return (await getUbtsaSessionName()) !== null;
-}
-
-/**
  * Validates the supplied name (against the allowlist) and that person's own
  * password and, when both are correct, persists them in an HttpOnly cookie
  * scoped to /ubtsa. Returns the normalized name on success, or null on

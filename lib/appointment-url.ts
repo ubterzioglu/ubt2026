@@ -1,3 +1,5 @@
+import { readSearchParam } from "@/lib/search-params";
+
 export type AppointmentFeedbackTone = "success" | "error" | "info";
 
 export type SearchParamsRecord = Record<string, string | string[] | undefined>;
@@ -7,21 +9,6 @@ interface BuildAppointmentSectionUrlOptions {
   status?: AppointmentFeedbackTone;
   message?: string;
   slotId?: string;
-}
-
-export function readSearchParam(
-  value: string | string[] | undefined,
-  fallback = ""
-): string {
-  if (typeof value === "string") {
-    return value;
-  }
-
-  if (Array.isArray(value)) {
-    return value[0] ?? fallback;
-  }
-
-  return fallback;
 }
 
 export function readAppointmentFeedbackTone(

@@ -1,19 +1,3 @@
-export const SECTION_IDS = [
-  "tools-developed-by-ubt",
-  "my-cv",
-  "about-me",
-  "key-achievements",
-  "tech-stack",
-  "experience",
-  "corporate-projects",
-  "private-projects",
-  "articles",
-  "book-appointment",
-  "contact"
-] as const;
-
-export type SectionId = (typeof SECTION_IDS)[number];
-
 export type FeaturedCategory =
   | "tools"
   | "articles"

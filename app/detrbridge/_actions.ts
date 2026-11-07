@@ -3,6 +3,7 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { readFormString } from "@/lib/form-data";
 import { signInDetrbridge, signOutDetrbridge } from "@/lib/admin-auth";
 import { recordDetrbridgeSignIn } from "@/lib/detrbridge-visits";
 
@@ -13,8 +14,8 @@ import { recordDetrbridgeSignIn } from "@/lib/detrbridge-visits";
  * in the URL.
  */
 export async function detrbridgeSignInAction(formData: FormData): Promise<void> {
-  const name = String(formData.get("name") ?? "");
-  const candidate = String(formData.get("access") ?? "");
+  const name = readFormString(formData, "name");
+  const candidate = readFormString(formData, "access");
   const signedInName = await signInDetrbridge(name, candidate);
   if (signedInName) {
     await recordDetrbridgeSignIn(signedInName);

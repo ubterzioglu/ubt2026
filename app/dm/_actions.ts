@@ -3,6 +3,7 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { readFormString } from "@/lib/form-data";
 import { signInTasksAdmin, signOutTasksAdmin } from "@/lib/admin-auth";
 
 /**
@@ -11,7 +12,7 @@ import { signInTasksAdmin, signOutTasksAdmin } from "@/lib/admin-auth";
  * the board can be shared independently of the appointment-admin key.
  */
 export async function tasksSignInAction(formData: FormData): Promise<void> {
-  const candidate = String(formData.get("access") ?? "");
+  const candidate = readFormString(formData, "access");
   await signInTasksAdmin(candidate);
   redirect("/dm" as Route);
 }

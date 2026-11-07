@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 
 import type { SocialPlatform, SocialPostItem } from "@/types/site";
 import { SOCIAL_PLATFORMS } from "@/types/site";
-import { DM_BRAND_GRADIENT } from "@/app/dm/_components/theme";
 import { BoardGuide } from "@/app/dm/_components/board-guide";
 import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 

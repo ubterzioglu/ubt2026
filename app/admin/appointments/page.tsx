@@ -2,6 +2,8 @@ import type { Route } from "next";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { readSearchParam } from "@/lib/search-params";
+import { readFormString } from "@/lib/form-data";
 import { getAllAppointments, updateAppointmentStatus } from "@/lib/appointments";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { AdminGate } from "@/app/admin/_components/admin-gate";
@@ -10,18 +12,6 @@ import { APPOINTMENT_STATUSES } from "@/types/appointment";
 
 interface AdminAppointmentsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") {
-    return value;
-  }
-
-  if (Array.isArray(value)) {
-    return value[0] ?? "";
-  }
-
-  return "";
 }
 
 function buildAppointmentsUrl(
@@ -74,8 +64,8 @@ export default async function AdminAppointmentsPage({
 }: AdminAppointmentsPageProps) {
   const params = searchParams ? await searchParams : {};
   const hasAccess = await isAdminAuthenticated();
-  const status = readParam(params.status) as "success" | "error" | "";
-  const message = readParam(params.message);
+  const status = readSearchParam(params.status) as "success" | "error" | "";
+  const message = readSearchParam(params.message);
 
   if (!hasAccess) {
     return <AdminGate redirectTo="/admin/appointments" submitLabel="Open appointment review" />;
@@ -88,8 +78,8 @@ export default async function AdminAppointmentsPage({
       redirect("/admin/appointments" as Route);
     }
 
-    const appointmentId = String(formData.get("appointmentId") ?? "");
-    const appointmentStatus = String(formData.get("status") ?? "pending");
+    const appointmentId = readFormString(formData, "appointmentId");
+    const appointmentStatus = readFormString(formData, "status", "pending");
 
     const result = await updateAppointmentStatus(
       appointmentId,

@@ -1,3 +1,4 @@
+import { readSearchParam } from "@/lib/search-params";
 import { BoardGuide } from "@/app/dm/_components/board-guide";
 import type { BoardGuideContent } from "@/app/dm/_components/board-guide";
 import { JobsSection } from "@/app/dm/_components/scraper/jobs-section";
@@ -94,12 +95,6 @@ const FINDER_GUIDE: BoardGuideContent = {
   ]
 };
 
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return value[0] ?? "";
-  return "";
-}
-
 interface ScraperTabProps {
   params: Record<string, string | string[] | undefined>;
   cardClass: string;
@@ -118,7 +113,7 @@ export async function ScraperTab({
   cardInnerClass,
   inputClass
 }: ScraperTabProps) {
-  const secParam = readParam(params.sec);
+  const secParam = readSearchParam(params.sec);
   const activeSection: FinderSectionKey =
     secParam === "sablonlar"
       ? "sablonlar"
@@ -128,19 +123,19 @@ export async function ScraperTab({
           ? "maliyet"
           : "isler";
 
-  const jobId = readParam(params.job);
+  const jobId = readSearchParam(params.job);
   const jobStatusFilter = normalizeFinderJobStatus(
-    readParam(params.jstatus) || "all"
+    readSearchParam(params.jstatus) || "all"
   );
-  const candidateParam = readParam(params.cstatus);
+  const candidateParam = readSearchParam(params.cstatus);
   const candidateFilter: FinderReviewStatus | "all" =
     candidateParam === "all"
       ? "all"
       : candidateParam
         ? normalizeFinderReviewStatus(candidateParam)
         : "pending";
-  const editId = readParam(params.edit);
-  const flashOk = readParam(params.ok);
+  const editId = readSearchParam(params.edit);
+  const flashOk = readSearchParam(params.ok);
 
   // Chip rozetleri için sayaçlar her zaman; bölüm verileri yalnızca kendi
   // görünümünde çekilir.
@@ -172,7 +167,7 @@ export async function ScraperTab({
     flashOk === "created"
       ? "İş kuyruğa eklendi. Detaydan taramayı başlatabilirsin."
       : flashOk === "ran"
-        ? `Tarama tamamlandı${readParam(params.n) ? ` — ${readParam(params.n)} aday incelemeye hazır.` : "."}`
+        ? `Tarama tamamlandı${readSearchParam(params.n) ? ` — ${readSearchParam(params.n)} aday incelemeye hazır.` : "."}`
         : flashOk === "updated"
           ? "Şablon güncellendi."
           : "";

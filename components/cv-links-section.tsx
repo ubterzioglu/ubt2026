@@ -86,7 +86,7 @@ export function CvLinksSection({ links }: CvLinksSectionProps) {
             </summary>
             <div className="mt-4">
               <p className="mb-4 text-sm leading-6 text-ink/70">
-                Download one of the CV draft templates to get started before submitting your review request.
+                Download one of the CV draft templates to get started.
               </p>
               <div className="flex flex-wrap gap-3">
                 <a

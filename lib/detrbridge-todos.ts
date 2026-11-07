@@ -1,10 +1,36 @@
 import "server-only";
 
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+import { createServiceClient } from "@/lib/supabase-server";
 
 type SourceState = "remote" | "env-missing" | "empty" | "error";
 
 export type DetrbridgeTodoStatus = "open" | "done";
+
+export type DetrbridgeTodoBoard = "todos" | "todos2";
+
+interface TodoBoardStorage {
+  todos: string;
+  comments: string;
+  attachments: string;
+  bucket: string;
+}
+
+const BOARD_STORAGE: Record<DetrbridgeTodoBoard, TodoBoardStorage> = {
+  todos: {
+    todos: "detrbridge_todos",
+    comments: "detrbridge_todo_comments",
+    attachments: "detrbridge_todo_attachments",
+    bucket: "detrbridge-files"
+  },
+  todos2: {
+    todos: "detrbridge_todos2",
+    comments: "detrbridge_todo2_comments",
+    attachments: "detrbridge_todo2_attachments",
+    bucket: "detrbridge-files2"
+  }
+};
 
 const TODO_STATUSES: readonly DetrbridgeTodoStatus[] = ["open", "done"];
 
@@ -100,24 +126,8 @@ const ATTACHMENT_COLUMNS = "id, todo_id, storage_path, file_name, size_bytes, cr
 
 const DUE_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-const ATTACHMENT_BUCKET = "detrbridge-files";
 const SIGNED_URL_TTL_SECONDS = 60 * 60 * 8; // 8 hours, matches the admin session
 const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024; // 10 MB
-
-function getServiceEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) return null;
-  return { url, serviceRoleKey };
-}
-
-function createServiceClient(): SupabaseClient | null {
-  const env = getServiceEnv();
-  if (!env) return null;
-  return createClient(env.url, env.serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
-}
 
 /** Returns the due date normalized to yyyy-mm-dd, or null when absent/invalid. */
 function normalizeDueDate(value: string): string | null {
@@ -160,11 +170,12 @@ function toComment(row: SupabaseCommentRow): DetrbridgeTodoComment {
  * results by todo id. Signing failures degrade to url: null per file.
  */
 async function loadAttachmentsByTodo(
-  supabase: SupabaseClient
+  supabase: SupabaseClient,
+  storage: TodoBoardStorage
 ): Promise<Map<string, DetrbridgeTodoAttachment[]>> {
   const byTodo = new Map<string, DetrbridgeTodoAttachment[]>();
   const { data, error } = await supabase
-    .from("detrbridge_todo_attachments")
+    .from(storage.attachments)
     .select(ATTACHMENT_COLUMNS)
     .order("created_at", { ascending: true });
   if (error) throw error;
@@ -174,7 +185,7 @@ async function loadAttachmentsByTodo(
   const urlByPath = new Map<string, string>();
   try {
     const { data: signed } = await supabase.storage
-      .from(ATTACHMENT_BUCKET)
+      .from(storage.bucket)
       .createSignedUrls(
         rows.map((row) => row.storage_path),
         SIGNED_URL_TTL_SECONDS
@@ -208,12 +219,15 @@ async function loadAttachmentsByTodo(
  * links. Open todos come first, ordered by deadline (todos without a
  * deadline last), then by creation time.
  */
-export async function getAllTodosAdmin(): Promise<DetrbridgeTodosResult> {
+export async function getAllTodosAdmin(
+  board: DetrbridgeTodoBoard
+): Promise<DetrbridgeTodosResult> {
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) return { source: "env-missing", items: [] };
   try {
     const { data, error } = await supabase
-      .from("detrbridge_todos")
+      .from(storage.todos)
       .select(TODO_COLUMNS)
       .order("created_at", { ascending: true });
     if (error) throw error;
@@ -223,7 +237,7 @@ export async function getAllTodosAdmin(): Promise<DetrbridgeTodosResult> {
     let attachmentsByTodo = new Map<string, DetrbridgeTodoAttachment[]>();
     if (rows.length > 0) {
       const { data: commentRows, error: commentError } = await supabase
-        .from("detrbridge_todo_comments")
+        .from(storage.comments)
         .select(COMMENT_COLUMNS)
         .order("created_at", { ascending: true });
       if (commentError) throw commentError;
@@ -232,7 +246,7 @@ export async function getAllTodosAdmin(): Promise<DetrbridgeTodosResult> {
         list.push(toComment(row));
         commentsByTodo.set(row.todo_id, list);
       }
-      attachmentsByTodo = await loadAttachmentsByTodo(supabase);
+      attachmentsByTodo = await loadAttachmentsByTodo(supabase, storage);
     }
 
     const items = rows
@@ -264,23 +278,28 @@ export async function getAllTodosAdmin(): Promise<DetrbridgeTodosResult> {
 }
 
 /** Arşivde olmayan görev sayısı — sekme rozetleri için. */
-export async function getActiveTodoCount(): Promise<number> {
+export async function getActiveTodoCount(board: DetrbridgeTodoBoard): Promise<number> {
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) return 0;
   const { count, error } = await supabase
-    .from("detrbridge_todos")
+    .from(storage.todos)
     .select("id", { count: "exact", head: true })
     .is("archived_at", null);
   if (error) return 0;
   return count ?? 0;
 }
 
-export async function getTodoByIdAdmin(id: string): Promise<DetrbridgeTodoItem | null> {
+export async function getTodoByIdAdmin(
+  board: DetrbridgeTodoBoard,
+  id: string
+): Promise<DetrbridgeTodoItem | null> {
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) return null;
   try {
     const { data, error } = await supabase
-      .from("detrbridge_todos")
+      .from(storage.todos)
       .select(TODO_COLUMNS)
       .eq("id", id)
       .maybeSingle();
@@ -295,6 +314,7 @@ export async function getTodoByIdAdmin(id: string): Promise<DetrbridgeTodoItem |
 /** Validate + upload one attachment. Returns the stored path or an error. */
 async function uploadAttachment(
   supabase: SupabaseClient,
+  bucket: string,
   todoId: string,
   file: File
 ): Promise<{ ok: true; path: string } | { ok: false; errorMessage: string }> {
@@ -307,7 +327,7 @@ async function uploadAttachment(
   try {
     const bytes = new Uint8Array(await file.arrayBuffer());
     const { error } = await supabase.storage
-      .from(ATTACHMENT_BUCKET)
+      .from(bucket)
       .upload(path, bytes, {
         contentType: file.type || "application/octet-stream",
         upsert: true
@@ -324,17 +344,19 @@ async function uploadAttachment(
 
 async function removeAttachmentObjects(
   supabase: SupabaseClient,
+  bucket: string,
   paths: string[]
 ): Promise<void> {
   if (paths.length === 0) return;
   try {
-    await supabase.storage.from(ATTACHMENT_BUCKET).remove(paths);
+    await supabase.storage.from(bucket).remove(paths);
   } catch {
     // Best-effort cleanup; a dangling object is harmless.
   }
 }
 
 export async function addAttachment(
+  board: DetrbridgeTodoBoard,
   todoId: string,
   file: File
 ): Promise<MutationResult> {
@@ -342,13 +364,14 @@ export async function addAttachment(
     return { ok: false, errorMessage: "Dosya seçilmedi." };
   }
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
-  const uploaded = await uploadAttachment(supabase, todoId, file);
+  const uploaded = await uploadAttachment(supabase, storage.bucket, todoId, file);
   if (!uploaded.ok) return uploaded;
   try {
-    const { error } = await supabase.from("detrbridge_todo_attachments").insert({
+    const { error } = await supabase.from(storage.attachments).insert({
       todo_id: todoId,
       storage_path: uploaded.path,
       file_name: file.name || "dosya",
@@ -357,7 +380,7 @@ export async function addAttachment(
     if (error) throw error;
     return { ok: true };
   } catch (error) {
-    await removeAttachmentObjects(supabase, [uploaded.path]);
+    await removeAttachmentObjects(supabase, storage.bucket, [uploaded.path]);
     return {
       ok: false,
       errorMessage: error instanceof Error ? error.message : "Attach failed."
@@ -366,26 +389,28 @@ export async function addAttachment(
 }
 
 export async function deleteAttachment(
+  board: DetrbridgeTodoBoard,
   attachmentId: string
 ): Promise<MutationResult> {
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
     const { data: existing } = await supabase
-      .from("detrbridge_todo_attachments")
+      .from(storage.attachments)
       .select("storage_path")
       .eq("id", attachmentId)
       .maybeSingle();
     const { error } = await supabase
-      .from("detrbridge_todo_attachments")
+      .from(storage.attachments)
       .delete()
       .eq("id", attachmentId);
     if (error) throw error;
     const path =
       (existing as { storage_path: string } | null)?.storage_path ?? null;
-    if (path) await removeAttachmentObjects(supabase, [path]);
+    if (path) await removeAttachmentObjects(supabase, storage.bucket, [path]);
     return { ok: true };
   } catch (error) {
     return {
@@ -396,6 +421,7 @@ export async function deleteAttachment(
 }
 
 export async function createTodo(
+  board: DetrbridgeTodoBoard,
   input: DetrbridgeTodoInput
 ): Promise<MutationResult & { id?: string }> {
   const title = input.title.trim();
@@ -403,12 +429,13 @@ export async function createTodo(
     return { ok: false, errorMessage: "Görev başlığı en az 2 karakter olmalı." };
   }
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
     const { data, error } = await supabase
-      .from("detrbridge_todos")
+      .from(storage.todos)
       .insert({
         title,
         assignee: input.assignee.trim() || "Ortak",
@@ -428,6 +455,7 @@ export async function createTodo(
 }
 
 export async function updateTodo(
+  board: DetrbridgeTodoBoard,
   id: string,
   input: DetrbridgeTodoInput
 ): Promise<MutationResult> {
@@ -436,12 +464,13 @@ export async function updateTodo(
     return { ok: false, errorMessage: "Görev başlığı en az 2 karakter olmalı." };
   }
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
     const { error } = await supabase
-      .from("detrbridge_todos")
+      .from(storage.todos)
       .update({
         title,
         assignee: input.assignee.trim() || "Ortak",
@@ -459,16 +488,18 @@ export async function updateTodo(
 }
 
 export async function setTodoStatus(
+  board: DetrbridgeTodoBoard,
   id: string,
   status: DetrbridgeTodoStatus
 ): Promise<MutationResult> {
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
     const { error } = await supabase
-      .from("detrbridge_todos")
+      .from(storage.todos)
       .update({ status: normalizeDetrbridgeStatus(status) })
       .eq("id", id);
     if (error) throw error;
@@ -487,16 +518,18 @@ export async function setTodoStatus(
  * sadece aktif listeden çıkıp sayfa sonundaki arşiv kartına taşınır.
  */
 export async function setTodoArchived(
+  board: DetrbridgeTodoBoard,
   id: string,
   archived: boolean
 ): Promise<MutationResult> {
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
     const { error } = await supabase
-      .from("detrbridge_todos")
+      .from(storage.todos)
       .update({ archived_at: archived ? new Date().toISOString() : null })
       .eq("id", id);
     if (error) throw error;
@@ -510,6 +543,7 @@ export async function setTodoArchived(
 }
 
 export async function addComment(
+  board: DetrbridgeTodoBoard,
   todoId: string,
   body: string,
   author: string
@@ -519,11 +553,12 @@ export async function addComment(
     return { ok: false, errorMessage: "Yorum boş olamaz." };
   }
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
-    const { error } = await supabase.from("detrbridge_todo_comments").insert({
+    const { error } = await supabase.from(storage.comments).insert({
       todo_id: todoId,
       body: text,
       author: author.trim() || "Ortak"
@@ -538,14 +573,18 @@ export async function addComment(
   }
 }
 
-export async function deleteComment(commentId: string): Promise<MutationResult> {
+export async function deleteComment(
+  board: DetrbridgeTodoBoard,
+  commentId: string
+): Promise<MutationResult> {
   const supabase = createServiceClient();
+  const storage = BOARD_STORAGE[board];
   if (!supabase) {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
     const { error } = await supabase
-      .from("detrbridge_todo_comments")
+      .from(storage.comments)
       .delete()
       .eq("id", commentId);
     if (error) throw error;

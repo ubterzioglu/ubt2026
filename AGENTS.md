@@ -69,8 +69,8 @@ Paths alias: `@/*` maps to project root.
 
 - **Files**: kebab-case for all files (`featured-items.ts`, `scroll-to-top.tsx`).
 - **Components**: PascalCase (`HeroSection`, `FeaturedGrid`).
-- **Types/Interfaces**: PascalCase (`FeaturedItem`, `SectionShellProps`).
-- **Constants**: camelCase for objects (`siteMeta`, `navigationItems`), UPPER_SNAKE_CASE for const arrays used as enum-like values (`SECTION_IDS`).
+- **Types/Interfaces**: PascalCase (`FeaturedItem`, `TodosTabProps`).
+- **Constants**: camelCase for objects (`siteMeta`, `navigationItems`), UPPER_SNAKE_CASE for const arrays used as enum-like values (`SOCIAL_PLATFORMS`).
 - **CSS custom properties**: kebab-case (`--accent-soft`, `--font-display`).
 - **Tailwind theme keys**: camelCase (`accentSoft`, `fontDisplay`).
 

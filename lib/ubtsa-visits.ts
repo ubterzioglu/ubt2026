@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase-server";
 
 type SourceState = "remote" | "env-missing" | "empty" | "error";
 
@@ -28,15 +28,6 @@ const VISIT_COLUMNS = "id, name, signed_in_at";
 
 /** Panoda gösterilen en fazla kayıt — iki kullanıcı için fazlasıyla yeterli. */
 const VISIT_LIMIT = 200;
-
-function createServiceClient(): SupabaseClient | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) return null;
-  return createClient(url, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
-}
 
 /**
  * Başarılı bir girişi loglar.

@@ -1,6 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { readSearchParam } from "@/lib/search-params";
+import { readFormString } from "@/lib/form-data";
 import { isBakcakanatAuthenticated } from "@/lib/admin-auth";
 import { BakcakanatLogin } from "@/app/bakcakanat/_components/bakcakanat-login";
 import {
@@ -28,12 +30,6 @@ export const metadata = {
 
 interface BakcakanatPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return value[0] ?? "";
-  return "";
 }
 
 function normalizeSiteHref(site: string): string | null {
@@ -92,19 +88,19 @@ export default async function BakcakanatPage({
   }
 
   const result = await getAllAkcakanatDomainsAdmin();
-  const createdParam = readParam(params.created);
-  const updatedParam = readParam(params.updated);
-  const deletedParam = readParam(params.deleted);
-  const errorParam = readParam(params.error);
-  const editId = readParam(params.edit);
+  const createdParam = readSearchParam(params.created);
+  const updatedParam = readSearchParam(params.updated);
+  const deletedParam = readSearchParam(params.deleted);
+  const errorParam = readSearchParam(params.error);
+  const editId = readSearchParam(params.edit);
   const editing = editId ? await getAkcakanatDomainByIdAdmin(editId) : null;
 
   const filters: Record<FilterKey, string> = {
-    priority: readParam(params.priority),
-    email: readParam(params.email),
-    redirect: readParam(params.redirect),
-    hosting: readParam(params.hosting),
-    payment: readParam(params.payment)
+    priority: readSearchParam(params.priority),
+    email: readSearchParam(params.email),
+    redirect: readSearchParam(params.redirect),
+    hosting: readSearchParam(params.hosting),
+    payment: readSearchParam(params.payment)
   };
 
   async function createAction(formData: FormData) {
@@ -113,18 +109,18 @@ export default async function BakcakanatPage({
       redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
     const outcome = await createAkcakanatDomain({
-      site: (formData.get("site") as string | null) ?? "",
-      domainInfo: (formData.get("domainInfo") as string | null) ?? "",
-      hosting: (formData.get("hosting") as string | null) ?? "",
-      email: (formData.get("email") as string | null) ?? "",
-      hasEmail: ((formData.get("hasEmail") as string | null) ?? "0") === "1",
-      redirectTo: (formData.get("redirectTo") as string | null) ?? "",
-      paymentDays: (formData.get("paymentDays") as string | null) ?? "",
-      paymentMethod: (formData.get("paymentMethod") as string | null) ?? "",
-      comment: (formData.get("comment") as string | null) ?? "",
-      priority: parsePriority((formData.get("priority") as string | null) ?? "5"),
+      site: readFormString(formData, "site"),
+      domainInfo: readFormString(formData, "domainInfo"),
+      hosting: readFormString(formData, "hosting"),
+      email: readFormString(formData, "email"),
+      hasEmail: (readFormString(formData, "hasEmail", "0")) === "1",
+      redirectTo: readFormString(formData, "redirectTo"),
+      paymentDays: readFormString(formData, "paymentDays"),
+      paymentMethod: readFormString(formData, "paymentMethod"),
+      comment: readFormString(formData, "comment"),
+      priority: parsePriority(readFormString(formData, "priority", "5")),
       sortOrder: Number.parseInt(
-        (formData.get("sortOrder") as string | null) ?? "0",
+        readFormString(formData, "sortOrder", "0"),
         10
       )
     });
@@ -144,23 +140,23 @@ export default async function BakcakanatPage({
     if (!(await isBakcakanatAuthenticated())) {
       redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (!id) {
       redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
     const outcome = await updateAkcakanatDomain(id, {
-      site: (formData.get("site") as string | null) ?? "",
-      domainInfo: (formData.get("domainInfo") as string | null) ?? "",
-      hosting: (formData.get("hosting") as string | null) ?? "",
-      email: (formData.get("email") as string | null) ?? "",
-      hasEmail: ((formData.get("hasEmail") as string | null) ?? "0") === "1",
-      redirectTo: (formData.get("redirectTo") as string | null) ?? "",
-      paymentDays: (formData.get("paymentDays") as string | null) ?? "",
-      paymentMethod: (formData.get("paymentMethod") as string | null) ?? "",
-      comment: (formData.get("comment") as string | null) ?? "",
-      priority: parsePriority((formData.get("priority") as string | null) ?? "5"),
+      site: readFormString(formData, "site"),
+      domainInfo: readFormString(formData, "domainInfo"),
+      hosting: readFormString(formData, "hosting"),
+      email: readFormString(formData, "email"),
+      hasEmail: (readFormString(formData, "hasEmail", "0")) === "1",
+      redirectTo: readFormString(formData, "redirectTo"),
+      paymentDays: readFormString(formData, "paymentDays"),
+      paymentMethod: readFormString(formData, "paymentMethod"),
+      comment: readFormString(formData, "comment"),
+      priority: parsePriority(readFormString(formData, "priority", "5")),
       sortOrder: Number.parseInt(
-        (formData.get("sortOrder") as string | null) ?? "0",
+        readFormString(formData, "sortOrder", "0"),
         10
       )
     });
@@ -180,7 +176,7 @@ export default async function BakcakanatPage({
     if (!(await isBakcakanatAuthenticated())) {
       redirect("/bakcakanat" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (id) {
       await deleteAkcakanatDomain(id);
     }

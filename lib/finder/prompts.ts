@@ -48,41 +48,7 @@ If the page is not a real venue/provider profile or listing, return:
   "evidence_quotes": []
 }`;
 
-const MAX_EXTRACTED_CHARS = 16_000;
 const MAX_BATCH_EXTRACTED_CHARS = 6_000;
-
-export function buildClassifierUserPrompt(
-  job: FinderJobRow,
-  source: FinderJobSourceRow
-): string {
-  const extracted = (source.extracted_text ?? "").slice(0, MAX_EXTRACTED_CHARS);
-  return `Job context:
-- role_key: ${job.role_key}
-- item_type: ${job.item_type}
-- target location: ${job.location_label}
-- include terms: ${JSON.stringify(job.must_include_terms)}
-- exclude terms: ${JSON.stringify(job.must_exclude_terms)}
-
-Page metadata:
-- url: ${source.source_url}
-- title: ${source.source_title ?? ""}
-- snippet: ${source.source_snippet ?? ""}
-
-Extracted content:
-${extracted}
-
-Rules:
-- Prefer explicit evidence over inference.
-- Do not invent phone, email, address, opening hours, or prices.
-- The venue/provider must be located in or clearly serve the target location; otherwise lower confidence below 50.
-- For languages, use ISO-like short codes where possible: de, en, tr.
-- services: short offering/feature labels found on the page verbatim (e.g. "Sauna", "Wellness", "Bar"), max 15 — do not normalize, merge, or translate them.
-- street: street name only, no house number. house_number: separate. postal_code: 5-digit PLZ if present.
-- Contacts must be typed objects.
-- evidence_quotes: short verbatim excerpts supporting the match itself (that this is a real venue page), max 6.
-- self_statements: short verbatim excerpts where the business explicitly describes itself/its audience, max 5. Empty array if none.
-- If multiple venues/providers appear on one page (directory index), return the best matching single candidate only, or is_match false when it is a pure listing index.`;
-}
 
 export function buildClassifierBatchUserPrompt(
   job: FinderJobRow,

@@ -3,6 +3,7 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { readFormString } from "@/lib/form-data";
 import { signInBakcakanat, signOutBakcakanat } from "@/lib/admin-auth";
 
 /**
@@ -11,7 +12,7 @@ import { signInBakcakanat, signOutBakcakanat } from "@/lib/admin-auth";
  * other admin keys. The password never appears in the URL.
  */
 export async function bakcakanatSignInAction(formData: FormData): Promise<void> {
-  const candidate = String(formData.get("access") ?? "");
+  const candidate = readFormString(formData, "access");
   await signInBakcakanat(candidate);
   redirect("/bakcakanat" as Route);
 }

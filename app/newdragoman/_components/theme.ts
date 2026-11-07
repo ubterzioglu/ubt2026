@@ -2,8 +2,6 @@
  * Palette lifted from the proposal document itself (app/newdragoman/_content),
  * so the gate in front of it reads as the same piece of work.
  */
-export const DRAGOMAN_INK = "#1F1A14";
-export const DRAGOMAN_TEAL = "#016D53";
 export const DRAGOMAN_BUOY = "#FAC896";
 export const DRAGOMAN_FOAM = "#FDF3EA";
 export const DRAGOMAN_DEEP = "#073D31";

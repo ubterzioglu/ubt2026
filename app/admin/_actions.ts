@@ -3,6 +3,7 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { readFormString } from "@/lib/form-data";
 import { signInAdmin, signOutAdmin } from "@/lib/admin-auth";
 
 const ADMIN_PATHS = [
@@ -35,7 +36,7 @@ export async function adminSignInAction(
   redirectTo: string,
   formData: FormData
 ): Promise<void> {
-  const candidate = String(formData.get("access") ?? "");
+  const candidate = readFormString(formData, "access");
   await signInAdmin(candidate);
   redirect(safeAdminPath(redirectTo) as Route);
 }

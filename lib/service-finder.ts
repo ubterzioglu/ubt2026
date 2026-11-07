@@ -1,8 +1,6 @@
 import "server-only";
 
-import { createClient } from "@supabase/supabase-js";
-import type { SupabaseClient } from "@supabase/supabase-js";
-
+import { createServiceClient } from "@/lib/supabase-server";
 import { JobNotClaimableError, executeFinderJob } from "@/lib/finder/run-job";
 import type {
   FinderContact,
@@ -151,7 +149,6 @@ export interface FinderJobDetail {
 }
 
 export type FinderJobCounts = Record<FinderJobStatus, number>;
-export type FinderCandidateCounts = Record<FinderReviewStatus, number>;
 
 export interface FinderMutationResult {
   ok: boolean;
@@ -194,15 +191,6 @@ export function normalizeFinderReviewStatus(value: string): FinderReviewStatus {
   return (REVIEW_STATUSES as readonly string[]).includes(value)
     ? (value as FinderReviewStatus)
     : "pending";
-}
-
-function createServiceClient(): SupabaseClient | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) return null;
-  return createClient(url, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
 }
 
 // ─── Yardımcı eşlemeler ──────────────────────────────────────────────────────
@@ -364,36 +352,6 @@ export async function getFinderJobCountsAdmin(): Promise<FinderJobCounts> {
       })
     );
     return counts.reduce<FinderJobCounts>(
-      (acc, [status, count]) => ({ ...acc, [status]: count }),
-      empty
-    );
-  } catch {
-    return empty;
-  }
-}
-
-export async function getFinderCandidateCountsAdmin(): Promise<FinderCandidateCounts> {
-  const empty: FinderCandidateCounts = {
-    pending: 0,
-    approved: 0,
-    rejected: 0,
-    needs_edit: 0,
-    published: 0
-  };
-  const supabase = createServiceClient();
-  if (!supabase) return empty;
-  try {
-    const counts = await Promise.all(
-      REVIEW_STATUSES.map(async (status) => {
-        const { count, error } = await supabase
-          .from("service_finder_candidates")
-          .select("id", { count: "exact", head: true })
-          .eq("review_status", status);
-        if (error) throw error;
-        return [status, count ?? 0] as const;
-      })
-    );
-    return counts.reduce<FinderCandidateCounts>(
       (acc, [status, count]) => ({ ...acc, [status]: count }),
       empty
     );

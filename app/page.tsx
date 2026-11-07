@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
+import { readFormString } from "@/lib/form-data";
 import { AboutAccordion } from "@/components/about-accordion";
 import { BookmarksList } from "@/components/bookmarks-list";
 import { BookingForm } from "@/components/appointment/booking-form";
@@ -47,9 +48,9 @@ import {
 import {
   buildAppointmentSectionUrl,
   readAppointmentFeedbackTone,
-  readSearchParam,
   type SearchParamsRecord
 } from "@/lib/appointment-url";
+import { readSearchParam } from "@/lib/search-params";
 import { createAppointment, getAvailableAppointmentSlots } from "@/lib/appointments";
 import { sendNewBookingNotification } from "@/lib/email";
 import { getFeaturedCollections } from "@/lib/featured-items";
@@ -130,13 +131,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   async function submitBookingRequest(formData: FormData) {
     "use server";
 
-    const slotId = String(formData.get("slotId") ?? "");
+    const slotId = readFormString(formData, "slotId");
     const result = await createAppointment({
       slotId,
-      fullName: String(formData.get("fullName") ?? ""),
-      email: String(formData.get("email") ?? ""),
-      company: String(formData.get("company") ?? ""),
-      notes: String(formData.get("notes") ?? "")
+      fullName: readFormString(formData, "fullName"),
+      email: readFormString(formData, "email"),
+      company: readFormString(formData, "company"),
+      notes: readFormString(formData, "notes")
     });
 
     if (!result.ok || !result.data) {

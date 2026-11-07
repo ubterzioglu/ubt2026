@@ -3,6 +3,7 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { readFormString } from "@/lib/form-data";
 import { signInUbtsa, signOutUbtsa } from "@/lib/admin-auth";
 import { recordUbtsaSignIn } from "@/lib/ubtsa-visits";
 
@@ -13,8 +14,8 @@ import { recordUbtsaSignIn } from "@/lib/ubtsa-visits";
  * generic `?error=1` flag, so a wrong password is never echoed back.
  */
 export async function ubtsaSignInAction(formData: FormData): Promise<void> {
-  const name = String(formData.get("name") ?? "");
-  const candidate = String(formData.get("access") ?? "");
+  const name = readFormString(formData, "name");
+  const candidate = readFormString(formData, "access");
   const signedInName = await signInUbtsa(name, candidate);
   if (signedInName) {
     await recordUbtsaSignIn(signedInName);

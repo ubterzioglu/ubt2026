@@ -7,7 +7,6 @@
 
 /** Core accent hexes (kept as named constants so JSX can reference them). */
 export const BAKCAKANAT_EMERALD = "#34D399";
-export const BAKCAKANAT_SKY = "#38BDF8";
 
 /**
  * Tri-color brand gradient used for borders, the logo tile and the CTA.

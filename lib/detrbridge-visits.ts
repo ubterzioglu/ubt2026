@@ -1,7 +1,8 @@
 import "server-only";
 
 import { headers } from "next/headers";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+
+import { createServiceClient } from "@/lib/supabase-server";
 
 /** UBT'nin /detrbridge linkini paylaştığı an (TR saatiyle 23 Temmuz 2026, 12:29 — yeniden paylaşım). */
 export const DETRBRIDGE_SHARE_MOMENT = new Date("2026-07-23T12:29:00+03:00");
@@ -34,21 +35,6 @@ interface SupabaseVisitRow {
   hours_after_share: number;
   user_agent: string | null;
   first_seen_at: string;
-}
-
-function getServiceEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) return null;
-  return { url, serviceRoleKey };
-}
-
-function createServiceClient(): SupabaseClient | null {
-  const env = getServiceEnv();
-  if (!env) return null;
-  return createClient(env.url, env.serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
 }
 
 function hoursSinceShare(now: Date): number {

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase-server";
 
 export interface ZelifsTrip {
   id: string;
@@ -25,19 +25,10 @@ interface ZelifsStateRow {
   minus_notes: ZelifsNote[];
 }
 
-function createSupabaseClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) return null;
-  return createClient(url, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
-}
-
 const EMPTY_STATE: ZelifsState = { trips: [], plus: [], minus: [] };
 
 export async function getZelifsState(): Promise<ZelifsState> {
-  const client = createSupabaseClient();
+  const client = createServiceClient();
   if (!client) return EMPTY_STATE;
 
   const { data } = await client
@@ -56,7 +47,7 @@ export async function getZelifsState(): Promise<ZelifsState> {
 }
 
 export async function saveZelifsState(state: ZelifsState): Promise<boolean> {
-  const client = createSupabaseClient();
+  const client = createServiceClient();
   if (!client) return false;
 
   const { error } = await client.from("zelifs_state").upsert({

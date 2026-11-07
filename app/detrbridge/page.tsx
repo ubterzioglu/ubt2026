@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { readSearchParam } from "@/lib/search-params";
 import { isDetrbridgeAuthenticated, getDetrbridgeSessionName } from "@/lib/admin-auth";
 import { DetrbridgeLogin } from "@/app/detrbridge/_components/detrbridge-login";
 import {
@@ -54,20 +55,11 @@ import {
   addComment,
   deleteComment,
   addAttachment,
-  deleteAttachment
+  deleteAttachment,
+  type DetrbridgeTodoBoard,
+  type DetrbridgeTodoInput
 } from "@/lib/detrbridge-todos";
-import {
-  getAllTodos2Admin,
-  getActiveTodo2Count,
-  createTodo2,
-  updateTodo2,
-  setTodo2Status,
-  setTodo2Archived,
-  addComment2,
-  deleteComment2,
-  addAttachment2,
-  deleteAttachment2
-} from "@/lib/detrbridge-todos2";
+import { readFormString } from "@/lib/form-data";
 import { WelcomeTab } from "@/app/detrbridge/_components/welcome-tab";
 
 export const metadata = {
@@ -77,12 +69,6 @@ export const metadata = {
 
 interface DetrbridgePageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return value[0] ?? "";
-  return "";
 }
 
 function matchesRating(averageRating: number | null, minRating: number | null): boolean {
@@ -108,6 +94,156 @@ function briefItemUrl(itemKey: string, errorMessage?: string): string {
   return `/detrbridge?${query.toString()}${itemKey ? `#${itemKey}` : ""}`;
 }
 
+type RedirectTarget = Parameters<typeof redirect>[0];
+
+async function requireDetrbridgeAuth(): Promise<void> {
+  if (!(await isDetrbridgeAuthenticated())) {
+    redirect("/detrbridge" as RedirectTarget);
+  }
+}
+
+function todoBoardUrl(board: DetrbridgeTodoBoard, errorMessage?: string): RedirectTarget {
+  const base = `/detrbridge?tab=${board}`;
+  const url = errorMessage ? `${base}&error=${encodeURIComponent(errorMessage)}` : base;
+  return url as RedirectTarget;
+}
+
+function readTodoInput(formData: FormData): DetrbridgeTodoInput {
+  return {
+    title: readFormString(formData, "title"),
+    assignee: readFormString(formData, "assignee"),
+    dueDate: readFormString(formData, "dueDate")
+  };
+}
+
+function createTodoBoardActions(board: DetrbridgeTodoBoard) {
+  async function createAction(formData: FormData) {
+    "use server";
+    await requireDetrbridgeAuth();
+    const outcome = await createTodo(board, readTodoInput(formData));
+    let attachError: string | null = null;
+    const file = formData.get("file");
+    if (outcome.ok && outcome.id && file instanceof File && file.size > 0) {
+      const attached = await addAttachment(board, outcome.id, file);
+      if (!attached.ok) {
+        attachError = attached.errorMessage ?? "Dosya yüklenemedi.";
+      }
+    }
+    revalidatePath("/detrbridge");
+    if (!outcome.ok) {
+      redirect(todoBoardUrl(board, outcome.errorMessage ?? "Görev eklenemedi."));
+    }
+    redirect(
+      todoBoardUrl(
+        board,
+        attachError ? `Görev eklendi ama dosya yüklenemedi: ${attachError}` : undefined
+      )
+    );
+  }
+
+  async function updateAction(formData: FormData) {
+    "use server";
+    await requireDetrbridgeAuth();
+    const id = readFormString(formData, "id");
+    if (!id) {
+      redirect(todoBoardUrl(board));
+    }
+    const outcome = await updateTodo(board, id, readTodoInput(formData));
+    revalidatePath("/detrbridge");
+    redirect(
+      todoBoardUrl(board, outcome.ok ? undefined : (outcome.errorMessage ?? "Görev güncellenemedi."))
+    );
+  }
+
+  async function toggleAction(formData: FormData) {
+    "use server";
+    await requireDetrbridgeAuth();
+    const id = readFormString(formData, "id");
+    const next = readFormString(formData, "next", "open") === "done" ? "done" : "open";
+    if (id) {
+      await setTodoStatus(board, id, next);
+    }
+    revalidatePath("/detrbridge");
+    redirect(todoBoardUrl(board));
+  }
+
+  async function archiveAction(formData: FormData) {
+    "use server";
+    await requireDetrbridgeAuth();
+    const id = readFormString(formData, "id");
+    const archived = readFormString(formData, "archived", "1") === "1";
+    if (id) {
+      await setTodoArchived(board, id, archived);
+    }
+    revalidatePath("/detrbridge");
+    redirect(todoBoardUrl(board));
+  }
+
+  async function commentAction(formData: FormData) {
+    "use server";
+    await requireDetrbridgeAuth();
+    const todoId = readFormString(formData, "todoId");
+    const body = readFormString(formData, "body");
+    const author = readFormString(formData, "author");
+    if (!todoId) {
+      redirect(todoBoardUrl(board));
+    }
+    const outcome = await addComment(board, todoId, body, author);
+    revalidatePath("/detrbridge");
+    redirect(
+      todoBoardUrl(board, outcome.ok ? undefined : (outcome.errorMessage ?? "Yorum eklenemedi."))
+    );
+  }
+
+  async function deleteCommentAction(formData: FormData) {
+    "use server";
+    await requireDetrbridgeAuth();
+    const commentId = readFormString(formData, "commentId");
+    if (commentId) {
+      await deleteComment(board, commentId);
+    }
+    revalidatePath("/detrbridge");
+    redirect(todoBoardUrl(board));
+  }
+
+  async function attachAction(formData: FormData) {
+    "use server";
+    await requireDetrbridgeAuth();
+    const todoId = readFormString(formData, "todoId");
+    const file = formData.get("file");
+    if (!todoId || !(file instanceof File) || file.size === 0) {
+      redirect(todoBoardUrl(board));
+    }
+    const outcome = await addAttachment(board, todoId, file);
+    revalidatePath("/detrbridge");
+    redirect(
+      todoBoardUrl(board, outcome.ok ? undefined : (outcome.errorMessage ?? "Dosya yüklenemedi."))
+    );
+  }
+
+  async function deleteAttachmentAction(formData: FormData) {
+    "use server";
+    await requireDetrbridgeAuth();
+    const attachmentId = readFormString(formData, "attachmentId");
+    if (attachmentId) {
+      await deleteAttachment(board, attachmentId);
+    }
+    revalidatePath("/detrbridge");
+    redirect(todoBoardUrl(board));
+  }
+
+  return {
+    createAction,
+    updateAction,
+    toggleAction,
+    archiveAction,
+    commentAction,
+    deleteCommentAction,
+    attachAction,
+    deleteAttachmentAction
+  };
+}
+
 const cardClass =
   "overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl";
 const cardInnerClass = "";
@@ -120,7 +256,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     return <DetrbridgeLogin signIn={detrbridgeSignInAction} />;
   }
 
-  const requestedTab = readParam(params.tab);
+  const requestedTab = readSearchParam(params.tab);
   const KNOWN_TABS: readonly BridgeTabKey[] = [
     "welcome",
     "todos2",
@@ -137,29 +273,30 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
       ? (requestedTab as BridgeTabKey)
       : "welcome";
 
-  const errorParam = readParam(params.error);
-  const editTodoId = readParam(params.edit) || null;
-  const query = readParam(params.q).trim();
-  const minRatingParam = readParam(params.minRating);
+  const errorParam = readSearchParam(params.error);
+  const editTodoId = readSearchParam(params.edit) || null;
+  const query = readSearchParam(params.q).trim();
+  const minRatingParam = readSearchParam(params.minRating);
   const minRating = minRatingParam ? Number(minRatingParam) : null;
   const sessionName = await getDetrbridgeSessionName();
   const firstVisit = await recordDetrbridgeVisit();
   const result = activeTab === "logos" ? await getAllLogosAdmin(1) : null;
   const round2Result = activeTab === "logos-round2" ? await getAllLogosAdmin(2) : null;
   const visits = activeTab === "visits" ? await getDetrbridgeVisits() : [];
-  const todosResult = activeTab === "todos" ? await getAllTodosAdmin() : null;
-  const todos2Result = activeTab === "todos2" ? await getAllTodos2Admin() : null;
+  const activeTodoBoard: DetrbridgeTodoBoard | null =
+    activeTab === "todos" || activeTab === "todos2" ? activeTab : null;
+  const todoBoardResult = activeTodoBoard ? await getAllTodosAdmin(activeTodoBoard) : null;
   const domainsResult = activeTab === "domains" ? await getAllDomainsAdmin() : null;
   const briefComments =
     activeTab === "meeting-brief" ? await getAllBriefComments() : null;
-  const openBriefItemKey = readParam(params.open) || null;
+  const openBriefItemKey = readSearchParam(params.open) || null;
   const [logoCount, logoCountRound2, domainCount, todoCount, todo2Count] =
     await Promise.all([
       getLogoCount(1),
       getLogoCount(2),
       getDomainCount(),
-      getActiveTodoCount(),
-      getActiveTodo2Count()
+      getActiveTodoCount("todos"),
+      getActiveTodoCount("todos2")
     ]);
 
   const filteredLogos =
@@ -196,7 +333,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     "use server";
     const uploaderName = await getDetrbridgeSessionName();
     if (!uploaderName) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+      redirect("/detrbridge" as RedirectTarget);
     }
     const file = formData.get("file");
     if (!(file instanceof File)) {
@@ -221,10 +358,10 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     "use server";
     const voterName = await getDetrbridgeSessionName();
     if (!voterName) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+      redirect("/detrbridge" as RedirectTarget);
     }
-    const logoId = (formData.get("logoId") as string | null) ?? "";
-    const rating = Number((formData.get("rating") as string | null) ?? "0");
+    const logoId = readFormString(formData, "logoId");
+    const rating = Number(readFormString(formData, "rating", "0"));
     const outcome = logoId
       ? await castVote(logoId, voterName, rating)
       : { ok: false, errorMessage: "Logo bulunamadı." };
@@ -240,35 +377,31 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
   async function selectAction(formData: FormData) {
     "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
+    await requireDetrbridgeAuth();
+    const id = readFormString(formData, "id");
     if (id) {
       await selectLogo(id);
     }
     revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=logos" as Parameters<typeof redirect>[0]);
+    redirect("/detrbridge?tab=logos" as RedirectTarget);
   }
 
   async function deleteAction(formData: FormData) {
     "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
+    await requireDetrbridgeAuth();
+    const id = readFormString(formData, "id");
     if (id) {
       await deleteLogo(id);
     }
     revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=logos" as Parameters<typeof redirect>[0]);
+    redirect("/detrbridge?tab=logos" as RedirectTarget);
   }
 
   async function createRound2Action(formData: FormData) {
     "use server";
     const uploaderName = await getDetrbridgeSessionName();
     if (!uploaderName) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+      redirect("/detrbridge" as RedirectTarget);
     }
     const file = formData.get("file");
     if (!(file instanceof File)) {
@@ -293,10 +426,10 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     "use server";
     const voterName = await getDetrbridgeSessionName();
     if (!voterName) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+      redirect("/detrbridge" as RedirectTarget);
     }
-    const logoId = (formData.get("logoId") as string | null) ?? "";
-    const rating = Number((formData.get("rating") as string | null) ?? "0");
+    const logoId = readFormString(formData, "logoId");
+    const rating = Number(readFormString(formData, "rating", "0"));
     const outcome = logoId
       ? await castVote(logoId, voterName, rating)
       : { ok: false, errorMessage: "Logo bulunamadı." };
@@ -312,51 +445,45 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
   async function selectRound2Action(formData: FormData) {
     "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
+    await requireDetrbridgeAuth();
+    const id = readFormString(formData, "id");
     if (id) {
       await selectLogo(id);
     }
     revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=logos-round2" as Parameters<typeof redirect>[0]);
+    redirect("/detrbridge?tab=logos-round2" as RedirectTarget);
   }
 
   async function deleteRound2Action(formData: FormData) {
     "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
+    await requireDetrbridgeAuth();
+    const id = readFormString(formData, "id");
     if (id) {
       await deleteLogo(id);
     }
     revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=logos-round2" as Parameters<typeof redirect>[0]);
+    redirect("/detrbridge?tab=logos-round2" as RedirectTarget);
   }
 
   async function promoteAction() {
     "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
+    await requireDetrbridgeAuth();
     await promoteTopLogosToRound2(5);
     revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=logos-round2" as Parameters<typeof redirect>[0]);
+    redirect("/detrbridge?tab=logos-round2" as RedirectTarget);
   }
 
   async function createDomainAction(formData: FormData) {
     "use server";
     const uploaderName = await getDetrbridgeSessionName();
     if (!uploaderName) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+      redirect("/detrbridge" as RedirectTarget);
     }
-    const domainName = (formData.get("domainName") as string | null) ?? "";
-    const priceRaw = (formData.get("priceYearly") as string | null) ?? "";
-    const retailPriceRaw = (formData.get("retailPriceYearly") as string | null) ?? "";
-    const renewalPriceRaw = (formData.get("renewalPriceYearly") as string | null) ?? "";
-    const priceCurrency = (formData.get("priceCurrency") as string | null) ?? "EUR";
+    const domainName = readFormString(formData, "domainName");
+    const priceRaw = readFormString(formData, "priceYearly");
+    const retailPriceRaw = readFormString(formData, "retailPriceYearly");
+    const renewalPriceRaw = readFormString(formData, "renewalPriceYearly");
+    const priceCurrency = readFormString(formData, "priceCurrency", "EUR");
     const outcome = await createDomain(uploaderName, domainName, {
       priceYearly: priceRaw ? Number(priceRaw) : null,
       retailPriceYearly: retailPriceRaw ? Number(retailPriceRaw) : null,
@@ -377,10 +504,10 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     "use server";
     const voterName = await getDetrbridgeSessionName();
     if (!voterName) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+      redirect("/detrbridge" as RedirectTarget);
     }
-    const domainId = (formData.get("domainId") as string | null) ?? "";
-    const rating = Number((formData.get("rating") as string | null) ?? "0");
+    const domainId = readFormString(formData, "domainId");
+    const rating = Number(readFormString(formData, "rating", "0"));
     const outcome = domainId
       ? await castDomainVote(domainId, voterName, rating)
       : { ok: false, errorMessage: "Domain bulunamadı." };
@@ -396,332 +523,24 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
 
   async function selectDomainAction(formData: FormData) {
     "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
+    await requireDetrbridgeAuth();
+    const id = readFormString(formData, "id");
     if (id) {
       await selectDomain(id);
     }
     revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=domains" as Parameters<typeof redirect>[0]);
+    redirect("/detrbridge?tab=domains" as RedirectTarget);
   }
 
   async function deleteDomainAction(formData: FormData) {
     "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
+    await requireDetrbridgeAuth();
+    const id = readFormString(formData, "id");
     if (id) {
       await deleteDomain(id);
     }
     revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=domains" as Parameters<typeof redirect>[0]);
-  }
-
-  async function createTodoAction(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const outcome = await createTodo({
-      title: (formData.get("title") as string | null) ?? "",
-      assignee: (formData.get("assignee") as string | null) ?? "",
-      dueDate: (formData.get("dueDate") as string | null) ?? ""
-    });
-    let attachError: string | null = null;
-    const file = formData.get("file");
-    if (outcome.ok && outcome.id && file instanceof File && file.size > 0) {
-      const attached = await addAttachment(outcome.id, file);
-      if (!attached.ok) {
-        attachError = attached.errorMessage ?? "Dosya yüklenemedi.";
-      }
-    }
-    revalidatePath("/detrbridge");
-    redirect(
-      (outcome.ok
-        ? attachError
-          ? `/detrbridge?tab=todos&error=${encodeURIComponent(`Görev eklendi ama dosya yüklenemedi: ${attachError}`)}`
-          : "/detrbridge?tab=todos"
-        : `/detrbridge?tab=todos&error=${encodeURIComponent(outcome.errorMessage ?? "Görev eklenemedi.")}`) as Parameters<
-        typeof redirect
-      >[0]
-    );
-  }
-
-  async function updateTodoAction(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    if (!id) {
-      redirect("/detrbridge?tab=todos" as Parameters<typeof redirect>[0]);
-    }
-    const outcome = await updateTodo(id, {
-      title: (formData.get("title") as string | null) ?? "",
-      assignee: (formData.get("assignee") as string | null) ?? "",
-      dueDate: (formData.get("dueDate") as string | null) ?? ""
-    });
-    revalidatePath("/detrbridge");
-    redirect(
-      (outcome.ok
-        ? "/detrbridge?tab=todos"
-        : `/detrbridge?tab=todos&error=${encodeURIComponent(outcome.errorMessage ?? "Görev güncellenemedi.")}`) as Parameters<
-        typeof redirect
-      >[0]
-    );
-  }
-
-  async function toggleTodoAction(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    const next =
-      ((formData.get("next") as string | null) ?? "open") === "done" ? "done" : "open";
-    if (id) {
-      await setTodoStatus(id, next);
-    }
-    revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=todos" as Parameters<typeof redirect>[0]);
-  }
-
-  async function archiveTodoAction(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    const archived = ((formData.get("archived") as string | null) ?? "1") === "1";
-    if (id) {
-      await setTodoArchived(id, archived);
-    }
-    revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=todos" as Parameters<typeof redirect>[0]);
-  }
-
-  async function commentTodoAction(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const todoId = (formData.get("todoId") as string | null) ?? "";
-    const body = (formData.get("body") as string | null) ?? "";
-    const author = (formData.get("author") as string | null) ?? "";
-    if (!todoId) {
-      redirect("/detrbridge?tab=todos" as Parameters<typeof redirect>[0]);
-    }
-    const outcome = await addComment(todoId, body, author);
-    revalidatePath("/detrbridge");
-    redirect(
-      (outcome.ok
-        ? "/detrbridge?tab=todos"
-        : `/detrbridge?tab=todos&error=${encodeURIComponent(outcome.errorMessage ?? "Yorum eklenemedi.")}`) as Parameters<
-        typeof redirect
-      >[0]
-    );
-  }
-
-  async function deleteCommentTodoAction(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const commentId = (formData.get("commentId") as string | null) ?? "";
-    if (commentId) {
-      await deleteComment(commentId);
-    }
-    revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=todos" as Parameters<typeof redirect>[0]);
-  }
-
-  async function attachTodoAction(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const todoId = (formData.get("todoId") as string | null) ?? "";
-    const file = formData.get("file");
-    if (!todoId || !(file instanceof File) || file.size === 0) {
-      redirect("/detrbridge?tab=todos" as Parameters<typeof redirect>[0]);
-    }
-    const outcome = await addAttachment(todoId, file as File);
-    revalidatePath("/detrbridge");
-    redirect(
-      (outcome.ok
-        ? "/detrbridge?tab=todos"
-        : `/detrbridge?tab=todos&error=${encodeURIComponent(outcome.errorMessage ?? "Dosya yüklenemedi.")}`) as Parameters<
-        typeof redirect
-      >[0]
-    );
-  }
-
-  async function deleteAttachmentTodoAction(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const attachmentId = (formData.get("attachmentId") as string | null) ?? "";
-    if (attachmentId) {
-      await deleteAttachment(attachmentId);
-    }
-    revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=todos" as Parameters<typeof redirect>[0]);
-  }
-
-  async function createTodo2Action(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const outcome = await createTodo2({
-      title: (formData.get("title") as string | null) ?? "",
-      assignee: (formData.get("assignee") as string | null) ?? "",
-      dueDate: (formData.get("dueDate") as string | null) ?? ""
-    });
-    let attachError: string | null = null;
-    const file = formData.get("file");
-    if (outcome.ok && outcome.id && file instanceof File && file.size > 0) {
-      const attached = await addAttachment2(outcome.id, file);
-      if (!attached.ok) {
-        attachError = attached.errorMessage ?? "Dosya yüklenemedi.";
-      }
-    }
-    revalidatePath("/detrbridge");
-    redirect(
-      (outcome.ok
-        ? attachError
-          ? `/detrbridge?tab=todos2&error=${encodeURIComponent(`Görev eklendi ama dosya yüklenemedi: ${attachError}`)}`
-          : "/detrbridge?tab=todos2"
-        : `/detrbridge?tab=todos2&error=${encodeURIComponent(outcome.errorMessage ?? "Görev eklenemedi.")}`) as Parameters<
-        typeof redirect
-      >[0]
-    );
-  }
-
-  async function updateTodo2Action(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    if (!id) {
-      redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
-    }
-    const outcome = await updateTodo2(id, {
-      title: (formData.get("title") as string | null) ?? "",
-      assignee: (formData.get("assignee") as string | null) ?? "",
-      dueDate: (formData.get("dueDate") as string | null) ?? ""
-    });
-    revalidatePath("/detrbridge");
-    redirect(
-      (outcome.ok
-        ? "/detrbridge?tab=todos2"
-        : `/detrbridge?tab=todos2&error=${encodeURIComponent(outcome.errorMessage ?? "Görev güncellenemedi.")}`) as Parameters<
-        typeof redirect
-      >[0]
-    );
-  }
-
-  async function toggleTodo2Action(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    const next =
-      ((formData.get("next") as string | null) ?? "open") === "done" ? "done" : "open";
-    if (id) {
-      await setTodo2Status(id, next);
-    }
-    revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
-  }
-
-  async function archiveTodo2Action(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const id = (formData.get("id") as string | null) ?? "";
-    const archived = ((formData.get("archived") as string | null) ?? "1") === "1";
-    if (id) {
-      await setTodo2Archived(id, archived);
-    }
-    revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
-  }
-
-  async function commentTodo2Action(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const todoId = (formData.get("todoId") as string | null) ?? "";
-    const body = (formData.get("body") as string | null) ?? "";
-    const author = (formData.get("author") as string | null) ?? "";
-    if (!todoId) {
-      redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
-    }
-    const outcome = await addComment2(todoId, body, author);
-    revalidatePath("/detrbridge");
-    redirect(
-      (outcome.ok
-        ? "/detrbridge?tab=todos2"
-        : `/detrbridge?tab=todos2&error=${encodeURIComponent(outcome.errorMessage ?? "Yorum eklenemedi.")}`) as Parameters<
-        typeof redirect
-      >[0]
-    );
-  }
-
-  async function deleteCommentTodo2Action(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const commentId = (formData.get("commentId") as string | null) ?? "";
-    if (commentId) {
-      await deleteComment2(commentId);
-    }
-    revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
-  }
-
-  async function attachTodo2Action(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const todoId = (formData.get("todoId") as string | null) ?? "";
-    const file = formData.get("file");
-    if (!todoId || !(file instanceof File) || file.size === 0) {
-      redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
-    }
-    const outcome = await addAttachment2(todoId, file as File);
-    revalidatePath("/detrbridge");
-    redirect(
-      (outcome.ok
-        ? "/detrbridge?tab=todos2"
-        : `/detrbridge?tab=todos2&error=${encodeURIComponent(outcome.errorMessage ?? "Dosya yüklenemedi.")}`) as Parameters<
-        typeof redirect
-      >[0]
-    );
-  }
-
-  async function deleteAttachmentTodo2Action(formData: FormData) {
-    "use server";
-    if (!(await isDetrbridgeAuthenticated())) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
-    }
-    const attachmentId = (formData.get("attachmentId") as string | null) ?? "";
-    if (attachmentId) {
-      await deleteAttachment2(attachmentId);
-    }
-    revalidatePath("/detrbridge");
-    redirect("/detrbridge?tab=todos2" as Parameters<typeof redirect>[0]);
+    redirect("/detrbridge?tab=domains" as RedirectTarget);
   }
 
   async function addBriefCommentAction(formData: FormData) {
@@ -729,17 +548,17 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     // Yazar oturumdan alınır — formdan gelen bir isme asla güvenilmez.
     const author = await getDetrbridgeSessionName();
     if (!author) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+      redirect("/detrbridge" as RedirectTarget);
     }
-    const itemKey = (formData.get("itemKey") as string | null) ?? "";
-    const body = (formData.get("body") as string | null) ?? "";
+    const itemKey = readFormString(formData, "itemKey");
+    const body = readFormString(formData, "body");
     const outcome = await addBriefComment(itemKey, body, author);
     revalidatePath("/detrbridge");
     redirect(
       briefItemUrl(
         itemKey,
         outcome.ok ? undefined : (outcome.errorMessage ?? "Yorum eklenemedi.")
-      ) as Parameters<typeof redirect>[0]
+      ) as RedirectTarget
     );
   }
 
@@ -747,17 +566,17 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
     "use server";
     const author = await getDetrbridgeSessionName();
     if (!author) {
-      redirect("/detrbridge" as Parameters<typeof redirect>[0]);
+      redirect("/detrbridge" as RedirectTarget);
     }
-    const commentId = (formData.get("commentId") as string | null) ?? "";
-    const itemKey = (formData.get("itemKey") as string | null) ?? "";
+    const commentId = readFormString(formData, "commentId");
+    const itemKey = readFormString(formData, "itemKey");
     const outcome = await deleteBriefComment(commentId, author);
     revalidatePath("/detrbridge");
     redirect(
       briefItemUrl(
         itemKey,
         outcome.ok ? undefined : (outcome.errorMessage ?? "Yorum silinemedi.")
-      ) as Parameters<typeof redirect>[0]
+      ) as RedirectTarget
     );
   }
 
@@ -898,59 +717,24 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
             </>
           ) : null}
 
-          {activeTab === "todos" && todosResult ? (
+          {activeTodoBoard && todoBoardResult ? (
             <>
-              {todosResult.source === "env-missing" && (
+              {todoBoardResult.source === "env-missing" && (
                 <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
                   Supabase bağlantısı yapılandırılmamış
                   (SUPABASE_SERVICE_ROLE_KEY eksik). Görevler yüklenemiyor.
                 </div>
               )}
-              {todosResult.source === "error" && (
+              {todoBoardResult.source === "error" && (
                 <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
-                  Görevler yüklenirken hata oluştu: {todosResult.errorMessage}
+                  Görevler yüklenirken hata oluştu: {todoBoardResult.errorMessage}
                 </div>
               )}
               <TodosTab
-                todos={todosResult.items}
+                todos={todoBoardResult.items}
                 editingId={editTodoId}
-                createAction={createTodoAction}
-                updateAction={updateTodoAction}
-                toggleAction={toggleTodoAction}
-                archiveAction={archiveTodoAction}
-                commentAction={commentTodoAction}
-                deleteCommentAction={deleteCommentTodoAction}
-                attachAction={attachTodoAction}
-                deleteAttachmentAction={deleteAttachmentTodoAction}
-              />
-            </>
-          ) : null}
-
-          {activeTab === "todos2" && todos2Result ? (
-            <>
-              {todos2Result.source === "env-missing" && (
-                <div className="rounded-[1.1rem] border border-amber-400/25 bg-amber-400/10 px-5 py-3 text-[13px] font-medium text-amber-200">
-                  Supabase bağlantısı yapılandırılmamış
-                  (SUPABASE_SERVICE_ROLE_KEY eksik). Görevler yüklenemiyor.
-                </div>
-              )}
-              {todos2Result.source === "error" && (
-                <div className="rounded-[1.1rem] border border-rose-400/25 bg-rose-400/10 px-5 py-3 text-[13px] font-medium text-rose-200">
-                  Görevler yüklenirken hata oluştu: {todos2Result.errorMessage}
-                </div>
-              )}
-              <TodosTab
-                todos={todos2Result.items}
-                editingId={editTodoId}
-                tabKey="todos2"
-                createAction={createTodo2Action}
-                updateAction={updateTodo2Action}
-                toggleAction={toggleTodo2Action}
-                archiveAction={archiveTodo2Action}
-                commentAction={commentTodo2Action}
-                deleteCommentAction={deleteCommentTodo2Action}
-                attachAction={attachTodo2Action}
-                deleteAttachmentAction={deleteAttachmentTodo2Action}
+                tabKey={activeTodoBoard}
+                {...createTodoBoardActions(activeTodoBoard)}
               />
             </>
           ) : null}

@@ -6,14 +6,6 @@
  * without touching the global (teal/orange) site theme.
  */
 
-export const DM_COLORS = {
-  magenta: "#ff2d95",
-  violet: "#a855f7",
-  cyan: "#22d3ee",
-  blue: "#3b82f6",
-  red: "#ff2247"
-} as const;
-
 /** Tri-color brand gradient: magenta → violet → cyan. */
 export const DM_BRAND_GRADIENT =
   "linear-gradient(110deg, #ff2d95 0%, #a855f7 50%, #22d3ee 100%)";

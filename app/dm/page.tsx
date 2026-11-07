@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { readSearchParam } from "@/lib/search-params";
+import { readFormString } from "@/lib/form-data";
 import { isTasksAdminAuthenticated } from "@/lib/admin-auth";
 import { tasksSignInAction, tasksSignOutAction } from "@/app/dm/_actions";
 import { DmLogin } from "@/app/dm/_components/dm-login";
@@ -56,12 +58,6 @@ export const maxDuration = 300;
 
 interface DmPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return value[0] ?? "";
-  return "";
 }
 
 const inputClass =
@@ -263,7 +259,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     );
   }
 
-  const tabParam = readParam(params.tab);
+  const tabParam = readSearchParam(params.tab);
   const activeTab: DmTabKey =
     tabParam === "findings"
       ? "findings"
@@ -274,10 +270,10 @@ export default async function DmPage({ searchParams }: DmPageProps) {
           : tabParam === "scraper"
             ? "scraper"
             : "tasks";
-  const createdParam = readParam(params.created);
-  const updatedParam = readParam(params.updated);
-  const errorParam = readParam(params.error);
-  const editId = readParam(params.edit);
+  const createdParam = readSearchParam(params.created);
+  const updatedParam = readSearchParam(params.updated);
+  const errorParam = readSearchParam(params.error);
+  const editId = readSearchParam(params.edit);
 
   const tasksResult = await getAllProjectTasksAdmin();
   const editing =
@@ -292,7 +288,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     activeTab === "findings" && editId
       ? await getFindingByIdAdmin(editId)
       : null;
-  const selectedFindingId = readParam(params.finding);
+  const selectedFindingId = readSearchParam(params.finding);
   const selectedFinding =
     activeTab === "findings" && selectedFindingId
       ? findingsResult.items.find((f) => f.id === selectedFindingId) ?? null
@@ -310,16 +306,16 @@ export default async function DmPage({ searchParams }: DmPageProps) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
     await createProjectTask({
-      title: (formData.get("title") as string | null) ?? "",
-      owner: (formData.get("owner") as string | null) ?? "Ortak",
-      category: (formData.get("category") as string | null) ?? "",
-      status: parseStatus((formData.get("status") as string | null) ?? "todo"),
+      title: readFormString(formData, "title"),
+      owner: readFormString(formData, "owner", "Ortak"),
+      category: readFormString(formData, "category"),
+      status: parseStatus(readFormString(formData, "status", "todo")),
       priority: parsePriority(
-        (formData.get("priority") as string | null) ?? "normal"
+        readFormString(formData, "priority", "normal")
       ),
-      dueTarget: (formData.get("dueTarget") as string | null) ?? "",
-      notes: (formData.get("notes") as string | null) ?? "",
-      sortOrder: parseSortOrder((formData.get("sortOrder") as string | null) ?? "0")
+      dueTarget: readFormString(formData, "dueTarget"),
+      notes: readFormString(formData, "notes"),
+      sortOrder: parseSortOrder(readFormString(formData, "sortOrder", "0"))
     });
 
     revalidatePath("/dm");
@@ -331,21 +327,21 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (!id) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
     await updateProjectTask(id, {
-      title: (formData.get("title") as string | null) ?? "",
-      owner: (formData.get("owner") as string | null) ?? "Ortak",
-      category: (formData.get("category") as string | null) ?? "",
-      status: parseStatus((formData.get("status") as string | null) ?? "todo"),
+      title: readFormString(formData, "title"),
+      owner: readFormString(formData, "owner", "Ortak"),
+      category: readFormString(formData, "category"),
+      status: parseStatus(readFormString(formData, "status", "todo")),
       priority: parsePriority(
-        (formData.get("priority") as string | null) ?? "normal"
+        readFormString(formData, "priority", "normal")
       ),
-      dueTarget: (formData.get("dueTarget") as string | null) ?? "",
-      notes: (formData.get("notes") as string | null) ?? "",
-      sortOrder: parseSortOrder((formData.get("sortOrder") as string | null) ?? "0")
+      dueTarget: readFormString(formData, "dueTarget"),
+      notes: readFormString(formData, "notes"),
+      sortOrder: parseSortOrder(readFormString(formData, "sortOrder", "0"))
     });
 
     revalidatePath("/dm");
@@ -357,8 +353,8 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
-    const status = parseStatus((formData.get("status") as string | null) ?? "todo");
+    const id = readFormString(formData, "id");
+    const status = parseStatus(readFormString(formData, "status", "todo"));
     if (id) {
       await updateProjectTask(id, { status });
     }
@@ -371,7 +367,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (id) {
       await deleteProjectTask(id);
     }
@@ -393,14 +389,14 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     }
     const result = await createFinding(
       {
-        title: (formData.get("title") as string | null) ?? "",
-        area: (formData.get("area") as string | null) ?? "",
-        owner: (formData.get("owner") as string | null) ?? "Ortak",
+        title: readFormString(formData, "title"),
+        area: readFormString(formData, "area"),
+        owner: readFormString(formData, "owner", "Ortak"),
         status: normalizeFindingStatus(
-          (formData.get("status") as string | null) ?? "open"
+          readFormString(formData, "status", "open")
         ),
         severity: normalizeFindingSeverity(
-          (formData.get("severity") as string | null) ?? "normal"
+          readFormString(formData, "severity", "normal")
         ),
         sortOrder: 0
       },
@@ -418,21 +414,21 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (!id) {
       redirect("/dm?tab=findings" as Parameters<typeof redirect>[0]);
     }
     const result = await updateFinding(
       id,
       {
-        title: (formData.get("title") as string | null) ?? "",
-        area: (formData.get("area") as string | null) ?? "",
-        owner: (formData.get("owner") as string | null) ?? "Ortak",
+        title: readFormString(formData, "title"),
+        area: readFormString(formData, "area"),
+        owner: readFormString(formData, "owner", "Ortak"),
         status: normalizeFindingStatus(
-          (formData.get("status") as string | null) ?? "open"
+          readFormString(formData, "status", "open")
         ),
         severity: normalizeFindingSeverity(
-          (formData.get("severity") as string | null) ?? "normal"
+          readFormString(formData, "severity", "normal")
         )
       },
       findingFile(formData)
@@ -449,7 +445,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (id) {
       await deleteFinding(id);
     }
@@ -462,7 +458,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (id) {
       await updateFinding(id, { status: "resolved" });
     }
@@ -475,9 +471,9 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    const findingId = (formData.get("finding") as string | null) ?? "";
-    const body = (formData.get("body") as string | null) ?? "";
-    const author = (formData.get("author") as string | null) ?? "Ortak";
+    const findingId = readFormString(formData, "finding");
+    const body = readFormString(formData, "body");
+    const author = readFormString(formData, "author", "Ortak");
     if (findingId) {
       await addComment(findingId, body, author);
     }
@@ -494,8 +490,8 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
-    const findingId = (formData.get("finding") as string | null) ?? "";
+    const id = readFormString(formData, "id");
+    const findingId = readFormString(formData, "finding");
     if (id) {
       await deleteComment(id);
     }
@@ -514,8 +510,8 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
-    const platform = (formData.get("platform") as string | null) ?? "";
+    const id = readFormString(formData, "id");
+    const platform = readFormString(formData, "platform");
     const shared = (formData.get("shared") as string | null) === "1";
     if (id && platform) {
       await setPostShared(id, platform, shared);

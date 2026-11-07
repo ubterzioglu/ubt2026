@@ -6,7 +6,6 @@ import { DmLogin } from "@/app/dm/_components/dm-login";
 import { DmNav } from "@/app/dm/_components/dm-nav";
 import {
   DM_AMBIENT_BACKGROUND,
-  DM_BRAND_GRADIENT,
   DM_GRID_TEXTURE
 } from "@/app/dm/_components/theme";
 import { getAllFinderCandidatesAdmin } from "@/lib/service-finder";

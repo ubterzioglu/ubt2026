@@ -2,6 +2,8 @@ import type { Route } from "next";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { readSearchParam } from "@/lib/search-params";
+import { readFormString } from "@/lib/form-data";
 import {
   createAppointmentSlot,
   deleteAppointmentSlot,
@@ -15,18 +17,6 @@ import { SlotDatePicker } from "@/components/appointment/slot-date-picker";
 
 interface AdminSlotsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") {
-    return value;
-  }
-
-  if (Array.isArray(value)) {
-    return value[0] ?? "";
-  }
-
-  return "";
 }
 
 function buildSlotsUrl(
@@ -70,8 +60,8 @@ function formatSlotTime(startsAt: string, endsAt: string, timezone: string): str
 export default async function AdminSlotsPage({ searchParams }: AdminSlotsPageProps) {
   const params = searchParams ? await searchParams : {};
   const hasAccess = await isAdminAuthenticated();
-  const status = readParam(params.status) as "success" | "error" | "";
-  const message = readParam(params.message);
+  const status = readSearchParam(params.status) as "success" | "error" | "";
+  const message = readSearchParam(params.message);
 
   if (!hasAccess) {
     return <AdminGate redirectTo="/admin/slots" submitLabel="Open slot manager" />;
@@ -85,12 +75,12 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
     }
 
     const result = await createAppointmentSlot({
-      title: String(formData.get("title") ?? ""),
-      location: String(formData.get("location") ?? ""),
-      description: String(formData.get("description") ?? ""),
-      startsAt: String(formData.get("startsAt") ?? ""),
-      endsAt: String(formData.get("endsAt") ?? ""),
-      timezone: String(formData.get("timezone") ?? "Europe/Berlin"),
+      title: readFormString(formData, "title"),
+      location: readFormString(formData, "location"),
+      description: readFormString(formData, "description"),
+      startsAt: readFormString(formData, "startsAt"),
+      endsAt: readFormString(formData, "endsAt"),
+      timezone: readFormString(formData, "timezone", "Europe/Berlin"),
       isPublic: formData.get("isPublic") === "on"
     });
 
@@ -113,15 +103,15 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
       redirect("/admin/slots" as Route);
     }
 
-    const slotId = String(formData.get("slotId") ?? "");
+    const slotId = readFormString(formData, "slotId");
 
     const result = await updateAppointmentSlot(slotId, {
-      title: String(formData.get("title") ?? ""),
-      location: String(formData.get("location") ?? ""),
-      description: String(formData.get("description") ?? ""),
-      startsAt: String(formData.get("startsAt") ?? ""),
-      endsAt: String(formData.get("endsAt") ?? ""),
-      timezone: String(formData.get("timezone") ?? "Europe/Berlin"),
+      title: readFormString(formData, "title"),
+      location: readFormString(formData, "location"),
+      description: readFormString(formData, "description"),
+      startsAt: readFormString(formData, "startsAt"),
+      endsAt: readFormString(formData, "endsAt"),
+      timezone: readFormString(formData, "timezone", "Europe/Berlin"),
       isPublic: formData.get("isPublic") === "on"
     });
 
@@ -144,7 +134,7 @@ export default async function AdminSlotsPage({ searchParams }: AdminSlotsPagePro
       redirect("/admin/slots" as Route);
     }
 
-    const slotId = String(formData.get("slotId") ?? "");
+    const slotId = readFormString(formData, "slotId");
 
     const result = await deleteAppointmentSlot(slotId);
 

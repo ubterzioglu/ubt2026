@@ -1,7 +1,6 @@
 import "server-only";
 
-import { createClient } from "@supabase/supabase-js";
-
+import { createServiceClient } from "@/lib/supabase-server";
 import { secureCompare } from "@/lib/secure-compare";
 
 import type {
@@ -76,35 +75,6 @@ function createEmptyAppointmentsResult(
     source,
     appointments: []
   };
-}
-
-function getSupabaseEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !serviceRoleKey) {
-    return null;
-  }
-
-  return {
-    url,
-    serviceRoleKey
-  };
-}
-
-function createServiceSupabaseClient() {
-  const env = getSupabaseEnv();
-
-  if (!env) {
-    return null;
-  }
-
-  return createClient(env.url, env.serviceRoleKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false
-    }
-  });
 }
 
 function toAppointmentSlot(row: AppointmentSlotRow): AppointmentSlot {
@@ -261,7 +231,7 @@ export function hasAdminAccess(candidate: string | null | undefined): boolean {
 }
 
 export async function getAvailableAppointmentSlots(): Promise<AppointmentSlotsResult> {
-  const supabase = createServiceSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!supabase) {
     return createEmptySlotsResult("env-missing");
@@ -300,7 +270,7 @@ export async function getAvailableAppointmentSlots(): Promise<AppointmentSlotsRe
 }
 
 export async function getAllAppointmentSlots(): Promise<AppointmentSlotsResult> {
-  const supabase = createServiceSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!supabase) {
     return createEmptySlotsResult("env-missing");
@@ -335,7 +305,7 @@ export async function getAllAppointmentSlots(): Promise<AppointmentSlotsResult> 
 }
 
 export async function getAllAppointments(): Promise<AppointmentsResult> {
-  const supabase = createServiceSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!supabase) {
     return createEmptyAppointmentsResult("env-missing");
@@ -381,7 +351,7 @@ export async function createAppointmentSlot(
     };
   }
 
-  const supabase = createServiceSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!supabase) {
     return {
@@ -437,7 +407,7 @@ export async function updateAppointmentSlot(
     };
   }
 
-  const supabase = createServiceSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!supabase) {
     return {
@@ -484,7 +454,7 @@ export async function updateAppointmentSlot(
 export async function deleteAppointmentSlot(
   slotId: string
 ): Promise<AppointmentMutationResult<{ id: string }>> {
-  const supabase = createServiceSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!supabase) {
     return {
@@ -530,7 +500,7 @@ export async function createAppointment(
     };
   }
 
-  const supabase = createServiceSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!supabase) {
     return {
@@ -599,7 +569,7 @@ export async function updateAppointmentStatus(
   appointmentId: string,
   status: AppointmentStatus
 ): Promise<AppointmentMutationResult<Appointment>> {
-  const supabase = createServiceSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!supabase) {
     return {

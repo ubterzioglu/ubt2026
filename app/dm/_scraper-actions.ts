@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { readFormString } from "@/lib/form-data";
 import { isTasksAdminAuthenticated } from "@/lib/admin-auth";
 import {
   cancelFinderJobAdmin,
@@ -47,18 +48,18 @@ async function requireDmAccess(): Promise<void> {
 
 export async function scraperJobCreateAction(formData: FormData): Promise<void> {
   await requireDmAccess();
-  const city = ((formData.get("city") as string | null) ?? "").trim();
-  const location = ((formData.get("location") as string | null) ?? "").trim();
+  const city = (readFormString(formData, "city")).trim();
+  const location = (readFormString(formData, "location")).trim();
   const result = await createFinderJobAdmin({
-    title: (formData.get("title") as string | null) ?? "",
-    templateId: ((formData.get("template") as string | null) ?? "") || undefined,
+    title: readFormString(formData, "title"),
+    templateId: (readFormString(formData, "template")) || undefined,
     locationLabel: location || city,
     city,
-    freeformTopic: ((formData.get("topic") as string | null) ?? "") || undefined,
+    freeformTopic: (readFormString(formData, "topic")) || undefined,
     softCapUsd: Number(formData.get("softCap") ?? ""),
     hardCapUsd: Number(formData.get("hardCap") ?? ""),
     maxQueries: Number(formData.get("maxQueries") ?? ""),
-    seedUrls: parseLines((formData.get("seedUrls") as string | null) ?? "")
+    seedUrls: parseLines(readFormString(formData, "seedUrls"))
   });
   revalidatePath("/dm");
   const target = result.ok
@@ -69,7 +70,7 @@ export async function scraperJobCreateAction(formData: FormData): Promise<void> 
 
 export async function scraperJobRunAction(formData: FormData): Promise<void> {
   await requireDmAccess();
-  const id = (formData.get("id") as string | null) ?? "";
+  const id = readFormString(formData, "id");
   if (!id) {
     redirect(`${TAB_BASE}&sec=isler` as Parameters<typeof redirect>[0]);
   }
@@ -83,7 +84,7 @@ export async function scraperJobRunAction(formData: FormData): Promise<void> {
 
 export async function scraperJobCancelAction(formData: FormData): Promise<void> {
   await requireDmAccess();
-  const id = (formData.get("id") as string | null) ?? "";
+  const id = readFormString(formData, "id");
   if (id) {
     await cancelFinderJobAdmin(id);
   }
@@ -93,7 +94,7 @@ export async function scraperJobCancelAction(formData: FormData): Promise<void> 
 
 export async function scraperJobRequeueAction(formData: FormData): Promise<void> {
   await requireDmAccess();
-  const id = (formData.get("id") as string | null) ?? "";
+  const id = readFormString(formData, "id");
   if (id) {
     await requeueFinderJobAdmin(id);
   }
@@ -105,7 +106,7 @@ export async function scraperJobRequeueAction(formData: FormData): Promise<void>
 
 export async function scraperJobReleaseAction(formData: FormData): Promise<void> {
   await requireDmAccess();
-  const id = (formData.get("id") as string | null) ?? "";
+  const id = readFormString(formData, "id");
   if (id) {
     await releaseStuckFinderJobAdmin(id);
   }
@@ -119,13 +120,13 @@ export async function scraperCandidateReviewAction(
   formData: FormData
 ): Promise<void> {
   await requireDmAccess();
-  const id = (formData.get("id") as string | null) ?? "";
-  const jobRef = (formData.get("job") as string | null) ?? "";
+  const id = readFormString(formData, "id");
+  const jobRef = readFormString(formData, "job");
   const status = normalizeFinderReviewStatus(
-    (formData.get("status") as string | null) ?? "pending"
+    readFormString(formData, "status", "pending")
   );
-  const note = (formData.get("note") as string | null) ?? "";
-  const backFilter = (formData.get("cstatus") as string | null) ?? "pending";
+  const note = readFormString(formData, "note");
+  const backFilter = readFormString(formData, "cstatus", "pending");
   if (id) {
     await reviewFinderCandidateAdmin(id, status, note);
   }
@@ -141,7 +142,7 @@ export async function scraperTemplateToggleAction(
   formData: FormData
 ): Promise<void> {
   await requireDmAccess();
-  const id = (formData.get("id") as string | null) ?? "";
+  const id = readFormString(formData, "id");
   const active = (formData.get("active") as string | null) === "1";
   if (id) {
     await setFinderTemplateActiveAdmin(id, active);
@@ -154,17 +155,17 @@ export async function scraperTemplateUpdateAction(
   formData: FormData
 ): Promise<void> {
   await requireDmAccess();
-  const id = (formData.get("id") as string | null) ?? "";
+  const id = readFormString(formData, "id");
   if (!id) {
     redirect(`${TAB_BASE}&sec=sablonlar` as Parameters<typeof redirect>[0]);
   }
   const result = await updateFinderTemplateAdmin(id, {
     label: (formData.get("label") as string | null) ?? undefined,
     queryTemplates: parseLines(
-      (formData.get("queryTemplates") as string | null) ?? ""
+      readFormString(formData, "queryTemplates")
     ),
     mustExcludeTerms: parseCommaList(
-      (formData.get("mustExcludeTerms") as string | null) ?? ""
+      readFormString(formData, "mustExcludeTerms")
     )
   });
   revalidatePath("/dm");
@@ -178,7 +179,7 @@ export async function scraperProviderToggleAction(
   formData: FormData
 ): Promise<void> {
   await requireDmAccess();
-  const id = (formData.get("id") as string | null) ?? "";
+  const id = readFormString(formData, "id");
   const enabled = (formData.get("enabled") as string | null) === "1";
   if (id) {
     await setFinderProviderEnabledAdmin(id, enabled);

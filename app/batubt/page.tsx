@@ -2,10 +2,12 @@ import Image from "next/image";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { readSearchParam } from "@/lib/search-params";
+import { readFormString } from "@/lib/form-data";
 import { isBatubtAuthenticated } from "@/lib/admin-auth";
 import { BatubtLogin } from "@/app/batubt/_components/batubt-login";
 import { batubtSignInAction, batubtSignOutAction } from "@/app/batubt/_actions";
-import { BATUBT_BRAND_GRADIENT } from "@/app/batubt/_components/theme";
+import { BATUBT_BRAND_GRADIENT, BATUBT_YELLOW } from "@/app/batubt/_components/theme";
 import {
   getAllFooterClientsAdmin,
   getFooterClientByIdAdmin,
@@ -24,12 +26,6 @@ interface BatubtPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-function readParam(value: string | string[] | undefined): string {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return value[0] ?? "";
-  return "";
-}
-
 const STATUS_OPTIONS: { value: FooterClientStatus; label: string }[] = [
   { value: "pending", label: "Beklemede" },
   { value: "added", label: "Eklendi" },
@@ -41,9 +37,6 @@ const STATUS_BADGE: Record<FooterClientStatus, string> = {
   added: "border-violet-400/30 bg-violet-400/10 text-violet-300",
   verified: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
 };
-
-// BatuBT accent (yellow) — used in place of the global teal `accent` token.
-const YELLOW = "#FBBC05";
 
 function statusLabel(value: FooterClientStatus): string {
   return STATUS_OPTIONS.find((option) => option.value === value)?.label ?? value;
@@ -93,12 +86,12 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
   }
 
   const result = await getAllFooterClientsAdmin();
-  const createdParam = readParam(params.created);
-  const updatedParam = readParam(params.updated);
-  const deletedParam = readParam(params.deleted);
-  const ownerFilter = readParam(params.owner);
-  const statusFilter = readParam(params.status);
-  const editId = readParam(params.edit);
+  const createdParam = readSearchParam(params.created);
+  const updatedParam = readSearchParam(params.updated);
+  const deletedParam = readSearchParam(params.deleted);
+  const ownerFilter = readSearchParam(params.owner);
+  const statusFilter = readSearchParam(params.status);
+  const editId = readSearchParam(params.edit);
   const editing = editId ? await getFooterClientByIdAdmin(editId) : null;
 
   async function createAction(formData: FormData) {
@@ -107,14 +100,14 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
       redirect("/batubt" as Parameters<typeof redirect>[0]);
     }
     await createFooterClient({
-      clientName: (formData.get("clientName") as string | null) ?? "",
-      domain: (formData.get("domain") as string | null) ?? "",
-      owner: (formData.get("owner") as string | null) ?? "",
-      responsible: (formData.get("responsible") as string | null) ?? "",
-      footerCode: (formData.get("footerCode") as string | null) ?? "",
-      status: parseStatus((formData.get("status") as string | null) ?? "pending"),
-      notes: (formData.get("notes") as string | null) ?? "",
-      sortOrder: parseSortOrder((formData.get("sortOrder") as string | null) ?? "0")
+      clientName: readFormString(formData, "clientName"),
+      domain: readFormString(formData, "domain"),
+      owner: readFormString(formData, "owner"),
+      responsible: readFormString(formData, "responsible"),
+      footerCode: readFormString(formData, "footerCode"),
+      status: parseStatus(readFormString(formData, "status", "pending")),
+      notes: readFormString(formData, "notes"),
+      sortOrder: parseSortOrder(readFormString(formData, "sortOrder", "0"))
     });
 
     revalidatePath("/batubt");
@@ -126,19 +119,19 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
     if (!(await isBatubtAuthenticated())) {
       redirect("/batubt" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (!id) {
       redirect("/batubt" as Parameters<typeof redirect>[0]);
     }
     await updateFooterClient(id, {
-      clientName: (formData.get("clientName") as string | null) ?? "",
-      domain: (formData.get("domain") as string | null) ?? "",
-      owner: (formData.get("owner") as string | null) ?? "",
-      responsible: (formData.get("responsible") as string | null) ?? "",
-      footerCode: (formData.get("footerCode") as string | null) ?? "",
-      status: parseStatus((formData.get("status") as string | null) ?? "pending"),
-      notes: (formData.get("notes") as string | null) ?? "",
-      sortOrder: parseSortOrder((formData.get("sortOrder") as string | null) ?? "0")
+      clientName: readFormString(formData, "clientName"),
+      domain: readFormString(formData, "domain"),
+      owner: readFormString(formData, "owner"),
+      responsible: readFormString(formData, "responsible"),
+      footerCode: readFormString(formData, "footerCode"),
+      status: parseStatus(readFormString(formData, "status", "pending")),
+      notes: readFormString(formData, "notes"),
+      sortOrder: parseSortOrder(readFormString(formData, "sortOrder", "0"))
     });
 
     revalidatePath("/batubt");
@@ -150,8 +143,8 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
     if (!(await isBatubtAuthenticated())) {
       redirect("/batubt" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
-    const status = parseStatus((formData.get("status") as string | null) ?? "pending");
+    const id = readFormString(formData, "id");
+    const status = parseStatus(readFormString(formData, "status", "pending"));
     if (id) {
       await updateFooterClient(id, { status });
     }
@@ -164,7 +157,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
     if (!(await isBatubtAuthenticated())) {
       redirect("/batubt" as Parameters<typeof redirect>[0]);
     }
-    const id = (formData.get("id") as string | null) ?? "";
+    const id = readFormString(formData, "id");
     if (id) {
       await deleteFooterClient(id);
     }
@@ -276,7 +269,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
               <div>
                 <p
                   className="text-[10px] font-semibold uppercase tracking-[0.28em]"
-                  style={{ color: YELLOW }}
+                  style={{ color: BATUBT_YELLOW }}
                 >
                   BatuBT
                 </p>
@@ -338,7 +331,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
             >
               <p
                 className="text-[10px] font-semibold uppercase tracking-[0.2em]"
-                style={{ color: YELLOW }}
+                style={{ color: BATUBT_YELLOW }}
               >
                 {stat.label}
               </p>
@@ -369,7 +362,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
                 <a
                   href="/batubt"
                   className="text-[13px] font-semibold"
-                  style={{ color: YELLOW }}
+                  style={{ color: BATUBT_YELLOW }}
                 >
                   İptal
                 </a>
@@ -398,7 +391,7 @@ export default async function BatubtPage({ searchParams }: BatubtPageProps) {
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
                 <span className={darkLabel}>
-                  Müşteri / metin <span style={{ color: YELLOW }}>*</span>
+                  Müşteri / metin <span style={{ color: BATUBT_YELLOW }}>*</span>
                 </span>
                 <input
                   type="text"
@@ -694,7 +687,7 @@ function FooterClientCard({
             <details className="group">
               <summary
                 className="inline-flex cursor-pointer list-none items-center gap-1.5 text-[11px] font-semibold [&::-webkit-details-marker]:hidden"
-                style={{ color: YELLOW }}
+                style={{ color: BATUBT_YELLOW }}
               >
                 <span>Footer kodunu göster</span>
                 <span className="text-white/30 transition group-open:rotate-90">

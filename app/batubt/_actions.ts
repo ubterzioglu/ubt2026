@@ -3,6 +3,7 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { readFormString } from "@/lib/form-data";
 import { signInBatubt, signOutBatubt } from "@/lib/admin-auth";
 
 /**
@@ -11,7 +12,7 @@ import { signInBatubt, signOutBatubt } from "@/lib/admin-auth";
  * independently of the other admin keys. The key never appears in the URL.
  */
 export async function batubtSignInAction(formData: FormData): Promise<void> {
-  const candidate = String(formData.get("access") ?? "");
+  const candidate = readFormString(formData, "access");
   await signInBatubt(candidate);
   redirect("/batubt" as Route);
 }

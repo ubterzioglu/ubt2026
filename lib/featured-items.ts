@@ -1,7 +1,6 @@
 import "server-only";
 
-import { createClient } from "@supabase/supabase-js";
-
+import { createAnonClient, createServiceClient } from "@/lib/supabase-server";
 import type { FeaturedCategory, FeaturedItem } from "@/types/site";
 
 type SourceState = "remote" | "env-missing" | "empty" | "error";
@@ -55,25 +54,15 @@ const toFeaturedItem = (row: SupabaseFeaturedRow): FeaturedItem => ({
 export async function getFeaturedCollections<TCategory extends FeaturedCategory>(
   categories: readonly TCategory[]
 ): Promise<FeaturedCollectionResult<TCategory>> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey =
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!url || !anonKey) {
-    return {
-      source: "env-missing",
-      itemsByCategory: defaultCollections(categories)
-    };
-  }
-
   try {
-    const supabase = createClient(url, anonKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false
-      }
-    });
+    const supabase = createAnonClient();
+
+    if (!supabase) {
+      return {
+        source: "env-missing",
+        itemsByCategory: defaultCollections(categories)
+      };
+    }
 
     const { data, error } = await supabase
       .from("featured_items")
@@ -109,21 +98,6 @@ export async function getFeaturedCollections<TCategory extends FeaturedCategory>
       itemsByCategory: defaultCollections(categories)
     };
   }
-}
-
-function getServiceEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) return null;
-  return { url, serviceRoleKey };
-}
-
-function createServiceClient() {
-  const env = getServiceEnv();
-  if (!env) return null;
-  return createClient(env.url, env.serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
 }
 
 export interface BookmarkInput {

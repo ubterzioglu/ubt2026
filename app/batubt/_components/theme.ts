@@ -7,7 +7,6 @@
 
 /** Core accent hexes (kept as named constants so JSX can reference them). */
 export const BATUBT_YELLOW = "#FBBC05"; // Google / hardal sarısı (Almanya 101)
-export const BATUBT_VIOLET = "#A855F7";
 
 /**
  * Tri-color brand gradient used for borders, the logo tile and the CTA.

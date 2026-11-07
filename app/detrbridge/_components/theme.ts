@@ -6,7 +6,6 @@
  */
 
 /** Core accent hexes (kept as named constants so JSX can reference them). */
-export const DETRBRIDGE_NAVY = "#1E3A8A";
 export const DETRBRIDGE_GOLD = "#F5B700";
 
 /**

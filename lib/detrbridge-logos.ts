@@ -1,6 +1,8 @@
 import "server-only";
 
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+import { createServiceClient } from "@/lib/supabase-server";
 
 type SourceState = "remote" | "env-missing" | "empty" | "error";
 
@@ -59,21 +61,6 @@ const LOGO_COLUMNS =
 const LOGO_BUCKET = "detrbridge-logos";
 const SIGNED_URL_TTL_SECONDS = 60 * 60 * 8; // 8 hours, matches the admin session
 const MAX_LOGO_BYTES = 10 * 1024 * 1024; // 10 MB
-
-function getServiceEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) return null;
-  return { url, serviceRoleKey };
-}
-
-function createServiceClient(): SupabaseClient | null {
-  const env = getServiceEnv();
-  if (!env) return null;
-  return createClient(env.url, env.serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
-}
 
 function toLogo(
   row: SupabaseLogoRow,
