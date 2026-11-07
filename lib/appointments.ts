@@ -2,6 +2,7 @@ import "server-only";
 
 import { createServiceClient } from "@/lib/supabase-server";
 import { secureCompare } from "@/lib/secure-compare";
+import { APPOINTMENT_STATUSES } from "@/types/appointment";
 
 import type {
   Appointment,
@@ -53,6 +54,12 @@ interface AppointmentRow {
 
 const activeStatuses = new Set<AppointmentStatus>(["pending", "confirmed"]);
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function normalizeStatus(value: string): AppointmentStatus | null {
+  return (APPOINTMENT_STATUSES as readonly string[]).includes(value)
+    ? (value as AppointmentStatus)
+    : null;
+}
 
 function normalizeOptionalText(value: string | null | undefined): string | null {
   const normalized = value?.trim() ?? "";
@@ -567,8 +574,17 @@ export async function createAppointment(
 
 export async function updateAppointmentStatus(
   appointmentId: string,
-  status: AppointmentStatus
+  status: string
 ): Promise<AppointmentMutationResult<Appointment>> {
+  const normalizedStatus = normalizeStatus(status);
+
+  if (!normalizedStatus) {
+    return {
+      ok: false,
+      errorMessage: "Unknown appointment status."
+    };
+  }
+
   const supabase = createServiceClient();
 
   if (!supabase) {
@@ -582,7 +598,7 @@ export async function updateAppointmentStatus(
     const { data, error } = await supabase
       .from("appointments")
       .update({
-        status
+        status: normalizedStatus
       })
       .eq("id", appointmentId)
       .select(

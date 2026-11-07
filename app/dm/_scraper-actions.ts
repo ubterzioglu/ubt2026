@@ -40,6 +40,11 @@ function parseCommaList(value: string): string[] {
     .filter(Boolean);
 }
 
+function parseOptionalNumber(value: string): number | undefined {
+  const trimmed = value.trim();
+  return trimmed ? Number(trimmed) : undefined;
+}
+
 async function requireDmAccess(): Promise<void> {
   if (!(await isTasksAdminAuthenticated())) {
     redirect("/dm" as Parameters<typeof redirect>[0]);
@@ -58,7 +63,7 @@ export async function scraperJobCreateAction(formData: FormData): Promise<void> 
     freeformTopic: (readFormString(formData, "topic")) || undefined,
     softCapUsd: Number(formData.get("softCap") ?? ""),
     hardCapUsd: Number(formData.get("hardCap") ?? ""),
-    maxQueries: Number(formData.get("maxQueries") ?? ""),
+    maxQueries: parseOptionalNumber(readFormString(formData, "maxQueries")),
     seedUrls: parseLines(readFormString(formData, "seedUrls"))
   });
   revalidatePath("/dm");
@@ -85,35 +90,38 @@ export async function scraperJobRunAction(formData: FormData): Promise<void> {
 export async function scraperJobCancelAction(formData: FormData): Promise<void> {
   await requireDmAccess();
   const id = readFormString(formData, "id");
-  if (id) {
-    await cancelFinderJobAdmin(id);
-  }
+  const result = id ? await cancelFinderJobAdmin(id) : null;
   revalidatePath("/dm");
-  redirect(`${TAB_BASE}&sec=isler` as Parameters<typeof redirect>[0]);
+  const target = result && !result.ok
+    ? `${TAB_BASE}&sec=isler&error=${encodeURIComponent(result.errorMessage ?? "İş iptal edilemedi.")}`
+    : `${TAB_BASE}&sec=isler`;
+  redirect(target as Parameters<typeof redirect>[0]);
 }
 
 export async function scraperJobRequeueAction(formData: FormData): Promise<void> {
   await requireDmAccess();
   const id = readFormString(formData, "id");
-  if (id) {
-    await requeueFinderJobAdmin(id);
-  }
+  const result = id ? await requeueFinderJobAdmin(id) : null;
   revalidatePath("/dm");
-  redirect(
-    `${TAB_BASE}&sec=isler${id ? `&job=${id}` : ""}` as Parameters<typeof redirect>[0]
-  );
+  const target = `${TAB_BASE}&sec=isler${id ? `&job=${id}` : ""}${
+    result && !result.ok
+      ? `&error=${encodeURIComponent(result.errorMessage ?? "İş yeniden kuyruğa alınamadı.")}`
+      : ""
+  }`;
+  redirect(target as Parameters<typeof redirect>[0]);
 }
 
 export async function scraperJobReleaseAction(formData: FormData): Promise<void> {
   await requireDmAccess();
   const id = readFormString(formData, "id");
-  if (id) {
-    await releaseStuckFinderJobAdmin(id);
-  }
+  const result = id ? await releaseStuckFinderJobAdmin(id) : null;
   revalidatePath("/dm");
-  redirect(
-    `${TAB_BASE}&sec=isler${id ? `&job=${id}` : ""}` as Parameters<typeof redirect>[0]
-  );
+  const target = `${TAB_BASE}&sec=isler${id ? `&job=${id}` : ""}${
+    result && !result.ok
+      ? `&error=${encodeURIComponent(result.errorMessage ?? "İş serbest bırakılamadı.")}`
+      : ""
+  }`;
+  redirect(target as Parameters<typeof redirect>[0]);
 }
 
 export async function scraperCandidateReviewAction(
@@ -127,15 +135,14 @@ export async function scraperCandidateReviewAction(
   );
   const note = readFormString(formData, "note");
   const backFilter = readFormString(formData, "cstatus", "pending");
-  if (id) {
-    await reviewFinderCandidateAdmin(id, status, note);
-  }
+  const result = id ? await reviewFinderCandidateAdmin(id, status, note) : null;
   revalidatePath("/dm");
-  redirect(
-    `${TAB_BASE}&sec=isler&job=${jobRef}&cstatus=${encodeURIComponent(backFilter)}` as Parameters<
-      typeof redirect
-    >[0]
-  );
+  const target = `${TAB_BASE}&sec=isler&job=${jobRef}&cstatus=${encodeURIComponent(backFilter)}${
+    result && !result.ok
+      ? `&error=${encodeURIComponent(result.errorMessage ?? "Aday güncellenemedi.")}`
+      : ""
+  }`;
+  redirect(target as Parameters<typeof redirect>[0]);
 }
 
 export async function scraperTemplateToggleAction(
@@ -144,11 +151,12 @@ export async function scraperTemplateToggleAction(
   await requireDmAccess();
   const id = readFormString(formData, "id");
   const active = (formData.get("active") as string | null) === "1";
-  if (id) {
-    await setFinderTemplateActiveAdmin(id, active);
-  }
+  const result = id ? await setFinderTemplateActiveAdmin(id, active) : null;
   revalidatePath("/dm");
-  redirect(`${TAB_BASE}&sec=sablonlar` as Parameters<typeof redirect>[0]);
+  const target = result && !result.ok
+    ? `${TAB_BASE}&sec=sablonlar&error=${encodeURIComponent(result.errorMessage ?? "Şablon güncellenemedi.")}`
+    : `${TAB_BASE}&sec=sablonlar`;
+  redirect(target as Parameters<typeof redirect>[0]);
 }
 
 export async function scraperTemplateUpdateAction(
@@ -181,9 +189,10 @@ export async function scraperProviderToggleAction(
   await requireDmAccess();
   const id = readFormString(formData, "id");
   const enabled = (formData.get("enabled") as string | null) === "1";
-  if (id) {
-    await setFinderProviderEnabledAdmin(id, enabled);
-  }
+  const result = id ? await setFinderProviderEnabledAdmin(id, enabled) : null;
   revalidatePath("/dm");
-  redirect(`${TAB_BASE}&sec=saglayicilar` as Parameters<typeof redirect>[0]);
+  const target = result && !result.ok
+    ? `${TAB_BASE}&sec=saglayicilar&error=${encodeURIComponent(result.errorMessage ?? "Sağlayıcı güncellenemedi.")}`
+    : `${TAB_BASE}&sec=saglayicilar`;
+  redirect(target as Parameters<typeof redirect>[0]);
 }

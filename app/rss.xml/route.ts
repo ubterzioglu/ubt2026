@@ -14,6 +14,8 @@ interface FeedItem {
   guid: string;
 }
 
+const ABSOLUTE_URL_PATTERN = /^https?:\/\//i;
+
 const builder = new XMLBuilder({
   ignoreAttributes: false,
   format: true,
@@ -40,7 +42,11 @@ export async function GET() {
     for (const update of news.items) {
       feedItems.push({
         title: update.title,
-        link: update.detailHref ? `${BASE_URL}${update.detailHref}` : BASE_URL,
+        link: update.detailHref
+          ? ABSOLUTE_URL_PATTERN.test(update.detailHref)
+            ? update.detailHref
+            : `${BASE_URL}${update.detailHref}`
+          : BASE_URL,
         description: update.summary,
         pubDate: toRfc822(update.createdAt),
         guid: `${BASE_URL}/#news-${update.id}`

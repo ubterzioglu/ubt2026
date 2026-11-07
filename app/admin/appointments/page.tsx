@@ -79,12 +79,9 @@ export default async function AdminAppointmentsPage({
     }
 
     const appointmentId = readFormString(formData, "appointmentId");
-    const appointmentStatus = readFormString(formData, "status", "pending");
+    const appointmentStatus = readFormString(formData, "status");
 
-    const result = await updateAppointmentStatus(
-      appointmentId,
-      appointmentStatus as (typeof APPOINTMENT_STATUSES)[number]
-    );
+    const result = await updateAppointmentStatus(appointmentId, appointmentStatus);
 
     revalidatePath("/admin");
     revalidatePath("/admin/appointments");

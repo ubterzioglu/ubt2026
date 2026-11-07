@@ -29,7 +29,8 @@ export function deriveSessionToken(secret: string, label: string): string {
 
 /** Verifies a token produced by {@link deriveSessionToken} in constant time. */
 export function verifySessionToken(token: string, secret: string, label: string): boolean {
-  const expected = deriveSessionToken(secret, label);
-  if (token.length !== expected.length) return false;
-  return timingSafeEqual(Buffer.from(token), Buffer.from(expected));
+  const expected = Buffer.from(deriveSessionToken(secret, label));
+  const candidate = Buffer.from(token);
+  if (candidate.length !== expected.length) return false;
+  return timingSafeEqual(candidate, expected);
 }

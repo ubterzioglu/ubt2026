@@ -793,12 +793,14 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
     classifierConfig.provider_key === "gemini2"
       ? providerByKey(runtime, "gemini")
       : providerByKey(runtime, "gemini2");
+  let activeClassifierConfig = classifierConfig;
   const switcher: ClassifierSwitcher = {
     current: createGeminiClassifier(resolveSecret(classifierConfig.secret_ref)),
     rateLimitKey: `${classifierConfig.secret_ref}:${baseModel}`,
     switchToSecondary:
       secondaryClassifierConfig?.is_enabled === true
         ? () => {
+            activeClassifierConfig = secondaryClassifierConfig;
             switcher.current = createGeminiClassifier(
               resolveSecret(secondaryClassifierConfig.secret_ref)
             );
@@ -837,8 +839,8 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
     }
 
     await recordCost(runtime, {
-      provider_key: "gemini",
-      provider_config_id: classifierConfig.id,
+      provider_key: activeClassifierConfig.provider_key,
+      provider_config_id: activeClassifierConfig.id,
       event_type: "classify",
       billing_unit: "tokens",
       quantity: classification.usage.inputTokens + classification.usage.outputTokens,

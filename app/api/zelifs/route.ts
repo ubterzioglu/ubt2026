@@ -41,11 +41,15 @@ export async function POST(request: Request) {
   }
 
   const b = body as Record<string, unknown>;
-  await saveZelifsState({
+  const saved = await saveZelifsState({
     trips: Array.isArray(b.trips) ? b.trips : [],
     plus: Array.isArray(b.plus) ? b.plus : [],
     minus: Array.isArray(b.minus) ? b.minus : []
   });
+
+  if (!saved) {
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true });
 }

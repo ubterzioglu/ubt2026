@@ -305,7 +305,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!(await isTasksAdminAuthenticated())) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    await createProjectTask({
+    const result = await createProjectTask({
       title: readFormString(formData, "title"),
       owner: readFormString(formData, "owner", "Ortak"),
       category: readFormString(formData, "category"),
@@ -319,7 +319,10 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     });
 
     revalidatePath("/dm");
-    redirect("/dm?created=1" as Parameters<typeof redirect>[0]);
+    const target = result.ok
+      ? "/dm?created=1"
+      : `/dm?error=${encodeURIComponent(result.errorMessage ?? "1")}`;
+    redirect(target as Parameters<typeof redirect>[0]);
   }
 
   async function updateAction(formData: FormData) {
@@ -331,7 +334,7 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     if (!id) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
-    await updateProjectTask(id, {
+    const result = await updateProjectTask(id, {
       title: readFormString(formData, "title"),
       owner: readFormString(formData, "owner", "Ortak"),
       category: readFormString(formData, "category"),
@@ -345,7 +348,10 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     });
 
     revalidatePath("/dm");
-    redirect("/dm?updated=1" as Parameters<typeof redirect>[0]);
+    const target = result.ok
+      ? "/dm?updated=1"
+      : `/dm?error=${encodeURIComponent(result.errorMessage ?? "1")}`;
+    redirect(target as Parameters<typeof redirect>[0]);
   }
 
   async function inlineStatusAction(formData: FormData) {
@@ -355,11 +361,13 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     }
     const id = readFormString(formData, "id");
     const status = parseStatus(readFormString(formData, "status", "todo"));
-    if (id) {
-      await updateProjectTask(id, { status });
-    }
+    const result = id ? await updateProjectTask(id, { status }) : null;
     revalidatePath("/dm");
-    redirect("/dm" as Parameters<typeof redirect>[0]);
+    const target =
+      result && !result.ok
+        ? `/dm?error=${encodeURIComponent(result.errorMessage ?? "1")}`
+        : "/dm";
+    redirect(target as Parameters<typeof redirect>[0]);
   }
 
   async function deleteAction(formData: FormData) {
@@ -368,11 +376,13 @@ export default async function DmPage({ searchParams }: DmPageProps) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
     const id = readFormString(formData, "id");
-    if (id) {
-      await deleteProjectTask(id);
-    }
+    const result = id ? await deleteProjectTask(id) : null;
     revalidatePath("/dm");
-    redirect("/dm" as Parameters<typeof redirect>[0]);
+    const target =
+      result && !result.ok
+        ? `/dm?error=${encodeURIComponent(result.errorMessage ?? "1")}`
+        : "/dm";
+    redirect(target as Parameters<typeof redirect>[0]);
   }
 
   // --- Test findings actions ---
@@ -446,11 +456,13 @@ export default async function DmPage({ searchParams }: DmPageProps) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
     const id = readFormString(formData, "id");
-    if (id) {
-      await deleteFinding(id);
-    }
+    const result = id ? await deleteFinding(id) : null;
     revalidatePath("/dm");
-    redirect("/dm?tab=findings" as Parameters<typeof redirect>[0]);
+    const target =
+      result && !result.ok
+        ? `/dm?tab=findings&error=${encodeURIComponent(result.errorMessage ?? "1")}`
+        : "/dm?tab=findings";
+    redirect(target as Parameters<typeof redirect>[0]);
   }
 
   async function resolveFindingAction(formData: FormData) {
@@ -459,11 +471,13 @@ export default async function DmPage({ searchParams }: DmPageProps) {
       redirect("/dm" as Parameters<typeof redirect>[0]);
     }
     const id = readFormString(formData, "id");
-    if (id) {
-      await updateFinding(id, { status: "resolved" });
-    }
+    const result = id ? await updateFinding(id, { status: "resolved" }) : null;
     revalidatePath("/dm");
-    redirect("/dm?tab=findings" as Parameters<typeof redirect>[0]);
+    const target =
+      result && !result.ok
+        ? `/dm?tab=findings&error=${encodeURIComponent(result.errorMessage ?? "1")}`
+        : "/dm?tab=findings";
+    redirect(target as Parameters<typeof redirect>[0]);
   }
 
   async function addCommentAction(formData: FormData) {
@@ -474,12 +488,14 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     const findingId = readFormString(formData, "finding");
     const body = readFormString(formData, "body");
     const author = readFormString(formData, "author", "Ortak");
-    if (findingId) {
-      await addComment(findingId, body, author);
-    }
+    const result = findingId ? await addComment(findingId, body, author) : null;
     revalidatePath("/dm");
+    const errorSuffix =
+      result && !result.ok
+        ? `&error=${encodeURIComponent(result.errorMessage ?? "1")}`
+        : "";
     redirect(
-      `/dm?tab=findings&finding=${findingId}#yorumlar` as Parameters<
+      `/dm?tab=findings&finding=${findingId}${errorSuffix}#yorumlar` as Parameters<
         typeof redirect
       >[0]
     );
@@ -492,12 +508,14 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     }
     const id = readFormString(formData, "id");
     const findingId = readFormString(formData, "finding");
-    if (id) {
-      await deleteComment(id);
-    }
+    const result = id ? await deleteComment(id) : null;
     revalidatePath("/dm");
+    const errorSuffix =
+      result && !result.ok
+        ? `&error=${encodeURIComponent(result.errorMessage ?? "1")}`
+        : "";
     redirect(
-      `/dm?tab=findings&finding=${findingId}#yorumlar` as Parameters<
+      `/dm?tab=findings&finding=${findingId}${errorSuffix}#yorumlar` as Parameters<
         typeof redirect
       >[0]
     );
@@ -513,11 +531,14 @@ export default async function DmPage({ searchParams }: DmPageProps) {
     const id = readFormString(formData, "id");
     const platform = readFormString(formData, "platform");
     const shared = (formData.get("shared") as string | null) === "1";
-    if (id && platform) {
-      await setPostShared(id, platform, shared);
-    }
+    const result =
+      id && platform ? await setPostShared(id, platform, shared) : null;
     revalidatePath("/dm");
-    redirect("/dm?tab=social" as Parameters<typeof redirect>[0]);
+    const target =
+      result && !result.ok
+        ? `/dm?tab=social&error=${encodeURIComponent(result.errorMessage ?? "1")}`
+        : "/dm?tab=social";
+    redirect(target as Parameters<typeof redirect>[0]);
   }
 
   const allTasks = tasksResult.items;

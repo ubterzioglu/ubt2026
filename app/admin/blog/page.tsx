@@ -21,6 +21,14 @@ interface AdminBlogPageProps {
 const inputClass =
   "w-full rounded-[1rem] border border-line/80 bg-white px-4 py-3 text-sm text-ink shadow-sm outline-none transition focus:border-accent/55 focus:ring-2 focus:ring-accent/15";
 
+function buildBlogErrorUrl(message?: string, editId?: string): string {
+  const params = new URLSearchParams({ error: message || "Action failed." });
+  if (editId) {
+    params.set("edit", editId);
+  }
+  return `/admin/blog?${params.toString()}`;
+}
+
 export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps) {
   const params = searchParams ? await searchParams : {};
   const hasAccess = await isAdminAuthenticated();
@@ -32,6 +40,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
   const blogResult = await getAllBlogPostsAdmin();
   const createdParam = readSearchParam(params.created);
   const updatedParam = readSearchParam(params.updated);
+  const errorParam = readSearchParam(params.error);
   const editId = readSearchParam(params.edit);
   const editing = editId ? await getBlogPostByIdAdmin(editId) : null;
 
@@ -47,7 +56,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
     const coverImageUrl = readFormString(formData, "coverImageUrl");
     const isPublished = formData.get("isPublished") === "on";
 
-    await createBlogPost({
+    const result = await createBlogPost({
       title,
       slug: slug.trim() || undefined,
       summary,
@@ -55,6 +64,10 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
       coverImageUrl: coverImageUrl.trim() || null,
       isPublished
     });
+
+    if (!result.ok) {
+      redirect(buildBlogErrorUrl(result.errorMessage) as Parameters<typeof redirect>[0]);
+    }
 
     revalidatePath("/admin/blog");
     revalidatePath("/blog");
@@ -77,7 +90,7 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
     const coverImageUrl = readFormString(formData, "coverImageUrl");
     const isPublished = formData.get("isPublished") === "on";
 
-    await updateBlogPost(id, {
+    const result = await updateBlogPost(id, {
       title,
       slug: slug.trim() || undefined,
       summary,
@@ -85,6 +98,10 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
       coverImageUrl: coverImageUrl.trim() || null,
       isPublished
     });
+
+    if (!result.ok) {
+      redirect(buildBlogErrorUrl(result.errorMessage, id) as Parameters<typeof redirect>[0]);
+    }
 
     revalidatePath("/admin/blog");
     revalidatePath("/blog");
@@ -99,7 +116,10 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
     const id = readFormString(formData, "id");
     const current = formData.get("isPublished") === "true";
     if (id) {
-      await updateBlogPost(id, { isPublished: !current });
+      const result = await updateBlogPost(id, { isPublished: !current });
+      if (!result.ok) {
+        redirect(buildBlogErrorUrl(result.errorMessage) as Parameters<typeof redirect>[0]);
+      }
     }
     revalidatePath("/admin/blog");
     revalidatePath("/blog");
@@ -113,7 +133,10 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
     }
     const id = readFormString(formData, "id");
     if (id) {
-      await deleteBlogPost(id);
+      const result = await deleteBlogPost(id);
+      if (!result.ok) {
+        redirect(buildBlogErrorUrl(result.errorMessage) as Parameters<typeof redirect>[0]);
+      }
     }
     revalidatePath("/admin/blog");
     revalidatePath("/blog");
@@ -160,6 +183,11 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
         {updatedParam === "1" && (
           <div className="rounded-[1.35rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800">
             Blog post updated successfully.
+          </div>
+        )}
+        {errorParam && (
+          <div className="rounded-[1.35rem] border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-900">
+            {errorParam}
           </div>
         )}
 

@@ -133,7 +133,7 @@ async function removeLogoObjects(
  * URL and its vote average, sorted by average rating (highest first,
  * unvoted logos last), then by creation time.
  */
-export async function getAllLogosAdmin(round: number = 1): Promise<DetrbridgeLogosResult> {
+export async function getAllLogosAdmin(round: number): Promise<DetrbridgeLogosResult> {
   const supabase = createServiceClient();
   if (!supabase) return { source: "env-missing", items: [] };
   try {
@@ -203,7 +203,7 @@ export async function getAllLogosAdmin(round: number = 1): Promise<DetrbridgeLog
 }
 
 /** Lightweight total count for nav badges — no rows, no signed URLs. */
-export async function getLogoCount(round: number = 1): Promise<number> {
+export async function getLogoCount(round: number): Promise<number> {
   const supabase = createServiceClient();
   if (!supabase) return 0;
   const { count, error } = await supabase
@@ -217,7 +217,7 @@ export async function getLogoCount(round: number = 1): Promise<number> {
 export async function createLogo(
   input: { uploaderName: string },
   file: File,
-  round: number = 2
+  round: number
 ): Promise<MutationResult> {
   const uploaderName = input.uploaderName.trim();
   if (uploaderName.length < 2) {

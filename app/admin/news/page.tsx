@@ -17,6 +17,11 @@ interface AdminNewsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
+function buildNewsErrorUrl(message?: string): string {
+  const params = new URLSearchParams({ error: message || "Action failed." });
+  return `/admin/news?${params.toString()}`;
+}
+
 export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps) {
   const params = searchParams ? await searchParams : {};
   const hasAccess = await isAdminAuthenticated();
@@ -27,6 +32,7 @@ export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps
 
   const newsResult = await getAllNewsUpdatesAdmin();
   const createdParam = readSearchParam(params.created);
+  const errorParam = readSearchParam(params.error);
 
   async function createAction(formData: FormData) {
     "use server";
@@ -41,7 +47,7 @@ export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps
     const sortOrder = parseInt(rawOrder, 10);
     const isPublished = formData.get("isPublished") === "on";
 
-    await createNewsUpdate({
+    const result = await createNewsUpdate({
       title,
       summary,
       imageUrl: imageUrl.trim() || null,
@@ -49,6 +55,10 @@ export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps
       sortOrder: isNaN(sortOrder) ? 0 : sortOrder,
       isPublished
     });
+
+    if (!result.ok) {
+      redirect(buildNewsErrorUrl(result.errorMessage) as Parameters<typeof redirect>[0]);
+    }
 
     revalidatePath("/admin/news");
     redirect("/admin/news?created=1" as Parameters<typeof redirect>[0]);
@@ -62,7 +72,10 @@ export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps
     const id = readFormString(formData, "id");
     const current = formData.get("isPublished") === "true";
     if (id) {
-      await updateNewsUpdate(id, { isPublished: !current });
+      const result = await updateNewsUpdate(id, { isPublished: !current });
+      if (!result.ok) {
+        redirect(buildNewsErrorUrl(result.errorMessage) as Parameters<typeof redirect>[0]);
+      }
     }
     revalidatePath("/admin/news");
     redirect("/admin/news" as Parameters<typeof redirect>[0]);
@@ -75,7 +88,10 @@ export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps
     }
     const id = readFormString(formData, "id");
     if (id) {
-      await deleteNewsUpdate(id);
+      const result = await deleteNewsUpdate(id);
+      if (!result.ok) {
+        redirect(buildNewsErrorUrl(result.errorMessage) as Parameters<typeof redirect>[0]);
+      }
     }
     revalidatePath("/admin/news");
     redirect("/admin/news" as Parameters<typeof redirect>[0]);
@@ -116,6 +132,11 @@ export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps
         {createdParam === "1" && (
           <div className="rounded-[1.35rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800">
             News item created successfully.
+          </div>
+        )}
+        {errorParam && (
+          <div className="rounded-[1.35rem] border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-medium text-rose-900">
+            {errorParam}
           </div>
         )}
 

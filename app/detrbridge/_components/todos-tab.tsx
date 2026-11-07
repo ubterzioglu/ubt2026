@@ -72,8 +72,8 @@ function formatFileSize(bytes: number): string {
  * "Görevler" panel: add/edit accordion form, then a list of todo rows each
  * with a status toggle, collapsible attachments and comment thread.
  * Ported from the retired /detr board — same surface minus destructive
- * delete (görevler arşivlenir, silinmez) and no per-session "kim" prefill
- * (detrbridge has no per-user identity, single shared gate).
+ * delete (görevler arşivlenir, silinmez). Comment authors are never typed
+ * into the form; the server action takes them from the signed-in session name.
  */
 export function TodosTab({
   todos,
@@ -605,13 +605,6 @@ function TodoRow({
             className="flex flex-col gap-2 sm:flex-row sm:items-center"
           >
             <input type="hidden" name="todoId" value={item.id} />
-            <input
-              type="text"
-              name="author"
-              maxLength={100}
-              placeholder="İsim"
-              className={`${darkInput} sm:max-w-[130px]`}
-            />
             <input
               type="text"
               name="body"

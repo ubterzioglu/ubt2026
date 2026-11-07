@@ -181,10 +181,12 @@ function createTodoBoardActions(board: DetrbridgeTodoBoard) {
 
   async function commentAction(formData: FormData) {
     "use server";
-    await requireDetrbridgeAuth();
+    const author = await getDetrbridgeSessionName();
+    if (!author) {
+      redirect("/detrbridge" as RedirectTarget);
+    }
     const todoId = readFormString(formData, "todoId");
     const body = readFormString(formData, "body");
-    const author = readFormString(formData, "author");
     if (!todoId) {
       redirect(todoBoardUrl(board));
     }
@@ -343,7 +345,7 @@ export default async function DetrbridgePage({ searchParams }: DetrbridgePagePro
         >[0]
       );
     }
-    const outcome = await createLogo({ uploaderName }, file as File);
+    const outcome = await createLogo({ uploaderName }, file as File, 1);
     revalidatePath("/detrbridge");
     redirect(
       (outcome.ok
