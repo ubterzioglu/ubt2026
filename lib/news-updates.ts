@@ -1,5 +1,6 @@
 import "server-only";
 
+import { validateContentFields } from "@/lib/content-validation";
 import { createAnonClient, createServiceClient } from "@/lib/supabase-server";
 import type { NewsUpdateItem } from "@/types/site";
 
@@ -112,8 +113,8 @@ export async function getAllNewsUpdatesAdmin(): Promise<NewsUpdatesResult> {
 export async function createNewsUpdate(input: NewsUpdateInput): Promise<NewsUpdateMutationResult> {
   const title = input.title.trim();
   const summary = input.summary.trim();
-  if (title.length < 2) return { ok: false, errorMessage: "Title must be at least 2 characters." };
-  if (summary.length < 5) return { ok: false, errorMessage: "Summary must be at least 5 characters." };
+  const invalid = validateContentFields(input);
+  if (invalid) return { ok: false, errorMessage: invalid };
 
   const supabase = createServiceClient();
   if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
@@ -137,6 +138,9 @@ export async function updateNewsUpdate(
   id: string,
   input: Partial<NewsUpdateInput>
 ): Promise<NewsUpdateMutationResult> {
+  const invalid = validateContentFields(input);
+  if (invalid) return { ok: false, errorMessage: invalid };
+
   const supabase = createServiceClient();
   if (!supabase) return { ok: false, errorMessage: "Service credentials missing." };
   const patch: Record<string, unknown> = {};

@@ -405,9 +405,17 @@ export async function selectLogo(id: string): Promise<MutationResult> {
     return { ok: false, errorMessage: "Service credentials missing." };
   }
   try {
+    const { data: target, error: targetError } = await supabase
+      .from("detrbridge_logos")
+      .select("round")
+      .eq("id", id)
+      .maybeSingle();
+    if (targetError) throw targetError;
+    if (!target) return { ok: false, errorMessage: "Logo not found." };
     const { error: clearError } = await supabase
       .from("detrbridge_logos")
       .update({ is_selected: false })
+      .eq("round", (target as { round: number }).round)
       .neq("id", id);
     if (clearError) throw clearError;
     const { error } = await supabase
