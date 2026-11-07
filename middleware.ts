@@ -25,6 +25,7 @@ function withDetrbridgeVisitorCookie(request: NextRequest): NextResponse {
   const requestHeaders = new Headers(request.headers);
 
   if (existing) {
+    requestHeaders.delete(DETRBRIDGE_FIRST_VISIT_HEADER);
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
@@ -53,9 +54,13 @@ const UBTSA_VISITOR_COOKIE = "ubt_ubtsa_visitor";
  */
 function withUbtsaVisitorCookie(request: NextRequest): NextResponse {
   const seen = request.cookies.get(UBTSA_VISITOR_COOKIE)?.value;
-  if (seen) return NextResponse.next();
-
   const requestHeaders = new Headers(request.headers);
+
+  if (seen) {
+    requestHeaders.delete(UBTSA_FIRST_VISIT_HEADER);
+    return NextResponse.next({ request: { headers: requestHeaders } });
+  }
+
   requestHeaders.set(UBTSA_FIRST_VISIT_HEADER, "1");
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
