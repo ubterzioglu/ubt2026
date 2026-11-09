@@ -2,8 +2,7 @@ import type { ReactNode } from "react";
 
 import { adminSignOutAction } from "@/app/admin/_actions";
 import { AdminIcon } from "@/app/admin/_components/admin-icon";
-import { AdminMobileMenu, AdminNav } from "@/app/admin/_components/admin-nav";
-import { BOARD_ACCESS_LABEL, BOARD_ROUTES } from "@/app/admin/_components/admin-routes";
+import { AdminBoardsGroup, AdminMobileMenu, AdminNav } from "@/app/admin/_components/admin-nav";
 
 function Brand() {
   return (
@@ -16,44 +15,6 @@ function Brand() {
         <span className="block text-[11px] text-ink/50">Requests &amp; content</span>
       </span>
     </a>
-  );
-}
-
-function BoardsGroup() {
-  return (
-    <details className="group/boards">
-      <summary className="flex min-h-[40px] cursor-pointer list-none items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-ink/70 transition hover:bg-paper hover:text-ink [&::-webkit-details-marker]:hidden">
-        <AdminIcon name="boards" className="text-ink/45" />
-        <span className="flex-1">Boards</span>
-        <span className="rounded-md bg-paper px-1.5 py-0.5 text-[11px] font-semibold text-ink/55">
-          {BOARD_ROUTES.length}
-        </span>
-        <AdminIcon
-          name="chevron"
-          size={16}
-          className="text-ink/40 transition-transform group-open/boards:rotate-180"
-        />
-      </summary>
-      <ul className="mt-1 space-y-0.5 border-l border-line/70 pl-3 ml-5">
-        {BOARD_ROUTES.map((route) => (
-          <li key={route.href}>
-            <a
-              href={route.href}
-              className="flex min-h-[34px] items-center justify-between gap-2 rounded-md px-2 py-1 text-[13px] text-ink/70 transition hover:bg-paper hover:text-accent"
-            >
-              <span className="truncate">{route.label}</span>
-              <span
-                className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] ${
-                  route.access === "public" ? "bg-paper text-ink/50" : "bg-accent/10 text-accent"
-                }`}
-              >
-                {BOARD_ACCESS_LABEL[route.access]}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </details>
   );
 }
 
@@ -84,7 +45,7 @@ function NavigationBody() {
         <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/40">
           Other pages
         </p>
-        <BoardsGroup />
+        <AdminBoardsGroup />
       </div>
     </div>
   );

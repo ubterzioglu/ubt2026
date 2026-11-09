@@ -28,3 +28,10 @@ docs/logoubt2/
 # Gemini sohbet exportlari - buyuk ve gereksiz, commitleme
 *Google Gemini.html
 *Google Gemini_files/
+# Yerel/ozel dosyalar
+.claude/
+.superpowers/
+pagespeed_insights_raporu.md
+01M5Q6MV78JCR2YHKWK0H0S8Z6*.md
+public/good.png
+ubt2026-ozel-dosyalar/
