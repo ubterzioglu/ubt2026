@@ -8,7 +8,12 @@ import { AdminGate } from "@/app/admin/_components/admin-gate";
 import { AdminPageHeader } from "@/app/admin/_components/admin-page-header";
 import { FlashBanner } from "@/app/admin/_components/flash-banner";
 import { PublishableRow } from "@/app/admin/_components/publishable-row";
-import { adminInputClass } from "@/app/admin/_components/form-classes";
+import { AdminBadge, AdminDisclosure, AdminListPanel } from "@/app/admin/_components/admin-panels";
+import {
+  adminInputClass,
+  adminPrimaryButtonClass,
+  adminSmallButtonClass
+} from "@/app/admin/_components/form-classes";
 import {
   getAllBlogPostsAdmin,
   getBlogPostByIdAdmin,
@@ -144,179 +149,162 @@ export default async function AdminBlogPage({ searchParams }: AdminBlogPageProps
   }
 
   return (
-    <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto flex max-w-4xl flex-col gap-6">
-        <AdminPageHeader eyebrow="Content management" title="Blog" />
+    <>
+      <AdminPageHeader
+        eyebrow="Content"
+        title="Blog"
+        description="Markdown posts published under /blog."
+      />
 
-        {createdParam === "1" && (
-          <FlashBanner tone="success">Blog post created successfully.</FlashBanner>
-        )}
-        {updatedParam === "1" && (
-          <FlashBanner tone="success">Blog post updated successfully.</FlashBanner>
-        )}
-        {errorParam && <FlashBanner tone="error">{errorParam}</FlashBanner>}
+      {createdParam === "1" && (
+        <FlashBanner tone="success">Blog post created successfully.</FlashBanner>
+      )}
+      {updatedParam === "1" && (
+        <FlashBanner tone="success">Blog post updated successfully.</FlashBanner>
+      )}
+      {errorParam && <FlashBanner tone="error">{errorParam}</FlashBanner>}
 
-        <section className="section-panel px-6 py-6 sm:px-8">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="font-body text-xl font-semibold text-ink">
-              {editing ? "Edit post" : "Add new post"}
-            </h2>
-            {editing ? (
-              <a href="/admin/blog" className="text-sm font-semibold text-accent hover:text-accent/80">
-                Cancel edit
-              </a>
-            ) : null}
+      <AdminDisclosure
+        key={editing?.id ?? "new"}
+        title={editing ? `Edit post: ${editing.title}` : "Add new post"}
+        description={editing ? `/blog/${editing.slug}` : "Write a new Markdown post"}
+        defaultOpen={Boolean(editing) || blogResult.items.length === 0}
+      >
+        {editing ? (
+          <div className="mb-4 flex justify-end">
+            <a href="/admin/blog" className={adminSmallButtonClass}>
+              Cancel edit
+            </a>
           </div>
-          <form
-            action={editing ? updateAction : createAction}
-            className="mt-6 space-y-4"
-          >
-            {editing ? <input type="hidden" name="id" value={editing.id} /> : null}
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="block sm:col-span-2">
-                <span className="mb-1.5 block text-sm font-medium text-ink">
-                  Title <span className="text-accent">*</span>
-                </span>
-                <input
-                  type="text"
-                  name="title"
-                  required
-                  minLength={2}
-                  maxLength={200}
-                  defaultValue={editing?.title ?? ""}
-                  placeholder="e.g. How I test flaky end-to-end flows"
-                  className={adminInputClass}
-                />
-              </label>
-              <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-ink">
-                  Slug <span className="text-ink/45">(optional)</span>
-                </span>
-                <input
-                  type="text"
-                  name="slug"
-                  maxLength={120}
-                  defaultValue={editing?.slug ?? ""}
-                  placeholder="auto-generated from title"
-                  className={adminInputClass}
-                />
-              </label>
-              <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-ink">Cover image URL</span>
-                <input
-                  type="text"
-                  name="coverImageUrl"
-                  defaultValue={editing?.coverImageUrl ?? ""}
-                  placeholder="https://..."
-                  className={adminInputClass}
-                />
-              </label>
-              <label className="block sm:col-span-2">
-                <span className="mb-1.5 block text-sm font-medium text-ink">
-                  Summary <span className="text-accent">*</span>
-                </span>
-                <textarea
-                  name="summary"
-                  required
-                  minLength={5}
-                  maxLength={500}
-                  rows={2}
-                  defaultValue={editing?.summary ?? ""}
-                  placeholder="Short description shown in the blog list card."
-                  className={adminInputClass}
-                />
-              </label>
-              <label className="block sm:col-span-2">
-                <span className="mb-1.5 block text-sm font-medium text-ink">
-                  Content (Markdown) <span className="text-accent">*</span>
-                </span>
-                <textarea
-                  name="content"
-                  required
-                  minLength={1}
-                  rows={14}
-                  defaultValue={editing?.content ?? ""}
-                  placeholder={"# Heading\n\nWrite the post body in **Markdown**. Lists, links, tables and code blocks are supported."}
-                  className={`${adminInputClass} font-mono`}
-                />
-              </label>
-              <div className="flex items-center gap-3 self-end pb-3">
-                <input
-                  type="checkbox"
-                  name="isPublished"
-                  id="isPublished"
-                  defaultChecked={editing?.isPublished ?? false}
-                  className="h-4 w-4 rounded border-line/80 accent-accent"
-                />
-                <label htmlFor="isPublished" className="text-sm font-medium text-ink">
-                  Published (visible on /blog)
-                </label>
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent/95"
-            >
-              {editing ? "Save changes" : "Create blog post"}
-            </button>
-          </form>
-        </section>
-
-        <section className="space-y-3">
-          <div className="flex items-center justify-between gap-4 px-1">
-            <h2 className="font-body text-xl font-semibold text-ink">
-              All posts
-              <span className="ml-2 font-body text-base font-normal text-ink/50">
-                ({blogResult.items.length})
+        ) : null}
+        <form
+          action={editing ? updateAction : createAction}
+          className="space-y-4"
+        >
+          {editing ? <input type="hidden" name="id" value={editing.id} /> : null}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block sm:col-span-2">
+              <span className="mb-1.5 block text-sm font-medium text-ink">
+                Title <span className="text-accent">*</span>
               </span>
-            </h2>
-          </div>
-
-          {blogResult.items.length > 0 ? (
-            blogResult.items.map((item) => (
-              <PublishableRow
-                key={item.id}
-                id={item.id}
-                title={item.title}
-                summary={item.summary}
-                isPublished={item.isPublished}
-                badges={
-                  <span className="rounded-full bg-paper px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/55">
-                    /{item.slug}
-                  </span>
-                }
-                details={
-                  <p className="mt-1 text-xs text-ink/50">
-                    View:{" "}
-                    <a
-                      href={`/blog/${item.slug}`}
-                      className="text-accent hover:underline"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      /blog/{item.slug}
-                    </a>
-                  </p>
-                }
-                leadingActions={
-                  <a
-                    href={`/admin/blog?edit=${item.id}`}
-                    className="inline-flex min-h-[38px] items-center justify-center rounded-full border border-line/80 bg-white px-4 py-2 text-xs font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-                  >
-                    Edit
-                  </a>
-                }
-                togglePublishAction={togglePublishAction}
-                deleteAction={deleteAction}
+              <input
+                type="text"
+                name="title"
+                required
+                minLength={2}
+                maxLength={200}
+                defaultValue={editing?.title ?? ""}
+                placeholder="e.g. How I test flaky end-to-end flows"
+                className={adminInputClass}
               />
-            ))
-          ) : (
-            <p className="rounded-[1.35rem] border border-dashed border-line/80 px-5 py-6 text-sm text-ink/68">
-              No blog posts yet. Use the form above to add the first one.
-            </p>
-          )}
-        </section>
-      </div>
-    </main>
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">
+                Slug <span className="text-ink/45">(optional)</span>
+              </span>
+              <input
+                type="text"
+                name="slug"
+                maxLength={120}
+                defaultValue={editing?.slug ?? ""}
+                placeholder="auto-generated from title"
+                className={adminInputClass}
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">Cover image URL</span>
+              <input
+                type="text"
+                name="coverImageUrl"
+                defaultValue={editing?.coverImageUrl ?? ""}
+                placeholder="https://..."
+                className={adminInputClass}
+              />
+            </label>
+            <label className="block sm:col-span-2">
+              <span className="mb-1.5 block text-sm font-medium text-ink">
+                Summary <span className="text-accent">*</span>
+              </span>
+              <textarea
+                name="summary"
+                required
+                minLength={5}
+                maxLength={500}
+                rows={2}
+                defaultValue={editing?.summary ?? ""}
+                placeholder="Short description shown in the blog list card."
+                className={adminInputClass}
+              />
+            </label>
+            <label className="block sm:col-span-2">
+              <span className="mb-1.5 block text-sm font-medium text-ink">
+                Content (Markdown) <span className="text-accent">*</span>
+              </span>
+              <textarea
+                name="content"
+                required
+                minLength={1}
+                rows={14}
+                defaultValue={editing?.content ?? ""}
+                placeholder={"# Heading\n\nWrite the post body in **Markdown**. Lists, links, tables and code blocks are supported."}
+                className={`${adminInputClass} font-mono`}
+              />
+            </label>
+            <div className="flex items-center gap-3 self-end pb-3">
+              <input
+                type="checkbox"
+                name="isPublished"
+                id="isPublished"
+                defaultChecked={editing?.isPublished ?? false}
+                className="h-4 w-4 rounded border-line/80 accent-accent"
+              />
+              <label htmlFor="isPublished" className="text-sm font-medium text-ink">
+                Published (visible on /blog)
+              </label>
+            </div>
+          </div>
+          <button type="submit" className={adminPrimaryButtonClass}>
+            {editing ? "Save changes" : "Create blog post"}
+          </button>
+        </form>
+      </AdminDisclosure>
+
+      <AdminListPanel
+        title="All posts"
+        count={blogResult.items.length}
+        emptyMessage="No blog posts yet. Use the form above to add the first one."
+      >
+        {blogResult.items.map((item) => (
+          <PublishableRow
+            key={item.id}
+            id={item.id}
+            title={item.title}
+            summary={item.summary}
+            isPublished={item.isPublished}
+            badges={<AdminBadge>/{item.slug}</AdminBadge>}
+            details={
+              <p className="mt-1 text-xs text-ink/50">
+                View:{" "}
+                <a
+                  href={`/blog/${item.slug}`}
+                  className="text-accent hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  /blog/{item.slug}
+                </a>
+              </p>
+            }
+            leadingActions={
+              <a href={`/admin/blog?edit=${item.id}`} className={adminSmallButtonClass}>
+                Edit
+              </a>
+            }
+            togglePublishAction={togglePublishAction}
+            deleteAction={deleteAction}
+          />
+        ))}
+      </AdminListPanel>
+    </>
   );
 }

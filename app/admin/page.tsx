@@ -1,12 +1,46 @@
+import type { Route } from "next";
+import Link from "next/link";
+
 import { getAllAppointments, getAllAppointmentSlots } from "@/lib/appointments";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAllNewsUpdatesAdmin } from "@/lib/news-updates";
 import { getAllBlogPostsAdmin } from "@/lib/blog-posts";
-import { AdminGate } from "@/app/admin/_components/admin-gate";
-import { OverviewAccordion } from "@/app/admin/_components/overview-accordion";
-import { RouteList } from "@/app/admin/_components/route-list";
-import { AdminPageHeader } from "@/app/admin/_components/admin-page-header";
+import { getAllBookmarksAdmin } from "@/lib/featured-items";
 import { formatSlotTime } from "@/lib/slot-time";
+import { AdminGate } from "@/app/admin/_components/admin-gate";
+import { AdminIcon } from "@/app/admin/_components/admin-icon";
+import type { AdminIconName } from "@/app/admin/_components/admin-icon";
+import { AdminPageHeader } from "@/app/admin/_components/admin-page-header";
+import { AdminBadge, AdminListPanel } from "@/app/admin/_components/admin-panels";
+import { APPOINTMENT_STATUS_TONE } from "@/app/admin/_components/appointment-status";
+import {
+  adminPrimaryButtonClass,
+  adminSecondaryButtonClass,
+  adminSmallButtonClass
+} from "@/app/admin/_components/form-classes";
+import { APPOINTMENT_STATUSES } from "@/types/appointment";
+
+interface StatTile {
+  label: string;
+  value: number;
+  hint: string;
+  href: Route;
+  icon: AdminIconName;
+  highlight?: boolean;
+}
+
+interface Publishable {
+  isPublished: boolean;
+}
+
+function countDrafts(items: readonly Publishable[]): number {
+  return items.filter((item) => !item.isPublished).length;
+}
+
+function draftHint(items: readonly Publishable[]): string {
+  const drafts = countDrafts(items);
+  return drafts > 0 ? `${drafts} draft${drafts === 1 ? "" : "s"}` : "All published";
+}
 
 export default async function AdminPage() {
   const hasAccess = await isAdminAuthenticated();
@@ -15,190 +49,185 @@ export default async function AdminPage() {
     return <AdminGate redirectTo="/admin" submitLabel="Open admin panel" />;
   }
 
-  const [
-    slotsResult,
-    appointmentsResult,
-    newsResult,
-    blogResult
-  ] = await Promise.all([
-    getAllAppointmentSlots(),
-    getAllAppointments(),
-    getAllNewsUpdatesAdmin(),
-    getAllBlogPostsAdmin()
-  ]);
+  const [slotsResult, appointmentsResult, newsResult, blogResult, bookmarksResult] =
+    await Promise.all([
+      getAllAppointmentSlots(),
+      getAllAppointments(),
+      getAllNewsUpdatesAdmin(),
+      getAllBlogPostsAdmin(),
+      getAllBookmarksAdmin()
+    ]);
+
   const now = new Date();
-  const openSlots = slotsResult.slots.filter(
-    (slot) => slot.isPublic && !slot.isBooked && new Date(slot.startsAt) > now
-  );
-  const pendingAppointments = appointmentsResult.appointments.filter(
-    (appointment) => appointment.status === "pending"
-  );
-  const confirmedAppointments = appointmentsResult.appointments.filter(
-    (appointment) => appointment.status === "confirmed"
-  );
-  const recentAppointments = appointmentsResult.appointments.slice(0, 5);
-  const nextSlots = slotsResult.slots
-    .filter((slot) => new Date(slot.startsAt) > now)
-    .slice(0, 5);
+  const appointments = appointmentsResult.appointments;
+  const futureSlots = slotsResult.slots.filter((slot) => new Date(slot.startsAt) > now);
+  const openSlots = futureSlots.filter((slot) => slot.isPublic && !slot.isBooked);
+  const statusCounts = APPOINTMENT_STATUSES.map((status) => ({
+    status,
+    count: appointments.filter((appointment) => appointment.status === status).length
+  }));
+  const pendingCount = statusCounts.find((entry) => entry.status === "pending")?.count ?? 0;
+  const recentAppointments = appointments.slice(0, 6);
+  const nextSlots = futureSlots.slice(0, 6);
+
+  const tiles: StatTile[] = [
+    {
+      label: "Pending review",
+      value: pendingCount,
+      hint: "Waiting for a decision",
+      href: "/admin/appointments?filter=pending" as Route,
+      icon: "inbox",
+      highlight: pendingCount > 0
+    },
+    {
+      label: "Open slots",
+      value: openSlots.length,
+      hint: `${futureSlots.length} upcoming in total`,
+      href: "/admin/slots",
+      icon: "calendar"
+    },
+    {
+      label: "News",
+      value: newsResult.items.length,
+      hint: draftHint(newsResult.items),
+      href: "/admin/news",
+      icon: "news"
+    },
+    {
+      label: "Blog posts",
+      value: blogResult.items.length,
+      hint: draftHint(blogResult.items),
+      href: "/admin/blog",
+      icon: "pen"
+    },
+    {
+      label: "Bookmarks",
+      value: bookmarksResult.items.length,
+      hint: draftHint(bookmarksResult.items),
+      href: "/admin/bookmarks",
+      icon: "bookmark"
+    }
+  ];
 
   return (
-    <main className="page-shell min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6">
-        <AdminPageHeader eyebrow="Request admin" title="UBT" showBackLink={false}>
-          <a
-            href="/admin/slots"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent/95"
-          >
-            Manage slots
-          </a>
-          <a
-            href="/admin/appointments"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-          >
-            Review appointments
-          </a>
-          <a
-            href="/admin/news"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-          >
-            Manage news
-          </a>
-          <a
-            href="/admin/blog"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-          >
-            Manage blog
-          </a>
-          <a
-            href="/admin/bookmarks"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-line/80 bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/40 hover:text-accent"
-          >
-            Manage bookmarks
-          </a>
-        </AdminPageHeader>
+    <>
+      <AdminPageHeader
+        eyebrow="Overview"
+        title="Dashboard"
+        description={`${appointments.length} requests in total, ${pendingCount} waiting for review.`}
+      >
+        <Link href="/admin/appointments" className={adminSecondaryButtonClass}>
+          Review requests
+        </Link>
+        <Link href={"/admin/slots#new-slot" as Route} className={adminPrimaryButtonClass}>
+          <AdminIcon name="plus" size={16} />
+          New slot
+        </Link>
+      </AdminPageHeader>
 
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          <article className="section-panel px-6 py-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-              Open slots
-            </p>
-            <p className="mt-3 font-body text-4xl font-semibold text-ink">{openSlots.length}</p>
-            <p className="mt-2 text-sm text-ink/68">Published future slots with no active booking.</p>
-          </article>
-          <article className="section-panel px-6 py-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-              Pending review
-            </p>
-            <p className="mt-3 font-body text-4xl font-semibold text-ink">
-              {pendingAppointments.length}
-            </p>
-            <p className="mt-2 text-sm text-ink/68">Requests waiting for confirmation or cancellation.</p>
-          </article>
-          <article className="section-panel px-6 py-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-              Confirmed
-            </p>
-            <p className="mt-3 font-body text-4xl font-semibold text-ink">
-              {confirmedAppointments.length}
-            </p>
-            <p className="mt-2 text-sm text-ink/68">Appointments currently marked as confirmed.</p>
-          </article>
-          <article className="section-panel px-6 py-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-              News items
-            </p>
-            <p className="mt-3 font-body text-4xl font-semibold text-ink">
-              {newsResult.items.length}
-            </p>
-            <p className="mt-2 text-sm text-ink/68">Published and draft news &amp; update cards.</p>
-          </article>
-          <article className="section-panel px-6 py-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-              Blog posts
-            </p>
-            <p className="mt-3 font-body text-4xl font-semibold text-ink">
-              {blogResult.items.length}
-            </p>
-            <p className="mt-2 text-sm text-ink/68">Published and draft blog posts.</p>
-          </article>
-        </section>
-
-        <RouteList />
-
-        <section className="flex flex-col gap-4">
-          <OverviewAccordion
-            eyebrow="Upcoming slots"
-            title="Next availability"
-            count={nextSlots.length}
-            viewAllHref="/admin/slots"
+      <section className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
+        {tiles.map((tile) => (
+          <Link
+            key={tile.label}
+            href={tile.href}
+            className={`group rounded-xl border bg-white px-4 py-4 shadow-sm transition hover:border-accent/40 ${
+              tile.highlight ? "border-amber-300" : "border-line/80"
+            }`}
           >
-            {nextSlots.length > 0 ? (
-              nextSlots.map((slot) => (
-                <article
-                  key={slot.id}
-                  className="rounded-[1.35rem] border border-line/80 bg-white/85 px-4 py-4"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-base font-semibold text-ink">{slot.title}</h3>
-                      <p className="mt-1 text-sm text-ink/70">
-                        {formatSlotTime(slot.startsAt, slot.endsAt, slot.timezone)}
-                      </p>
-                    </div>
-                    <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
-                      {slot.isBooked ? "Booked" : slot.isPublic ? "Open" : "Hidden"}
-                    </span>
-                  </div>
-                </article>
-              ))
-            ) : (
-              <p className="rounded-[1.35rem] border border-dashed border-line/80 px-4 py-5 text-sm text-ink/68">
-                No future slots are available yet.
-              </p>
-            )}
-          </OverviewAccordion>
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-xs font-semibold text-ink/55">{tile.label}</span>
+              <AdminIcon
+                name={tile.icon}
+                size={16}
+                className="text-ink/35 transition group-hover:text-accent"
+              />
+            </div>
+            <p className="mt-2 text-3xl font-semibold tracking-tight text-ink">{tile.value}</p>
+            <p className="mt-1 truncate text-xs text-ink/50">{tile.hint}</p>
+          </Link>
+        ))}
+      </section>
 
-          <OverviewAccordion
-            eyebrow="Recent requests"
-            title="Latest bookings"
-            count={recentAppointments.length}
-            viewAllHref="/admin/appointments"
-          >
-            {recentAppointments.length > 0 ? (
-              recentAppointments.map((appointment) => (
-                <article
-                  key={appointment.id}
-                  className="rounded-[1.35rem] border border-line/80 bg-white/85 px-4 py-4"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-base font-semibold text-ink">{appointment.fullName}</h3>
-                      <p className="mt-1 text-sm text-ink/70">{appointment.email}</p>
-                      {appointment.slot ? (
-                        <p className="mt-2 text-sm text-ink/68">
-                          {formatSlotTime(
-                            appointment.slot.startsAt,
-                            appointment.slot.endsAt,
-                            appointment.slot.timezone
-                          )}
-                        </p>
-                      ) : null}
-                    </div>
-                    <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/72">
-                      {appointment.status}
-                    </span>
-                  </div>
-                </article>
-              ))
-            ) : (
-              <p className="rounded-[1.35rem] border border-dashed border-line/80 px-4 py-5 text-sm text-ink/68">
-                No appointment requests have been submitted yet.
-              </p>
-            )}
-          </OverviewAccordion>
+      <section className="rounded-xl border border-line/80 bg-white px-5 py-4 shadow-sm">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold text-ink">Request pipeline</h2>
+          <span className="text-xs text-ink/50">{appointments.length} total</span>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {statusCounts.map((entry) => (
+            <Link
+              key={entry.status}
+              href={`/admin/appointments?filter=${entry.status}` as Route}
+              className="flex items-center justify-between gap-2 rounded-lg border border-line/70 px-3 py-2.5 transition hover:border-accent/40"
+            >
+              <AdminBadge tone={APPOINTMENT_STATUS_TONE[entry.status]}>{entry.status}</AdminBadge>
+              <span className="text-lg font-semibold text-ink">{entry.count}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
 
-        </section>
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+        <AdminListPanel
+          title="Latest requests"
+          count={recentAppointments.length}
+          emptyMessage="No appointment requests have been submitted yet."
+          actions={
+            <Link href="/admin/appointments" className={adminSmallButtonClass}>
+              View all
+            </Link>
+          }
+        >
+          {recentAppointments.map((appointment) => (
+            <li key={appointment.id} className="flex items-center justify-between gap-4 px-5 py-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-ink">{appointment.fullName}</p>
+                <p className="truncate text-xs text-ink/55">
+                  {appointment.email}
+                  {appointment.company ? ` · ${appointment.company}` : ""}
+                </p>
+                {appointment.slot ? (
+                  <p className="mt-0.5 truncate text-xs text-ink/45">
+                    {formatSlotTime(
+                      appointment.slot.startsAt,
+                      appointment.slot.endsAt,
+                      appointment.slot.timezone
+                    )}
+                  </p>
+                ) : null}
+              </div>
+              <AdminBadge tone={APPOINTMENT_STATUS_TONE[appointment.status]}>
+                {appointment.status}
+              </AdminBadge>
+            </li>
+          ))}
+        </AdminListPanel>
+
+        <AdminListPanel
+          title="Upcoming slots"
+          count={nextSlots.length}
+          emptyMessage="No future slots are available yet."
+          actions={
+            <Link href="/admin/slots" className={adminSmallButtonClass}>
+              Manage
+            </Link>
+          }
+        >
+          {nextSlots.map((slot) => (
+            <li key={slot.id} className="flex items-center justify-between gap-4 px-5 py-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-ink">{slot.title}</p>
+                <p className="truncate text-xs text-ink/55">
+                  {formatSlotTime(slot.startsAt, slot.endsAt, slot.timezone)}
+                </p>
+              </div>
+              <AdminBadge tone={slot.isBooked ? "info" : slot.isPublic ? "success" : "neutral"}>
+                {slot.isBooked ? "Booked" : slot.isPublic ? "Open" : "Hidden"}
+              </AdminBadge>
+            </li>
+          ))}
+        </AdminListPanel>
       </div>
-    </main>
+    </>
   );
 }
