@@ -1,3 +1,4 @@
+import { ScrollToTop } from "@/components/scroll-to-top";
 import { projectairDocument } from "@/content/projectair";
 import { PROJECTAIR_PLAN_MARKDOWN } from "@/content/projectair-plan";
 import { ProjectairPlan } from "@/app/projectair/_components/projectair-plan";
@@ -133,6 +134,8 @@ export function ProjectairDocument({ signOut }: Readonly<ProjectairDocumentProps
           {doc.footer}
         </p>
       </footer>
+
+      <ScrollToTop />
     </div>
   );
 }
