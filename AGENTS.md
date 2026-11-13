@@ -12,6 +12,7 @@ npm run build        # Production build
 npm run start        # Start production server
 npm run lint         # ESLint (zero warnings allowed: --max-warnings=0)
 npm run typecheck    # TypeScript type checking (tsc --noEmit)
+npm run sync:projectair  # Regenerate content/projectair-plan.ts from the Drive HTML (add -- --file <path> for a local copy)
 ```
 
 **Always run `npm run lint` and `npm run typecheck` after making changes.** Both must pass with zero errors.

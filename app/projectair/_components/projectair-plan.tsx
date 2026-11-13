@@ -4,6 +4,8 @@ import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import { headingSlug } from "@/lib/heading-slug";
+
 function nodeText(node: ReactNode): string {
   return Children.toArray(node)
     .map((child) => {
@@ -15,11 +17,7 @@ function nodeText(node: ReactNode): string {
 }
 
 function headingId(children: ReactNode): string {
-  return nodeText(children)
-    .trim()
-    .toLowerCase()
-    .replace(/[^\p{L}\p{M}\p{N}\s-]/gu, "")
-    .replace(/\s/g, "-");
+  return headingSlug(nodeText(children));
 }
 
 const markdownComponents: Components = {
