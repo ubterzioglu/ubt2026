@@ -3,12 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   outputFileTracingRoot: process.cwd(),
-  // The /newdragoman proposal is read from disk at request time (it must not
-  // live in public/, which would bypass its password gate), and a plain
-  // fs.readFile is invisible to Next's tracer — list it so the standalone
-  // build copies it.
+  // The /newdragoman and /projectair documents are read from disk at request
+  // time (they must not live in public/, which would bypass their password
+  // gates), and a plain fs.readFile is invisible to Next's tracer — list them
+  // so the standalone build copies them.
   outputFileTracingIncludes: {
-    "/newdragoman/content": ["./app/newdragoman/_content/**"]
+    "/newdragoman/content": ["./app/newdragoman/_content/**"],
+    "/projectair/content": ["./app/projectair/_content/**"]
   },
   // Lint runs locally via `npm run lint`; skipping it in `next build`
   // shaves the lint pass off every Coolify deployment.

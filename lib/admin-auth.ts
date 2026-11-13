@@ -38,6 +38,12 @@ const BATUBT_ADMIN_ACCESS_COOKIE = "ubt_batubt_access";
  */
 const BAKCAKANAT_ACCESS_COOKIE = "ubt_bakcakanat_access";
 
+/**
+ * The /projectair document board has its own password/cookie, like
+ * /bakcakanat, and also opens for a super-admin session.
+ */
+const PROJECTAIR_ACCESS_COOKIE = "ubt_projectair_access";
+
 const ADMIN_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 8; // 8 hours
 
 async function setBoardCookie(name: string, value: string, path: string): Promise<void> {
@@ -297,6 +303,25 @@ const bakcakanatGate = createPasswordGate({
 export const isBakcakanatAuthenticated = bakcakanatGate.isAuthenticated;
 export const signInBakcakanat = bakcakanatGate.signIn;
 export const signOutBakcakanat = bakcakanatGate.signOut;
+
+/**
+ * Reads the /projectair password (empty string if not configured). No
+ * fallback: without PROJECTAIR_PASSWORD only a super-admin session gets in.
+ */
+function getProjectairPassword(): string {
+  return process.env.PROJECTAIR_PASSWORD?.trim() ?? "";
+}
+
+const projectairGate = createPasswordGate({
+  getSecret: getProjectairPassword,
+  cookieName: PROJECTAIR_ACCESS_COOKIE,
+  path: "/projectair",
+  boardKey: "projectair"
+});
+
+export const isProjectairAuthenticated = projectairGate.isAuthenticated;
+export const signInProjectair = projectairGate.signIn;
+export const signOutProjectair = projectairGate.signOut;
 
 /**
  * The `/detrbridge` logo-selection board is gated by a name allowlist plus

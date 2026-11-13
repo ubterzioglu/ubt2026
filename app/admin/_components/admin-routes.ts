@@ -55,6 +55,7 @@ export const BOARD_ROUTES: readonly BoardRoute[] = [
   { href: "/elif", label: "Elif", access: "super-admin", description: "ZELIFS" },
   { href: "/holiday", label: "Holiday", access: "public", description: "TR 2026 tatil hesaplayıcı" },
   { href: "/newdragoman", label: "New Dragoman", access: "password", description: "dragoman-turkey.com yenileme önerisi" },
+  { href: "/projectair", label: "Project Air", access: "super-admin", description: "Project Air dokümanı" },
   { href: "/sandbox", label: "Sandbox", access: "public", description: "Standalone HTML notes, handouts and resources" },
   { href: "/skillubt", label: "Skill UBT", access: "public", description: "Requirements interview skill guide" },
   { href: "/smellable", label: "Smellable", access: "public", description: "An app you can smell" },
