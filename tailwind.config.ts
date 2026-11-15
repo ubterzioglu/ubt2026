@@ -49,13 +49,18 @@ const config: Config = {
         sweep: {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" }
+        },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" }
         }
       },
       animation: {
         float: "float 9s ease-in-out infinite",
         drift: "drift 14s ease-in-out infinite",
         reveal: "reveal 700ms ease-out both",
-        sweep: "sweep 22s linear infinite"
+        sweep: "sweep 22s linear infinite",
+        marquee: "marquee 28s linear infinite"
       }
     }
   },
