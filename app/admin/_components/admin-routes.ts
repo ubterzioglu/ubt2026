@@ -53,6 +53,7 @@ export const BOARD_ROUTES: readonly BoardRoute[] = [
   { href: "/detrbridge", label: "detrbridge", access: "super-admin", description: "Logo seçimi" },
   { href: "/dm", label: "DM board", access: "super-admin", description: "Görevler ve kullanım rehberi" },
   { href: "/elif", label: "Elif", access: "super-admin", description: "ZELIFS" },
+  { href: "/guides", label: "Guides", access: "public", description: "AI rehberleri ve cheat sheet PDF'leri (TR / EN)" },
   { href: "/holiday", label: "Holiday", access: "public", description: "TR 2026 tatil hesaplayıcı" },
   { href: "/newdragoman", label: "New Dragoman", access: "password", description: "dragoman-turkey.com yenileme önerisi" },
   { href: "/projectair", label: "Project Air", access: "super-admin", description: "Havacılık bakım eğitim platformu proje kararları" },
