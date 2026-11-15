@@ -65,6 +65,12 @@ export default function PrivacyPage() {
             cookies and process usage data; you can prevent this by blocking cookies in your
             browser settings or via a privacy filter.
           </p>
+          <p>
+            On the <strong>/guides</strong> page we count page views and PDF downloads in our own
+            database. For this a random visitor id is stored in a cookie limited to /guides; no IP
+            address, name or browser details are saved, and the counts are only used to see which
+            guides are useful.
+          </p>
         </Section>
 
         <Section title="Cookies">

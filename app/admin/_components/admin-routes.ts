@@ -14,7 +14,8 @@ export const ADMIN_SECTIONS: readonly AdminSection[] = [
   { href: "/admin/slots", label: "Slots", icon: "calendar" },
   { href: "/admin/news", label: "News", icon: "news" },
   { href: "/admin/blog", label: "Blog", icon: "pen" },
-  { href: "/admin/bookmarks", label: "Bookmarks", icon: "bookmark" }
+  { href: "/admin/bookmarks", label: "Bookmarks", icon: "bookmark" },
+  { href: "/admin/guides", label: "Guides stats", icon: "chart" }
 ];
 
 export const BOARDS_OVERVIEW_HREF = "/admin/boards" as Route;

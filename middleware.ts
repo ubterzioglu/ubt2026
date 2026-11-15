@@ -6,6 +6,9 @@ import {
   DETRBRIDGE_FIRST_VISIT_HEADER,
   ELIF_SESSION_COOKIE,
   ELIF_SESSION_LABEL,
+  GUIDES_FIRST_VISIT_HEADER,
+  GUIDES_VISITOR_COOKIE,
+  GUIDES_VISITOR_HEADER,
   SUPER_ADMIN_COOKIE,
   SUPER_ADMIN_LABEL,
   UBTSA_FIRST_VISIT_HEADER
@@ -74,6 +77,31 @@ function withUbtsaVisitorCookie(request: NextRequest): NextResponse {
   return response;
 }
 
+function withGuidesVisitorCookie(request: NextRequest): NextResponse {
+  const existing = request.cookies.get(GUIDES_VISITOR_COOKIE)?.value;
+  const requestHeaders = new Headers(request.headers);
+  const visitorId = existing ?? crypto.randomUUID();
+
+  requestHeaders.set(GUIDES_VISITOR_HEADER, visitorId);
+  if (existing) {
+    requestHeaders.delete(GUIDES_FIRST_VISIT_HEADER);
+  } else {
+    requestHeaders.set(GUIDES_FIRST_VISIT_HEADER, "1");
+  }
+
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  if (!existing) {
+    response.cookies.set(GUIDES_VISITOR_COOKIE, visitorId, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/guides",
+      maxAge: VISITOR_COOKIE_MAX_AGE_SECONDS
+    });
+  }
+  return response;
+}
+
 /**
  * Edge-side twin of `isSuperAdmin()` in lib/admin-auth.ts. That module is
  * `server-only` and built on `node:crypto`, neither of which exists here, so
@@ -106,6 +134,10 @@ export async function middleware(request: NextRequest) {
     return withDetrbridgeVisitorCookie(request);
   }
 
+  if (request.nextUrl.pathname === "/guides") {
+    return withGuidesVisitorCookie(request);
+  }
+
   if (request.nextUrl.pathname.startsWith("/ubtsa")) {
     return withUbtsaVisitorCookie(request);
   }
@@ -118,5 +150,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/zelifs/:path*", "/detrbridge/:path*", "/ubtsa/:path*"]
+  matcher: ["/zelifs/:path*", "/detrbridge/:path*", "/ubtsa/:path*", "/guides"]
 };

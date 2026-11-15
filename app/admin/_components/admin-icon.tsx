@@ -6,6 +6,7 @@ const ICON_PATHS = {
   pen: "M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z",
   bookmark: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z",
   boards: "M3 3h18v18H3zM3 9h18M9 21V9",
+  chart: "M3 3v18h18M8 17v-5M13 17V8M18 17v-9",
   logout: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9",
   menu: "M4 6h16M4 12h16M4 18h16",
   chevron: "m6 9 6 6 6-6",

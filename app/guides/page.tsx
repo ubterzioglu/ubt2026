@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { DEFAULT_GUIDE_LANGUAGE, GUIDE_LANGUAGES, guides, guidesCopy, guidesMarquee } from "@/content/guides";
+import { recordGuidePageView } from "@/lib/guide-events";
 import { buildMetadata } from "@/lib/seo";
 import type { GuideLanguage, GuideTone } from "@/types/guides";
 
@@ -57,6 +58,7 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
   const params = searchParams ? await searchParams : {};
   const language = toLanguage(params.lang);
   const copy = guidesCopy[language];
+  await recordGuidePageView(language);
 
   const totalPages = guides.reduce((sum, guide) => sum + guide.files[language].pages, 0);
   const stats = [
@@ -195,7 +197,7 @@ export default async function GuidesPage({ searchParams }: GuidesPageProps) {
                 </p>
 
                 <a
-                  href={file.href}
+                  href={`/guides/open/${guide.id}/${language}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`group/link relative mt-auto flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#0b0b10]/60 px-5 py-4 transition hover:border-transparent hover:text-[#0b0b10] ${tone.button}`}
