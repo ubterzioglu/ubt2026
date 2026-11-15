@@ -10,6 +10,7 @@ interface ProjectairDocumentProps {
 
 const NAV_ITEMS = [
   ...projectairDocument.sections.map((section) => ({ id: section.id, label: section.title })),
+  ...projectairDocument.planNav,
   { id: "tam-plan", label: "Ana planın tamamı" },
   { id: "dosyalar", label: "Proje dosyaları" }
 ];

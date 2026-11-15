@@ -2,7 +2,7 @@ import type { ProjectairDocument } from "@/types/projectair";
 
 export const projectairDocument = {
   eyebrow: "Proje kararları",
-  version: "Ana plan v0.26 · 13 Kasım 2026",
+  version: "Ana plan v0.27 · 15 Kasım 2026",
   title: "Havacılık Bakım Eğitim Platformu",
   summary:
     "Kurumlara teknik eğitim içeriği üretimi ve eğitim atama, tamamlama ve sonuç takibi için abonelikli bir platform.",
@@ -243,6 +243,7 @@ export const projectairDocument = {
       ]
     }
   ],
+  planNav: [{ id: "gürkanla-görüşme-gündemi", label: "Gürkan’la görüşme gündemi" }],
   filesFolder: {
     label: "Google Drive klasörünü aç",
     href: "https://drive.google.com/drive/folders/19ZonxonohIzFQkkR_NDwdOsrFHhZgDok?usp=sharing"
@@ -281,5 +282,5 @@ export const projectairDocument = {
       href: "https://drive.google.com/file/d/1Ws7hWWkVQy1m9_dQTPdfPnZPgOUDLilB/view?usp=drivesdk"
     }
   ],
-  footer: "Kaynak belge · 01_E2E_Ana_Plan.md · Sürüm 0.26"
+  footer: "Kaynak belge · 01_E2E_Ana_Plan.md · Sürüm 0.27"
 } as const satisfies ProjectairDocument;

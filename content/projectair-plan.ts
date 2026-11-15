@@ -1,8 +1,8 @@
 export const PROJECTAIR_PLAN_MARKDOWN = String.raw`
 ## Havacılık Bakım Eğitim Platformu — E2E Ana Doküman
 
-**Sürüm:** 0.26 — İlk demo için temsili parça kararı\
-**Güncelleme tarihi:** 13 Kasım 2026\
+**Sürüm:** 0.27 — Demo, pilot ve marka görüşme gündemi\
+**Güncelleme tarihi:** 15 Kasım 2026\
 **Durum:** Soru-cevap ile geliştirilecek çalışma taslağı\
 **Ürün adı:** Kararlaştırılmadı — ÖNEMLİ TODO
 
@@ -939,6 +939,36 @@ Yanıtlar geldiğinde ilgili bölümlere öneri/uzman girdisi olarak işlenecek;
 
 ### Soru-cevap ile derinleştirme sırası
 
+#### Gürkan’la görüşme gündemi
+
+İlk demo için temsili parça, montaj sırası ve iki eğitim seviyesi kararlaştırıldı. Aşağıdaki sorular görüşme hazırlığı için açık tutuluyor.
+
+**İlk eğitim senaryosu**
+
+1. İlk eğitim mesleğe girişe mi, belirli bir sınava mı odaklanacak? Sınavsa hangisi?
+2. Hangi temsili parçayı, bileşenleri ve montaj adımlarını göstereceğiz?
+3. İki seviyede başarıyı nasıl ölçeceğiz? Hangi hatalar kritik sayılacak, açıklama ne zaman gösterilecek ve tekrar hakkı olacak mı?
+4. Türkçe anlatım ve İngilizce teknik terimlerle devam edelim mi? İngilizce anlatım önerisi seslendirme veya sorular için değerlendirilecek mi?
+5. Selim Kona’ya senaryo taslağı mı, çalışan demo mu gösterilecek?
+
+**Demo, pilot ve marka**
+
+1. Belge yükleme ve içerik üretimi ilk demoya alınacak mı, pilotta mı ele alınacak?
+2. İki eğitim seviyesi, montaj sırası ve yönetici ekranında sonucun görünmesi sunuma hazır sayılmak için yeterli mi?
+3. Parça görseli, montaj şeması ve senaryo hangi sırayla hazırlanacak? Teknik inceleme hangi aşamada yapılacak? Görüşmede geçen 1 ve 15 Aralık hedefleri geçerli mi?
+4. İlk sunum hangi kuruma ve kime yapılacak? Görüşmenin önceliği ihtiyaç doğrulama mı, pilot adayı bulmak mı?
+5. İçerik üretim maliyeti, uzman inceleme yükü ve ödeme isteği bakımından hangi sonuçlar ücretli hizmete geçişi destekler?
+6. Gerçek uçak içeriğine geçildiğinde teknik belgeleri kim sağlayacak, izin kimden teyit edilecek ve belge değiştiğinde eğitimi kim inceleyecek?
+7. Markanın öne çıkaracağı değer ne olacak? Havacılık bakım uzmanlığı, kuruma özel içerik ve tek yerde eğitim takibi değerlendirilmesi gereken seçenekler.
+8. Marka adı Türkçe mi, İngilizce mi olacak? Havacılığı çağrıştıran isimlerle başka eğitim alanlarına da uyabilecek isimler değerlendirilecek mi?
+9. İlk sunumda çalışma adı yeterli mi, yoksa isim, alan adı ve marka tescili açısından uygunluk önceden mi incelenecek?
+
+**Sonraki aşamalarda ele alınacaklar**
+
+- Pilot öncesinde kurum ve katılımcılar, ücret durumu, geri bildirim grupları ve veri paylaşım koşulları.
+- Ticari sürüm öncesinde kaynak izinleri, uzman onayı ve revizyon kuralları, motor konularının önceliği, B1/C kapsamı, fiyatlandırma, bütçe ve sözleşmeler.
+- Ürün ayrıntıları için aşağıdaki beş açık soru.
+
 #### Görüşmeye dönüş noktası — henüz cevaplanmayan beş soru
 
 Kullanıcı taslağı paylaşmak üzere aşağıdaki soruları yanıtlamadan ara verdi. Hiçbiri ürün kararı sayılmayacak; devam edildiğinde buradan başlanabilir:
@@ -966,6 +996,8 @@ Kullanıcı taslağı paylaşmak üzere aşağıdaki soruları yanıtlamadan ara
 **Değişiklik kaydı — 0.25:** Her iki ilk müşteri grubu görüşme kapsamına alındı ve montaj sırası demo kapsamına eklendi. İlk kullanım amacı ile Selim Kona’ya ne zaman danışılacağı Gürkan’la görüşülecek. Temsili parça yaklaşımı öneri olarak kaydedildi.
 
 **Değişiklik kaydı — 0.26.** İlk demo için temsili parça yaklaşımı onaylandı. İki seviyenin eğitim akışı, etkileşimleri ve hazırlık görevleri yazıldı.
+
+**Değişiklik kaydı — 0.27.** İlk eğitim için beş soru ile demo, pilot ve marka için dokuz soru görüşme gündemine eklendi.
 
 1. **Amaç ve ticari yön:** Ne kuruyoruz, kime sunuyoruz, ilk somut başarı ne?
 2. **Eğitim ve ilk ürün:** Hangi problemi hangi içerik ve kullanıcı akışıyla çözüyoruz?

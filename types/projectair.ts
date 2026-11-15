@@ -35,6 +35,11 @@ export interface ProjectairSection {
   note?: ProjectairNote;
 }
 
+export interface ProjectairNavItem {
+  id: string;
+  label: string;
+}
+
 export interface ProjectairDocument {
   eyebrow: string;
   version: string;
@@ -42,6 +47,7 @@ export interface ProjectairDocument {
   summary: string;
   phases: readonly string[];
   sections: readonly ProjectairSection[];
+  planNav: readonly ProjectairNavItem[];
   filesFolder: ProjectairLink;
   files: readonly ProjectairLink[];
   footer: string;
