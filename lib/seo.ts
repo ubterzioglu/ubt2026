@@ -6,7 +6,7 @@ export const BASE_URL = "https://ubterzioglu.de";
 export const SITE_NAME = "Umut Barış Terzioğlu";
 export const BRAND_SUFFIX = "Senior QA Engineer";
 export const SITE_PUBLISHED_AT = "2026-04-06";
-export const SITE_LAST_UPDATED = "2026-10-24";
+export const SITE_LAST_UPDATED = "2026-11-17";
 export const SEARCH_INDEX_DISALLOW_PATHS = [
   "/admin",
   "/admin/",
