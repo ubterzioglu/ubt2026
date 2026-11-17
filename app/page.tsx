@@ -25,7 +25,12 @@ import { buildMetadata, SITE_LAST_UPDATED, SITE_PUBLISHED_AT } from "@/lib/seo";
 import { buildBreadcrumbSchema, buildFaqSchema, buildSpeakableSchema } from "@/lib/structured-data";
 import { fallbackArticles, fallbackBookmarks, fallbackTools } from "@/content/featured";
 import { fallbackNewsUpdates } from "@/content/news-updates";
-import { showDevelopedToolsSection, showSideProjectsSection } from "@/content/site";
+import {
+  showArticlesSection,
+  showBookmarksSection,
+  showDevelopedToolsSection,
+  showSideProjectsSection
+} from "@/content/site";
 import {
   achievementBullets,
   achievementMetrics,
@@ -394,38 +399,42 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </section>
       ) : null}
 
-      <section id="articles" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Articles Has UBT Published?</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8">
-              <FeaturedGrid
-                items={articles}
-                sourceLabel={fallbackSource}
-                emptyMessage="No articles are available yet."
-                cardLayout="square"
-              />
+      {showArticlesSection ? (
+        <section id="articles" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+              <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Articles Has UBT Published?</h2>
+              <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+              <div className="mt-8">
+                <FeaturedGrid
+                  items={articles}
+                  sourceLabel={fallbackSource}
+                  emptyMessage="No articles are available yet."
+                  cardLayout="square"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
-      <section id="my-bookmarks" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Bookmarks Does UBT Recommend?</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8">
-              <BookmarksList
-                items={bookmarks}
-                sourceLabel={fallbackSource}
-                emptyMessage="No bookmarks are available yet."
-              />
+      {showBookmarksSection ? (
+        <section id="my-bookmarks" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+              <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Bookmarks Does UBT Recommend?</h2>
+              <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+              <div className="mt-8">
+                <BookmarksList
+                  items={bookmarks}
+                  sourceLabel={fallbackSource}
+                  emptyMessage="No bookmarks are available yet."
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section id="book-appointment" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-import { navigationItems, siteMeta } from "@/content/site";
+import { navigationItems, siteMeta, visibleNavigationItems } from "@/content/site";
 
 const desktopLabelMap: Record<(typeof navigationItems)[number]["id"], string> = {
   "my-cv": "My CV",
@@ -50,7 +50,7 @@ export function SiteHeader() {
 
         <nav className="hidden min-w-0 flex-1 md:block" aria-label="Primary">
           <ul className="flex flex-nowrap items-center justify-center text-xs font-semibold tracking-[0.08em] text-ink lg:text-sm">
-            {navigationItems.map((item, index) => (
+            {visibleNavigationItems.map((item, index) => (
               <li key={item.id} className="flex items-center">
                 <a
                   href={`#${item.id}`}
@@ -58,7 +58,7 @@ export function SiteHeader() {
                 >
                   {desktopLabelMap[item.id]}
                 </a>
-                {index < navigationItems.length - 1 ? (
+                {index < visibleNavigationItems.length - 1 ? (
                   <span
                     className="px-2.5 text-ink/35 lg:px-3"
                     aria-hidden="true"
@@ -104,7 +104,7 @@ export function SiteHeader() {
                 {siteMeta.name}
               </a>
             </li>
-            {navigationItems.map((item) => (
+            {visibleNavigationItems.map((item) => (
               <li key={item.id}>
                 <a
                   href={`#${item.id}`}

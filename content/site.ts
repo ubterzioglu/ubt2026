@@ -21,6 +21,10 @@ export const showDevelopedToolsSection = false;
 
 export const showSideProjectsSection = false;
 
+export const showArticlesSection = false;
+
+export const showBookmarksSection = false;
+
 export const navigationItems = [
   { id: "my-cv", label: "My CV" },
   { id: "about-me", label: "About me" },
@@ -32,6 +36,10 @@ export const navigationItems = [
   { id: "book-appointment", label: "Book Appointment" },
   { id: "contact", label: "Contact" }
 ] as const;
+
+export const visibleNavigationItems = navigationItems.filter(
+  (item) => item.id !== "articles" || showArticlesSection
+);
 
 export const heroActions: CtaLink[] = [
   { label: "View My CV", href: "#my-cv", variant: "primary" },
