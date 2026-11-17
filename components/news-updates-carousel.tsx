@@ -63,7 +63,7 @@ export function NewsUpdatesCarousel({ items }: NewsUpdatesCarouselProps) {
 
     const firstCard = viewport.querySelector<HTMLElement>("[data-news-card='true']");
     const halfWidth = viewport.scrollWidth / 2;
-    const cardWidth = firstCard?.offsetWidth ?? viewport.clientWidth * 0.88;
+    const cardWidth = firstCard?.offsetWidth ?? viewport.clientWidth * 0.7;
     const gap = 16;
 
     if (direction === "prev" && viewport.scrollLeft <= 4) {
@@ -132,8 +132,8 @@ export function NewsUpdatesCarousel({ items }: NewsUpdatesCarouselProps) {
             const card = (
               <>
                 <div
-                  className={`relative aspect-[1.48] overflow-hidden ${
-                    item.detailHref ? "" : "rounded-t-[1.45rem] sm:rounded-t-[1.6rem]"
+                  className={`relative aspect-[1.7] overflow-hidden ${
+                    item.detailHref ? "" : "rounded-t-[1.2rem] sm:rounded-t-[1.3rem]"
                   }`}
                 >
                   {item.imageUrl ? (
@@ -143,22 +143,22 @@ export function NewsUpdatesCarousel({ items }: NewsUpdatesCarouselProps) {
                       src={item.imageUrl}
                       alt={item.title}
                       fill
-                      sizes="(min-width: 1280px) 24rem, (min-width: 768px) 22rem, 86vw"
+                      sizes="(min-width: 1280px) 18rem, (min-width: 768px) 16rem, 70vw"
                       className="object-cover transition duration-500 group-hover:scale-[1.03]"
                     />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-accent/18 via-accentSoft/50 to-sunrise/18" />
                   )}
                 </div>
-                <div className="p-5 sm:p-6">
-                  <h3 className="font-body text-[clamp(1.2rem,4vw,1.55rem)] font-semibold text-ink">
+                <div className="p-4">
+                  <h3 className="font-body text-[clamp(1rem,3.4vw,1.15rem)] font-semibold text-ink">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-ink/72 sm:text-base">
+                  <p className="mt-2 text-xs leading-5 text-ink/72 sm:text-sm sm:leading-6">
                     {item.summary}
                   </p>
                   {item.detailHref ? (
-                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-accent">
+                    <span className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-accent">
                       Details <span aria-hidden="true">↗</span>
                     </span>
                   ) : null}
@@ -167,7 +167,7 @@ export function NewsUpdatesCarousel({ items }: NewsUpdatesCarouselProps) {
             );
 
             const className =
-              "group w-[86vw] shrink-0 overflow-hidden rounded-[1.45rem] border border-line/80 bg-white/82 shadow-sm transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow sm:w-[22rem] sm:rounded-[1.6rem] xl:w-[24rem]";
+              "group w-[70vw] shrink-0 overflow-hidden rounded-[1.2rem] border border-line/80 bg-white/82 shadow-sm transition hover:-translate-y-1 hover:border-accent/45 hover:shadow-glow sm:w-[16rem] sm:rounded-[1.3rem] xl:w-[18rem]";
 
             return item.detailHref ? (
               <a
@@ -192,11 +192,11 @@ export function NewsUpdatesCarousel({ items }: NewsUpdatesCarouselProps) {
       </div>
 
       {items.length > 1 ? (
-        <div className="mt-7 flex items-center justify-center gap-3">
+        <div className="mt-5 flex items-center justify-center gap-3">
           <button
             type="button"
             onClick={() => scrollByCard("prev")}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line/80 bg-gradient-to-b from-white to-mist/80 text-ink shadow-[0_14px_28px_rgba(20,31,39,0.12)] transition hover:-translate-y-0.5 hover:border-accent/35 hover:text-accent hover:shadow-[0_18px_34px_rgba(27,122,110,0.18)] sm:h-12 sm:w-12"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line/80 bg-gradient-to-b from-white to-mist/80 text-ink shadow-[0_14px_28px_rgba(20,31,39,0.12)] transition hover:-translate-y-0.5 hover:border-accent/35 hover:text-accent hover:shadow-[0_18px_34px_rgba(27,122,110,0.18)] sm:h-10 sm:w-10"
             aria-label="Previous news update"
           >
             <svg
@@ -212,7 +212,7 @@ export function NewsUpdatesCarousel({ items }: NewsUpdatesCarouselProps) {
           <button
             type="button"
             onClick={() => scrollByCard("next")}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line/80 bg-gradient-to-b from-white to-mist/80 text-ink shadow-[0_14px_28px_rgba(20,31,39,0.12)] transition hover:-translate-y-0.5 hover:border-accent/35 hover:text-accent hover:shadow-[0_18px_34px_rgba(27,122,110,0.18)] sm:h-12 sm:w-12"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line/80 bg-gradient-to-b from-white to-mist/80 text-ink shadow-[0_14px_28px_rgba(20,31,39,0.12)] transition hover:-translate-y-0.5 hover:border-accent/35 hover:text-accent hover:shadow-[0_18px_34px_rgba(27,122,110,0.18)] sm:h-10 sm:w-10"
             aria-label="Next news update"
           >
             <svg

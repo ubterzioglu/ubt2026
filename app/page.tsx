@@ -214,20 +214,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </p>
       </div>
 
-      <section id="news-updates" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">
-              What Is New?
-            </h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8">
-              <NewsUpdatesCarousel items={newsUpdates} />
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section id="about-me" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
@@ -486,6 +472,19 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </section>
 
       <FaqSection items={faqItems} />
+      <section id="news-updates" className="scroll-mt-24 px-4 py-3 sm:scroll-mt-28 sm:px-6 sm:py-4 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="section-panel overflow-hidden px-5 py-6 sm:px-7 lg:px-8 lg:py-7">
+            <h2 className="font-body text-[clamp(1.35rem,4.5vw,1.65rem)] font-semibold tracking-[-0.02em] text-ink">
+              What Is New?
+            </h2>
+            <div className="mt-4 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+            <div className="mt-5">
+              <NewsUpdatesCarousel items={newsUpdates} />
+            </div>
+          </div>
+        </div>
+      </section>
       <ContactSection contactItems={contactItems} geoLinks={geoLinks} />
       <SiteFooter />
     </main>
