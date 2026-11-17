@@ -17,6 +17,10 @@ export const heroKeywords = [
   "Team Mentoring"
 ] as const;
 
+export const showDevelopedToolsSection = false;
+
+export const showSideProjectsSection = false;
+
 export const navigationItems = [
   { id: "my-cv", label: "My CV" },
   { id: "about-me", label: "About me" },

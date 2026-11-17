@@ -25,6 +25,7 @@ import { buildMetadata, SITE_LAST_UPDATED, SITE_PUBLISHED_AT } from "@/lib/seo";
 import { buildBreadcrumbSchema, buildFaqSchema, buildSpeakableSchema } from "@/lib/structured-data";
 import { fallbackArticles, fallbackBookmarks, fallbackTools } from "@/content/featured";
 import { fallbackNewsUpdates } from "@/content/news-updates";
+import { showDevelopedToolsSection, showSideProjectsSection } from "@/content/site";
 import {
   achievementBullets,
   achievementMetrics,
@@ -269,22 +270,24 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
-      <section id="tools-developed-by-ubt" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Which Tools Has UBT Developed?</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <div className="mt-8">
-              <FeaturedGrid
-                items={tools}
-                sourceLabel={fallbackSource}
-                emptyMessage="No tools are available yet."
-                cardLayout="square"
-              />
+      {showDevelopedToolsSection ? (
+        <section id="tools-developed-by-ubt" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+              <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">Which Tools Has UBT Developed?</h2>
+              <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+              <div className="mt-8">
+                <FeaturedGrid
+                  items={tools}
+                  sourceLabel={fallbackSource}
+                  emptyMessage="No tools are available yet."
+                  cardLayout="square"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section id="tech-stack" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
@@ -356,38 +359,40 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
-      <section id="private-projects" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Side Projects Does UBT Build?</h2>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
-            <p className="mt-6 max-w-3xl text-sm leading-7 text-ink/68">{privateProjectsIntroParagraph}</p>
-            <div className="mt-8 flex flex-col gap-4">
-              {privateProjects.map((project) => (
-                <article key={project.title} className="flex flex-col gap-4 rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:flex-row sm:items-center sm:justify-between sm:rounded-[1.55rem] sm:p-6">
-                  <div className="flex-1 sm:pr-6">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
-                    <h3 className="mt-2 font-body text-[clamp(1.35rem,4.8vw,1.5rem)] font-semibold text-ink">{project.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-ink/68">{project.summary}</p>
-                  </div>
-                  {project.image && (
-                    <figure className="flex-shrink-0 text-center">
-                      <Image
-                        src={`/private/${project.image}`}
-                        alt={`${project.title} — ${project.label}`}
-                        width={120}
-                        height={120}
-                        className="mx-auto h-24 w-24 rounded-full border border-line/50 object-cover shadow-sm sm:h-28 sm:w-28"
-                      />
-                      <figcaption className="mt-2 text-[0.65rem] leading-4 text-ink/45">{project.title} — {project.label}</figcaption>
-                    </figure>
-                  )}
-                </article>
-              ))}
+      {showSideProjectsSection ? (
+        <section id="private-projects" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="section-panel overflow-hidden px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+              <h2 className="font-body text-[clamp(1.75rem,6vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">What Side Projects Does UBT Build?</h2>
+              <div className="mt-6 h-px w-full bg-gradient-to-r from-accent/60 via-accent/30 to-transparent" />
+              <p className="mt-6 max-w-3xl text-sm leading-7 text-ink/68">{privateProjectsIntroParagraph}</p>
+              <div className="mt-8 flex flex-col gap-4">
+                {privateProjects.map((project) => (
+                  <article key={project.title} className="flex flex-col gap-4 rounded-[1.35rem] border border-line/80 bg-white/82 p-5 sm:flex-row sm:items-center sm:justify-between sm:rounded-[1.55rem] sm:p-6">
+                    <div className="flex-1 sm:pr-6">
+                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{project.label}</p>
+                      <h3 className="mt-2 font-body text-[clamp(1.35rem,4.8vw,1.5rem)] font-semibold text-ink">{project.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-ink/68">{project.summary}</p>
+                    </div>
+                    {project.image && (
+                      <figure className="flex-shrink-0 text-center">
+                        <Image
+                          src={`/private/${project.image}`}
+                          alt={`${project.title} — ${project.label}`}
+                          width={120}
+                          height={120}
+                          className="mx-auto h-24 w-24 rounded-full border border-line/50 object-cover shadow-sm sm:h-28 sm:w-28"
+                        />
+                        <figcaption className="mt-2 text-[0.65rem] leading-4 text-ink/45">{project.title} — {project.label}</figcaption>
+                      </figure>
+                    )}
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section id="articles" className="scroll-mt-24 px-4 py-4 sm:scroll-mt-28 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
