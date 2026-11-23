@@ -241,6 +241,30 @@ export const projectairDocument = {
           ]
         }
       ]
+    },
+    {
+      id: "guncellemeler",
+      number: "08",
+      kicker: "Değişiklik geçmişi",
+      title: "Güncellemeler",
+      intro: ["Sayfa açıldığından beri yapılan güncellemeler, en yeniden eskiye."],
+      facts: [
+        {
+          term: "23 Kasım 2026",
+          description:
+            "Ana plan v0.29 yayımlandı. 15 Kasım toplantısı işlendi; Toplantı notları, Kararlar ve Todolar bölümleri eklendi. Fiyat varsayımı, takvim, görüşme sırası ve açık kararlar güncellendi. Projeyle ilgisiz bir toplantı notu eki plandan kaldırıldı. Bu Güncellemeler bölümü eklendi."
+        },
+        {
+          term: "15 Kasım 2026",
+          description:
+            "Ana plan v0.27 yayımlandı. Gürkan’la görüşme gündemine ilk eğitim için beş soru, demo, pilot ve marka için dokuz soru eklendi."
+        },
+        {
+          term: "13 Kasım 2026",
+          description:
+            "Şifreli Project Air sayfası açıldı. Doküman sitenin kendi bileşenlerine taşındı ve yukarı çık butonu eklendi. Ana plan v0.26 Drive’daki HTML’den sayfaya aktarıldı. Plan güncellemeleri elle çalıştırılan senkronizasyona bağlandı."
+        }
+      ]
     }
   ],
   planNav: [
