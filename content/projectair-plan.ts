@@ -1,8 +1,8 @@
 export const PROJECTAIR_PLAN_MARKDOWN = String.raw`
 ## Havacılık Bakım Eğitim Platformu — E2E Ana Doküman
 
-**Sürüm:** 0.27 — Demo, pilot ve marka görüşme gündemi\
-**Güncelleme tarihi:** 15 Kasım 2026\
+**Sürüm:** 0.29 — Toplantı notları, kararlar ve todolar\
+**Güncelleme tarihi:** 23 Kasım 2026\
 **Durum:** Soru-cevap ile geliştirilecek çalışma taslağı\
 **Ürün adı:** Kararlaştırılmadı — ÖNEMLİ TODO
 
@@ -10,7 +10,7 @@ export const PROJECTAIR_PLAN_MARKDOWN = String.raw`
 
 Bu belge tamamlanmamış bir çalışma taslağıdır. İçerik üretimi ve abonelikli eğitim platformunu birlikte kapsayan işin ana çerçevesi oluşturuldu; demo → pilot → hizmet sırası benimsendi. İlk pazar Türkiye, ilk dil Türkçe. Kararlaştırılan işlevlerin tamamının ilk demoda uygulanacağı taahhüt edilmedi.
 
-**Önemli açık konular:** Ürün/marka adı; ilk eğitim konusu; yayın öncesi uzman onayının zorunluluğu; rol/yetki modeli; dış AI servislerinin kullanımı; demoda belge yükleyerek içerik üretiminin çalıştırılması; yanlış cevap sonrası açıklama/tekrar davranışı; başarı ve belge koşulları; ayrıntılı değerlendirme/grafik planı; pilot geri bildirim grupları; fiyatlar ve pilotun ücretli/ücretsiz olması. Kaynak izinleri ve teknik içerik ayrıca incelenecek. Bütçe tabloları şablondur; proje tarihleri ve süreleri atanmadı.
+**Önemli açık konular:** Ürün/marka adı; ilk eğitim konusu; yayın öncesi uzman onayının zorunluluğu; rol/yetki modeli; dış AI servislerinin kullanımı; yanlış cevap sonrası açıklama/tekrar davranışı; başarı ve belge koşulları; ayrıntılı değerlendirme/grafik planı; pilot geri bildirim grupları; fiyatlar ve pilotun ücretli/ücretsiz olması. Kaynak izinleri ve teknik içerik ayrıca incelenecek. Bütçe tabloları şablondur; proje tarihleri ve süreleri atanmadı.
 
 Gürkan'dan beklenen teknik yanıtlar ve kullanıcıyla görüşmenin devam noktası aşağıda kayıtlıdır. Öneriler ile alınmış kararlar farklı statüdedir.
 
@@ -44,6 +44,11 @@ Gürkan'dan beklenen teknik yanıtlar ve kullanıcıyla görüşmenin devam nokt
 22. [Pilot, doğrulama ve başarı ölçümü](#22-pilot-doğrulama-ve-başarı-ölçümü)
 23. [Yol haritası, bağımlılıklar ve riskler](#23-yol-haritası-bağımlılıklar-ve-riskler)
 24. [Doküman yönetimi ve ekler](#24-doküman-yönetimi-ve-ekler)
+25. [Toplantı notları](#25-toplantı-notları)
+26. [Kararlar](#26-kararlar)
+27. [Todolar](#27-todolar)
+
+[Ek A — Otomasyon ve review toplantısı, 12 Kasım 2026](#ek-a--otomasyon-ve-review-toplantısı-12-kasım-2026)
 
 ### Dokümanın amacı ve kullanım şekli
 
@@ -511,6 +516,8 @@ Airbus, teknik yayınlara erişim için AirbusWorld ve airnavX kanalını açık
 - Fiyat araştırması, maliyet tabanı, indirim ve ek kullanım politikaları.
 - İçerik güncellemesi, destek ve özel entegrasyonların paketlere dahil edilmesi.
 
+**15 Kasım güncellemesi:** Bireysel abonelik için fiyat hipotezi [Kararlar](#26-kararlar) bölümünde K6 olarak kayıtlıdır. Kurum fiyatları açık kalıyor.
+
 **Çıktı:** Fiyat hipotezleri, paket tablosu ve teklif modeli.
 
 ### 18. Pazarlama, satış, ortaklıklar ve CRM
@@ -714,6 +721,8 @@ Gürkan ve Barış, pazarlama ve halkla ilişkiler (PR) çalışmalarını birli
 
 **Takvim görüşme notu:** Önceki plan tarih atamadan hazırlanmıştı. 9 Kasım görüşme notunda yaklaşık iki hafta içinde 2–3 hazırlık toplantısı, 1 Aralık 2026 için kısmi demo ve 15 Aralık 2026 için tamamlanmış demo önerildi. Bunlar görüşme hedefleri. Kapsam, kaynak izinleri ve inceleyen kişinin uygunluğu netleşince Gürkan ve Barış birlikte teyit edecek.
 
+**15 Kasım güncellemesi:** Görüşmede 15 Aralık 2026 demo ve pilot için, görevler ve veri tamamlanırsa mümkün bir hedef olarak anıldı. 1 Aralık yeniden teyit edilmedi. Ayrıntı: [Toplantı notları](#25-toplantı-notları).
+
 #### 23.1 Tarihsiz uygulama planı
 
 | Sıra | İş paketi | Ön koşul | Beklenen teslim | Sorumlu rol — atanacak | Takvim durumu |
@@ -780,6 +789,84 @@ Bağımsız işler gerektiğinde birlikte yürütülebilir; sıralama tüm işle
 - Sözleşme, teklif, pilot, teknik inceleme ve destek şablonlarına bağlantılar.
 
 **Çıktı:** Güncel ve izlenebilir ortak proje bilgi tabanı.
+
+### 25. Toplantı notları
+
+Her toplantı bu bölüme tarihiyle eklenir. Çıkan kararlar [Kararlar](#26-kararlar), yapılacak işler [Todolar](#27-todolar) bölümüne işlenir.
+
+#### 15 Kasım 2026 — Gürkan ve Barış
+
+**Süre:** 68 dakika\
+**Kaynak:** [Fathom kaydı](https://fathom.video/share/WXb3T6zFLBd3sSx5b6zkf3wGXS25nUYL) ve otomatik transkript\
+**Not:** Transkriptte konuşmacı etiketleri ve bazı özel adlar hatalı. Teyit gereken yerler işaretlendi.
+
+**Demo ve pilot.** Demo, ürünün nasıl çalıştığını gösteren tanıtım aşaması olarak tarif edildi. Pilot, müşteriye sunulacak ilk sürüm gibi ele alınacak. Belge yükleyip içerik üretme pilota bırakıldı. İki eğitim seviyesi, montaj sırası ve yöneticinin sonucu görmesi demo için yeterli bulundu. Gürkan, ürünün asıl ilgi çekeceği kitlenin CEO'lar değil teknisyenler olduğunu belirtti.
+
+**İlk parça ve senaryo.** Bir uçak parçası görseli seçilip senaryo onun üzerinden yazılacak. Amaç önce demoyu çıkarmak.
+
+**İlk sunumlar.** Sıra Selim Kona, Southwind ve Gürkan'ın staj yaptığı yerden bir bağlantı olarak konuşuldu. Barış, fikrin kopyalanmasını en büyük endişe olarak belirtti. Sunumdan önce ne kadarının gösterileceği yeniden konuşulacak.
+
+**Fiyat.** Gürkan önce aylık 350–400 TL önerdi. Görüşme, aylık 10 euro (yaklaşık 550 TL) temel plan, yıllık alımda indirim ve daha pahalı üst paketler üzerinde birleşti. Belgenin ayrı ücretlendirilmesi de konuşuldu. Abonelerin tek ay alıp bırakma riski dile getirildi.
+
+**Belge ve veri.** Projenin en büyük bağımlılığı olarak görüldü. Eldeki kaynakların bir bölümü eski revizyon. Barış, sonradan büyük veri eklemenin maliyeti ve hata payını artıracağı için geliştirmeyi başlatmadan önce verinin yeterli olduğundan emin olmak istiyor. Airbus ve Boeing adlandırmalarının farklı olduğu ve ad hatası yapılamayacağı vurgulandı.
+
+**Eğitim deneyimi.** Teknisyenin dokunma ve duyma yoluyla öğrendiği, sesin de meslekte önemli olduğu konuşuldu. Sorularda video, fotoğraf ve çoktan seçmeli biçimler anıldı. Barış'ın uygulamayı tasarlayabilmesi için gerçek sınav örneklerini ve kullanıcı senaryosunu görmesi gerekiyor.
+
+**Doğruluk.** Üretilen videonun teknik doğruluğu en kritik konu olarak görüldü. Barış teknik doğruluğu kendisinin onaylayamayacağını belirtti. Gürkan, kaynak belgeler elinde olduğunda montaj gösterimini kontrol edebileceğini söyledi. Kullanıcı geri bildirimiyle düzeltme yaklaşımı konuşuldu, ancak hata oranı hedefi belirlenmedi.
+
+**Teknik yapı.** Next.js ve React kullanılacak. Giriş Google hesabı veya e-posta doğrulamasıyla yapılacak. Uygulama Barış'ın mevcut sunucusunda çalışacak, yalnızca alan adı için yaklaşık 16 dolar gider öngörüldü. Video üretim aracı henüz seçilmedi.
+
+**Marka.** Project Air çalışma adı olarak duruyor. Gürkan 5–10 isim, logo fikri, renk ve alan adı önerisi hazırlayacak. Kırmızı, beyaz ve turkuaz renkler fikir olarak anıldı, karar verilmedi.
+
+**Takvim ve süreklilik.** Görevler tamamlanır ve veri gelirse 15 Aralık civarı demo ve pilot, yılbaşına kadar ilk düzeltmeler hedeflendi. Üniversite öğrencilerinin ücretsiz test etmesi önerildi. Gürkan'ın askerlik durumu 1 Şubat 2027 sonrasında projeyi etkileyebilir, kesin tarih yok.
+
+**Ortaklık.** Barış, kazanç oluşursa %70 Gürkan, %30 Barış olabileceğini söyledi ve ikisinin şu an eşit haklara sahip olduğunu belirtti. Bu sözlü bir niyettir, yazılı ortaklık kararı değildir.
+
+### 26. Kararlar
+
+Durumlar: **Kararlaştırıldı** toplantıda uzlaşıldı. **Çalışma varsayımı** şimdilik bununla ilerlenir, değişebilir. **Teyit gerekli** uygulanmadan önce doğrulanacak.
+
+| No | Tarih | Karar | Durum | Not | Bölüm |
+| - | - | - | - | - | - |
+| K1 | 15 Kasım 2026 | Belge yükleyerek içerik üretme ilk demoda değil, pilotta ele alınacak | Kararlaştırıldı | | 12, 23 |
+| K2 | 15 Kasım 2026 | Demo için iki eğitim seviyesi, montaj sırası ve yöneticinin sonucu görmesi yeterli | Kararlaştırıldı | | 12, 22 |
+| K3 | 15 Kasım 2026 | Sürüm sırası demo → pilot → v1, v2, ... → canlı | Kararlaştırıldı | Demo tanıtım, pilot müşteriye sunulan ilk sürüm | 23 |
+| K4 | 15 Kasım 2026 | Demo tek parça üzerinden kurulacak, senaryo o parçaya göre yazılacak | Kararlaştırıldı | Görselin kullanım hakkı kontrol edilecek. Özgün ve temsili demo kararı geçerli | 8, 16 |
+| K5 | 15 Kasım 2026 | İlk sunum sırası: Selim Kona → Southwind → Gürkan'ın staj bağlantısı | Teyit gerekli | Transkriptte "Saltwind" ve "Ulukan Abacı" geçiyor; kurum ve kişi adı teyit edilecek | 18 |
+| K6 | 15 Kasım 2026 | Bireysel abonelik aylık 10 euro, yıllıkta indirim, üst paketler 12, 14 ve 16 euro, belge ayrı ücretli | Çalışma varsayımı | Kurum fiyatı değildir. Müşteri görüşmeleriyle sınanacak | 17 |
+| K7 | 15 Kasım 2026 | Öncelikli pazar Türkiye | Kararlaştırıldı | Yurt dışı sonraki aşama | 3, 18 |
+| K8 | 15 Kasım 2026 | Üründe üretici adları yerine "Tip 1", "Tip 2" gibi anonim uçak adları kullanılacak | Teyit gerekli | Fikri mülkiyet kılavuzu model adlarının tanımlayıcı kullanımına izin verildiğini söylüyor. Hukuk görüşü alınacak | 16 |
+| K9 | 15 Kasım 2026 | Next.js ve React, Google veya e-posta doğrulamalı giriş, Barış'ın mevcut sunucusu | Kararlaştırıldı | Alan adı marka seçilince alınacak | 14 |
+| K10 | 15 Kasım 2026 | Arayüz iskeleti başlayabilir, veri katmanı Gürkan verinin yeterli olduğunu teyit edince bağlanacak | Kararlaştırıldı | | 9, 14 |
+| K11 | 15 Kasım 2026 | Fikirler WhatsApp'a yazılacak, toplantı çıktıları bu dokümana işlenecek | Kararlaştırıldı | | 20, 24 |
+
+**Karara bağlanmayanlar:** Marka adı, logo ve renkler; ilk uçak parçası; video üretim aracı; ücretli hizmete geçiş ölçütleri; hata oranı hedefi; yazılı ortaklık ve pay oranı.
+
+### 27. Todolar
+
+Durumlar 23 Kasım 2026 itibarıyla WhatsApp yazışmasına göre güncellendi.
+
+| No | Yapılacak iş | Sorumlu | Hedef | Durum |
+| - | - | - | - | - |
+| T1 | Bütün belge kaynaklarını plan olarak yazmak: hangi belge, kimden, hangi yetkili kanal ve izinle | Gürkan | Bir sonraki toplantı | Açık |
+| T2 | Eldeki güncel dokümanları ortak Drive klasörüne yüklemek, eksikleri listelemek | Gürkan | 17 Kasım 2026 | Kısmen. Boeing dosyaları bekliyor |
+| T3 | Sektördeki kişilere iletilecek tek ve düzenli bilgi talebi mesajını hazırlamak | Gürkan | Bir sonraki toplantı | Kısmen. 16 Kasım'da kısa taslak yazıldı |
+| T4 | Mesajı kendi bağlantılarına göndermek, dönüşleri toplamak | Gürkan, Barış | T3 sonrası | Bekliyor |
+| T5 | Sınav ve eğitim örneklerini paylaşmak, öğrencinin adım adım kullanıcı senaryosunu anlatmak | Gürkan | Bir sonraki toplantı | Açık |
+| T6 | Marka dosyası: 5–10 isim, logo fikirleri, renkler, alan adı | Gürkan | Bir sonraki toplantı | Kısmen. Bir isim ve amblem önerildi |
+| T7 | Demo için parçayı seçmek ve senaryo taslağını yazmak | Gürkan, Barış | Demo öncesi | Açık |
+| T8 | Web sitesi altyapısını ve arayüz iskeletini kurmak | Barış | 15 Aralık 2026 öncesi | Açık |
+| T9 | Veri yeterliliği teyit edilince veriyi arayüze bağlamak | Barış | T2 ve T5 sonrası | Bekliyor |
+| T10 | Toplantı notlarını ortak dokümana işlemek | Barış | 16 Kasım 2026 | Tamamlandı |
+| T11 | Temsili demodan gerçek uçak içeriğine geçişi ayrı bir görüşmede konuşmak | Gürkan, Barış | Bir sonraki toplantı | Açık |
+| T12 | Sunumlardan önce fikri koruma önlemlerini ve gösterilecek kapsamı belirlemek | Gürkan, Barış | İlk sunumdan önce | Açık |
+| T13 | Teknik doğruluğu kontrol edecek uzmanı ve inceleme yöntemini belirlemek | Gürkan | Demo öncesi | Açık |
+| T14 | Video, görsel ve ses üretim araçlarını seçmek | Barış | Demo üretimi öncesi | Açık |
+| T15 | Hedef kitle bilgisini paylaşmak, Instagram ve LinkedIn hazırlığını başlatmak | Gürkan, Barış | Marka seçimi sonrası | Açık |
+| T16 | Üniversite öğrencileriyle ücretsiz test planı hazırlamak | Gürkan | Demo sonrası | Açık |
+| T17 | Ücretli hizmete geçiş ölçütlerini belirlemek | Gürkan, Barış | Pilot öncesi | Açık |
+| T18 | Askerlik takvimini netleştirmek ve Gürkan'ın yokluğunda ürün sahipliğini planlamak | Gürkan, Barış | 1 Şubat 2027 öncesi | Açık |
+| T19 | Ortaklık, pay oranı ve fikri mülkiyeti yazılı hale getirmek | Gürkan, Barış | İlk sunumdan önce | Açık |
 
 ### Mevcut bağlam ve henüz kararlaştırılmamış konular
 
@@ -941,7 +1028,7 @@ Yanıtlar geldiğinde ilgili bölümlere öneri/uzman girdisi olarak işlenecek;
 
 #### Gürkan’la görüşme gündemi
 
-İlk demo için temsili parça, montaj sırası ve iki eğitim seviyesi kararlaştırıldı. Aşağıdaki sorular görüşme hazırlığı için açık tutuluyor.
+İlk demo için temsili parça, montaj sırası ve iki eğitim seviyesi kararlaştırıldı. Aşağıdaki sorular görüşme hazırlığı için açık tutuluyor. 15 Kasım görüşmesinde yanıtlananlar [Kararlar](#26-kararlar) bölümündedir.
 
 **İlk eğitim senaryosu**
 
@@ -999,6 +1086,10 @@ Kullanıcı taslağı paylaşmak üzere aşağıdaki soruları yanıtlamadan ara
 
 **Değişiklik kaydı — 0.27.** İlk eğitim için beş soru ile demo, pilot ve marka için dokuz soru görüşme gündemine eklendi.
 
+**Değişiklik kaydı — 0.28.** Kullanıcının paylaştığı 12 Kasım 2026 otomasyon toplantı notları Ek A olarak eklendi. Kararlar, sorumlular ve 7189 için doğrulama ihtiyacı kaydedildi.
+
+**Değişiklik kaydı — 0.29.** 15 Kasım 2026 toplantısı işlendi. Toplantı notları, Kararlar ve Todolar bölümleri eklendi.
+
 1. **Amaç ve ticari yön:** Ne kuruyoruz, kime sunuyoruz, ilk somut başarı ne?
 2. **Eğitim ve ilk ürün:** Hangi problemi hangi içerik ve kullanıcı akışıyla çözüyoruz?
 3. **Kaynak, doğruluk ve haklar:** Hangi veriyi hangi izinle, kimlerin kontrolüyle kullanıyoruz?
@@ -1007,4 +1098,51 @@ Kullanıcı taslağı paylaşmak üzere aşağıdaki soruları yanıtlamadan ara
 6. **Finans ve uygulama:** Hangi ekip ve bütçeyle, hangi aşamalarda ilerliyoruz?
 
 Her turda 3–5 bağlantılı soru ele alınacak. Yanıtlar ilgili bölümlere işlenecek; bunların etkilediği diğer bölümler de güncellenecek. Henüz yanıtlanamayanlar açık soru veya sınanacak varsayım olarak kalacak. Soru-cevapta gelişen kapsam, kullanıcı kararı olmadan geliştirme veya yayınlama yetkisi sayılmayacak.
+
+### Ek A — Otomasyon ve review toplantısı, 12 Kasım 2026
+
+Kaynak, kullanıcının paylaştığı toplantı notlarıdır. Bu ek Partner Automation, KIT ve smoke test süreçleriyle ilgili toplantı kaydını içerir.
+
+#### Toplantı notları
+
+**Konu:** Masterplanın gözden geçirilmesi ve review sürecinin kararlaştırılması\
+**Tarih:** 12 Kasım 2026\
+**Süre:** 54 dk 54 sn
+
+Toplantıda iki konu öne çıktı: otomasyon taleplerinin ekibe nasıl iletileceği ve test otomasyonunda review’un nasıl yapılacağı. Mevcut durumda taleplerin plansız ve son dakika gelmesi, önceliklendirmeyi ve iş takibini zorlaştırıyor. Bu nedenle taleplerin açıklaması ve takibi için düzenli bir süreç gerektiği vurgulandı.
+
+Otomasyon kodunun paylaşımı için de iki ayrı repo yapısı konuşuldu: testlerin dayandığı otomasyon altyapısı ve bu altyapıyı kullanan test senaryoları ayrı tutulacak. Böylece ilgili ekipler altyapıya PR ile katkı sunabilecek; KIT ve smoke testleri ise ekip tarafından yönetilmeye devam edecek.
+
+Test senaryolarının review’unda yalnızca testi çalıştırmanın yeterli olmayacağı belirtildi. Test adımlarının ve doğrulamaların doğru alanları kontrol ettiğini anlamak için kod da gözden geçirilecek. Review’un odağı kod stili veya mimari iyileştirmelerden çok, testin beklenen iş sonucunu gerçekten doğrulayıp doğrulamadığı olacak.
+
+#### Alınan kararlar
+
+- **Acil ve küçük değişiklikler için geçici bir yol izlenecek:** İlgili ekip değişikliği hazırlayıp PR açabilecek; ekip PR’ı gözden geçirecek. Bu yol mevcut iş yükü ve önceliklere bağlı olacak.
+- Taleplerin açıklaması ve takibi için **ticket/board süreci** kullanılacak. Değişikliğin amacı anlaşılır olmalı; ihtiyaçlar toplantılarda son dakika ve kayıtsız biçimde iletilmemeli.
+- Otomasyon yapısı iki repo halinde ayrılacak:
+- **Partner Automation:** Testlerin kullandığı API ve altyapı/implementasyon bileşenleri.
+- **Test repo:** KIT, smoke testleri ve gerçek test senaryoları.
+- Altyapı değişikliklerini ağırlıklı olarak ekip geliştirecek; diğer ekipler uygun küçük katkılar için PR açabilecek. Test senaryolarının sahipliği ekipte kalacak.
+- Test senaryolarının review’u **kod incelemesini de içerecek**. İncelemede adımların sırası, doğru aksiyonlar ve doğru alanların assertion ile kontrol edilmesi esas alınacak.
+- Review yaklaşımını denemek için **17 smoke test senaryosu pilot** olarak seçildi; kısa oturumlarla birlikte incelenecek.
+- Assignment otomasyonu için mevcut Partner Automation yapısı ileride örnek alınabilir. Ancak şu anda ek bir kişiden bu çerçeveyi geniş ölçekte geliştirmesi beklenmiyor.
+- Bekleme süreleri, ortam seçimi ve giriş yöntemleriyle ilgili yapılan değişiklikler altyapı değişiklikleri olduğundan ayrı ve daha kapsamlı review gerektiriyor.
+
+#### Todo’lar
+
+| Yapılacak iş | Sorumlu | Not |
+| - | - | - |
+| Acil değişiklikler için PR ve review akışını netleştirip ilgili ekiple paylaşmak | Umut ve ekip | Geçici yaklaşım; öncelik ve kapasiteye bağlı |
+| Ticket’larda gerekli açıklama ve izlenebilirlik ölçütlerini belirlemek | Umut ve ekip | Değişikliğin amacı ve beklenen sonuç anlaşılmalı |
+| Partner Automation ile test senaryolarının repo ayrımını ve kapsamını netleştirmek | Ekip | API/altyapı bir repo; KIT ve smoke testleri ayrı repo |
+| Partner Automation repo’sunda PR build ve ileride release sürecini planlamak | Ekip | Repo ayrımının devamı |
+| Review yaklaşımını anlatan kısa sunum/bilgilendirme hazırlamak | Umut | Review yapacak kişilere yönelik |
+| Seçilen 17 smoke test için kısa review oturumları düzenlemek | Umut, Dirk ve ilgili ekip | Pilot uygulama |
+| Review kontrolünde test adımları ve assertion’ların doğru çalıştığını doğrulamak | Review yapanlar | Gerekirse testi arayüzde çalıştırarak kontrol etmek |
+| Bekleme süresi, ortam ve login ayarlarını içeren değişiklik için doğru ticket/branch/PR durumunu doğrulamak | Umut ve Dirk | Toplantıda ticket **7189**’un durumu karıştı; PR ve Develop’a alınma durumu teyit edilmedi |
+| 7189 ve ilgili DTO alanlarının gerçek durumunu board, branch ve PR üzerinden takip etmek | Umut ve Dirk | “Hazır” denmesi ile gerçekten implement edilip review’a açılması birbirine karıştı |
+| Değişikliklerin bağımlılık ve öncelik sırasını netleştirmek | Umut ve ekip | Özellikle hız/ortam düzenlemelerinin diğer review’lar için zorunlu olup olmadığı kontrol edilmeli |
+| Açık kalan konuları Malte ile takip toplantısında ele almak | Umut ve Malte | Toplantıda sonraki perşembe için konuşuldu |
+
+**Açık kalan nokta:** 7189’daki yedi DTO alanının uygulanıp uygulanmadığı ve değişikliğin PR’a taşınıp Develop’a alınıp alınmadığı toplantı sırasında netleştirilemedi. Bu nedenle tamamlanmış iş olarak değil, doğrulanması gereken takip maddesi olarak kaydedildi.
 `;

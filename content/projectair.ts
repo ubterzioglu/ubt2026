@@ -2,7 +2,7 @@ import type { ProjectairDocument } from "@/types/projectair";
 
 export const projectairDocument = {
   eyebrow: "Proje kararları",
-  version: "Ana plan v0.27 · 15 Kasım 2026",
+  version: "Ana plan v0.29 · 23 Kasım 2026",
   title: "Havacılık Bakım Eğitim Platformu",
   summary:
     "Kurumlara teknik eğitim içeriği üretimi ve eğitim atama, tamamlama ve sonuç takibi için abonelikli bir platform.",
@@ -66,7 +66,7 @@ export const projectairDocument = {
       note: {
         tone: "pending",
         title: "Teyit bekleyen takvim.",
-        body: "1 Aralık 2026 kısmi demo ve 15 Aralık 2026 tamamlanmış demo için görüşmede geçen hedefler."
+        body: "15 Kasım görüşmesinde, görevler ve veri tamamlanırsa 15 Aralık 2026 demo ve pilot için olası hedef olarak anıldı."
       }
     },
     {
@@ -154,12 +154,12 @@ export const projectairDocument = {
         {
           term: "Fiyat seçenekleri",
           description:
-            "Kurum aboneliği, kullanıcı başına ücret, içerik paketi ve özel içerik üretimi. Paketler ve tutarlar karar bekliyor."
+            "Kurum aboneliği, kullanıcı başına ücret, içerik paketi ve özel içerik üretimi. Bireysel abonelik için çalışma varsayımı aylık 10 euro. Kurum paketleri ve tutarları karar bekliyor."
         },
         {
           term: "Görüşme adayları",
           description:
-            "Selim Kona uzman görüşü için, Southwind olası kurum teması için anıldı. İlk kurum ve muhatap teyit bekliyor."
+            "Konuşulan sıra Selim Kona, Southwind ve Gürkan’ın staj bağlantısı. Kurum ve kişi adları teyit bekliyor."
         }
       ],
       note: {
@@ -228,7 +228,7 @@ export const projectairDocument = {
           items: [
             "Hesap daveti veya kendi kaydı, çevrimdışı kullanım, altyazı ve anlatım metni.",
             "Kişisel notlar, işaretleme ve tanıtım eğitimine erişim şekli.",
-            "Rol ve yetkiler, entegrasyon ayrıntıları, dış AI kullanımı ve demoda belge yükleme."
+            "Rol ve yetkiler, entegrasyon ayrıntıları ve dış AI kullanımı."
           ]
         },
         {
@@ -243,7 +243,12 @@ export const projectairDocument = {
       ]
     }
   ],
-  planNav: [{ id: "gürkanla-görüşme-gündemi", label: "Gürkan’la görüşme gündemi" }],
+  planNav: [
+    { id: "25-toplantı-notları", label: "Toplantı notları" },
+    { id: "26-kararlar", label: "Kararlar" },
+    { id: "27-todolar", label: "Todolar" },
+    { id: "gürkanla-görüşme-gündemi", label: "Gürkan’la görüşme gündemi" }
+  ],
   filesFolder: {
     label: "Google Drive klasörünü aç",
     href: "https://drive.google.com/drive/folders/19ZonxonohIzFQkkR_NDwdOsrFHhZgDok?usp=sharing"
@@ -282,5 +287,5 @@ export const projectairDocument = {
       href: "https://drive.google.com/file/d/1Ws7hWWkVQy1m9_dQTPdfPnZPgOUDLilB/view?usp=drivesdk"
     }
   ],
-  footer: "Kaynak belge · 01_E2E_Ana_Plan.md · Sürüm 0.27"
+  footer: "Kaynak belge · 01_E2E_Ana_Plan.md · Sürüm 0.29"
 } as const satisfies ProjectairDocument;
