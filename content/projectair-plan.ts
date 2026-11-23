@@ -48,8 +48,6 @@ Gürkan'dan beklenen teknik yanıtlar ve kullanıcıyla görüşmenin devam nokt
 26. [Kararlar](#26-kararlar)
 27. [Todolar](#27-todolar)
 
-[Ek A — Otomasyon ve review toplantısı, 12 Kasım 2026](#ek-a--otomasyon-ve-review-toplantısı-12-kasım-2026)
-
 ### Dokümanın amacı ve kullanım şekli
 
 Fikrin doğrulanmasından ilk müşteriye, içerik üretiminden yazılım geliştirmeye, satıştan günlük işletime kadar projenin ortak başvuru kaynağını oluşturmak. Bu sürüm bir içindekiler listesinden daha ayrıntılı bir çalışma iskeletidir; tamamlanmış iş planı, teknik şartname veya uygunluk beyanı değildir.
@@ -1086,7 +1084,7 @@ Kullanıcı taslağı paylaşmak üzere aşağıdaki soruları yanıtlamadan ara
 
 **Değişiklik kaydı — 0.27.** İlk eğitim için beş soru ile demo, pilot ve marka için dokuz soru görüşme gündemine eklendi.
 
-**Değişiklik kaydı — 0.28.** Kullanıcının paylaştığı 12 Kasım 2026 otomasyon toplantı notları Ek A olarak eklendi. Kararlar, sorumlular ve 7189 için doğrulama ihtiyacı kaydedildi.
+**Değişiklik kaydı — 0.28.** Bu projeyle ilgisiz bir toplantı notu eki eklenmişti; 0.29 ile kaldırıldı.
 
 **Değişiklik kaydı — 0.29.** 15 Kasım 2026 toplantısı işlendi. Toplantı notları, Kararlar ve Todolar bölümleri eklendi.
 
@@ -1098,51 +1096,4 @@ Kullanıcı taslağı paylaşmak üzere aşağıdaki soruları yanıtlamadan ara
 6. **Finans ve uygulama:** Hangi ekip ve bütçeyle, hangi aşamalarda ilerliyoruz?
 
 Her turda 3–5 bağlantılı soru ele alınacak. Yanıtlar ilgili bölümlere işlenecek; bunların etkilediği diğer bölümler de güncellenecek. Henüz yanıtlanamayanlar açık soru veya sınanacak varsayım olarak kalacak. Soru-cevapta gelişen kapsam, kullanıcı kararı olmadan geliştirme veya yayınlama yetkisi sayılmayacak.
-
-### Ek A — Otomasyon ve review toplantısı, 12 Kasım 2026
-
-Kaynak, kullanıcının paylaştığı toplantı notlarıdır. Bu ek Partner Automation, KIT ve smoke test süreçleriyle ilgili toplantı kaydını içerir.
-
-#### Toplantı notları
-
-**Konu:** Masterplanın gözden geçirilmesi ve review sürecinin kararlaştırılması\
-**Tarih:** 12 Kasım 2026\
-**Süre:** 54 dk 54 sn
-
-Toplantıda iki konu öne çıktı: otomasyon taleplerinin ekibe nasıl iletileceği ve test otomasyonunda review’un nasıl yapılacağı. Mevcut durumda taleplerin plansız ve son dakika gelmesi, önceliklendirmeyi ve iş takibini zorlaştırıyor. Bu nedenle taleplerin açıklaması ve takibi için düzenli bir süreç gerektiği vurgulandı.
-
-Otomasyon kodunun paylaşımı için de iki ayrı repo yapısı konuşuldu: testlerin dayandığı otomasyon altyapısı ve bu altyapıyı kullanan test senaryoları ayrı tutulacak. Böylece ilgili ekipler altyapıya PR ile katkı sunabilecek; KIT ve smoke testleri ise ekip tarafından yönetilmeye devam edecek.
-
-Test senaryolarının review’unda yalnızca testi çalıştırmanın yeterli olmayacağı belirtildi. Test adımlarının ve doğrulamaların doğru alanları kontrol ettiğini anlamak için kod da gözden geçirilecek. Review’un odağı kod stili veya mimari iyileştirmelerden çok, testin beklenen iş sonucunu gerçekten doğrulayıp doğrulamadığı olacak.
-
-#### Alınan kararlar
-
-- **Acil ve küçük değişiklikler için geçici bir yol izlenecek:** İlgili ekip değişikliği hazırlayıp PR açabilecek; ekip PR’ı gözden geçirecek. Bu yol mevcut iş yükü ve önceliklere bağlı olacak.
-- Taleplerin açıklaması ve takibi için **ticket/board süreci** kullanılacak. Değişikliğin amacı anlaşılır olmalı; ihtiyaçlar toplantılarda son dakika ve kayıtsız biçimde iletilmemeli.
-- Otomasyon yapısı iki repo halinde ayrılacak:
-- **Partner Automation:** Testlerin kullandığı API ve altyapı/implementasyon bileşenleri.
-- **Test repo:** KIT, smoke testleri ve gerçek test senaryoları.
-- Altyapı değişikliklerini ağırlıklı olarak ekip geliştirecek; diğer ekipler uygun küçük katkılar için PR açabilecek. Test senaryolarının sahipliği ekipte kalacak.
-- Test senaryolarının review’u **kod incelemesini de içerecek**. İncelemede adımların sırası, doğru aksiyonlar ve doğru alanların assertion ile kontrol edilmesi esas alınacak.
-- Review yaklaşımını denemek için **17 smoke test senaryosu pilot** olarak seçildi; kısa oturumlarla birlikte incelenecek.
-- Assignment otomasyonu için mevcut Partner Automation yapısı ileride örnek alınabilir. Ancak şu anda ek bir kişiden bu çerçeveyi geniş ölçekte geliştirmesi beklenmiyor.
-- Bekleme süreleri, ortam seçimi ve giriş yöntemleriyle ilgili yapılan değişiklikler altyapı değişiklikleri olduğundan ayrı ve daha kapsamlı review gerektiriyor.
-
-#### Todo’lar
-
-| Yapılacak iş | Sorumlu | Not |
-| - | - | - |
-| Acil değişiklikler için PR ve review akışını netleştirip ilgili ekiple paylaşmak | Umut ve ekip | Geçici yaklaşım; öncelik ve kapasiteye bağlı |
-| Ticket’larda gerekli açıklama ve izlenebilirlik ölçütlerini belirlemek | Umut ve ekip | Değişikliğin amacı ve beklenen sonuç anlaşılmalı |
-| Partner Automation ile test senaryolarının repo ayrımını ve kapsamını netleştirmek | Ekip | API/altyapı bir repo; KIT ve smoke testleri ayrı repo |
-| Partner Automation repo’sunda PR build ve ileride release sürecini planlamak | Ekip | Repo ayrımının devamı |
-| Review yaklaşımını anlatan kısa sunum/bilgilendirme hazırlamak | Umut | Review yapacak kişilere yönelik |
-| Seçilen 17 smoke test için kısa review oturumları düzenlemek | Umut, Dirk ve ilgili ekip | Pilot uygulama |
-| Review kontrolünde test adımları ve assertion’ların doğru çalıştığını doğrulamak | Review yapanlar | Gerekirse testi arayüzde çalıştırarak kontrol etmek |
-| Bekleme süresi, ortam ve login ayarlarını içeren değişiklik için doğru ticket/branch/PR durumunu doğrulamak | Umut ve Dirk | Toplantıda ticket **7189**’un durumu karıştı; PR ve Develop’a alınma durumu teyit edilmedi |
-| 7189 ve ilgili DTO alanlarının gerçek durumunu board, branch ve PR üzerinden takip etmek | Umut ve Dirk | “Hazır” denmesi ile gerçekten implement edilip review’a açılması birbirine karıştı |
-| Değişikliklerin bağımlılık ve öncelik sırasını netleştirmek | Umut ve ekip | Özellikle hız/ortam düzenlemelerinin diğer review’lar için zorunlu olup olmadığı kontrol edilmeli |
-| Açık kalan konuları Malte ile takip toplantısında ele almak | Umut ve Malte | Toplantıda sonraki perşembe için konuşuldu |
-
-**Açık kalan nokta:** 7189’daki yedi DTO alanının uygulanıp uygulanmadığı ve değişikliğin PR’a taşınıp Develop’a alınıp alınmadığı toplantı sırasında netleştirilemedi. Bu nedenle tamamlanmış iş olarak değil, doğrulanması gereken takip maddesi olarak kaydedildi.
 `;
